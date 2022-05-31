@@ -39,9 +39,9 @@ class PurchaseApplicationTests {
 	void insertPurchase() {
 		Purchase purchase=new Purchase();
 		User user=new User();
-		user.setUserId("user01");
-		user.setUserName("홍길동");
-		user.setPhone("1111");
+		user.setUserId("ghm4905");
+		user.setUserName("김태히");
+		user.setPhone("4905");
 		
 		purchase.setUser(user);
 		purchase.setPrice(10000);

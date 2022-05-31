@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
            "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 
-<mapper namespace="com.example.demo.mapper.PurchaseMapper"> 
+<mapper namespace="shop.seulmeal.service.mapper.PurchaseMapper"> 
 
 	<!-- custom_product -->
 	<insert id="insertCustomProduct">
@@ -11,7 +11,7 @@
 		(customproduct_no, user_id, product_no, purchase_no, count, 
 		cart_status, status, reg_date)
 		values((seq_customproduct_no.NEXTVAL),#{user.userId}, #{product.productNo}, 
-		#{purchase.purchaseNo:NUMBER}, #{count:NUMBER}, #{cartStatus:CHAR}, 
+		#{purchase.purchaseNo:NUMERIC}, #{count:NUMERIC}, #{cartStatus:CHAR}, 
 		#{status:CHAR}, SYSDATE)
 		<selectKey keyProperty="customproductnNo" resultType="int" order="AFTER">
 			SELECT seq_purchase_no.CURRVAL FROM DUAL
@@ -20,17 +20,17 @@
 	
 
 	<!-- purchase -->
-	<insert id="inserPurchase">
+	<insert id="insertPurchase">
 		INSERT INTO purchase
 		(purchase_no, user_id, price, delivery_price, address, name, phone, 
 		message, purchase_status, reason, image, status, reg_date, 
 		payment_condition, imp_uid, amount)
-		values((seq_purchase_no.NEXTVAL),#{user.userId},#{price:NUMBER}, 
-		#{deliveryPrice:NUMBER}, #{address:VARCHAR}, #{name:VARCHAR}, 
+		values((seq_purchase_no.NEXTVAL),#{user.userId},#{price:NUMERIC}, 
+		#{deliveryPrice:NUMERIC}, #{address:VARCHAR}, #{name:VARCHAR}, 
 		#{phone:VARCHAR}, #{message:VARCHAR}, #{purchaseStatus:CHAR}, 
 		#{reason:VARCHAR}, #{image:VARCHAR}, #{status:CHAR}, 
 		SYSDATE, #{paymentCondition:CHAR},#{imp_uid:VARCHAR}, 
-		#{amount:NUMBER})
+		#{amount:NUMERIC})
 		<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
 			SELECT seq_purchase_no.CURRVAL FROM DUAL
 		</selectKey>
