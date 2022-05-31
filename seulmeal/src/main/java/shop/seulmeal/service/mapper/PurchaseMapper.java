@@ -23,7 +23,7 @@ public interface PurchaseMapper {
 	public List<Purchase> getListPurchase();
 	
 	//구매코드 변경 
-	public int updatePurchase(Purchase purchase);
+	public int updatePurchaseCode(Purchase purchase);
 	
 	//구매내역 삭제 
 	public int deletePurchase(Purchase purchase);
