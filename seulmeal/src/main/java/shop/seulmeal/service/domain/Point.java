@@ -1,19 +1,21 @@
 package shop.seulmeal.service.domain;
 
-import java.sql.Date;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
 @Getter
 @Setter
+@ToString
 public class Point {
+	
 	private int pointNo;
-	private User user;
+	private String userId;
 	private Purchase purchase;
 	private String pointStatus;
 	private int point;
 	private Date regDate;
+
 }

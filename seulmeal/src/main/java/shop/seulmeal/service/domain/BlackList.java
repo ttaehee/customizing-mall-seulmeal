@@ -1,6 +1,6 @@
 package shop.seulmeal.service.domain;
 
-import java.util.List;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +9,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Block {
+public class BlackList {
 
-	private int blockNo;
-	private List<User> user;
-
+	private int blackListNo;
+	private User user;
+	private Date regDate;
+	
 }
