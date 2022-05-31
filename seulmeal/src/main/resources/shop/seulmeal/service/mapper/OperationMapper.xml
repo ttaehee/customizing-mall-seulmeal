@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.seulmeal.service.mapper.OperationMapper">
+	<insert id="insertOperation">
+		INSERT INTO post(post_no,user_id, title, content, short_content, thumnail, reg_date, update_date, end_date, post_status,public_status,password)
+		values((seq_post_no.NEXTVAL),#{user.userId},#{title},#{content},#{shortContent:VARCHAR},#{thumnail:VARCHAR},SYSDATE,SYSDATE,#{endDate:DATE},#{postStatus},#{publicStatus:VARCHAR},#{password:VARCHAR})
+		<selectKey keyProperty="postNo" resultType="int" order="AFTER">
+			SELECT seq_post_no.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<select id="getOpeartion" resultType="post">
+		SELECT * FROM post
+		<where>
+			no = #{value}
+		</where>
+	</select>
+	
+	<update id="updateOperation">
+		UPDATE post
+		<set>
+			title = #{title:VARCHAR},
+			content = #{content:VARCHAR},
+			short_content = #{shortContent:VARCHAR},
+			views = #{views},
+			thumnail = #{thumnail:VARCHAR},
+			update_date = SYSDATE,
+			end_date = #{endDate:DATE}
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
+	</update>
+	
+	<update id="deleteOperation">
+		UPDATE post
+		<set>
+			status = 1
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
+	</update>
+	
+	<!-- list -->
+	<select id="getListOperation" resultType="post" parameterType="map">
+		SELECT *
+		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
+				FROM	(SELECT * FROM post
+							<where>
+								post_status = #{postStatus}
+								AND status = '0'
+							</where>							
+							ORDER BY reg_date )inner_table
+				WHERE ROWNUM &lt;= #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	</select>
+	
+	<!-- ROW Count -->
+	<select id="getTotalCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+	  	FROM(	SELECT * FROM post
+	  	<where>
+	  		post_status = #{postStatus}
+	  		AND status = '0'
+	  	</where> ) countTable
+	</select>
+	
+	<!-- 답변 -->
+	<insert id="insertAnswer">
+		INSERT INTO comments(comment_no,user_id,post_no,content,reg_date,update_date)
+		values((seq_comment_no.NEXTVAL),#{user.userId},#{postNo},#{content},SYSDATE,SYSDATE)
+		<selectKey keyProperty="commentNo" resultType="int" order="AFTER">
+			SELECT seq_comment_no.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<select id="getListAnswer" resultType="comment">
+		SELECT * FROM comments
+		<where>
+			post_no = #{postNo}
+			AND status = '0'
+		</where>
+	</select>
+	
+	<update id="updateAnswer">
+		UPDATE comments
+		<set>
+			content = #{content},
+			update_date = SYSDATE
+		</set>
+		<where>
+			comment_no = #{commentNo}
+		</where>
+	</update>
+	
+	<update id="deleteAnswer">
+		UPDATE comments
+		<set>
+			status ='1'
+		</set>
+		<where>
+			comment_no = #{commentNo}
+		</where>
+	</update>
+</mapper>

@@ -19,4 +19,5 @@ public class Comment {
 	private Date regDate;
 	private Date updateDate;
 	private int parentCommentNo;
+	private int postNo;
 }
