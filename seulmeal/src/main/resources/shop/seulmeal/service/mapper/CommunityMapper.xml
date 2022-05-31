@@ -5,64 +5,85 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="shop.seulmeal.service.mapper.CommunityMapper">
-	
-	<resultMap type="shop.seulmeal.service.domain.Post" id="postSelectMap">
+
+
+	<!-- Post -->
+	<resultMap type="shop.seulmeal.service.domain.Post"
+		id="postSelectMap">
 		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
-		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.userId" column="user_id"
+			jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="NUMERIC" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
-		<result property="shortContent" column="short_content" jdbcType="VARCHAR" />
+		<result property="shortContent" column="short_content"
+			jdbcType="VARCHAR" />
 		<result property="views" column="views" jdbcType="NUMERIC" />
-		<result property="commentCount" column="comment_count" jdbcType="NUMERIC" />
-		<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
-		<result property="thumnail" column="thumnail" jdbcType="VARCHAR" />
+		<result property="commentCount" column="comment_count"
+			jdbcType="NUMERIC" />
+		<result property="likeCount" column="like_count"
+			jdbcType="NUMERIC" />
+		<result property="thumnail" column="thumnail"
+			jdbcType="VARCHAR" />
 		<result property="regDate" column="reg_date" jdbcType="DATE" />
-		<result property="updateDate" column="update_date" jdbcType="DATE" />
+		<result property="updateDate" column="update_date"
+			jdbcType="DATE" />
 		<result property="endDate" column="end_date" jdbcType="DATE" />
-		<result property="postStatus" column="post_status" jdbcType="CHAR" />
-		<result property="publicStatus" column="public_status" jdbcType="CHAR" />
-		<result property="password" column="password" jdbcType="NUMERIC" />
-		<result property="answerStatus" column="answer_status" jdbcType="CHAR" />
+		<result property="postStatus" column="post_status"
+			jdbcType="CHAR" />
+		<result property="publicStatus" column="public_status"
+			jdbcType="CHAR" />
+		<result property="password" column="password"
+			jdbcType="NUMERIC" />
+		<result property="answerStatus" column="answer_status"
+			jdbcType="CHAR" />
 		<result property="status" column="status" jdbcType="CHAR" />
 	</resultMap>
 
-
 	<insert id="insertPost" parameterType="Post">
-		INSERT INTO post(post_no, user_id, title, content, reg_date, post_status) 
+		INSERT INTO post(post_no, user_id, title, content, reg_date,
+		post_status)
 		VALUES(seq_post_no.nextval, #{user.userId}, #{title}, #{content}, SYSDATE, '0')
+		<selectKey keyProperty="postNo" resultType="int"
+			order="AFTER">
+			SELECT seq_post_no.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
-	
-	<select id="getPost" parameterType="int" resultMap="postSelectMap">
-		SELECT * FROM post 
+
+	<select id="getPost" parameterType="int"
+		resultMap="postSelectMap">
+		SELECT * FROM post
 		WHERE post_no = #{postNo}
 		AND post_status = '0'
 		AND status = '0'
 	</select>
-	
+
 	<select id="getListPost" resultMap="postSelectMap">
-		SELECT * FROM post 
-		WHERE post_status = '0' 
+		SELECT * FROM post
+		WHERE post_status = '0'
 		AND status = '0'
 	</select>
-	
+
 	<update id="updatePost" parameterType="Post">
 		UPDATE post
-		SET title = #{title}, content = #{content}, update_date = SYSDATE
-		WHERE post_no = #{postNo}
+		SET title =
+		#{title}, content = #{content}, update_date = SYSDATE
+		WHERE post_no =
+		#{postNo}
 		AND post_status = '0'
 		AND status = '0'
-		
+
 	</update>
-	
+
 	<!-- delete -->
 	<update id="deletePost" parameterType="int">
 		UPDATE post
-		SET status = '1'
+		SET status =
+		'1'
 		WHERE post_no = #{postNo}
 		AND post_status = '0'
 		AND status = '0'
 	</update>
-	
+
 	<!-- deleteAll -->
 	<update id="deletePostAll">
 		UPDATE post
@@ -70,41 +91,86 @@
 		WHERE post_status = '0'
 		AND status = '0'
 	</update>
-	
-	
-	
-	
+
+
+
+
 	<!-- Comment -->
-	<insert id="insertComment" parameterType="Comment"></insert>
+	<resultMap type="shop.seulmeal.service.domain.Comment"
+		id="commentSelectMap">
+		<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
+		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.nickName" column="nickname" jdbcType="VARCHAR" />
+		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
+		<result property="content" column="content" jdbcType="VARCHAR" />
+		<result property="layer" column="layer" jdbcType="CHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
+		<result property="updateDate" column="update_date" jdbcType="DATE" />
+		<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
+		<result property="parentCommentNo" column="parent_comment_no" jdbcType="NUMERIC" />
+		<result property="status" column="status" jdbcType="CHAR" />
+	</resultMap>
 	
-	<select id="getListComment"></select>
 	
-	<update id="updateComment" parameterType="Comment"></update>
-	
-	<!-- delete  -->
-	<update id="deleteComment" parameterType="int"></update>
-	
-	
+	<insert id="insertComment" parameterType="Comment">
+		INSERT INTO 
+		comments(comment_no, user_id, nickname, post_no, content, layer, reg_date, parent_comment_no, status)
+		VALUES (seq_comment_no.nextval, 
+		#{user.userId},
+		#{user.nickName}, 
+		#{postNo}, 
+		#{content}, 
+		#{layer}, 
+		SYSDATE, 
+		#{parent_comment_no}, 
+		#{status});
+	</insert>
+
+	<select id="getListComment" parameterType="int" resultMap="commentSelectMap">
+		SELECT 
+		comment_no, user_id, nickname, content, layer, reg_date, 
+		update_date, like_count, parent_comment_no, status
+		FROM comments
+		WHERE post_no = #{postNo}
+		AND status = '0';
+	</select>
+
+	<update id="updateComment" parameterType="Comment">
+		UPDATE comments 
+		SET content = #{content}, update_date = #{updateDate}
+		WHERE comment_no = #{commentNo}
+		AND status = '0';
+	</update>
+
+	<!-- delete -->
+	<update id="deleteComment" parameterType="int">
+		UPDATE comments 
+		SET status = '1'
+		WHERE comment_no = #{commentNo}
+		AND status = '0';
+	</update>
+
+
 	<!-- Like -->
 	<insert id="insertLike"></insert>
-	
+
 	<delete id="deleteLike"></delete>
-	
-	
-	
+
+
+
 	<!-- Follow -->
 	<insert id="insertFollow"></insert>
-	
-	<select id="getListFollow"></select>
-	
-	
-	
-	
-	<delete id="getTotalCount"></delete>
-	
 
-	
-	
-	
-	
+	<select id="getListFollow"></select>
+
+
+
+
+	<delete id="getTotalCount"></delete>
+
+
+
+
+
+
 </mapper>
