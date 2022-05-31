@@ -1,0 +1,23 @@
+server:
+  port: 7000
+  tomcat:
+    additional-tld-skip-patterns: "*.jar"
+
+spring:
+  datasource:
+    url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=D:/oracle/Wallet_DB202204092247
+    username: admin
+    password: Vywjdans!234
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  mvc:
+    view:
+      suffix: .jsp
+      prefix: /WEB-INF/views/
+mybatis:
+  type-aliases-package: shop.seulmeal.service.domain
+  mapper-locations: shop.seulmeal.service.mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+    
