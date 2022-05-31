@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,8 +22,8 @@ public class Post {
 	private int commentCount;
 	private int likeCount;
 	private String thumnail;
-	private Timestamp regDate;
-	private Timestamp updateDate;
+	private Date regDate;
+	private Date updateDate;
 	private Date endDate;
 	private String postStatus;
 	private String publicStatus;
@@ -30,6 +31,7 @@ public class Post {
 	private String answerStatus;
 	private String status;
 	
-	// post가 comment를 가지고 있다.
-	private List<Comment> comment;
+	// post媛� comment瑜� 媛�吏�怨� �엳�떎.
+	private List<Comment> comments;
+	private List<Attachments> attachments;
 }
