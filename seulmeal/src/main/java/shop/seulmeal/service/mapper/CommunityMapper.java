@@ -3,7 +3,6 @@ package shop.seulmeal.service.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;

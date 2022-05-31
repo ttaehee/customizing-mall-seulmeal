@@ -124,6 +124,9 @@
 		SYSDATE, 
 		#{parent_comment_no}, 
 		#{status});
+			<selectKey keyProperty="commentNo" resultType="int" order="AFTER">
+			SELECT seq_comment_no.CURRVAL FROM DUAL
+			</selectKey>
 	</insert>
 
 	<select id="getListComment" parameterType="int" resultMap="commentSelectMap">
