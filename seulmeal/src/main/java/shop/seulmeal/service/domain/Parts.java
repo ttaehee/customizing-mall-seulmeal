@@ -19,4 +19,6 @@ public class Parts {
 	
 	// productNo
 	private int productNo;
+	// productPartsNo
+	private int productPartsNo;
 }

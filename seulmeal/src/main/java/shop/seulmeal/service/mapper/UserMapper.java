@@ -1,11 +1,14 @@
+
 package shop.seulmeal.service.mapper;
 
-import java.awt.Point;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.BlackList;
+import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.User;
 
 @Mapper

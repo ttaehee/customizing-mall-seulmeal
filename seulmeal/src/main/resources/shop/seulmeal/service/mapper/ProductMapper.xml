@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.seulmeal.service.mapper.ProductMapper">
+	<resultMap type="parts" id="partsSelectMap">
+		<result property="partsNo" column="parts_no" jdbcType="NUMERIC"/>
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+		<result property="price" column="price" jdbcType="NUMERIC"/>
+		<result property="calorie" column="calorie" jdbcType="NUMERIC"/>
+		<result property="status" column="status" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insertParts">
+		INSERT INTO parts(parts_no, name, price, calorie, reg_date)
+		values((seq_parts_no.NEXTVAL), #{name}, #{price}, #{calorie}, SYSDATE)
+		<selectKey keyProperty="partsNo" resultType="int" order="AFTER">
+			SELECT seq_parts_no.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<select id="getParts" resultMap="partsSelectMap" parameterType="map">
+		SELECT * FROM parts
+		<where>
+			<choose>	
+				<when test="name != null">
+					name =#{name}
+				</when>
+				<otherwise>
+					parts_no = #{partsNo}
+				</otherwise>
+			</choose>			
+		</where>
+	</select>
+	
+	<select id="getPartsName" resultMap="partsSelectMap">
+		SELECT * FROM parts
+		<where>
+			name = #{value}
+		</where>
+	</select>
+	
+	<update id="updateParts">
+		UPDATE parts
+		<set>
+			name = #{name:VARCHAR},
+			price = #{price:INTEGER},
+			calorie = #{calorie:INTEGER}
+		</set>
+		<where>
+			partsNo = #{No}
+		</where>
+	</update>
+	
+	<update id="deleteParts">
+		UPDATE parts
+		<set>
+			status = 1
+		</set>
+		<where>
+			partsNo = #{No}
+		</where>
+	</update>
+	
+		
+	<!-- list -->
+	<select id="getListParts" resultMap="partsSelectMap" parameterType="map">
+		SELECT *
+		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
+				FROM	(SELECT * FROM parts
+							<where>
+								AND status = '0'
+							</where>
+							ORDER BY no )inner_table
+				WHERE ROWNUM &lt;= #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	</select>
+	
+	<!-- ROW Count -->
+	<select id="getTotalCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+	  	FROM(	SELECT * FROM parts
+	  						<where>
+								AND status = '0'
+							</where>
+			 ) countTable
+	</select>
+	
+	<!-- PRODUCPARTS -->
+	<!-- 재료 넣기 -->
+	<insert id="insertProudctParts">
+		INSERT INTO productparts(productparts_no, product_no, parts_no)	
+		SELECT seq_productparts_no.NEXTVAL, A.* FROM(
+			<foreach collection="list" item="parts" separator="UNION ALL">
+				SELECT #{parts.productNo:INTEGER} as product_no,
+					#{parts.partsNo:INTEGER} as parts_no
+					from dual
+			</foreach>
+		) A
+	</insert>
+	
+	<select id="getProductParts" resultType="parts">
+		SELECT * FROM PRODUCTPARTS pp, PARTS p
+		<where>
+			pp.parts_no = p.parts_no
+			AND pp.product_no = #{productNo}
+			AND pp.status = '0'
+		</where>
+	</select>
+	
+	<update id="deleteProductParts">
+		UPDATE productparts
+		<set>
+			status = '1'
+		</set>
+		<where>
+			productparts_no = #{productPartsNo}
+		</where>
+	</update>
+</mapper>
