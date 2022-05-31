@@ -12,6 +12,7 @@ import lombok.ToString;
 public class Block {
 
 	private int blockNo;
-	private List<User> user;
+	private String userId;
+	private String blockedUserId;
 
 }
