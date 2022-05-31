@@ -4,6 +4,193 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="shop.seulmeal.service.mapper.ProductMapper">
+
+		<!-- ========== PRODUCT ========== -->
+
+	<resultMap id="productSelectMap" type="product">
+		<result property="productNo"	column="product_no"	jdbcType="NUMERIC"/>
+		<result property="foodCategoryNo"	column="foodcategory_no"	jdbcType="NUMERIC"/>
+		<result property="productName"	column="name"	jdbcType="VARCHAR"/>
+		<result property="subContent"	column="sub_content" jdbcType="VARCHAR"/>
+		<result property="price"	column="price"	jdbcType="NUMERIC"/>
+		<result property="calorie	"	column="calorie"	jdbcType="NUMERIC"/>
+		<result property="content"	column="content"	jdbcType="VARCHAR"/>
+		<result property="stock"	column="stock"	jdbcType="NUMERIC"/>
+		<result property="averageRating"	column="average_rating"	jdbcType="NUMERIC"/>
+		<result property="likeCount"	column="like_count"	jdbcType="NUMERIC"/>
+		<result property="reviewCount"	column="review_count"	jdbcType="NUMERIC"/>
+		<result property="foodCategoryName"	column="foodcategory_name"	jdbcType="VARCHAR"/>
+		<result property="regDate"	column="reg_date"	jdbcType="DATE"/>
+		<result property="status"		column="status"	jdbcType="NUMERIC"/>
+		<result property="thumbnail"	column="thumbnail"	jdbcType="VARCHAR"/>
+	</resultMap>
+
+	
+	<insert id = "insertProduct"	parameterType ="product">
+		INSERT INTO product (product_no, foodcategory_no, name, sub_content, price, calorie, content, stock, average_rating, like_count, review_count, foodcategory_name, reg_date, status, thumbnail)
+		VALUES ( seq_product_no.NEXTVAL, #{foodCategoryNo}, #{productName}, #{subContent}, #{price}, #{calorie}, #{content}, #{stock}, 0, 0, 0, #{foodCategoryName}, SYSDATE, 0, #{thumbnail} )
+	</insert>
+	
+	
+	<select id= "getProduct" parameterType="product_no" resultMap="productSelectMap">
+		SELECT * FROM product WHERE product_no = #{product_no}
+	</select>
+	
+	
+	<select id= "ListProduct" parameterType="search">
+		SELECT * FROM (	SELECT inner_table.* , ROWNUM AS row_seq FROM
+		(	SELECT product_no , name , price, sub_content FROM product
+			<if test="searchCondition != null">
+				<where>
+					<if test="searchCondition == 0 and searchKeyword !='' ">
+		 				foodCategory_name like '%'||#{searchKeyword}||'%'
+					</if>
+					<if test="searchCondition == 1 and searchKeyword !='' ">
+		 				name like '%'||#{searchKeyword}||'%'
+					</if>
+					<if test="searchCondition == 2 and searchKeyword !='' ">
+		 				sub_content like '%'||#{searchKeyword}||'%'
+					</if>
+				</where>
+			</if>
+			ORDER BY product_no ) inner_table	WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	 </select>
+	 
+	 
+	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
+	  	SELECT COUNT(*) FROM (	SELECT product_no , name , price, sub_content FROM product
+			<if test="searchCondition != null">
+				<where>
+					<if test="searchCondition == 0 and searchKeyword !='' ">
+			 			foodCategory_name = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1 and searchKeyword !='' ">
+			 			name = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 2 and searchKeyword !='' ">
+			 			sub_content = #{searchKeyword}
+					</if>
+				</where>
+			</if> ) countTable				
+	</select>
+	
+
+	<update id= "updateProduct" parameterType = "product">
+		UPDATE product
+		<set>
+			foodcategory_no = #{foodCategoryNo},
+			name = #{productName},
+			sub_content = #{subContent},
+			price = #{price},
+			calorie = #{calorie},
+			content = #{content},
+			stock = #{stock},
+			foodcategory_name = #{foodCategoryName},
+			thumbnail = #{thumbnail}
+		</set>
+		WHERE product_no = #{productNo}
+	</update>
+	
+
+	<delete id = "deleteProduct" parameterType = "productNo">
+		UPDATE product
+			<set>
+			<if test = " status eq '0' " >status = '1'</if>
+			<if test = " status eq '1' " >status = '0'</if>
+			</set>
+		WHERE product_no = #{productNo}
+	</delete>
+
+
+		<!-- ========== FOOD CATEGORY ========== -->
+
+	
+	<insert id="insertFoodCategory"	parameterType="String">
+		INSERT INTO foodCategory (foodCategory_no, name, status) VALUES (seq_foodCategory_no.NEXTVAL, #{name}, 0)
+	</insert>
+	
+	<select id="ListFoodCategory"	parameterType="search">
+		SELECT * FROM (	SELECT inner_table.* , ROWNUM AS row_seq FROM
+		(	SELECT foodcategory_no , name , status FROM foodCategory
+			<if test="searchCondition != null">
+				<where>name like '%'||#{searchKeyword}||'%'</where>
+			</if>
+			ORDER BY product_no ) inner_table	WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	 </select>
+	 
+	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
+	  	SELECT COUNT(*) FROM (	SELECT foodcategory_no , foodcategory_name , status FROM foodcategory
+			<if test="searchCondition != null">
+				<where>
+					<if test="searchCondition == 0 and searchKeyword !='' ">
+			 			foodCategory_name = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1 and searchKeyword !='' ">
+			 			name = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 2 and searchKeyword !='' ">
+			 			sub_content = #{searchKeyword}
+					</if>
+				</where>
+			</if> ) countTable				
+	</select>
+
+	<delete id="deleteFoodCategory" parameterType="foodCategoryNo">
+		UPDATE foodCategory
+			<set>
+			<if test = " status eq '0' " >status = '1'</if>
+			<if test = " status eq '1' " >status = '0'</if>
+			</set>
+		WHERE foodCategory_no = #{foodCategoryNo}
+	</delete>
+	
+	
+		<!-- ========== REVIEW ========== -->
+	
+	<resultMap id="reviewSelectMap"	type="review">
+		<result property="reviewNo"	column="review_no"	jdbcType="NUMERIC"/>
+		<result property="userNo"		column="user_id"		jdbcType="VARCHAR"/>
+		<result property="title"			column="title"				jdbcType="VARCHAR"/>
+		<result property="content"		column="content"		jdbcType="VARCHAR"/>
+		<result property="rating"			column="rating"			jdbcType="NUMERIC"/>
+		<result property="regDate"		column="reg_date"		jdbcType="DATE"/>
+		<result property="status"			column="status"			jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<insert id="insertReview" parameterType="review">
+		INSERT INTO review (product_no, review_no, user_id, title, content, rating, reg_date, status)
+		VALUES (#{product_no}, seq_review_no.NEXTVAL, #{userId), #(title), #(content), #{rating}, SYSDATE, 0)
+	</insert>
+	
+	<update id="updateReview"	parameterType="review">
+		UPDATE review
+			<set>
+			title		=	#{title},
+			content	=	#{content},
+			rating	=	#{rating},
+			</set>
+		WHERE review_no = #{reviewNo}
+	</update>	
+	
+	<select id="getReview"	parameterType="reviewNo"	resultMap="reviewSelectMap">
+		SELECT * FROM review WHERE review_no = #{reviewNo}
+	</select>
+	
+	<select id="listReview"	parameterType="search">
+	SELECT * FROM (	SELECT inner_table.* , ROWNUM AS row_seq FROM
+		(	SELECT review_no , title , rating, reg_date, user_id FROM review
+			ORDER BY review_no ) inner_table	WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	 </select>
+	 
+	<select  id="getTotalCount"  parameterType="search"	 resultType="int">
+	  	SELECT COUNT(*) FROM (	SELECT review_no , title , rating, reg_date, user_id FROM review ) countTable			
+	</select>
+
+
+
 	<resultMap type="parts" id="partsSelectMap">
 		<result property="partsNo" column="parts_no" jdbcType="NUMERIC"/>
 		<result property="name" column="name" jdbcType="VARCHAR"/>

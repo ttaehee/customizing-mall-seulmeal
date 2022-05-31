@@ -5,10 +5,30 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import shop.seulmeal.service.domain.FoodCategory;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Review;
 
 @Mapper
 public interface ProductMapper {
+	
+	public void insertProduct(Product product) throws Exception;
+	public void updateProduct(Product product) throws Exception;
+	public Product getProduct(int productNo) throws Exception;
+	public List<Product> listProduct(Search search) throws Exception;
+	public void deleteProduct(int productNo) throws Exception;
+	
+	public void insertFoodCategory(String foodCategoryName) throws Exception;
+	public List<FoodCategory> listFoodCategory(Search search) throws Exception;
+	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
+	
+	public void insertReview(Review review) throws Exception;
+	public void updateReview(Review review) throws Exception;
+	public Review getReview(int reviewNo) throws Exception;
+	public List<Review> listReview(Search search) throws Exception;
+	public void deleteReview(int reviewNo) throws Exception;
+	
 	public int insertParts(Parts parts);
 	public Parts getParts(Map<String,Object> map);
 	public int updateParts(Parts parts);
