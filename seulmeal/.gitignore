@@ -32,7 +32,8 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+/oracleWallet/**
 
 ### VS Code ###
 .vscode/
-*.yml
+
