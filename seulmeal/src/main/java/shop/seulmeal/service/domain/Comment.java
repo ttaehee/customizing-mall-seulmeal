@@ -12,12 +12,12 @@ import lombok.ToString;
 public class Comment {
 	private int commentNo;
 	private User user;
+	private int postNo;
 	private String content;
 	private String layer;
-	private int likeCount;
-	private String status;
 	private Date regDate;
 	private Date updateDate;
+	private int likeCount;
 	private int parentCommentNo;
-	private int postNo;
+	private String status;
 }

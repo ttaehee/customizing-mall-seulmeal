@@ -32,7 +32,7 @@ public interface UserMapper {
 	
 	public int updateUserGrade(int no) throws Exception;
 	
-	public int updateUserTotalCount(int no) throws Exception;
+	public int updateUserTotalPoint(int no) throws Exception;
 	
 	public int insertBlackList(BlackList blackList) throws Exception;
 	
