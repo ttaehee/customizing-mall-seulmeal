@@ -36,6 +36,7 @@
 	    </update>
 		
 		<delete id="deleteUser">
+			update users set user_status = 1 where user_id = #{userId}	
 		</delete>
 		
 		
