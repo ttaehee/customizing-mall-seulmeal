@@ -35,7 +35,7 @@ class PurchaseApplicationTests {
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
-	@Test
+	//@Test
 	void insertPurchase() {
 		Purchase purchase=new Purchase();
 		User user=new User();
@@ -58,6 +58,45 @@ class PurchaseApplicationTests {
 		int result=purchaseMapper.insertPurchase(purchase);
 		System.out.println("결과 : "+result);
 		assertEquals(purchase.getPrice(), 10000);
+	}
+	
+	//@Test
+	void getPurchase() {
+		Purchase purchase=new Purchase();
+		
+		purchase.setPurchaseNo(2);
+		
+		purchase=purchaseMapper.getPurchase(2);
+		System.out.println("결과 : "+purchase);
+		
+		assertEquals(purchase.getPrice(), 10000);
+	}
+	
+	//@Test
+	void updatePurchaseCode() {
+		Purchase purchase=new Purchase();
+		
+		purchase.setPurchaseNo(2);
+		purchase.setPurchaseStatus("1");
+		
+		purchaseMapper.updatePurchaseCode(purchase);
+		purchase=purchaseMapper.getPurchase(2);
+		System.out.println("결과 : "+purchase);
+		
+		assertEquals(purchase.getPurchaseStatus(), "1");
+	}
+	
+	@Test
+	void deletePurchase() {
+		Purchase purchase=new Purchase();
+		
+		purchase.setPurchaseNo(2);
+		
+		purchaseMapper.deletePurchase(purchase);
+		purchase=purchaseMapper.getPurchase(2);
+		System.out.println("결과 : "+purchase);
+		
+		assertEquals(purchase.getStatus(), "1");
 	}
 
 }
