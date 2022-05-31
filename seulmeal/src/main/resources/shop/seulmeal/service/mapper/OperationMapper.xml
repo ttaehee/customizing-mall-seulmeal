@@ -12,10 +12,10 @@
 		</selectKey>
 	</insert>
 	
-	<select id="getOpeartion" resultType="post">
+	<select id="getOperation" resultType="post">
 		SELECT * FROM post
 		<where>
-			no = #{value}
+			post_no = #{value}
 		</where>
 	</select>
 	
