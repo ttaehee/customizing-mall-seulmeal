@@ -22,7 +22,7 @@ import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.mapper.UserMapper;
 
 @SpringBootTest
-class SeulmealApplicationTests {
+class OperationTest {
 	
 	@Autowired
 	private UserMapper userMapper;
@@ -40,7 +40,7 @@ class SeulmealApplicationTests {
 	int pageSize = 5;
 	
 	@Test
-	void contextLoads() {
+	void contextLoads() throws Exception {
 		User user = new User();
 		user = userMapper.getUser("jeong");
 		
@@ -142,13 +142,14 @@ class SeulmealApplicationTests {
 		for (Parts parts2 : list) {
 			System.out.println("1번에 들어간 재료 : "+parts2);
 		}
-		
+		/*
 		Comment cm = new Comment();
 		cm.setUser(user);
 		cm.setPostNo(10);
 		cm.setContent("문의 답변입니다.");
 		int r =operationMapper.insertAnswer(cm);
 		System.out.println(r == 1);
+		*/
 	}
 
 }

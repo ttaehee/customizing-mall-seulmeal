@@ -3,10 +3,10 @@ package shop.seulmeal.service.user.impl;
 import org.springframework.stereotype.Service;
 
 import shop.seulmeal.service.domain.User;
-import shop.seulmeal.service.user.UserService;
+import shop.seulmeal.service.user.UserSevice;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserSevice{
 
 	@Override
 	public void insertUser(User user) throws Exception {
