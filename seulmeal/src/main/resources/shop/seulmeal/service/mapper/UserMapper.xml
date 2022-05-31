@@ -39,6 +39,41 @@
 			update users set user_status = 1 where user_id = #{userId}	
 		</delete>
 		
+		<select id= "getListUser">
+			SELECT * FORM users WHERE user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' ORDER by user_name
+		</select>
+		
+		<select id="checkDuplicationUserId">
+			select user_id from users = #{userId}
+		</select>
+		
+		<select id="checkDuplicationNickName">
+			select nickname from users = #{nickName}
+		</select>
+		
+		<select id="getListUserTotalCount">
+		</select>
+		
+		<update id="updateUserGrade">
+			UPDATE users
+				SET grade = 
+				CASE
+				WHEN purchase_count BETWEEN 0 AND 2 THEN '0'
+				WHEN purchase_count BETWEEN 3 AND 4 THEN '1'
+				WHEN purchase_count BETWEEN 5 AND 9 THEN '2'
+				ELSE '3'
+				END;
+		</update>
+		
+		<update id="updateUserTotalPoint">
+			UPDATE users SET total_point = total_point + #{value} WHERE user_id =#{userId}
+		</update>
+		
+		<insert id="insertBlackList">
+			
+		</insert>
+		
+		
 		
 	
 	</mapper>     
