@@ -38,11 +38,11 @@ public interface UserMapper {
 	
 	public int updateBlackList(BlackList blackList) throws Exception;
 	
-	public List<BlackList> getListBlackList(Search search) throws Exception;
+	//public List<BlackList> getListBlackList(Search search) throws Exception;
 	
 	public int insertPoint(Point point) throws Exception;
 	
-	public Point getPoint(Point point) throws Exception;
+	//public Point getPoint(Point point) throws Exception;
 	
 	public List<Point> getListPoint(Search search) throws Exception;
 	
