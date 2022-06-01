@@ -38,21 +38,24 @@ public class OperationController {
 		
 		if(postStatus == 1) {
 			return "operation/insertOperationNotice";
-		} else {
+		} else if(postStatus == 2) {
 			return "operation/insertOperationEvent";
-		}		
+		} else {
+			return "operation/insertOperationQuery";
+		}
 	}
 	
 	@PostMapping("insertOperation")
-	public String insertOperation(Post post, String userId) {
+	public String insertOperation(Post post, String userId, Model model) {
 		User user = new User();
 		user.setUserId(userId);
 		post.setUser(user);
 		
 		System.out.println("POST 가져온거 :"+post);
 		operationService.insertOperation(post);
+		model.addAttribute("post",post);
 		
-		return "/operation/getOperation/"+post.getPostNo();
+		return "redirect:getOperation/"+post.getPostNo();		
 	}
 	
 	@GetMapping("getOperation/{postNo}")
@@ -65,11 +68,11 @@ public class OperationController {
 		
 		if(post.getPostStatus().equals("1")){
 			return "operation/getOperationNotice";
-		}
-		if(post.getPostStatus().equals("2")){
+		} else if(post.getPostStatus().equals("2")) {
 			return "operation/getOperationEvent";
+		} else {
+			return "operation/getOperationQuery";
 		}
-		return "";
 	}
 	
 	@GetMapping("updateOperation/{postNo}")
@@ -82,17 +85,20 @@ public class OperationController {
 		
 		if(post.getPostStatus().equals("1")){
 			return "operation/updateOperationNotice";
-		} else {
+		} else if(post.getPostStatus().equals("2")) {
 			return "operation/updateOperationEvent";
+		} else {
+			return "operation/updateOperationQuery";
 		}
 	}
 	
 	@PostMapping("updateOperation")
-	public String updateOperation(Post post) {
+	public String updateOperation(Post post, Model model) {
 		System.out.println("업데이트 수정할 내용 : "+post);
 		operationService.updateOperation(post);
+		model.addAttribute("post",post);
 		
-		return "/operation/getOperation/"+post.getPostNo();
+		return "redirect:getOperation/"+post.getPostNo();
 	}
 	
 	@GetMapping("getListOperation/{postStatus}")
@@ -115,8 +121,10 @@ public class OperationController {
 		
 		if(postStatus == 1) {
 			return "operation/listOperationNotice";
-		} else {
+		} else if(postStatus == 2) {
 			return "operation/listOperationEvent";
+		} else {
+			return "operation/listOperationQuery";
 		}
 	}
 }
