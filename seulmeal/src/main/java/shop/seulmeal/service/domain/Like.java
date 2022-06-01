@@ -11,8 +11,8 @@ public class Like {
 	 
 	private int likeNo;
 	private String userId; 
-	private int postNo;
-	private int commentNo;
-	private int productNo;
+	private Integer postNo;
+	private Integer commentNo;
+	private Integer productNo;
 	
 }

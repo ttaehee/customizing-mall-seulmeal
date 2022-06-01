@@ -15,9 +15,9 @@ public class Comment {
 	private int postNo;
 	private String content;
 	private String layer;
+	private Integer parentCommentNo;
 	private Date regDate;
 	private Date updateDate;
 	private int likeCount;
-	private int parentCommentNo;
 	private String status;
 }
