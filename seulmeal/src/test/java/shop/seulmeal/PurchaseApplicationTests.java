@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.CustomProduct;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.ProductMapper;
@@ -34,6 +36,26 @@ class PurchaseApplicationTests {
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
+	
+	@Test
+	void insertCustomProduct() {
+		CustomProduct customProduct=new CustomProduct();
+		User user=new User();
+		user.setUserId("ghm4905");
+		Product product=new Product();
+		product.setProductNo(1);
+		Purchase purchase=new Purchase();
+		purchase.setPurchaseNo(1);
+		
+		customProduct.setCount(2);
+		customProduct.setCartStatus("1");
+		customProduct.setStatus("0");
+			
+		int result=purchaseMapper.insertCustomProduct(customProduct);
+		System.out.println("결과 : "+result);
+		
+		assertEquals(customProduct.getCount(), 2);
+	}
 	
 	//@Test
 	void insertPurchase() {
@@ -86,7 +108,7 @@ class PurchaseApplicationTests {
 		assertEquals(purchase.getPurchaseStatus(), "1");
 	}
 	
-	@Test
+	//@Test
 	void deletePurchase() {
 		Purchase purchase=new Purchase();
 		
