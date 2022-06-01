@@ -44,11 +44,8 @@ class PurchaseApplicationTests {
 		user.setUserId("ghm4905");
 		Product product=new Product();
 		product.setProductNo(1);
-		Purchase purchase=new Purchase();
-		purchase.setPurchaseNo(1);
 		
 		customProduct.setUser(user);
-		customProduct.setPurchase(purchase);
 		
 		customProduct.setCount(2);
 		customProduct.setCartStatus("1");

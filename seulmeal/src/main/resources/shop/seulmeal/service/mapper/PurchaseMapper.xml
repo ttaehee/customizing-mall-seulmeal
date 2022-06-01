@@ -5,6 +5,22 @@
 
 <mapper namespace="shop.seulmeal.service.mapper.PurchaseMapper"> 
 
+	<!-- custom_pars -->
+	<insert id="insertCustomParts">
+		INSERT INTO custom_parts
+		(customparts_no, customproduct_no, productparts_no, parts_no, gram)
+		values((seq_customparts_no.NEXTVAL),#{customProduct.customProductNo:NUMERIC}, 
+		#{productParts.productPartsNo:NUMERIC}, #{parts.partsNo:NUMERIC}, 
+		#{gram:NUMERIC})
+		<selectKey keyProperty="custompartsNo" resultType="int" order="AFTER">
+			SELECT seq_custom_parts_no.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<delete id="deleteCustomParts" parameterType="int">
+        DELETE FROM custom_parts WHERE customproduct_no = #{customProductNo}
+    </delete>
+
 	<!-- custom_product -->
 	<insert id="insertCustomProduct">
 		INSERT INTO custom_product
@@ -13,10 +29,41 @@
 		values((seq_customproduct_no.NEXTVAL),#{user.userId}, #{product.productNo}, 
 		#{purchase.purchaseNo:NUMERIC}, #{count:NUMERIC}, #{cartStatus:CHAR}, 
 		#{status:CHAR}, SYSDATE)
-		<selectKey keyProperty="customproductnNo" resultType="int" order="AFTER">
-			SELECT seq_purchase_no.CURRVAL FROM DUAL
+		<selectKey keyProperty="customproductNo" resultType="int" order="AFTER">
+			SELECT seq_custom_product_no.CURRVAL FROM DUAL
 		</selectKey>
 	</insert>
+	
+	<update id="updateCustomProduct">
+		UPDATE custom_product
+		<set>
+			purchase_no=#{purchase.purchaseNo:NUMERIC}
+		</set>
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</update>
+	
+	<select id="getListCustomProduct" resultType="customProduct" parameterType="map">
+		SELECT *
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT prod.*, parts.*
+			    FROM custom_product prod, custom_parts parts
+				WHERE prod.customproduct_no=parts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
+				ORDER BY custom_product.customproduct_no) inner_table
+			WHERE ROWNUM &lt; = #{endRowNum})
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<update id="deleteCustomProduct">
+		UPDATE custom_product
+		<set>
+			cart_status = '1'
+		</set>
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</update>
 	
 
 	<!-- purchase -->
@@ -38,7 +85,9 @@
 	
 	<select id="getPurchase" resultType="purchase">
 		SELECT * FROM purchase
-		WHERE purchase_no = #{purchaseNo}
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
 	</select>
 	
 	<update id="updatePurchaseCode">
@@ -46,15 +95,19 @@
 		<set>
 			purchase_status=#{purchaseStatus:CHAR}
 		</set>
-		WHERE purchase_no = #{purchaseNo}
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
 	</update>
 	
 	<update id="deletePurchase">
 		UPDATE purchase
 		<set>
-			status = 1
+			status = '1'
 		</set>
-		WHERE purchase_no = #{purchaseNo}
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
 	</update>
 	
 	<select id="getListPurchase" resultType="purchase" parameterType="map">
@@ -85,7 +138,9 @@
 	<select id="getTotalCount" resultType="int" parameterType="map">
 		SELECT COUNT(*)
 	  	FROM( SELECT * FROM purchase
-		WHERE purchase_status = #{purchaseStatus} AND status = '0') countTable
+	  	<where>
+			purchase_status = #{purchaseStatus} AND status = '0') countTable
+		</where>
 	</select>
 
 
