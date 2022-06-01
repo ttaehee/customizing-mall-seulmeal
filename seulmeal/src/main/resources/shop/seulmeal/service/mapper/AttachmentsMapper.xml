@@ -17,7 +17,7 @@
 		</where>
 	</delete>
 	
-	<insert id="insertListAttachments">
+	<insert id="insertListAttachments" parameterType="map">
 		INSERT INTO attachments(attachments_no, product_no, review_no, post_no, comment_no, attachment_name, reg_date)
 		SELECT seq_attachments_no.NEXTVAL, A.* FROM(
 			<foreach collection="list" item="attachments" separator="UNION ALL">

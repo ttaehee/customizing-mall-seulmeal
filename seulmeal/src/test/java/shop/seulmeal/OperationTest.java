@@ -112,7 +112,7 @@ class OperationTest {
 		list.add(a5);
 		attachmentsMapper.insertListAttachments(list);
 		*/
-		
+		/*
 		Parts parts = new Parts();
 		parts.setName("��ġ3");
 		parts.setCalorie(170);
@@ -142,6 +142,7 @@ class OperationTest {
 		for (Parts parts2 : list) {
 			System.out.println("재료 : "+parts2);
 		}
+		*/
 		/*
 		Comment cm = new Comment();
 		cm.setUser(user);
@@ -150,6 +151,19 @@ class OperationTest {
 		int r =operationMapper.insertAnswer(cm);
 		System.out.println(r == 1);
 		*/
+		
+		//String rootPath = System.getProperty("user.dir");
+		//System.out.println(rootPath);
+		
+		Post post1 = new Post();
+		List<Post> list = new ArrayList<Post>();
+		for(int j=0; j<3; j++) {
+			post1.setPostNo(j);
+			list.add(j,post1);
+		}
+		for (Post post2 : list) {
+			System.out.println(post2.getPostNo());
+		}
 	}
 
 }

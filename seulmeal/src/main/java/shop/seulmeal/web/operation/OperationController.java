@@ -78,6 +78,11 @@ public class OperationController {
 		
 		Post post = operationService.getOperation(postNo);
 		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("postNo", post.getPostNo());
+		List<Attachments> list = attachmentsService.getAttachments(map);
+		post.setAttachments(list);
+		
 		model.addAttribute("post",post);
 		
 		if(post.getPostStatus().equals("1")){
