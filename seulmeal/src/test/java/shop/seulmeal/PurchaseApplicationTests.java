@@ -47,6 +47,9 @@ class PurchaseApplicationTests {
 		Purchase purchase=new Purchase();
 		purchase.setPurchaseNo(1);
 		
+		customProduct.setUser(user);
+		customProduct.setPurchase(purchase);
+		
 		customProduct.setCount(2);
 		customProduct.setCartStatus("1");
 		customProduct.setStatus("0");
