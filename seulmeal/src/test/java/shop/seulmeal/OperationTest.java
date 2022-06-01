@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import shop.seulmeal.common.Page;
@@ -38,6 +39,9 @@ class OperationTest {
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
+	
+	@Value("${java.file.test}")
+	String envValue;
 	
 	@Test
 	void contextLoads() throws Exception {
@@ -164,6 +168,8 @@ class OperationTest {
 		for (Post post2 : list) {
 			System.out.println(post2.getPostNo());
 		}
+		
+		System.out.println(envValue);
 	}
 
 }
