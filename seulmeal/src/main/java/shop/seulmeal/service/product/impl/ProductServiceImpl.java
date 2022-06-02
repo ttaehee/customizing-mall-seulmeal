@@ -25,11 +25,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	//test done
 	public void insertProduct(Product product) throws Exception {
 		productMapper.insertProduct(product);
 	}
 
 	@Override
+	//test done
 	public void updateProduct(Product product) throws Exception {
 		productMapper.updateProduct(product);
 	}
@@ -47,13 +49,16 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
+	//test done
 	public Product getProduct(int productNo) throws Exception {
 		return productMapper.getProduct(productNo);
 	}
 
 	@Override
+	//test done + need toggle
 	public void deleteProduct(int productNo) throws Exception {
-		productMapper.deleteParts(productNo);
+		
+		productMapper.deleteProduct(productNo);
 	}
 	
 	
@@ -65,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 
 	public Map<String, Object> listFoodCategory(Search search) throws Exception {
 		List<Foodcategory> list = productMapper.listFoodCategory(search);
-		int totalCount = productMapper.getTotalFoodCategoryCount(search);
+		int totalCount = productMapper.getTotalFoodCategoryCount();
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
@@ -83,6 +88,16 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void insertReview(Review review) throws Exception {
 		productMapper.insertReview(review);
+		Product product = 
+			productMapper.getProduct(review.getProduct().getProductNo());
+		product.setReviewCount(
+			productMapper.getReviewCountInProduct(review.getProduct().getProductNo()));
+		
+		double A = (double)productMapper.getAverageRating(review.getProduct().getProductNo());
+		
+		product.setAverageRating(A);
+		
+		productMapper.updateProduct(product);
 	}
 
 	@Override
@@ -98,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Map<String, Object> listReview(Search search) throws Exception {
 		List<Review> list = productMapper.listReview(search);
-		int totalCount = productMapper.getTotalReviewCount(search);
+		int totalCount = productMapper.getTotalReviewCount();
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);

@@ -3,6 +3,8 @@ package shop.seulmeal;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.BadAttributeValueExpException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +14,8 @@ import junit.framework.Assert;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Review;
+import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
 
 @SpringBootTest
@@ -23,8 +27,7 @@ public class ProductAppTest {
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
-	
-	
+
 	public void testInsertProduct() throws Exception {
 
 		Product product = new Product();
@@ -74,21 +77,90 @@ public class ProductAppTest {
 	
 	public void testUpdateProduct() throws Exception {
 		Product product = productService.getProduct(1);
-		food
 		
-		product.setFoodCategory();
+		Foodcategory food = new Foodcategory();
+		food.setFoodCategoryNo(3);
+		
+		product.setFoodCategory(food);
 		product.setName("UPDATED");
 		product.setSubContent("업데이트 완료");
 		product.setPrice(5900);
 		product.setCalorie(980);
 		product.setContent("업데이트를 성공적으로 마쳤습니다");
 		product.setStock(50);
-		product.set
+		product.setThumbnail("1");
+		
+		System.out.println(product);
+		
+		productService.updateProduct(product);
+		System.out.println(productService.getProduct(1));
 	}
 		
-	
 	
 	public void testdeleteProduct() throws Exception {
+		Product product = productService.getProduct(1);
+		
+		int A = product.getProductNo();
+		System.out.println(product.getStatus());
+		
+		productService.deleteProduct(A);
+		
+		product = productService.getProduct(1);
+		System.out.println(product.getStatus());
+	}
+	
+	
+	
+	
+	//test done
+	public void testInsertFoodCategory() throws Exception{
+		productService.insertFoodCategory("프랜차이즈");
+	}
+	
+	public void testListFoodCategory() throws Exception{
+		Search search = new Search();
+		search.setCurrentPage(1);
+	 	search.setPageSize(3);
+	 	search.setSearchCondition("1");
+	 	search.setSearchKeyword("식");
+	 	Map<String,Object> map = productService.listFoodCategory(search);
+	 	
+	 	List<Object> list = (List<Object>)map.get("list");
+	 	
+	 	Integer totalCount = (Integer)map.get("totalCount");
+		
+		System.out.println(map);
+	}
+	
+	//test done + 
+	public void testDeleteFoodCategory() throws Exception{
+		productService.deleteFoodCategory(6);
+	}
+	
+	//test done
+	@Test
+	public void testInsertReview() throws Exception{
+		Product product = new Product();
+		Review review = new Review();
+		User user = new User();
+		
+		product.setProductNo(2);
+		user.setUserId("LJC");
+		
+		
+		review.setProduct(product);
+		review.setUser(user);
+		review.setTitle("테스트 생성");
+		review.setContent("테스트 입력 성공");
+		review.setRating(2);
+		
+		productService.insertReview(review);
 		
 	}
+	
+	public void updateReview() throws Exception{
+		productService.updateReview();
+		
+	}
+	
 }

@@ -16,7 +16,7 @@
 		<result property="calorie"					column="calorie"					jdbcType="NUMERIC"/>
 		<result property="content"					column="content"					jdbcType="VARCHAR"/>
 		<result property="stock"						column="stock"						jdbcType="NUMERIC"/>
-		<result property="averageRating"			column="average_rating"			jdbcType="NUMERIC"/>
+		<result property="averageRating"			column="average_rating"			jdbcType="DOUBLE"/>
 		<result property="likeCount"					column="like_count"				jdbcType="NUMERIC"/>
 		<result property="reviewCount"				column="review_count"			jdbcType="NUMERIC"/>
 		<result property="regDate"					column="reg_date"					jdbcType="DATE"/>
@@ -79,26 +79,29 @@
 		UPDATE product
 		<set>
 			foodcategory_no = #{foodCategory.foodCategoryNo},
-			name = #{productName},
+			name = #{name},
 			sub_content = #{subContent},
 			price = #{price},
 			calorie = #{calorie},
 			content = #{content},
 			stock = #{stock},
-			thumbnail = #{thumbnail}
+			thumbnail = #{thumbnail},
+			review_Count = #{reviewCount},
+			like_Count = #{likeCount},
+			average_Rating= #{averageRating}
 		</set>
 		WHERE product_no = #{productNo}
 	</update>
 	
-
 	<update id = "deleteProduct">
 		UPDATE product
-			<set>
-			<if test = " status eq '0' " >status = '1'</if>
-			<if test = " status eq '1' " >status = '0'</if>
-			</set>
+			<set>	status = 1	</set>
 		WHERE product_no = #{productNo}
 	</update>
+	
+	<select id="getAverageRating" resultType="double">
+			SELECT ROUND(AVG(rating), 1) AS Avg_Rate FROM (SELECT rating FROM review WHERE review.product_No = #{productNo} ) COUNT
+	</select>
 
 
 		<!-- ========== FOOD CATEGORY ========== -->
@@ -111,30 +114,18 @@
 	<select id="ListFoodCategory" resultType="foodCategory">
 		SELECT * FROM (	SELECT inner_table.* , ROWNUM AS row_seq FROM
 		(	SELECT foodcategory_no , name , status FROM foodCategory
-			<if test="searchCondition != null">
-				<where>name like '%'||#{searchKeyword}||'%'</where>
-			</if>
 			ORDER BY foodcategory_no ) inner_table	WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 	 </select>
 	 
 	 <select  id="getTotalFoodCategoryCount" resultType="int">
 	  	SELECT COUNT(*) FROM (	SELECT foodcategory_no , foodcategory_name , status FROM foodcategory
-			<if test="searchCondition != null">
-				<where>
-					<if test="searchCondition == 0 and searchKeyword !='' ">
-			 			foodCategory_name = #{searchKeyword}
-					</if>
-				</where>
-			</if> ) countTable				
+			) countTable				
 	</select>
 
 	<update id="deleteFoodCategory">
 		UPDATE foodCategory
-			<set>
-			<if test = " status eq '0' " >status = '1'</if>
-			<if test = " status eq '1' " >status = '0'</if>
-			</set>
+			<set>	status = 1	</set>
 		WHERE foodCategory_no = #{foodCategoryNo}
 	</update>
 	
@@ -143,6 +134,7 @@
 	
 	<resultMap id="reviewSelectMap" type="review">
 		<result property="reviewNo"	column="review_no"	jdbcType="NUMERIC"/>
+		<result property="productNo"	column="product_no"	jdbcType="NUMERIC"/>
 		<result property="user.userId"	column="user_id"		jdbcType="VARCHAR"/>
 		<result property="title"			column="title"				jdbcType="VARCHAR"/>
 		<result property="content"		column="content"		jdbcType="VARCHAR"/>
@@ -166,7 +158,7 @@
 		WHERE review_no = #{reviewNo}
 	</update>	
 	
-	<select id="getReview" resultMap="reviewSelectMap">
+	<select id="getReview" resultMap="reviewSelectMap">=
 		SELECT * FROM review WHERE review_no = #{reviewNo}
 	</select>
 	
@@ -181,12 +173,13 @@
 	  	SELECT COUNT(*) FROM (	SELECT review_no , title , rating, reg_date, user_id FROM review ) countTable			
 	</select>
 	
+	<select  id="getReviewCountInProduct" resultType="int">
+		SELECT count(*) FROM review WHERE review.product_No = #{productNo}
+	</select>
+	
 	<update id="deleteReview">
 		UPDATE review
-			<set>
-			<if test = " status eq '0' " >status = '1'</if>
-			<if test = " status eq '1' " >status = '0'</if>
-			</set>
+			<set>	status = '1'	</set>
 		WHERE review_no = #{reviewNo}
 	</update>
 

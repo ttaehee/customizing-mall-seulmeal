@@ -43,7 +43,9 @@ public interface ProductMapper {
 	
 	// totalCount
 	public int getTotalProductCount(Search search) throws Exception;
-	public int getTotalFoodCategoryCount(Search search)throws Exception;
-	public int getTotalReviewCount(Search search)throws Exception;
+	public int getTotalFoodCategoryCount()throws Exception;
+	public int getReviewCountInProduct(int productNo)throws Exception;
+	public int getAverageRating (int productNo) throws Exception;
+	public int getTotalReviewCount()throws Exception;
 	public int getTotalPartsCount(Search search)throws Exception;
 }
