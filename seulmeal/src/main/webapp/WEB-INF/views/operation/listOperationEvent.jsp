@@ -12,9 +12,19 @@
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
-	<a href="/operation/insertOperation/2">이벤트 등록</a>
-	<a href="/operation/getListOperation/2/0"></a>
+	
+	
 	<div class="container">
+		<div class="dropdown">
+		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+		    Dropdown button
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+		    <li><a href="/operation/getListOperation/2/0/0">진행중인 이벤트</a></li>
+		    <li><a href="/operation/getListOperation/2/0/1">종료된 이벤트</a></li>
+		    <li><a href="/operation/insertOperation/2">이벤트 등록</a></li>
+		  </ul>
+		</div>
 		<div class="row">
 			<c:forEach var="post" items="${list}">
 				<c:set var="i" value="${i+1}" />
@@ -30,7 +40,27 @@
 			</c:forEach>			
 	    </div>
     </div>
-	<div>${page }</div>
+    
+    <div class="container">
+	<div class="row">
+		<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<nav aria-label="...">
+				  <ul class="pagination">
+			  		<li class="page-item disabled">
+				      <span class="page-link" data-value="1">Previous</span>
+				    </li>
+				  	<c:forEach var="i" begin="${page.beginUnitPage}" end="${page.endUnitPage}">
+				  		<li class="page-item"><a class="page-link" href="/operation/getListOperation/2/${i}">${i}</a></li>
+				  	</c:forEach>
+				  	<li class="page-item">
+				      <a class="page-link" href="#">Next</a>
+				    </li>
+				  </ul>
+				</nav>
+			</div>
+		</div>	
+	</div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 </body>
 </html>
