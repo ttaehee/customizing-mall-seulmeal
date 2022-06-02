@@ -60,15 +60,53 @@
 		</where>
 	</select>
 
-	<!--  X , 페이징 처리, 검색조건 -->
 	<!--  전체 게시글 목록 -->
-	<select id="getListPost" resultMap="postSelectMap">
-		SELECT * FROM post
-		<where>
-			post_status = '0'
-			AND status = '0'
-		</where>
+	<!--  '1' : 조회순, '2' : 베스트순, '3': 최신순-->
+	<select id="getListPost" parameterType="shop.seulmeal.common.Search" resultMap="postSelectMap">
+		SELECT *
+		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
+				FROM	(SELECT * FROM post	  
+						  	<where>
+						  		post_status = '0'
+						  		AND status = '0'
+						  		<if test="searchKeyword != null">
+						  			AND (title LIKE ('%'||#{searchKeyword}||'%') OR content LIKE ('%'||#{searchKeyword}||'%'))
+						  		</if>	
+						  	</where>
+						 			
+							ORDER BY
+							<if test="searchCondition != null">
+								<choose>
+									<when test="searchCondition == 1">views</when>
+									<when test="searchCondition == 2">like_count</when>
+									<when test="searchCondition == 3">reg_date</when>
+								</choose>
+							</if>
+							<if test="searchCondition == null">
+								like_count
+							</if>
+							 )inner_table
+				WHERE ROWNUM &lt;= #{endRowNum})
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
+	
+	<!-- ROW Count -->
+	<select id="getPostTotalCount" parameterType="shop.seulmeal.common.Search" resultType="int">
+		SELECT COUNT(*)
+	  	FROM(	SELECT * FROM post	  
+	  	<where>
+	  		post_status = '0'
+	  		AND status = '0'
+	  		<if test="searchKeyword != null ">
+	  			AND (title like ('%'||#{searchKeyword}||'%') OR content like ('%'||#{searchKeyword}||'%'))	
+	  		</if>
+	  	</where> ) countTable
+	</select>
+	
+
+
+
+	
 	
 	<!-- X -->
 	<!--  내 게시글 목록-->
@@ -152,17 +190,6 @@
 			</selectKey>
 	</insert>
 
-	<select id="getListComment" parameterType="int" resultMap="commentSelectMap">
-		SELECT 
-			comment_no, user_id, nickname, content, layer, reg_date, 
-			update_date, like_count, parent_comment_no, status
-		FROM comments
-		<where>
-			post_no = #{postNo}
-			AND status = '0'
-		</where>
-	</select>
-
 	<update id="updateComment" parameterType="Comment">
 		UPDATE 
 			comments 
@@ -188,7 +215,18 @@
 		</where>
 	</update>
 
-	<!-- X -->
+
+	<select id="getListComment" parameterType="int" resultMap="commentSelectMap">
+		SELECT 
+			comment_no, user_id, nickname, content, layer, reg_date, 
+			update_date, like_count, parent_comment_no, status
+		FROM comments
+		<where>
+			post_no = #{postNo}
+			AND status = '0'
+		</where>
+	</select>
+
 	<select id="getCommentTotalCount" parameterType="int" resultType="int">
 		SELECT COUNT(*)
 		FROM comments
@@ -449,29 +487,10 @@
 
 
 	<!-- list -->
-	<select id="getListCommunity" resultType="Post" parameterType="map">
-		SELECT *
-		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT * FROM post
-							<where>
-								post_status = #{postStatus}
-								AND status = '0'
-							</where>							
-							ORDER BY reg_date )inner_table
-				WHERE ROWNUM &lt;= #{search.endRowNum})
-		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
-	</select>
 
 
-	<!-- ROW Count -->
-	<select id="getTotalCount" resultType="int" parameterType="map">
-		SELECT COUNT(*)
-	  	FROM(	SELECT * FROM post
-	  	<where>
-	  		post_status = #{postStatus}
-	  		AND status = '0'
-	  	</where> ) countTable
-	</select>
+
+
 
 
 
