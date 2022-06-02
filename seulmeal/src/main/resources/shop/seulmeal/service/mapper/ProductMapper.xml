@@ -8,27 +8,26 @@
 		<!-- ========== PRODUCT ========== -->
 
 	<resultMap id="productSelectMap" type="product">
-		<result property="productNo"	column="product_no"	jdbcType="NUMERIC"/>
-		<result property="foodCategoryNo"	column="foodcategory_no"	jdbcType="NUMERIC"/>
-		<result property="productName"	column="name"	jdbcType="VARCHAR"/>
-		<result property="subContent"	column="sub_content" jdbcType="VARCHAR"/>
-		<result property="price"	column="price"	jdbcType="NUMERIC"/>
-		<result property="calorie	"	column="calorie"	jdbcType="NUMERIC"/>
-		<result property="content"	column="content"	jdbcType="VARCHAR"/>
-		<result property="stock"	column="stock"	jdbcType="NUMERIC"/>
-		<result property="averageRating"	column="average_rating"	jdbcType="NUMERIC"/>
-		<result property="likeCount"	column="like_count"	jdbcType="NUMERIC"/>
-		<result property="reviewCount"	column="review_count"	jdbcType="NUMERIC"/>
-		<result property="foodCategoryName"	column="foodcategory_name"	jdbcType="VARCHAR"/>
-		<result property="regDate"	column="reg_date"	jdbcType="DATE"/>
-		<result property="status"		column="status"	jdbcType="NUMERIC"/>
-		<result property="thumbnail"	column="thumbnail"	jdbcType="VARCHAR"/>
+		<result property="productNo"				column="product_no"				jdbcType="NUMERIC"/>
+		<result property="foodCategory.foodCategoryNo"			column="foodcategory_no"		jdbcType="NUMERIC"/>
+		<result property="name"						column="name"						jdbcType="VARCHAR"/>
+		<result property="subContent"				column="sub_content" 			jdbcType="VARCHAR"/>
+		<result property="price"						column="price"						jdbcType="NUMERIC"/>
+		<result property="calorie"					column="calorie"					jdbcType="NUMERIC"/>
+		<result property="content"					column="content"					jdbcType="VARCHAR"/>
+		<result property="stock"						column="stock"						jdbcType="NUMERIC"/>
+		<result property="averageRating"			column="average_rating"			jdbcType="NUMERIC"/>
+		<result property="likeCount"					column="like_count"				jdbcType="NUMERIC"/>
+		<result property="reviewCount"				column="review_count"			jdbcType="NUMERIC"/>
+		<result property="regDate"					column="reg_date"					jdbcType="DATE"/>
+		<result property="status"						column="status"						jdbcType="NUMERIC"/>
+		<result property="thumbnail"					column="thumbnail"				jdbcType="VARCHAR"/>
 	</resultMap>	
 
 	
 	<insert id = "insertProduct">
-		INSERT INTO product (product_no, foodcategory_no, name, sub_content, price, calorie, content, stock, average_rating, like_count, review_count, foodcategory_name, reg_date, status, thumbnail)
-		VALUES ( seq_product_no.NEXTVAL, #{foodCategoryNo}, #{productName}, #{subContent}, #{price}, #{calorie}, #{content}, #{stock}, 0, 0, 0, #{foodCategoryName}, SYSDATE, 0, #{thumbnail} )
+		INSERT INTO product (product_no, foodcategory_no, name, sub_content, price, calorie, content, stock, average_rating, like_count, review_count, reg_date, status, thumbnail)
+		VALUES ( seq_product_no.NEXTVAL, #{foodCategory.foodCategoryNo}, #{name}, #{subContent}, #{price}, #{calorie}, #{content}, #{stock}, 0, 0, 0, SYSDATE, 0, #{thumbnail} )
 	</insert>
 	
 	
@@ -39,7 +38,7 @@
 	
 	<select id= "ListProduct" resultMap="productSelectMap">
 		SELECT * FROM (	SELECT inner_table.* , ROWNUM AS row_seq FROM
-		(	SELECT product_no , name , price, sub_content FROM product
+		(	SELECT thumbnail, product_no , name , price, sub_content FROM product
 			<if test="searchCondition != null">
 				<where>
 					<if test="searchCondition == 0 and searchKeyword !='' ">
@@ -79,28 +78,27 @@
 	<update id= "updateProduct">
 		UPDATE product
 		<set>
-			foodcategory_no = #{foodCategoryNo},
+			foodcategory_no = #{foodCategory.foodCategoryNo},
 			name = #{productName},
 			sub_content = #{subContent},
 			price = #{price},
 			calorie = #{calorie},
 			content = #{content},
 			stock = #{stock},
-			foodcategory_name = #{foodCategoryName},
 			thumbnail = #{thumbnail}
 		</set>
 		WHERE product_no = #{productNo}
 	</update>
 	
 
-	<delete id = "deleteProduct">
+	<update id = "deleteProduct">
 		UPDATE product
 			<set>
 			<if test = " status eq '0' " >status = '1'</if>
 			<if test = " status eq '1' " >status = '0'</if>
 			</set>
 		WHERE product_no = #{productNo}
-	</delete>
+	</update>
 
 
 		<!-- ========== FOOD CATEGORY ========== -->
@@ -116,7 +114,7 @@
 			<if test="searchCondition != null">
 				<where>name like '%'||#{searchKeyword}||'%'</where>
 			</if>
-			ORDER BY product_no ) inner_table	WHERE ROWNUM &lt;= #{endRowNum} )
+			ORDER BY foodcategory_no ) inner_table	WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 	 </select>
 	 
@@ -127,31 +125,25 @@
 					<if test="searchCondition == 0 and searchKeyword !='' ">
 			 			foodCategory_name = #{searchKeyword}
 					</if>
-					<if test="searchCondition == 1 and searchKeyword !='' ">
-			 			name = #{searchKeyword}
-					</if>
-					<if test="searchCondition == 2 and searchKeyword !='' ">
-			 			sub_content = #{searchKeyword}
-					</if>
 				</where>
 			</if> ) countTable				
 	</select>
 
-	<delete id="deleteFoodCategory">
+	<update id="deleteFoodCategory">
 		UPDATE foodCategory
 			<set>
 			<if test = " status eq '0' " >status = '1'</if>
 			<if test = " status eq '1' " >status = '0'</if>
 			</set>
 		WHERE foodCategory_no = #{foodCategoryNo}
-	</delete>
+	</update>
 	
 	
 		<!-- ========== REVIEW ========== -->
 	
 	<resultMap id="reviewSelectMap" type="review">
 		<result property="reviewNo"	column="review_no"	jdbcType="NUMERIC"/>
-		<result property="user.userId"		column="user_id"		jdbcType="VARCHAR"/>
+		<result property="user.userId"	column="user_id"		jdbcType="VARCHAR"/>
 		<result property="title"			column="title"				jdbcType="VARCHAR"/>
 		<result property="content"		column="content"		jdbcType="VARCHAR"/>
 		<result property="rating"			column="rating"			jdbcType="NUMERIC"/>
@@ -161,7 +153,7 @@
 	
 	<insert id="insertReview">
 		INSERT INTO review (product_no, review_no, user_id, title, content, rating, reg_date, status)
-		VALUES (#{productNo}, seq_review_no.NEXTVAL, #{user.userId}, #{title}, #{content}, #{rating}, SYSDATE, '0')
+		VALUES (#{product.productNo}, seq_review_no.NEXTVAL, #{user.userId}, #{title}, #{content}, #{rating}, SYSDATE, '0')
 	</insert>
 	
 	<update id="updateReview">
@@ -188,6 +180,15 @@
 	<select  id="getTotalReviewCount" resultType="int">
 	  	SELECT COUNT(*) FROM (	SELECT review_no , title , rating, reg_date, user_id FROM review ) countTable			
 	</select>
+	
+	<update id="deleteReview">
+		UPDATE review
+			<set>
+			<if test = " status eq '0' " >status = '1'</if>
+			<if test = " status eq '1' " >status = '0'</if>
+			</set>
+		WHERE review_no = #{reviewNo}
+	</update>
 
 
 

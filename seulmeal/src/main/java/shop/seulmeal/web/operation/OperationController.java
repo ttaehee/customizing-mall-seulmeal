@@ -1,19 +1,24 @@
 package shop.seulmeal.web.operation;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.attachments.AttachmentsService;
+import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.operation.OperationService;
@@ -24,6 +29,9 @@ public class OperationController {
 	
 	@Autowired
 	private OperationService operationService;
+	
+	@Autowired
+	private AttachmentsService attachmentsService;
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
@@ -46,13 +54,19 @@ public class OperationController {
 	}
 	
 	@PostMapping("insertOperation")
-	public String insertOperation(Post post, String userId, Model model) {
+	@Transactional
+	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile, Attachments attachments) throws IllegalStateException, IOException {
 		User user = new User();
 		user.setUserId(userId);
 		post.setUser(user);
 		
 		System.out.println("POST 가져온거 :"+post);
 		operationService.insertOperation(post);
+		
+		attachments.setPostNo(Integer.toString(post.getPostNo()));
+		
+		attachmentsService.insertAttachments(uploadfile, attachments);
+		
 		model.addAttribute("post",post);
 		
 		return "redirect:getOperation/"+post.getPostNo();		
@@ -63,6 +77,11 @@ public class OperationController {
 		System.out.println(postNo);
 		
 		Post post = operationService.getOperation(postNo);
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("postNo", post.getPostNo());
+		List<Attachments> list = attachmentsService.getAttachments(map);
+		post.setAttachments(list);
 		
 		model.addAttribute("post",post);
 		
