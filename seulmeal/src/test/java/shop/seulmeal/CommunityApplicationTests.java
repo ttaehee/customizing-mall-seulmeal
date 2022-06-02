@@ -11,8 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Comment;
-import shop.seulmeal.service.domain.Follow;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Report;
@@ -26,6 +26,76 @@ class CommunityApplicationTests {
 	@Autowired
 	CommunityMapper communityMapper;
 
+	@Test
+	void getListPost() {
+		
+		communityMapper.deletePostAll();
+
+		// post1
+		User user01 = new User();
+		user01.setUserId("ghm8614"); // db에 있는 userId 사용
+
+		Post post = new Post();
+		post.setUser(user01);
+		post.setTitle("제목1");
+		post.setContent("내용1");
+		post.setPostStatus("0");
+		communityMapper.insertPost(post);
+		
+		// post2
+		User user02 = new User();
+		user02.setUserId("jeong"); 
+
+		post.setUser(user02);
+		post.setTitle("제목2");
+		post.setContent("내용2");
+		post.setPostStatus("0");
+		communityMapper.insertPost(post);
+		
+		Search search = new Search();
+		search.setCurrentPage(1);// endRowNum, startRowNum 계산 위해 필요
+		search.setPageSize(10);
+		//search.setSearchCondition("3"); : null이면 디폴트 좋아요순 
+		search.setSearchKeyword("용");// 정렬 x, 검색만
+
+		assertThat(communityMapper.getListPost(search).size()).isEqualTo(2);
+	}
+	
+	
+	//@Test:o
+	void getPostTotalCount() {
+		
+		communityMapper.deletePostAll();
+
+		// post1
+		User user01 = new User();
+		user01.setUserId("ghm8614"); // db에 있는 userId 사용
+
+		Post post = new Post();
+		post.setUser(user01);
+		post.setTitle("제목1");
+		post.setContent("내용1");
+		post.setPostStatus("0");
+		communityMapper.insertPost(post);
+		
+		// post2
+		User user02 = new User();
+		user02.setUserId("jeong"); 
+
+		post.setUser(user02);
+		post.setTitle("제목2");
+		post.setContent("내용2");
+		post.setPostStatus("0");
+		communityMapper.insertPost(post);
+		
+		Search search = new Search();
+		assertThat(communityMapper.getPostTotalCount(search)).isEqualTo(2);
+	}
+	
+	
+	
+	
+	/*
 	//@Test : o
 	void getListPost() {
 		
@@ -57,7 +127,10 @@ class CommunityApplicationTests {
 
 		List<Post> list = communityMapper.getListPost();
 		assertThat(list.size()).isEqualTo(1);
-	}
+	}*/
+	
+
+	
 
 	//@Test : o
 	void getPost() {
@@ -109,37 +182,37 @@ class CommunityApplicationTests {
 	}
 
 	//@Test : o
-	void deletePost() {
+//	void deletePost() {
+//
+//		communityMapper.deletePostAll();
+//		assertThat(communityMapper.getListPost().size()).isEqualTo(0);
+//		
+//		//
+//		User user01 = new User();
+//		user01.setUserId("ghm8614");
+//
+//		Post post = new Post();
+//		post.setUser(user01);
+//		post.setTitle("占쎌젫筌륅옙1");
+//		post.setContent("占쎄땀占쎌뒠1");
+//		post.setPostStatus("0");
+//		
+//		communityMapper.insertPost(post);
+//		assertThat(communityMapper.getListPost().size()).isEqualTo(1);
+//		
+//		
+//		communityMapper.deletePost(post.getPostNo());
+//		assertThat(communityMapper.getListPost().size()).isEqualTo(0);
+//	}
 
-		communityMapper.deletePostAll();
-		assertThat(communityMapper.getListPost().size()).isEqualTo(0);
-		
-		//
-		User user01 = new User();
-		user01.setUserId("ghm8614");
-
-		Post post = new Post();
-		post.setUser(user01);
-		post.setTitle("占쎌젫筌륅옙1");
-		post.setContent("占쎄땀占쎌뒠1");
-		post.setPostStatus("0");
-		
-		communityMapper.insertPost(post);
-		assertThat(communityMapper.getListPost().size()).isEqualTo(1);
-		
-		
-		communityMapper.deletePost(post.getPostNo());
-		assertThat(communityMapper.getListPost().size()).isEqualTo(0);
-	}
-
-	//@Test : o 
-	void deletePostAll() {
-
-		communityMapper.deletePostAll();
-		assertThat(communityMapper.getListPost().size()).isEqualTo(0);
-
-	}
-	
+//	//@Test : o 
+//	void deletePostAll() {
+//
+//		communityMapper.deletePostAll();
+//		assertThat(communityMapper.getListPost().size()).isEqualTo(0);
+//
+//	}
+//	
 	
 	// CommentTest
 	//@Test : o
@@ -355,26 +428,25 @@ class CommunityApplicationTests {
 		// ==== 준비 ====
 		communityMapper.deleteFollowAll();
 		
-		Follow follow01 = new Follow();
-		follow01.setUserId("ghm8614");
+		//Follow follow01 = new Follow();
+		//follow01.setUserId("ghm8614");
 		
-		Follow follow02 = new Follow();
-		follow02.setUserId("ghm8614");
+		//Follow follow02 = new Follow();
+		//follow02.setUserId("ghm8614");
 
 		// ==== 검증 ====
 		//팔로우
-		assertThat(communityMapper.insertFollow(follow01)).isEqualTo(1);
-		assertThat(communityMapper.insertFollow(follow02)).isEqualTo(1);
-		
-		//팔로우/팔로워 목록조회
-		assertThat(communityMapper.getListFollow("ghm8614").size()).isEqualTo(2);
-		assertThat(communityMapper.getListFollower("minhye").size()).isEqualTo(1);
-		
-		//팔로우 삭제
-		assertThat(communityMapper.deleteFollow(follow01)).isEqualTo(1);
+//		assertThat(communityMapper.insertFollow(follow01)).isEqualTo(1);
+//		assertThat(communityMapper.insertFollow(follow02)).isEqualTo(1);
+//		
+//		//팔로우/팔로워 목록조회
+//		assertThat(communityMapper.getListFollow("ghm8614").size()).isEqualTo(2);
+//		assertThat(communityMapper.getListFollower("minhye").size()).isEqualTo(1);
+//		
+//		//팔로우 삭제
+//		assertThat(communityMapper.deleteFollow(follow01)).isEqualTo(1);
 	}	
-	
-	
+
 	void contextLoads() {
 	}
 

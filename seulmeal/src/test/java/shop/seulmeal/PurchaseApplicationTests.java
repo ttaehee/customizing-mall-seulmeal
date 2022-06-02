@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Purchase;
@@ -37,7 +38,26 @@ class PurchaseApplicationTests {
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
-	@Test
+	//@Test
+	void insertCustomParts() {
+		CustomParts customParts=new CustomParts();
+
+		Product product=new Product();
+		product.setProductNo(1);
+		
+		//customParts.setUser(user);
+		//customParts.setProduct(product);
+		//customParts.setCount(2);
+		//customParts.setCartStatus("1");
+		//customParts.setStatus("0");
+			
+		//int result=purchaseMapper.insertCustomParts(customParts);
+		//System.out.println("결과 : "+result);
+		
+		//assertEquals(customProduct.getCount(), 2);
+	}
+	
+	//@Test
 	void insertCustomProduct() {
 		CustomProduct customProduct=new CustomProduct();
 		User user=new User();
@@ -46,13 +66,29 @@ class PurchaseApplicationTests {
 		product.setProductNo(1);
 		
 		customProduct.setUser(user);
-		
-		customProduct.setCount(2);
+		customProduct.setProduct(product);
+		customProduct.setCount(5);
 		customProduct.setCartStatus("1");
 		customProduct.setStatus("0");
 			
 		int result=purchaseMapper.insertCustomProduct(customProduct);
 		System.out.println("결과 : "+result);
+		
+		assertEquals(customProduct.getCount(), 2);
+	}
+	
+	//@Test
+	void updateCustomProduct() {
+		CustomProduct customProduct=new CustomProduct();
+		Purchase purchase=new Purchase();
+		purchase.setPurchaseNo(2);
+		
+		customProduct.setCustomProductNo(1);
+		customProduct.setPurchase(purchase);
+		
+		purchaseMapper.updateCustomProduct(customProduct);
+		customProduct=purchaseMapper.getCustomProduct(1);
+		System.out.println("결과 : "+customProduct);
 		
 		assertEquals(customProduct.getCount(), 2);
 	}
