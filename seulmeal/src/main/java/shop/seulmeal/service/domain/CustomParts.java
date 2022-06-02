@@ -11,4 +11,6 @@ public class CustomParts {
 	private int customPartsNo;
 	private Parts parts;
 	private int gram;
+	private int productPartsNo; //제외재료 
+	private int customProductNo;
 }

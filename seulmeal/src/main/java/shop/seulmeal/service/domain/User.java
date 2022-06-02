@@ -40,9 +40,9 @@ public class User {
 	private String foodCategoryName2;
 	private String foodCategoryName3;
 	private List<Parts> parts;
-	//private List<Follow> follow;
+	//private List<> follow;
 	private List<Relation> relation;
-	//private List<Wish> wish;
+	private List<Like> wish;
 	
 	
 }
