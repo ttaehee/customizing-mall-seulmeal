@@ -1,8 +1,5 @@
 package shop.seulmeal.service.domain;
 
-import java.sql.Date;
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,5 +10,9 @@ import lombok.ToString;
 public class Like {
 	 
 	private int likeNo;
+	private String userId; 
+	private Integer postNo;
+	private Integer commentNo;
+	private Integer productNo;
 	
 }

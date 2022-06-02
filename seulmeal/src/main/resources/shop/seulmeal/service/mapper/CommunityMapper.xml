@@ -5,8 +5,11 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="shop.seulmeal.service.mapper.CommunityMapper">
-	
-	<resultMap type="shop.seulmeal.service.domain.Post" id="postSelectMap">
+
+
+	<!-- 1. Post -->
+	<resultMap type="shop.seulmeal.service.domain.Post"
+		id="postSelectMap">
 		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
 		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="NUMERIC" />
@@ -26,85 +29,453 @@
 		<result property="status" column="status" jdbcType="CHAR" />
 	</resultMap>
 
-
 	<insert id="insertPost" parameterType="Post">
-		INSERT INTO post(post_no, user_id, title, content, reg_date, post_status) 
-		VALUES(seq_post_no.nextval, #{user.userId}, #{title}, #{content}, SYSDATE, '0')
+		INSERT INTO 
+			post(
+				post_no, 
+				user_id, 
+				title, 
+				content, 
+				reg_date,
+				post_status)
+		VALUES(
+			seq_post_no.nextval, 
+			#{user.userId}, 
+			#{title}, 
+			#{content}, 
+			SYSDATE, 
+			'0')
+		<selectKey keyProperty="postNo" resultType="int"
+			order="AFTER">
+			SELECT seq_post_no.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
-	
+
 	<select id="getPost" parameterType="int" resultMap="postSelectMap">
-		SELECT * FROM post 
-		WHERE post_no = #{postNo}
-		AND post_status = '0'
-		AND status = '0'
+		SELECT * FROM post
+		<where>
+			post_no = #{postNo}
+			AND post_status = '0'
+			AND status = '0'
+		</where>
 	</select>
-	
+
+	<!--  X , 페이징 처리, 검색조건 -->
+	<!--  전체 게시글 목록 -->
 	<select id="getListPost" resultMap="postSelectMap">
-		SELECT * FROM post 
-		WHERE post_status = '0' 
-		AND status = '0'
+		SELECT * FROM post
+		<where>
+			post_status = '0'
+			AND status = '0'
+		</where>
 	</select>
 	
+	<!-- X -->
+	<!--  내 게시글 목록-->
+	<select id="getListMyPost" parameterType="String" resultMap="postSelectMap">
+		SELECT * FROM post
+		<where>
+			post_status = '0'
+			AND status = '0'
+			AND user_id = #{userId}
+		</where>
+	</select>
+
 	<update id="updatePost" parameterType="Post">
 		UPDATE post
-		SET title = #{title}, content = #{content}, update_date = SYSDATE
-		WHERE post_no = #{postNo}
-		AND post_status = '0'
-		AND status = '0'
-		
+		<set> 
+			title = #{title}, content = #{content}, update_date = SYSDATE
+		</set>
+		<where>
+			post_no = #{postNo}
+			AND post_status = '0'
+			AND status = '0'
+		</where>
 	</update>
-	
-	<!-- delete -->
+
 	<update id="deletePost" parameterType="int">
 		UPDATE post
-		SET status = '1'
-		WHERE post_no = #{postNo}
-		AND post_status = '0'
-		AND status = '0'
+		<set> 
+			status = '1'
+		</set>
+		<where>
+			post_no = #{postNo}
+			AND post_status = '0'
+			AND status = '0'
+		</where>
 	</update>
-	
-	<!-- deleteAll -->
+
 	<update id="deletePostAll">
 		UPDATE post
-		SET status = '1'
-		WHERE post_status = '0'
-		AND status = '0'
+		<set>
+			status = '1'
+		</set>
+		<where>
+			post_status = '0'
+			AND status = '0'
+		</where>
+	</update>
+
+
+
+
+	<!-- 2. Comment -->
+	<resultMap type="shop.seulmeal.service.domain.Comment" id="commentSelectMap">
+		<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
+		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.nickName" column="nickname" jdbcType="VARCHAR" />
+		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
+		<result property="content" column="content" jdbcType="VARCHAR" />
+		<result property="layer" column="layer" jdbcType="CHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
+		<result property="updateDate" column="update_date" jdbcType="DATE" />
+		<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
+		<result property="parentCommentNo" column="parent_comment_no" jdbcType="INTEGER" />
+		<result property="status" column="status" jdbcType="CHAR" />
+	</resultMap>
+	
+	
+	<insert id="insertComment" parameterType="Comment">
+		INSERT INTO 
+			comments(comment_no, user_id, nickname, post_no, content, layer, reg_date, parent_comment_no, status)
+		VALUES (seq_comment_no.nextval, 
+			#{user.userId},
+			#{user.nickName}, 
+			#{postNo}, 
+			#{content}, 
+			#{layer}, 
+			SYSDATE, 
+			#{parentCommentNo:INTEGER}, 
+			#{status})
+			<selectKey keyProperty="commentNo" resultType="int" order="AFTER">
+			SELECT seq_comment_no.CURRVAL FROM DUAL
+			</selectKey>
+	</insert>
+
+	<select id="getListComment" parameterType="int" resultMap="commentSelectMap">
+		SELECT 
+			comment_no, user_id, nickname, content, layer, reg_date, 
+			update_date, like_count, parent_comment_no, status
+		FROM comments
+		<where>
+			post_no = #{postNo}
+			AND status = '0'
+		</where>
+	</select>
+
+	<update id="updateComment" parameterType="Comment">
+		UPDATE 
+			comments 
+		<set> 
+			content = #{content},
+			update_date = SYSDATE
+		</set>
+		<where>
+			comment_no = #{commentNo}
+			AND status = '0'
+		</where>
+	</update>
+
+	<update id="deleteComment" parameterType="int">
+		UPDATE 
+			comments 
+		<set>
+			status = '1'
+		</set>
+		<where> 
+			comment_no = #{commentNo}
+			AND status = '0'
+		</where>
+	</update>
+
+	<!-- X -->
+	<select id="getCommentTotalCount" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM comments
+		<where>
+			post_no = #{postNo}
+			AND status = '0'
+		</where>
+	</select>
+
+
+	<!-- 3. Report -->
+	<resultMap type="shop.seulmeal.service.domain.Report" id="reportSelectMap">
+		<result property="reportNo" column="report_no" jdbcType="NUMERIC" />
+		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
+		<result property="reporterId" column="reporter_id" jdbcType="VARCHAR" />
+		<result property="reason" column="reason" jdbcType="VARCHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
+		<result property="status" column="status" jdbcType="CHAR" />
+	</resultMap>	
+	
+	<insert id="insertReportPost" parameterType="Report">
+		INSERT INTO 
+            report(
+                report_no, 
+                post_no, 
+                reporter_id, 
+                reason,
+                reg_date,
+                status        
+            )
+        VALUES(
+            seq_report_no.nextval,
+            #{postNo},
+            #{reporterId},
+            #{reason},
+            SYSDATE,
+            '0')
+	</insert>
+	
+	<update id="deleteReportPost" parameterType="int">
+		UPDATE 
+            report
+        SET 
+            status = '1'
+        WHERE status = '0'
+        AND post_no = #{postNo}
+	</update>
+
+	<!--  X , 페이징 처리 -->
+	<select id="getListReportPost" resultMap="reportSelectMap">
+		SELECT 
+            report_no, 
+            post_no, 
+            reporter_id, 
+            reason,
+            reg_date,
+            status
+        FROM 
+            report
+        <where>
+        	status = '0'
+        </where>
+        ORDER BY reg_date DESC
+	</select>
+	
+	<delete id="deleteReportPostAll">
+		DELETE FROM report
+	</delete>
+
+
+
+	<!-- 4. Like -->
+	
+	<!-- 좋아요 체크 X-->
+	<update id="checkLike" parameterType="Like">
+
+	</update>
+
+	<!-- 좋아요 -->
+	<insert id="insertLike" parameterType="Like">
+		INSERT INTO
+			likes(like_no, user_id, post_no, comment_no, product_no)
+		VALUES
+			(seq_like_no.nextval, #{userId}, #{postNo:INTEGER}, #{commentNo:INTEGER}, #{productNo:INTEGER})
+	</insert>
+	
+	<!-- 게시글 좋아요 +1 -->
+	<update id="postLikeCountUp" parameterType="int">
+		UPDATE post
+		<set>
+			like_count = like_count + 1
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
 	</update>
 	
 	
 	
+	<!-- 좋아요 취소 -->
+	<delete id="deleteLike" parameterType="Like">
+		DELETE FROM 
+			likes
+		<where> 
+			user_id = #{userId}
+			AND post_no = #{postNo}
+		</where> 
+	</delete>
 	
-	<!-- Comment -->
-	<insert id="insertComment" parameterType="Comment"></insert>
+	<!-- 게시글 좋아요 -1 -->
+	<update id="postLikeCountDown" parameterType="int">
+		UPDATE post
+		<set>
+			like_count = like_count - 1
+		</set>	
+		<where>
+			post_no = #{postNo}
+		</where> 
+	</update>
+
+	<!-- 게시글 좋아요 수 조회 -->
+	<select id="getPostLikeCount" parameterType="int" resultType="int">
+		SELECT like_count
+		FROM post
+		<where>
+			post_no = #{postNo}
+			AND post_status = '0'
+			AND status = '0'			
+		</where>
+	</select>
+
+
+
+
+	<!-- 5. Follow -->
+	<resultMap type="shop.seulmeal.service.domain.Follow" id="followSelectMap">
+		<result property="followNo" column="relation_no" jdbcType="NUMERIC" />
+		<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="followingUserId" column="relation_user_id" jdbcType="VARCHAR" />
+	</resultMap>
 	
-	<select id="getListComment"></select>
+	<insert id="insertFollow" parameterType="Follow">
+		INSERT INTO 
+			relation(
+				relation_no, 
+				user_id, 
+				relation_user_id, 
+				reg_date, 
+				relation_status)
+		VALUES(
+			seq_relation_no.nextval, 
+			#{userId}, 
+			#{followingUserId}, 
+			SYSDATE, 
+			'0')
+	</insert>
+
+	<!--  X , 페이징 처리 -->
+	<select id="getListFollow" parameterType="String" resultMap="followSelectMap">
+		SELECT 
+			relation_user_id 
+		FROM 
+			relation
+		<where>
+			relation_status = '0'
+			AND user_id = #{userId}
+		</where>
+		
+	</select>
 	
-	<update id="updateComment" parameterType="Comment"></update>
-	
-	<!-- delete  -->
-	<update id="deleteComment" parameterType="int"></update>
-	
-	
-	<!-- Like -->
-	<insert id="insertLike"></insert>
-	
-	<delete id="deleteLike"></delete>
-	
-	
-	
-	<!-- Follow -->
-	<insert id="insertFollow"></insert>
-	
-	<select id="getListFollow"></select>
-	
-	
-	
-	
-	<delete id="getTotalCount"></delete>
+	<!--  X , 페이징 처리 -->
+	<select id="getListFollower" parameterType="String" resultMap="followSelectMap">
+		SELECT 
+			user_id 
+		FROM 
+			relation
+		<where>
+			relation_status = '0'
+			AND relation_user_id= #{followingUserId}
+		</where>
+	</select>
 	
 
+	<delete id="deleteFollow" parameterType="Follow">
+		DELETE FROM 
+			relation
+		<where>
+			relation_status = '0'
+			AND user_id = #{userId} 
+			AND relation_user_id = #{followingUserId}
+		</where>
+	</delete>
+
+	<update id="updateRelation" parameterType="Follow">
+		UPDATE 
+            relation
+        <set> 
+        	relation_status = '1'
+        </set>
+        <where>
+			ralation_status = '0'
+	        AND user_id = #{userId}
+	        AND relation_user_id = #{followingUserId}
+        </where>
+	</update>
+	
+	<delete id="deleteFollowAll">
+		DELETE FROM relation
+		<where>
+			relation_status = '0'
+		</where>
+	</delete>
+
+
+	<!-- 6. Block -->
+	<resultMap type="shop.seulmeal.service.domain.Block" id="blockSelectMap">
+		<result property="blockNo" column="relation_no" jdbcType="NUMERIC" />
+		<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="blockedUserId" column="relation_user_id" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="insertBlock" parameterType="Block">
+		INSERT INTO relation(relation_no, user_id, relation_user_id, reg_date, relation_status)
+		VALUES(seq_relation_no.nextval, #{userId}, #{blockedUserId}, SYSDATE, '1')
+	</insert>
 	
 	
-	
-	
+	<!--  X , 페이징 처리 -->
+	<select id="getListBlock" parameterType="String" resultMap="blockSelectMap">
+		SELECT 
+			relation_user_id 
+		FROM 
+			relation
+		<where>
+			relation_status = '1'
+			AND user_id = #{userId}
+		</where>
+	</select>
+
+	<delete id="deleteBlock" parameterType="Block">
+		DELETE FROM 
+			relation
+		<where>
+			relation_status = '1'
+			AND user_id = #{userId} 
+			AND relation_user_id = #{blockedUserId}
+		</where>
+	</delete>
+
+	<delete id="deleteBlockAll" >
+		DELETE FROM 
+			relation
+		<where>
+			relation_status = '1'
+		</where>
+	</delete>
+
+
+
+	<!-- list -->
+	<select id="getListCommunity" resultType="Post" parameterType="map">
+		SELECT *
+		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
+				FROM	(SELECT * FROM post
+							<where>
+								post_status = #{postStatus}
+								AND status = '0'
+							</where>							
+							ORDER BY reg_date )inner_table
+				WHERE ROWNUM &lt;= #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	</select>
+
+
+	<!-- ROW Count -->
+	<select id="getTotalCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+	  	FROM(	SELECT * FROM post
+	  	<where>
+	  		post_status = #{postStatus}
+	  		AND status = '0'
+	  	</where> ) countTable
+	</select>
+
+
+
+
+
+
 </mapper>

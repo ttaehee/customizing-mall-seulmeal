@@ -32,17 +32,17 @@ public interface UserMapper {
 	
 	public int updateUserGrade(int no) throws Exception;
 	
-	public int updateUserTotalCount(int no) throws Exception;
+	public int updateUserTotalPoint(int no) throws Exception;
 	
 	public int insertBlackList(BlackList blackList) throws Exception;
 	
 	public int updateBlackList(BlackList blackList) throws Exception;
 	
-	public List<BlackList> getListBlackList(Search search) throws Exception;
+	//public List<BlackList> getListBlackList(Search search) throws Exception;
 	
 	public int insertPoint(Point point) throws Exception;
 	
-	public Point getPoint(Point point) throws Exception;
+	//public Point getPoint(Point point) throws Exception;
 	
 	public List<Point> getListPoint(Search search) throws Exception;
 	

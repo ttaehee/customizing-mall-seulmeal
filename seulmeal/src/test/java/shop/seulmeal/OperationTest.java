@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import shop.seulmeal.common.Page;
@@ -39,6 +40,9 @@ class OperationTest {
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
+	@Value("${java.file.test}")
+	String envValue;
+	
 	@Test
 	void contextLoads() throws Exception {
 		User user = new User();
@@ -46,8 +50,8 @@ class OperationTest {
 		
 		Post post = new Post();
 		post.setUser(user);
-		post.setTitle("°øÁö»çÇ×");
-		post.setContent("°øÁö»çÇ× ³»¿ë");
+		post.setTitle("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		post.setContent("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 		post.setPostStatus("1");
 		
 		// C
@@ -57,7 +61,7 @@ class OperationTest {
 		//post = operationMapper.getOperation(21);
 		
 		// U
-		post.setContent("¼öÁ¤µÈ °øÁö»çÇ×");
+		post.setContent("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		post.setPostNo(21);
 		//operationMapper.updateOperation(post);
 		
@@ -79,9 +83,9 @@ class OperationTest {
 		int rs = operationMapper.getTotalCount(map);
 		
 		for (Post post2 : list) {
-			System.out.println("°øÁö : "+post2);
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ : "+post2);
 		}
-		System.out.println("ÃÑ°ª : "+rs);
+		System.out.println("ï¿½Ñ°ï¿½ : "+rs);
 		
 		*/
 		
@@ -98,11 +102,11 @@ class OperationTest {
 		a4.setPostNo("21");
 		a5.setPostNo("21");
 		
-		a1.setAttachmentName("testÁß");
-		a2.setAttachmentName("testÁß");
-		a3.setAttachmentName("testÁß");
-		a4.setAttachmentName("testÁß");
-		a5.setAttachmentName("testÁß");
+		a1.setAttachmentName("testï¿½ï¿½");
+		a2.setAttachmentName("testï¿½ï¿½");
+		a3.setAttachmentName("testï¿½ï¿½");
+		a4.setAttachmentName("testï¿½ï¿½");
+		a5.setAttachmentName("testï¿½ï¿½");
 		
 		List<Attachments> list = new ArrayList<>();
 		list.add(a1);
@@ -112,16 +116,16 @@ class OperationTest {
 		list.add(a5);
 		attachmentsMapper.insertListAttachments(list);
 		*/
-		
+		/*
 		Parts parts = new Parts();
-		parts.setName("±èÄ¡3");
+		parts.setName("ï¿½ï¿½Ä¡3");
 		parts.setCalorie(170);
 		parts.setPrice(1000);
 		
 		//productMapper.insertParts(parts);
 		
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("name", "±èÄ¡2");
+		map.put("name", "ï¿½ï¿½Ä¡2");
 		
 		parts = productMapper.getParts(map);
 		
@@ -140,16 +144,32 @@ class OperationTest {
 		list = productMapper.getProductParts(1);
 		
 		for (Parts parts2 : list) {
-			System.out.println("1¹ø¿¡ µé¾î°£ Àç·á : "+parts2);
+			System.out.println("ìž¬ë£Œ : "+parts2);
 		}
+		*/
 		/*
 		Comment cm = new Comment();
 		cm.setUser(user);
 		cm.setPostNo(10);
-		cm.setContent("¹®ÀÇ ´äº¯ÀÔ´Ï´Ù.");
+		cm.setContent("ï¿½ï¿½ï¿½ï¿½ ï¿½äº¯ï¿½Ô´Ï´ï¿½.");
 		int r =operationMapper.insertAnswer(cm);
 		System.out.println(r == 1);
 		*/
+		
+		//String rootPath = System.getProperty("user.dir");
+		//System.out.println(rootPath);
+		
+		Post post1 = new Post();
+		List<Post> list = new ArrayList<Post>();
+		for(int j=0; j<3; j++) {
+			post1.setPostNo(j);
+			list.add(j,post1);
+		}
+		for (Post post2 : list) {
+			System.out.println(post2.getPostNo());
+		}
+		
+		System.out.println(envValue);
 	}
 
 }

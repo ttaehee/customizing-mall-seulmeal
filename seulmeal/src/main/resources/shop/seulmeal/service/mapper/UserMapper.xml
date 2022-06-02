@@ -39,6 +39,98 @@
 			update users set user_status = 1 where user_id = #{userId}	
 		</delete>
 		
+		<select id= "getListUser">
+			SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT user_id , user_name, blacklist_status
+											FROM users
+											<if test="searchCondition != null">
+												<where>
+													<if test="searchCondition == 0 and searchKeyword !='' ">
+										 				user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' ORDER by user_name
+													</if>
+													<if test="searchCondition == 1 and searchKeyword !='' ">
+										 				blacklist_status = '1'
+													</if>
+												</where>
+											</if>
+											ORDER BY user_id ) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+		</select>
+		
+		<select id="checkDuplicationUserId">
+			select user_id from users = #{userId}
+		</select>
+		
+		<select id="checkDuplicationNickName">
+			select nickname from users = #{nickName}
+		</select>
+		
+		<select id="getListUserTotalCount">
+		</select>
+		
+		<update id="updateUserGrade">
+			UPDATE users
+				SET grade = 
+				CASE
+				WHEN purchase_count BETWEEN 0 AND 2 THEN '0'
+				WHEN purchase_count BETWEEN 3 AND 4 THEN '1'
+				WHEN purchase_count BETWEEN 5 AND 9 THEN '2'
+				ELSE '3'
+				END;
+		</update>
+		
+		<update id="updateUserTotalPoint">
+			UPDATE users SET total_point = total_point + #{value} WHERE user_id =#{userId};
+		</update>
+		
+		<insert id="insertBlackList">
+			INSERT 
+				WHEN block_count = 50 THEN
+				INTO relation VALUES(seq_relation_no.NEXTVAL, user_id, null, SYSDATE, '2') SELECT user_id, block_count FROM users;
+		</insert>
+		
+		<update id="updateBlackList">
+			update relation SET relation_status = '3' 
+				WHERE relation_status = '2' 
+				AND SYSDATE >= reg_date+90;	
+		</update>
+		
+		<insert id="insertPoint">
+			insert into point (point_no, user_id, purchase_no, point_status, point, reg_date) 
+				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{amount}, SYSDATE);
+		</insert>
+		
+		<select id="getListPoint">
+					SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT point_no, user_id, purchase_no, point_status, point, reg_date
+											FROM point
+											<if test="searchCondition != null">
+												<where>
+													<if test="searchCondition == 0 and searchKeyword !='' ">
+										 				point_status = '0'
+													</if>
+													<if test="searchCondition == 1 and searchKeyword !='' ">
+										 				point_status = '1'
+													</if>
+													<if test="searchCondition == 2 and searchKeyword !='' ">
+										 				point_status = '2'
+													</if>
+												</where>
+											</if>
+											ORDER BY user_id ) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+		</select>
+		
+		<select id="">
+		
+		</select>
+		
+		
+		
 		
 	
 	</mapper>     
