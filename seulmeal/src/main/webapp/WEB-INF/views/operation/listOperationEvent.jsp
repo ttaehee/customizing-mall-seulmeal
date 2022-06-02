@@ -11,6 +11,7 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<a href="/operation/insertOperation/2">이벤트 등록</a>
+	<a href="/operation/getListOperation/2/0"></a>
 	<div>${list }</div>
 	<div>${page }</div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>

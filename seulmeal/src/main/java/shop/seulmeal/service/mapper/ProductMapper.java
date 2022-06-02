@@ -21,7 +21,7 @@ public interface ProductMapper {
 	public void deleteProduct(int productNo) throws Exception;
 	
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
-	public List<Foodcategory> listFoodCategory(Search search) throws Exception;
+	public List<Foodcategory> getListFoodCategory() throws Exception;
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 	
 	public void insertReview(Review review) throws Exception;
@@ -30,17 +30,20 @@ public interface ProductMapper {
 	public List<Review> listReview(Search search) throws Exception;
 	public void deleteReview(int reviewNo) throws Exception;
 	
-	public int insertParts(Parts parts);
-	public Parts getParts(Map<String,Object> map);
-	public int updateParts(Parts parts);
-	public int deleteParts(int no);
-	public List<Parts> getListParts(Map<String,Object> map);
+	public int insertParts(Parts parts)throws Exception;
+	public Parts getParts(Map<String,Object> map)throws Exception;
+	public int updateParts(Parts parts)throws Exception;
+	public int deleteParts(int no)throws Exception;
+	public List<Parts> getListParts(Map<String,Object> map)throws Exception;
 	
 	// productParts
-	public int insertProudctParts(List<Parts> list);
-	public List<Parts> getProductParts(int productNo);
-	public int deleteProductParts(Parts parts);
+	public int insertProudctParts(List<Parts> list)throws Exception;
+	public List<Parts> getProductParts(int productNo)throws Exception;
+	public int deleteProductParts(int productPartsNo)throws Exception;
 	
 	// totalCount
-	public int getTotalCount(Map<String,Object> map);
+	public int getTotalProductCount(Search search) throws Exception;
+	public int getTotalFoodCategoryCount(Search search)throws Exception;
+	public int getTotalReviewCount(Search search)throws Exception;
+	public int getTotalPartsCount(Map<String, Object> map)throws Exception;
 }
