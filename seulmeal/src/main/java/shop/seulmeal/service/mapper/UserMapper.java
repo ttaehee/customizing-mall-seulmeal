@@ -31,7 +31,11 @@ public interface UserMapper {
 	
 	public int checkDuplicationNickName(String nickName) throws Exception;
 		
-	public int getListUserTotalCount(int no) throws Exception;
+	public int checkDuplicationPhone(String phone) throws Exception;
+	
+	public int checkDuplicationEmail(String email) throws Exception;
+	
+	public int getListUserTotalCount(Search search) throws Exception;
 	
 	public int updateUserGrade(int no) throws Exception;
 	
