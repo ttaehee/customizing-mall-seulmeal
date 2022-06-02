@@ -2,7 +2,11 @@ package shop.seulmeal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +48,7 @@ class CommunityApplicationTests {
 		
 		// post2
 		User user02 = new User();
-		user02.setUserId("jeong"); 
+		user02.setUserId("ghm8614"); 
 
 		post.setUser(user02);
 		post.setTitle("제목2");
@@ -58,7 +62,12 @@ class CommunityApplicationTests {
 		//search.setSearchCondition("3"); : null이면 디폴트 좋아요순 
 		search.setSearchKeyword("용");// 정렬 x, 검색만
 
-		assertThat(communityMapper.getListPost(search).size()).isEqualTo(2);
+		Map<String,Object> map = new HashMap<String, Object>();
+		 
+		map.put("search", search);
+		map.put("userId", "ghm8614");
+		
+		assertThat(communityMapper.getListPost(map).size()).isEqualTo(2);
 	}
 	
 	
