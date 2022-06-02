@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Foodcategory {
-	private int foodcategoryno;
+	private int foodCategoryNo;
 	private String name;
 	private String status;
 }

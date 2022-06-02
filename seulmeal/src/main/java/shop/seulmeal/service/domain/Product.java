@@ -15,7 +15,7 @@ public class Product {
 	private Foodcategory foodCategory;
 	private String name;
 	private String subContent;
-	private String thumnail;
+	private String thumbnail;
 	private int price;
 	private int calorie;
 	private String content;
