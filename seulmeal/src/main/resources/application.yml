@@ -11,6 +11,7 @@ spring:
       location: ./src/main/resources/attachments/
   datasource:
     url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247
+    #url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=C:/Users/bitcamp/git/seulmeal/seulmeal/oracleWallet/Wallet_DB202204092247
     username: admin
     password: Vywjdans!234
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

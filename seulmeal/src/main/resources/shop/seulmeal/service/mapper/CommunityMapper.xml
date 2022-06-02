@@ -28,6 +28,8 @@
 		<result property="answerStatus" column="answer_status" jdbcType="CHAR" />
 		<result property="status" column="status" jdbcType="CHAR" />
 	</resultMap>
+	
+	
 
 	<insert id="insertPost" parameterType="Post">
 		INSERT INTO 
@@ -60,15 +62,53 @@
 		</where>
 	</select>
 
-	<!--  X , 페이징 처리, 검색조건 -->
 	<!--  전체 게시글 목록 -->
-	<select id="getListPost" resultMap="postSelectMap">
-		SELECT * FROM post
-		<where>
-			post_status = '0'
-			AND status = '0'
-		</where>
+	<!--  '1' : 조회순, '2' : 베스트순, '3': 최신순-->
+	<select id="getListPost" parameterType="shop.seulmeal.common.Search" resultMap="postSelectMap">
+		SELECT *
+		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
+				FROM	(SELECT * FROM post	  
+						  	<where>
+						  		post_status = '0'
+						  		AND status = '0'
+						  		<if test="searchKeyword != null">
+						  			AND (title LIKE ('%'||#{searchKeyword}||'%') OR content LIKE ('%'||#{searchKeyword}||'%'))
+						  		</if>	
+						  	</where>
+						 			
+							ORDER BY
+							<if test="searchCondition != null">
+								<choose>
+									<when test="searchCondition == 1">views</when>
+									<when test="searchCondition == 2">like_count</when>
+									<when test="searchCondition == 3">reg_date</when>
+								</choose>
+							</if>
+							<if test="searchCondition == null">
+								like_count
+							</if>
+							 )inner_table
+				WHERE ROWNUM &lt;= #{endRowNum})
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
+	
+	<!-- ROW Count -->
+	<select id="getPostTotalCount" parameterType="shop.seulmeal.common.Search" resultType="int">
+		SELECT COUNT(*)
+	  	FROM(	SELECT * FROM post	  
+	  	<where>
+	  		post_status = '0'
+	  		AND status = '0'
+	  		<if test="searchKeyword != null ">
+	  			AND (title like ('%'||#{searchKeyword}||'%') OR content like ('%'||#{searchKeyword}||'%'))	
+	  		</if>
+	  	</where> ) countTable
+	</select>
+	
+
+
+
+	
 	
 	<!-- X -->
 	<!--  내 게시글 목록-->
@@ -152,17 +192,6 @@
 			</selectKey>
 	</insert>
 
-	<select id="getListComment" parameterType="int" resultMap="commentSelectMap">
-		SELECT 
-			comment_no, user_id, nickname, content, layer, reg_date, 
-			update_date, like_count, parent_comment_no, status
-		FROM comments
-		<where>
-			post_no = #{postNo}
-			AND status = '0'
-		</where>
-	</select>
-
 	<update id="updateComment" parameterType="Comment">
 		UPDATE 
 			comments 
@@ -188,7 +217,18 @@
 		</where>
 	</update>
 
-	<!-- X -->
+
+	<select id="getListComment" parameterType="int" resultMap="commentSelectMap">
+		SELECT 
+			comment_no, user_id, nickname, content, layer, reg_date, 
+			update_date, like_count, parent_comment_no, status
+		FROM comments
+		<where>
+			post_no = #{postNo}
+			AND status = '0'
+		</where>
+	</select>
+
 	<select id="getCommentTotalCount" parameterType="int" resultType="int">
 		SELECT COUNT(*)
 		FROM comments
@@ -324,13 +364,9 @@
 
 
 	<!-- 5. Follow -->
-	<resultMap type="shop.seulmeal.service.domain.Follow" id="followSelectMap">
-		<result property="followNo" column="relation_no" jdbcType="NUMERIC" />
-		<result property="userId" column="user_id" jdbcType="VARCHAR" />
-		<result property="followingUserId" column="relation_user_id" jdbcType="VARCHAR" />
-	</resultMap>
 	
-	<insert id="insertFollow" parameterType="Follow">
+	
+	<insert id="insertFollow">
 		INSERT INTO 
 			relation(
 				relation_no, 
@@ -347,7 +383,7 @@
 	</insert>
 
 	<!--  X , 페이징 처리 -->
-	<select id="getListFollow" parameterType="String" resultMap="followSelectMap">
+	<select id="getListFollow">
 		SELECT 
 			relation_user_id 
 		FROM 
@@ -360,7 +396,7 @@
 	</select>
 	
 	<!--  X , 페이징 처리 -->
-	<select id="getListFollower" parameterType="String" resultMap="followSelectMap">
+	<select id="getListFollower">
 		SELECT 
 			user_id 
 		FROM 
@@ -372,7 +408,7 @@
 	</select>
 	
 
-	<delete id="deleteFollow" parameterType="Follow">
+	<delete id="deleteFollow">
 		DELETE FROM 
 			relation
 		<where>
@@ -382,7 +418,7 @@
 		</where>
 	</delete>
 
-	<update id="updateRelation" parameterType="Follow">
+	<update id="updateRelation">
 		UPDATE 
             relation
         <set> 
@@ -404,37 +440,65 @@
 
 
 	<!-- 6. Block -->
-	<resultMap type="shop.seulmeal.service.domain.Block" id="blockSelectMap">
-		<result property="blockNo" column="relation_no" jdbcType="NUMERIC" />
-		<result property="userId" column="user_id" jdbcType="VARCHAR" />
-		<result property="blockedUserId" column="relation_user_id" jdbcType="VARCHAR" />
+	<resultMap type="Relation" id="relationSelectMap">
+		<result property="relationNo" column="relation_no" jdbcType="NUMERIC" />
+		<result property="relationUser.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="relationUser.nickName" column="nickname" jdbcType="VARCHAR" />
+		<result property="relationUser.profileImage" column="profile_image" jdbcType="VARCHAR" />
+		<result property="relationUser.profileMessage" column="profile_message" jdbcType="VARCHAR" />
+		<result property="relationStatus" column="relation_status" jdbcType="VARCHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
 	</resultMap>
 	
-	<insert id="insertBlock" parameterType="Block">
+	<insert id="insertBlock">
 		INSERT INTO relation(relation_no, user_id, relation_user_id, reg_date, relation_status)
-		VALUES(seq_relation_no.nextval, #{userId}, #{blockedUserId}, SYSDATE, '1')
+		VALUES(seq_relation_no.nextval, #{userId}, #{relationUser.userId}, SYSDATE, '1')
 	</insert>
 	
 	
-	<!--  X , 페이징 처리 -->
-	<select id="getListBlock" parameterType="String" resultMap="blockSelectMap">
-		SELECT 
-			relation_user_id 
-		FROM 
-			relation
-		<where>
-			relation_status = '1'
-			AND user_id = #{userId}
-		</where>
+	<!-- 차단 리스트 -->
+	<select id="getListBlock" parameterType="map" resultMap="relationSelectMap">
+		SELECT *
+		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
+				FROM	(SELECT r.*, u.nickname, u.profile_image,u.profile_message
+						 FROM relation r, users u
+							<where>
+								r.relation_user_id = u.user_id
+								<if test="userId != null">
+									AND r.user_id = #{userId}
+								</if>								
+								AND relation_status = 1
+								<if test="search.searchKeyword != null">
+									AND relation_user_id = '%'||#{search.searchKeyword}||'%'								
+								</if>
+							</where>							
+							ORDER BY r.reg_date )inner_table
+				WHERE ROWNUM &lt;= #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}	
 	</select>
-
-	<delete id="deleteBlock" parameterType="Block">
+	
+	<!-- 차단리스트 총숫자 -->
+	<select id="getTotalBlackCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+	  	FROM(	SELECT r.* FROM relation r, users u
+  							<where>
+								r.relation_user_id = u.user_id
+								<if test="userId != null">
+									AND r.user_id = #{userId}
+								</if>
+								AND relation_status = 1
+								<if test="search.searchKeyword != null">
+									AND relation_user_id = '%'||#{search.searchKeyword}||'%'								
+								</if>
+							</where> ) countTable
+	</select>
+	
+	
+	<delete id="deleteBlock">
 		DELETE FROM 
 			relation
 		<where>
-			relation_status = '1'
-			AND user_id = #{userId} 
-			AND relation_user_id = #{blockedUserId}
+			relation_no = #{relationNo}
 		</where>
 	</delete>
 
@@ -449,29 +513,10 @@
 
 
 	<!-- list -->
-	<select id="getListCommunity" resultType="Post" parameterType="map">
-		SELECT *
-		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT * FROM post
-							<where>
-								post_status = #{postStatus}
-								AND status = '0'
-							</where>							
-							ORDER BY reg_date )inner_table
-				WHERE ROWNUM &lt;= #{search.endRowNum})
-		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
-	</select>
 
 
-	<!-- ROW Count -->
-	<select id="getTotalCount" resultType="int" parameterType="map">
-		SELECT COUNT(*)
-	  	FROM(	SELECT * FROM post
-	  	<where>
-	  		post_status = #{postStatus}
-	  		AND status = '0'
-	  	</where> ) countTable
-	</select>
+
+
 
 
 

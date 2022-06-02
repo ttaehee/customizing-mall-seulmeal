@@ -18,7 +18,7 @@ public class User {
 	private String userId;
 	private String userName;
 	private String password;
-	private Date birth;
+	private String birth;
 	private String address;
 	private String phone;
 	private String email;
@@ -32,7 +32,7 @@ public class User {
 	private String role;
 	private String userStatus;
 	private int totalCount;
-	private String comfirmStatus;
+	private String confirmStatus;
 	private int blackLsitCount;
 	private int purchaseCount;
 	private String blackListStatus;
@@ -41,7 +41,7 @@ public class User {
 	private String foodCategoryName3;
 	private List<Parts> parts;
 	//private List<Follow> follow;
-	private List<Block> block;
+	private List<Relation> relation;
 	//private List<Wish> wish;
 	
 	

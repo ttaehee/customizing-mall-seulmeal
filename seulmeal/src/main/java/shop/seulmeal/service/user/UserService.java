@@ -4,7 +4,7 @@ import shop.seulmeal.service.domain.User;
 
 public interface UserService {
 
-	public void insertUser(User user) throws Exception;
+	public int insertUser(User user) throws Exception;
 	
 	public User getUser(String userId) throws Exception;
 	

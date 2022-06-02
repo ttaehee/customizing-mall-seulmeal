@@ -59,7 +59,7 @@
 	    </div>
 	  </section>
 	</main>
-	
+	<a href="/operation/getChatBot">챗봇이동</a>
 	<jsp:include page="./layer/footer.jsp"></jsp:include>
 </body>
 </html>

@@ -1,11 +1,28 @@
 package shop.seulmeal.web.operation;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -33,6 +50,8 @@ public class OperationController {
 	@Autowired
 	private AttachmentsService attachmentsService;
 	
+	
+	
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
@@ -43,6 +62,8 @@ public class OperationController {
 	
 	@GetMapping("insertOperation/{postStatus}")
 	public String insertOperation(@PathVariable int postStatus) {
+		
+		
 		
 		if(postStatus == 1) {
 			return "operation/insertOperationNotice";
@@ -120,15 +141,17 @@ public class OperationController {
 		return "redirect:getOperation/"+post.getPostNo();
 	}
 	
-	@GetMapping("getListOperation/{postStatus}")
-	public String getListOperation(@PathVariable int postStatus, Model model) {
+	@GetMapping(value={"getListOperation/{postStatus}/{searchCondition}","getListOperation/{postStatus}"})
+	public String getListOperation(@PathVariable int postStatus, Model model, @PathVariable(required = false) String searchCondition) {
 		System.out.println(postStatus);
 		
 		Search search = new Search();
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
 		}
+		
 		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
 		System.out.println(search);
 				
 		Map<String,Object> map = operationService.getListOperation(search, postStatus);
@@ -146,4 +169,12 @@ public class OperationController {
 			return "operation/listOperationQuery";
 		}
 	}
+	
+	@GetMapping("getChatBot")
+	public String getChatBot() {
+		
+		return "chatBot/chatBot";
+	}
+	
+	
 }
