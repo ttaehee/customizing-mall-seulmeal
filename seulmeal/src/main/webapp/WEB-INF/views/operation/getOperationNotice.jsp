@@ -32,6 +32,9 @@
 				</div>
 				<hr />
 				<div class="row">
+				<c:forEach var="attachments" items="${post.attachments}">
+						<a href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>			
+				</c:forEach>
 					${post.content}
 				</div>
 				<hr/>
