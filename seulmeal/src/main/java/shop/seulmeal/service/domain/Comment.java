@@ -20,4 +20,5 @@ public class Comment {
 	private Date updateDate;
 	private int likeCount;
 	private String status;
+		
 }
