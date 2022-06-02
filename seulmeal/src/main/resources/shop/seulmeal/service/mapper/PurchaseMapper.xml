@@ -5,37 +5,87 @@
 
 <mapper namespace="shop.seulmeal.service.mapper.PurchaseMapper"> 
 
+	<resultMap id="customProductSelectMap" type="customProduct">
+    	<result property="customProductNo" 		column="customproduct_no" 	jdbcType="NUMERIC"/>
+	
+		<association property="buyer" javaType="user" >
+			<result property="userId" 	 		column="user_id" 			jdbcType="VARCHAR"/>
+		</association>
+		
+		<association property="purchaseProd" javaType="product" >
+			<result property="productNo" 		column="product_no" 		jdbcType="NUMERIC"/>
+		</association>
+	</resultMap>
+
+
 	<!-- custom_pars -->
 	<insert id="insertCustomParts">
-		INSERT INTO custom_parts
+		INSERT INTO customparts
 		(customparts_no, customproduct_no, productparts_no, parts_no, gram)
 		values((seq_customparts_no.NEXTVAL),#{customProduct.customProductNo:NUMERIC}, 
 		#{productParts.productPartsNo:NUMERIC}, #{parts.partsNo:NUMERIC}, 
 		#{gram:NUMERIC})
-		<selectKey keyProperty="custompartsNo" resultType="int" order="AFTER">
-			SELECT seq_custom_parts_no.CURRVAL FROM DUAL
+		<selectKey keyProperty="customPartsNo" resultType="int" order="AFTER">
+			SELECT seq_customparts_no.CURRVAL FROM DUAL
 		</selectKey>
 	</insert>
 	
+	<select id="getCustomParts" resultType="customParts">
+		SELECT * FROM customparts
+		<where>
+			customparts_no = #{customPartsNo}
+		</where>
+	</select>
+	
+	<select id="getListCustomParts" resultType="customParts" parameterType="map">
+		SELECT *
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT prod.*, parts.*
+			    FROM customparts cparts
+				WHERE prod.customproduct_no=parts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
+				ORDER BY custom_product.customproduct_no) inner_table
+			WHERE ROWNUM &lt; = #{endRowNum})
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
 	<delete id="deleteCustomParts" parameterType="int">
-        DELETE FROM custom_parts WHERE customproduct_no = #{customProductNo}
+        DELETE FROM customparts WHERE customproduct_no = #{customProductNo}
     </delete>
+
 
 	<!-- custom_product -->
 	<insert id="insertCustomProduct">
-		INSERT INTO custom_product
-		(customproduct_no, user_id, product_no, purchase_no, count, 
+		INSERT INTO customproduct
+		(customproduct_no, user_id, product_no, count, 
 		cart_status, status, reg_date)
 		values((seq_customproduct_no.NEXTVAL),#{user.userId}, #{product.productNo}, 
-		#{purchase.purchaseNo:NUMERIC}, #{count:NUMERIC}, #{cartStatus:CHAR}, 
+		#{count:NUMERIC}, #{cartStatus:CHAR}, 
 		#{status:CHAR}, SYSDATE)
-		<selectKey keyProperty="customproductNo" resultType="int" order="AFTER">
-			SELECT seq_custom_product_no.CURRVAL FROM DUAL
+		<selectKey keyProperty="customProductNo" resultType="int" order="AFTER">
+			SELECT seq_customproduct_no.CURRVAL FROM DUAL
 		</selectKey>
 	</insert>
 	
+	<select id="getCustomProduct" resultType="customProduct">
+		SELECT *
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</select>
+	
+	<select id="getListCustomProduct" resultType="customProduct" parameterType="map">
+		SELECT *
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT cprod.*,cparts.*
+			    FROM customproduct cprod, customparts cparts
+				WHERE cprod.customproduct_no=cparts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
+				ORDER BY cprod.customproduct_no) inner_table
+			WHERE ROWNUM &lt; = #{endRowNum})
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
 	<update id="updateCustomProduct">
-		UPDATE custom_product
+		UPDATE customproduct
 		<set>
 			purchase_no=#{purchase.purchaseNo:NUMERIC}
 		</set>
@@ -44,19 +94,8 @@
 		</where>
 	</update>
 	
-	<select id="getListCustomProduct" resultType="customProduct" parameterType="map">
-		SELECT *
-		FROM (SELECT inner_table.*, ROWNUM AS row_seq
-			FROM (SELECT prod.*, parts.*
-			    FROM custom_product prod, custom_parts parts
-				WHERE prod.customproduct_no=parts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
-				ORDER BY custom_product.customproduct_no) inner_table
-			WHERE ROWNUM &lt; = #{endRowNum})
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-	</select>
-	
 	<update id="deleteCustomProduct">
-		UPDATE custom_product
+		UPDATE customproduct
 		<set>
 			cart_status = '1'
 		</set>
@@ -90,26 +129,6 @@
 		</where>
 	</select>
 	
-	<update id="updatePurchaseCode">
-		UPDATE purchase
-		<set>
-			purchase_status=#{purchaseStatus:CHAR}
-		</set>
-		<where>
-			purchase_no = #{purchaseNo}
-		</where>
-	</update>
-	
-	<update id="deletePurchase">
-		UPDATE purchase
-		<set>
-			status = '1'
-		</set>
-		<where>
-			purchase_no = #{purchaseNo}
-		</where>
-	</update>
-	
 	<select id="getListPurchase" resultType="purchase" parameterType="map">
 		SELECT *
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
@@ -133,6 +152,27 @@
 			WHERE ROWNUM &lt; = #{endRowNum})
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
+	
+	<update id="updatePurchaseCode">
+		UPDATE purchase
+		<set>
+			purchase_status=#{purchaseStatus:CHAR}
+		</set>
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
+	</update>
+	
+	<update id="deletePurchase">
+		UPDATE purchase
+		<set>
+			status = '1'
+		</set>
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
+	</update>
+
 	
 	<!-- ROW Count -->
 	<select id="getTotalCount" resultType="int" parameterType="map">
