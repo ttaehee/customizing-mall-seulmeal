@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+           "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="shop.seulmeal.service.mapper.PurchaseMapper"> 
+
+	<!-- custom_pars -->
+	<insert id="insertCustomParts">
+		INSERT INTO custom_parts
+		(customparts_no, customproduct_no, productparts_no, parts_no, gram)
+		values((seq_customparts_no.NEXTVAL),#{customProduct.customProductNo:NUMERIC}, 
+		#{productParts.productPartsNo:NUMERIC}, #{parts.partsNo:NUMERIC}, 
+		#{gram:NUMERIC})
+		<selectKey keyProperty="custompartsNo" resultType="int" order="AFTER">
+			SELECT seq_custom_parts_no.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<delete id="deleteCustomParts" parameterType="int">
+        DELETE FROM custom_parts WHERE customproduct_no = #{customProductNo}
+    </delete>
+
+	<!-- custom_product -->
+	<insert id="insertCustomProduct">
+		INSERT INTO custom_product
+		(customproduct_no, user_id, product_no, purchase_no, count, 
+		cart_status, status, reg_date)
+		values((seq_customproduct_no.NEXTVAL),#{user.userId}, #{product.productNo}, 
+		#{purchase.purchaseNo:NUMERIC}, #{count:NUMERIC}, #{cartStatus:CHAR}, 
+		#{status:CHAR}, SYSDATE)
+		<selectKey keyProperty="customproductNo" resultType="int" order="AFTER">
+			SELECT seq_custom_product_no.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<update id="updateCustomProduct">
+		UPDATE custom_product
+		<set>
+			purchase_no=#{purchase.purchaseNo:NUMERIC}
+		</set>
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</update>
+	
+	<select id="getListCustomProduct" resultType="customProduct" parameterType="map">
+		SELECT *
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT prod.*, parts.*
+			    FROM custom_product prod, custom_parts parts
+				WHERE prod.customproduct_no=parts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
+				ORDER BY custom_product.customproduct_no) inner_table
+			WHERE ROWNUM &lt; = #{endRowNum})
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<update id="deleteCustomProduct">
+		UPDATE custom_product
+		<set>
+			cart_status = '1'
+		</set>
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</update>
+	
+
+	<!-- purchase -->
+	<insert id="insertPurchase">
+		INSERT INTO purchase
+		(purchase_no, user_id, price, delivery_price, address, name, phone, 
+		message, purchase_status, reason, image, status, reg_date, 
+		payment_condition, imp_uid, amount)
+		values((seq_purchase_no.NEXTVAL),#{user.userId},#{price:NUMERIC}, 
+		#{deliveryPrice:NUMERIC}, #{address:VARCHAR}, #{name:VARCHAR}, 
+		#{phone:VARCHAR}, #{message:VARCHAR}, #{purchaseStatus:CHAR}, 
+		#{reason:VARCHAR}, #{image:VARCHAR}, #{status:CHAR}, 
+		SYSDATE, #{paymentCondition:CHAR},#{imp_uid:VARCHAR}, 
+		#{amount:NUMERIC})
+		<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
+			SELECT seq_purchase_no.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<select id="getPurchase" resultType="purchase">
+		SELECT * FROM purchase
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
+	</select>
+	
+	<update id="updatePurchaseCode">
+		UPDATE purchase
+		<set>
+			purchase_status=#{purchaseStatus:CHAR}
+		</set>
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
+	</update>
+	
+	<update id="deletePurchase">
+		UPDATE purchase
+		<set>
+			status = '1'
+		</set>
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
+	</update>
+	
+	<select id="getListPurchase" resultType="purchase" parameterType="map">
+		SELECT *
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT * FROM purchase
+				WHERE status='0'
+				<if test="searchCondition != null">
+					<if test="searchCondition == 0">
+						AND reg_date=SYSDATE
+					</if>
+					<if test="searchCondition == 1">
+						AND reg_date=#{regDate}
+					</if>
+					<if test="searchCondition == 2">
+						AND reg_date=#{regDate}
+					</if>
+					<if test="searchCondition == 3">
+						AND reg_date=#{regDate}
+					</if>
+				</if>
+				ORDER BY purchase_no) inner_table
+			WHERE ROWNUM &lt; = #{endRowNum})
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<!-- ROW Count -->
+	<select id="getTotalCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+	  	FROM( SELECT * FROM purchase
+	  	<where>
+			purchase_status = #{purchaseStatus} AND status = '0') countTable
+		</where>
+	</select>
+
+
+</mapper>

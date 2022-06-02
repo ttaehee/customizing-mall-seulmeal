@@ -17,7 +17,7 @@ public class Report {
 	private int postNo;
 	private String reporterId;
 	private String reason;
-	private Date reg_date;
+	private Date regDate;
 	private String status;
 	
 }

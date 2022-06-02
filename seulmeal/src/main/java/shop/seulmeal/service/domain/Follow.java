@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 public class Follow {
 	
-	private int FollowNo;
+	private int followNo;
 	private String userId;
 	private String followingUserId;
 

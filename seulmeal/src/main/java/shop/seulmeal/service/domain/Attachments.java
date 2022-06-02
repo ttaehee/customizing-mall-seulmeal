@@ -14,4 +14,10 @@ public class Attachments {
 	private String attachmentName;
 	private Date regDate;
 	private String status;
+	
+	// 데이터 번호용
+	private String productNo;
+	private String reviewNo;
+	private String postNo;
+	private String commentNo;
 }

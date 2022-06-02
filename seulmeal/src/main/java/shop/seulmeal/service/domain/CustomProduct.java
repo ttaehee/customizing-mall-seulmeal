@@ -19,6 +19,6 @@ public class CustomProduct {
 	private String status;
 	private Date regDate;
 	
-	// cusetomParts를 가지고 있다.
+	// customParts를 가지고 있다
 	private List<CustomParts> CustomParts;
 }

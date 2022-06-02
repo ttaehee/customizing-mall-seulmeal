@@ -99,7 +99,7 @@
 		
 		<insert id="insertPoint">
 			insert into point (point_no, user_id, purchase_no, point_status, point, reg_date) 
-				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo), #{pointStatus}, #{amount}, SYSDATE);
+				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{amount}, SYSDATE);
 		</insert>
 		
 		<select id="getListPoint">

@@ -19,7 +19,7 @@ public class Purchase {
 	private String phone;
 	private String message;
 	private String purchaseStatus;
-	private String reson;
+	private String reason;
 	private String image;
 	private String status;
 	private Date regDate;

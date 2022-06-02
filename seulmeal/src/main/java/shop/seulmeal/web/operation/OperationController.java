@@ -1,19 +1,24 @@
 package shop.seulmeal.web.operation;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.attachments.AttachmentsService;
+import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.operation.OperationService;
@@ -24,6 +29,9 @@ public class OperationController {
 	
 	@Autowired
 	private OperationService operationService;
+	
+	@Autowired
+	private AttachmentsService attachmentsService;
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
@@ -38,13 +46,16 @@ public class OperationController {
 		
 		if(postStatus == 1) {
 			return "operation/insertOperationNotice";
-		} else {
+		} else if(postStatus == 2) {
 			return "operation/insertOperationEvent";
-		}		
+		} else {
+			return "operation/insertOperationQuery";
+		}
 	}
 	
 	@PostMapping("insertOperation")
-	public String insertOperation(Post post, String userId) {
+	@Transactional
+	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile, Attachments attachments) throws IllegalStateException, IOException {
 		User user = new User();
 		user.setUserId(userId);
 		post.setUser(user);
@@ -52,7 +63,13 @@ public class OperationController {
 		System.out.println("POST 가져온거 :"+post);
 		operationService.insertOperation(post);
 		
-		return "/operation/getOperation/"+post.getPostNo();
+		attachments.setPostNo(Integer.toString(post.getPostNo()));
+		
+		attachmentsService.insertAttachments(uploadfile, attachments);
+		
+		model.addAttribute("post",post);
+		
+		return "redirect:getOperation/"+post.getPostNo();		
 	}
 	
 	@GetMapping("getOperation/{postNo}")
@@ -61,15 +78,20 @@ public class OperationController {
 		
 		Post post = operationService.getOperation(postNo);
 		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("postNo", post.getPostNo());
+		List<Attachments> list = attachmentsService.getAttachments(map);
+		post.setAttachments(list);
+		
 		model.addAttribute("post",post);
 		
 		if(post.getPostStatus().equals("1")){
 			return "operation/getOperationNotice";
-		}
-		if(post.getPostStatus().equals("2")){
+		} else if(post.getPostStatus().equals("2")) {
 			return "operation/getOperationEvent";
+		} else {
+			return "operation/getOperationQuery";
 		}
-		return "";
 	}
 	
 	@GetMapping("updateOperation/{postNo}")
@@ -82,17 +104,20 @@ public class OperationController {
 		
 		if(post.getPostStatus().equals("1")){
 			return "operation/updateOperationNotice";
-		} else {
+		} else if(post.getPostStatus().equals("2")) {
 			return "operation/updateOperationEvent";
+		} else {
+			return "operation/updateOperationQuery";
 		}
 	}
 	
 	@PostMapping("updateOperation")
-	public String updateOperation(Post post) {
+	public String updateOperation(Post post, Model model) {
 		System.out.println("업데이트 수정할 내용 : "+post);
 		operationService.updateOperation(post);
+		model.addAttribute("post",post);
 		
-		return "/operation/getOperation/"+post.getPostNo();
+		return "redirect:getOperation/"+post.getPostNo();
 	}
 	
 	@GetMapping("getListOperation/{postStatus}")
@@ -115,8 +140,10 @@ public class OperationController {
 		
 		if(postStatus == 1) {
 			return "operation/listOperationNotice";
-		} else {
+		} else if(postStatus == 2) {
 			return "operation/listOperationEvent";
+		} else {
+			return "operation/listOperationQuery";
 		}
 	}
 }
