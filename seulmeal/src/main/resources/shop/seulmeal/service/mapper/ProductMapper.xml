@@ -78,14 +78,13 @@
 	<update id= "updateProduct">
 		UPDATE product
 		<set>
-			foodcategory_no = #{foodCategoryNo},
+			foodcategory_no = #{foodCategory.foodCategoryNo},
 			name = #{productName},
 			sub_content = #{subContent},
 			price = #{price},
 			calorie = #{calorie},
 			content = #{content},
 			stock = #{stock},
-			foodcategory_name = #{foodCategoryName},
 			thumbnail = #{thumbnail}
 		</set>
 		WHERE product_no = #{productNo}

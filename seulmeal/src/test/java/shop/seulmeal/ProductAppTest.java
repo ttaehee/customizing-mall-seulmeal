@@ -55,7 +55,7 @@ public class ProductAppTest {
 		
 	}
 	
-	@Test
+	
 	public void testListProduct() throws Exception {
 		Search search = new Search();
 	 	search.setCurrentPage(1);
@@ -71,9 +71,22 @@ public class ProductAppTest {
 	 	
 	}
 	
+	
 	public void testUpdateProduct() throws Exception {
+		Product product = productService.getProduct(1);
+		food
 		
+		product.setFoodCategory();
+		product.setName("UPDATED");
+		product.setSubContent("업데이트 완료");
+		product.setPrice(5900);
+		product.setCalorie(980);
+		product.setContent("업데이트를 성공적으로 마쳤습니다");
+		product.setStock(50);
+		product.set
 	}
+		
+	
 	
 	public void testdeleteProduct() throws Exception {
 		
