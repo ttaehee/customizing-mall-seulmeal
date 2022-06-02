@@ -10,20 +10,24 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.mapper.PurchaseMapper;
 import shop.seulmeal.service.mapper.UserMapper;
+import shop.seulmeal.service.product.ProductService;
 
 
 @SpringBootTest
+//@Transactional(rollbackFor=Exception.class)
 class PurchaseApplicationTests {
 	
 	//@Autowired
@@ -32,8 +36,8 @@ class PurchaseApplicationTests {
 	@Autowired
 	private PurchaseMapper purchaseMapper;
 	
-	//@Autowired
-	//private ProductMapper productMapper;	
+	@Autowired
+	private ProductMapper productMapper;	
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
@@ -41,21 +45,76 @@ class PurchaseApplicationTests {
 	//@Test
 	void insertCustomParts() {
 		CustomParts customParts=new CustomParts();
-
-		Product product=new Product();
-		product.setProductNo(1);
+		Parts parts=new Parts();
+		parts.setPartsNo(1);
 		
-		//customParts.setUser(user);
-		//customParts.setProduct(product);
-		//customParts.setCount(2);
-		//customParts.setCartStatus("1");
-		//customParts.setStatus("0");
+		customParts.setCustomProductNo(1);
+		customParts.setProductPartsNo(1);
+		customParts.setParts(parts);
+		customParts.setGram(50);
 			
-		//int result=purchaseMapper.insertCustomParts(customParts);
-		//System.out.println("결과 : "+result);
+		List<CustomParts> list=new ArrayList<CustomParts>();
 		
-		//assertEquals(customProduct.getCount(), 2);
+		for(int i=0; i<5; i++) {
+			list.add(customParts);
+		}
+					
+		int result=purchaseMapper.insertCustomParts(list);
+		System.out.println("결과 : "+result);
+		
+		assertEquals(purchaseMapper.getCustomParts(11).getGram(), 50);
 	}
+	
+	//@Test
+	void getCustomParts() {
+		CustomParts customParts=new CustomParts();
+		
+		customParts=purchaseMapper.getCustomParts(11);
+		System.out.println("결과 : "+customParts);
+		
+		assertEquals(customParts.getGram(), 50);
+	}
+	
+	//@Test
+	void getListCustomParts() throws Exception {
+		
+		Search search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		
+		System.out.println("search : "+search);
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("customProductNo",1);
+		map.put("search", search);
+		
+		List<CustomParts> list=purchaseMapper.getListCustomParts(map);
+		
+		System.out.println("list 결과 : "+list);
+		
+		map.put("partsNo",1);
+		
+		for(CustomParts customParts : list) {
+			customParts.setCustomProductNo(1);
+			customParts.setParts(productMapper.getParts(map));
+			System.out.println("결과 : "+customParts);
+		}
+
+	}	
+	
+	//@Test
+	void deleteCustomParts() {
+		CustomParts customParts=new CustomParts();
+		
+		customParts.setCustomProductNo(1);
+		
+		purchaseMapper.deleteCustomParts(customParts);
+		
+		int result=purchaseMapper.deleteCustomParts(customParts);
+		System.out.println("결과 : "+result);
+	}	
 	
 	//@Test
 	void insertCustomProduct() {
@@ -74,7 +133,7 @@ class PurchaseApplicationTests {
 		int result=purchaseMapper.insertCustomProduct(customProduct);
 		System.out.println("결과 : "+result);
 		
-		assertEquals(customProduct.getCount(), 2);
+		assertEquals(purchaseMapper.getCustomProduct(1).getCount(), 2);
 	}
 	
 	//@Test
@@ -87,10 +146,10 @@ class PurchaseApplicationTests {
 		customProduct.setPurchase(purchase);
 		
 		purchaseMapper.updateCustomProduct(customProduct);
-		customProduct=purchaseMapper.getCustomProduct(1);
-		System.out.println("결과 : "+customProduct);
+
+		System.out.println("결과 : "+purchaseMapper.getCustomProduct(1));
 		
-		assertEquals(customProduct.getCount(), 2);
+		assertEquals(purchaseMapper.getCustomProduct(1).getCount(), 2);
 	}
 	
 	//@Test

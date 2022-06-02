@@ -1,6 +1,7 @@
 package shop.seulmeal.service.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,13 +15,13 @@ import shop.seulmeal.service.domain.Purchase;
 public interface PurchaseMapper {
 	
 	//커스터마이징재료 추가 
-	public int insertCustomParts(CustomParts customParts);
+	public int insertCustomParts(List<CustomParts> list);
 	
 	//커스터마이징상재료 상세 
 	public CustomParts getCustomParts(int customPartsNo);
 
 	//커스터마이징재료 리스트
-	public List<CustomParts> getListCustomParts();
+	public List<CustomParts> getListCustomParts(Map<String, Object> map);
 	
 	//커스터마이징재료 삭제 
 	public int deleteCustomParts(CustomParts customParts);
@@ -49,7 +50,7 @@ public interface PurchaseMapper {
 	public Purchase getPurchase(int purchaseNo);
 	
 	//구매내역리스트
-	public List<Purchase> getListPurchase();
+	public List<Purchase> getListPurchase(Map map);
 	
 	//구매코드 변경 
 	public int updatePurchaseCode(Purchase purchase);
@@ -58,6 +59,6 @@ public interface PurchaseMapper {
 	public int deletePurchase(Purchase purchase);
 	
 	//개수
-	//public String makeCurrentPageSql(String sql , Search search) throws Exception ;
+	public int getTotalCount(Search search);
 
 }
