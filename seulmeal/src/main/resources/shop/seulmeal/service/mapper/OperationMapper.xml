@@ -52,7 +52,23 @@
 				FROM	(SELECT * FROM post
 							<where>
 								post_status = #{postStatus}
-								AND status = '0'
+								AND status = '0' 
+								<if test="search.searchCondition==0">
+									<if test="postStatus == 2">
+										AND end_date &gt; SYSDATE
+									</if>
+									<if test="postStatus == 3">
+										AND answer_status = 0
+									</if>									
+								</if>
+								<if test="search.searchCondition==1">
+									<if test="postStatus == 2">
+										AND end_date &lt; SYSDATE
+									</if>
+									<if test="postStatus == 3">
+										AND answer_status = 1
+									</if>
+								</if>
 							</where>							
 							ORDER BY reg_date )inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum})
@@ -63,10 +79,26 @@
 	<select id="getTotalCount" resultType="int" parameterType="map">
 		SELECT COUNT(*)
 	  	FROM(	SELECT * FROM post
-	  	<where>
-	  		post_status = #{postStatus}
-	  		AND status = '0'
-	  	</where> ) countTable
+  							<where>
+								post_status = #{postStatus}
+								AND status = '0' 
+								<if test="search.searchCondition==0">
+									<if test="postStatus == 2">
+										AND end_date &gt; SYSDATE
+									</if>
+									<if test="postStatus == 3">
+										AND answer_status = 0
+									</if>									
+								</if>
+								<if test="search.searchCondition==1">
+									<if test="postStatus == 2">
+										AND end_date &lt; SYSDATE
+									</if>
+									<if test="postStatus == 3">
+										AND answer_status = 1
+									</if>
+								</if>
+							</where> ) countTable
 	</select>
 	
 	<!-- 답변 -->

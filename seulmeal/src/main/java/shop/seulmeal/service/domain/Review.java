@@ -11,6 +11,7 @@ import lombok.ToString;
 @Setter
 public class Review {
 	private int reviewNo;
+	private Product product;
 	private User user;
 	private String title;
 	private String content;

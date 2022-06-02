@@ -21,4 +21,7 @@ public class Parts {
 	private int productNo;
 	// productPartsNo
 	private int productPartsNo;
+	
+	// hateParts
+	private String userId;
 }

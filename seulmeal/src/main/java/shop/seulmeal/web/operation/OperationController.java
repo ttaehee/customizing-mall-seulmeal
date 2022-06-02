@@ -1,11 +1,28 @@
 package shop.seulmeal.web.operation;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -19,6 +36,7 @@ import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.attachments.AttachmentsService;
 import shop.seulmeal.service.domain.Attachments;
+import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.operation.OperationService;
@@ -33,6 +51,8 @@ public class OperationController {
 	@Autowired
 	private AttachmentsService attachmentsService;
 	
+	
+	
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
@@ -43,6 +63,8 @@ public class OperationController {
 	
 	@GetMapping("insertOperation/{postStatus}")
 	public String insertOperation(@PathVariable int postStatus) {
+		
+		
 		
 		if(postStatus == 1) {
 			return "operation/insertOperationNotice";
@@ -83,6 +105,11 @@ public class OperationController {
 		List<Attachments> list = attachmentsService.getAttachments(map);
 		post.setAttachments(list);
 		
+		if(post.getPostStatus().equals("3")) {
+			List<Comment> cList = operationService.getListAnswer(post.getPostNo());
+			post.setComments(cList);
+		}
+		
 		model.addAttribute("post",post);
 		
 		if(post.getPostStatus().equals("1")){
@@ -115,20 +142,28 @@ public class OperationController {
 	public String updateOperation(Post post, Model model) {
 		System.out.println("업데이트 수정할 내용 : "+post);
 		operationService.updateOperation(post);
+		
 		model.addAttribute("post",post);
 		
 		return "redirect:getOperation/"+post.getPostNo();
 	}
 	
-	@GetMapping("getListOperation/{postStatus}")
-	public String getListOperation(@PathVariable int postStatus, Model model) {
+	@GetMapping(value={"getListOperation/{postStatus}/{currentPage}/{searchCondition}",
+				"getListOperation/{postStatus}/{currentPage}",
+				"getListOperation/{postStatus}"})
+	public String getListOperation(@PathVariable int postStatus, Model model,@PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) {
 		System.out.println(postStatus);
 		
 		Search search = new Search();
+		if(currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
 		}
+		
 		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
 		System.out.println(search);
 				
 		Map<String,Object> map = operationService.getListOperation(search, postStatus);
@@ -146,4 +181,12 @@ public class OperationController {
 			return "operation/listOperationQuery";
 		}
 	}
+	
+	@GetMapping("getChatBot")
+	public String getChatBot() {
+		
+		return "chatBot/chatBot";
+	}
+	
+	
 }
