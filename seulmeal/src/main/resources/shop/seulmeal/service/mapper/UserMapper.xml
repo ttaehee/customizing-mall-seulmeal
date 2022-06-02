@@ -12,7 +12,7 @@
 		</insert>
 		
 		<select id="getUser" resultType="User">
-	        	SELECT * FROM users WHERE user_id = #{value}
+	        	SELECT * FROM users WHERE user_id = #{userId}
 	    </select>
 	    
 	    <update id="updateUser">
@@ -60,11 +60,11 @@
 		</select>
 		
 		<select id="checkDuplicationUserId">
-			select user_id from users = #{userId}
+			SELECT user_id from users = #{userId}
 		</select>
 		
 		<select id="checkDuplicationNickName">
-			select nickname from users = #{nickName}
+			SELECT nickname from users = #{nickName}
 		</select>
 		
 		<select id="getListUserTotalCount">
@@ -125,8 +125,9 @@
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>
 		
-		<select id="">
-		
+		<select id="getProfile">
+			SELECT user_id, nickname, grade, profile_image, profile_message, foodcategory_name1, foodcategory_name2, foodcategory_name3 
+				FROM users WHERE user_id = #{userId}
 		</select>
 		
 		

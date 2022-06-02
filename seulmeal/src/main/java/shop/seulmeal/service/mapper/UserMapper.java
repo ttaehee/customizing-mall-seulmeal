@@ -48,6 +48,10 @@ public interface UserMapper {
 	
 	public int getListPointTotalCount(int no) throws Exception;
 	
+	public User getProfile(User user) throws Exception;
+	
+	
+	
 	
 	
 }
