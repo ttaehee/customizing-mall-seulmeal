@@ -24,6 +24,8 @@ public interface ProductMapper {
 	public List<Product> getListProduct(Search search) throws Exception;
 
 	public void deleteProduct(int productNo) throws Exception;
+	
+	public void restoreProduct(int productNo) throws Exception;
 
 	// FOODCATEGORY
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
@@ -31,6 +33,8 @@ public interface ProductMapper {
 	public List<Foodcategory> getListFoodCategory() throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
+	
+	public void restoreFoodCategory(int foodCategoryNo) throws Exception;
 
 	// REVIEW
 	public void insertReview(Review review) throws Exception;
@@ -42,6 +46,8 @@ public interface ProductMapper {
 	public List<Review> getListReview() throws Exception;
 
 	public void deleteReview(int reviewNo) throws Exception;
+	
+	public void restoreReview(int reviewNo) throws Exception;
 
 	// PARTS
 	public int insertParts(Parts parts) throws Exception;

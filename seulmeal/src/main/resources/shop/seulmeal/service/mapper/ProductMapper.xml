@@ -104,6 +104,12 @@
 		<set> status = 1	</set>
 		WHERE product_no = #{productNo}
 	</update>
+	
+	<update id="restoreProduct">
+		UPDATE product
+		<set> status = 0	</set>
+		WHERE product_no = #{productNo}
+	</update>
 
 	<select id="getAverageRating" resultType="double">
 		SELECT ROUND(AVG(rating), 1) AS Avg_Rate FROM
@@ -119,14 +125,6 @@
 		status) VALUES (seq_foodCategory_no.NEXTVAL, #{name}, 0)
 	</insert>
 
-	<select id="getListFoodCategory" resultType="foodCategory">
-		SELECT * FROM (
-		SELECT inner_table.* , ROWNUM AS row_seq FROM
-		( SELECT foodcategory_no , name , status FROM foodCategory ORDER BY foodcategory_no ) inner_table
-		WHERE ROWNUM &lt;= #{endRowNum} )
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-	</select>
-
 	<select id="getTotalFoodCategoryCount" resultType="int">
 		SELECT COUNT(*) FROM ( SELECT foodcategory_no , foodcategory_name , status FROM foodcategory ) countTable
 	</select>
@@ -140,13 +138,19 @@
 		<set> status = 1	</set>
 		WHERE foodCategory_no = #{foodCategoryNo}
 	</update>
+	
+	<update id="restoreFoodCategory">
+		UPDATE foodCategory
+		<set> status = 0	</set>
+		WHERE foodCategory_no = #{foodCategoryNo}
+	</update>
 
 
 	<!-- ========== REVIEW ========== -->
 
 	<resultMap id="reviewSelectMap" type="review">
 		<result property="reviewNo" column="review_no" jdbcType="NUMERIC" />
-		<result property="productNo" column="product_no" jdbcType="NUMERIC" />
+		<result property="product.productNo" column="product_no" jdbcType="NUMERIC" />
 		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="VARCHAR" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
@@ -172,7 +176,7 @@
 		WHERE review_no = #{reviewNo}
 	</update>
 
-	<select id="getReview" resultMap="reviewSelectMap">=
+	<select id="getReview" resultMap="reviewSelectMap">
 		SELECT * FROM review WHERE
 		review_no = #{reviewNo}
 	</select>
@@ -199,6 +203,12 @@
 	<update id="deleteReview">
 		UPDATE review
 		<set> status = '1'	</set>
+		WHERE review_no = #{reviewNo}
+	</update>
+	
+	<update id="restoreReview">
+		UPDATE review
+		<set> status = '0'	</set>
 		WHERE review_no = #{reviewNo}
 	</update>
 

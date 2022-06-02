@@ -19,6 +19,8 @@ public interface ProductService {
 	public Product getProduct(int productNo) throws Exception;
 
 	public void deleteProduct(int productNo) throws Exception;
+	
+	public void restoreProduct(int productNo) throws Exception;
 
 	// foodCategory 관련
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
@@ -26,6 +28,8 @@ public interface ProductService {
 	public Map<String, Object> getListFoodCategory() throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
+	
+	public void restoreFoodCategory(int foodCategoryNo) throws Exception;
 
 	// Review
 	public void insertReview(Review review) throws Exception;
@@ -37,6 +41,8 @@ public interface ProductService {
 	public Map<String, Object> getListReview() throws Exception;
 
 	public void deleteReview(int reviewNo) throws Exception;
+	
+	public void restoreReview(int reviewNo) throws Exception;
 
 	// Parts 넣기
 	public int insertParts(Parts parts) throws Exception;

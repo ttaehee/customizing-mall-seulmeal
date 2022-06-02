@@ -123,31 +123,31 @@ public class ProductServiceImpl implements ProductService {
 	// Parts 관련
 	@Override
 	public int insertParts(Parts parts) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productMapper.insertParts(parts);
 	}
 
 	@Override
 	public Parts getParts(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productMapper.getParts(map);
 	}
 
 	@Override
 	public int updateParts(Parts parts) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productMapper.updateParts(parts);
 	}
 
 	@Override
 	public int deleteParts(int no) throws Exception {
-		// TODO Auto-generated method stub
+		
 		return productMapper.deleteParts(no);
 	}
 
 	@Override
 	public Map<String, Object> getListParts(Search search) throws Exception {
-		// TODO Auto-generated method stub
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("search", search);
 
@@ -160,20 +160,34 @@ public class ProductServiceImpl implements ProductService {
 	// ProductParts 관련
 	@Override
 	public int insertProudctParts(List<Parts> list) throws Exception {
-		// TODO Auto-generated method stub
 		return productMapper.insertProudctParts(list);
 	}
 
 	@Override
 	public List<Parts> getProductParts(int productNo) throws Exception {
-		// TODO Auto-generated method stub
 		return productMapper.getProductParts(productNo);
 	}
 
 	@Override
 	public int deleteProductParts(int productPartsNo) throws Exception {
-		// TODO Auto-generated method stub
 		return productMapper.deleteProductParts(productPartsNo);
+	}
+
+	
+	
+	@Override
+	public void restoreProduct(int productNo) throws Exception {
+		productMapper.restoreProduct(productNo);
+	}
+
+	@Override
+	public void restoreFoodCategory(int foodCategoryNo) throws Exception {
+		productMapper.restoreFoodCategory(foodCategoryNo);
+	}
+
+	@Override
+	public void restoreReview(int reviewNo) throws Exception {
+		productMapper.restoreReview(reviewNo);
 	}
 
 }

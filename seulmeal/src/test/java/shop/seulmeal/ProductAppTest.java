@@ -14,6 +14,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import junit.framework.Assert;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
 import shop.seulmeal.service.domain.User;
@@ -53,9 +54,7 @@ public class ProductAppTest {
 
 	public void testGetProduct() throws Exception {
 		Product product = productService.getProduct(1);
-
 		System.out.println(product);
-
 	}
 
 	public void testListProduct() throws Exception {
@@ -72,7 +71,7 @@ public class ProductAppTest {
 
 	}
 
-	public void testUpdateProduct() throws Exception {
+	public void testGetProductAndUpdateProduct() throws Exception {
 		Product product = productService.getProduct(1);
 
 		Foodcategory food = new Foodcategory();
@@ -93,7 +92,7 @@ public class ProductAppTest {
 		System.out.println(productService.getProduct(1));
 	}
 
-	public void testdeleteProduct() throws Exception {
+	public void testDeleteProduct() throws Exception {
 		Product product = productService.getProduct(1);
 
 		int A = product.getProductNo();
@@ -108,7 +107,7 @@ public class ProductAppTest {
 	
 	// FOOD CATEGORY
 	// test done
-	@Test
+	
 	public void testInsertFoodCategory() throws Exception {
 		productService.insertFoodCategory("프랜차이즈");
 	}
@@ -152,11 +151,11 @@ public class ProductAppTest {
 		productService.insertReview(review);
 
 	}
-
-	public void updateReview() throws Exception {
-		Review review = new Review();
+	
+	public void testGetReviewAndUpdateReview() throws Exception {
+		Review review = productService.getReview(42);
 		System.out.println(review);
-		review = productService.getReview(40);
+		
 		review.setTitle("수정되었습니다");
 		review.setContent("오류나면 안 돼요");
 		review.setRating(3);
@@ -168,8 +167,21 @@ public class ProductAppTest {
 	public void testGetListReview() throws Exception {
 
 	}
-
-	public void testGetReview() throws Exception {
-		productService.getReview(1);
+	
+	public void testDeleteReview() throws Exception {
+		Review review = productService.getReview(42);
+		System.out.println(review);
+		
+		productService.deleteReview(review.getReviewNo());
+		System.out.println(review.getStatus());
+	}
+	@Test
+	public void testInsertParts() throws Exception {
+		Parts pt = new Parts();
+		pt.setName("망고");
+		pt.setPrice(150);
+		pt.setCalorie(80);
+		System.out.println(pt);
+		productService.insertParts(pt);
 	}
 }
