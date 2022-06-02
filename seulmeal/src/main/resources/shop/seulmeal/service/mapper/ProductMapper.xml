@@ -28,6 +28,9 @@
 	<insert id = "insertProduct">
 		INSERT INTO product (product_no, foodcategory_no, name, sub_content, price, calorie, content, stock, average_rating, like_count, review_count, reg_date, status, thumbnail)
 		VALUES ( seq_product_no.NEXTVAL, #{foodCategory.foodCategoryNo}, #{name}, #{subContent}, #{price}, #{calorie}, #{content}, #{stock}, 0, 0, 0, SYSDATE, 0, #{thumbnail} )
+		<selectKey keyProperty="productNo" resultType="int" order="AFTER">
+			SELECT seq_product_no.CURRVAL FROM DUAL
+		</selectKey>
 	</insert>
 	
 	
@@ -108,26 +111,10 @@
 		INSERT INTO foodCategory (foodCategory_no, name, status) VALUES (seq_foodCategory_no.NEXTVAL, #{name}, 0)
 	</insert>
 	
-	<select id="ListFoodCategory" resultType="foodCategory">
-		SELECT * FROM (	SELECT inner_table.* , ROWNUM AS row_seq FROM
-		(	SELECT foodcategory_no , name , status FROM foodCategory
-			<if test="searchCondition != null">
-				<where>name like '%'||#{searchKeyword}||'%'</where>
-			</if>
-			ORDER BY foodcategory_no ) inner_table	WHERE ROWNUM &lt;= #{endRowNum} )
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
-	 </select>
-	 
-	 <select  id="getTotalFoodCategoryCount" resultType="int">
-	  	SELECT COUNT(*) FROM (	SELECT foodcategory_no , foodcategory_name , status FROM foodcategory
-			<if test="searchCondition != null">
-				<where>
-					<if test="searchCondition == 0 and searchKeyword !='' ">
-			 			foodCategory_name = #{searchKeyword}
-					</if>
-				</where>
-			</if> ) countTable				
-	</select>
+	<select id="getListFoodCategory" resultType="foodcategory">
+		SELECT foodcategory_no , name , status FROM foodCategory
+		WHERE status = '0'
+	 </select>	 
 
 	<update id="deleteFoodCategory">
 		UPDATE foodCategory
@@ -237,7 +224,7 @@
 			calorie = #{calorie:INTEGER}
 		</set>
 		<where>
-			partsNo = #{No}
+			partsNo = #{partsNo}
 		</where>
 	</update>
 	
@@ -260,7 +247,7 @@
 							<where>
 								AND status = '0'
 							</where>
-							ORDER BY no )inner_table
+							ORDER BY parts_no )inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>

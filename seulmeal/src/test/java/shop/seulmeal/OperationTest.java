@@ -9,18 +9,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
+import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.AttachmentsMapper;
 import shop.seulmeal.service.mapper.OperationMapper;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.mapper.UserMapper;
+import shop.seulmeal.service.product.ProductService;
 
 @SpringBootTest
 class OperationTest {
@@ -37,13 +41,19 @@ class OperationTest {
 	@Autowired
 	private ProductMapper productMapper;
 	
+	@Autowired
+	private ProductService productService;
+	
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
 	@Value("${java.file.test}")
 	String envValue;
 	
-	@Test
+	@Value("${chatBot.secretKey}")
+	String api;
+	
+	//@Test
 	void contextLoads() throws Exception {
 		User user = new User();
 		user = userMapper.getUser("jeong");
@@ -170,6 +180,77 @@ class OperationTest {
 		}
 		
 		System.out.println(envValue);
+		System.out.println("API KEY : "+api);
+		
+		Parts parts = new Parts();
+		parts.setName("O테스트2");
+		parts.setCalorie(100);
+		parts.setPrice(100);
+		//productService.insertParts(parts);
+		
+		System.out.println(parts);
+		
+		Map<String,Object> mapP = new HashMap<String,Object>();
+		mapP.put("name",parts.getName());
+		//parts = productService.getParts(mapP);
+		
+		parts.setPrice(10000);
+		//int r = productService.updateParts(parts);
+		
+		//System.out.println(r==1);
+		Search search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		mapP.put("search", search);
+		List<Parts> listP = productMapper.getListParts(mapP);
+		for (Parts parts2 : listP) {
+			System.out.println("재료 : "+parts2);
+		}
+	}
+	
+	//@Test
+	void foodCategory() throws Exception {
+		
+		List<Foodcategory> list = productService.getListFoodCategory();
+		
+		for (Foodcategory foodcategory : list) {
+			System.out.println("푸카 : "+foodcategory);
+		}
+	}
+	
+	//@Test
+	@Transactional
+	void insertProductFinal() throws Exception {
+		Product p = new Product();
+		Foodcategory f= new Foodcategory();
+		f.setFoodCategoryNo(1);
+		
+		p.setName("김치찌개9");
+		p.setFoodCategory(f);
+		p.setSubContent("정말 맛있는 찌개임");
+		p.setPrice(50000);
+		p.setThumbnail("123없음");
+		p.setCalorie(5000);
+		p.setContent("맛있다 정말로 김치찌개");
+		p.setStock(5);
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("name", "김치");
+		Parts parts = productService.getParts(map);
+		
+		map.put("name", "O테스트2");
+		Parts parts2 = productService.getParts(map);
+		
+		productService.insertProduct(p);
+		
+		List<Parts> list = new ArrayList();
+		parts.setProductNo(p.getProductNo());
+		parts2.setProductNo(p.getProductNo());
+		list.add(parts);
+		list.add(parts2);
+		productService.insertProudctParts(list);
 	}
 
 }

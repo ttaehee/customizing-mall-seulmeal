@@ -24,6 +24,12 @@ public class AttachmentsController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
+	public AttachmentsController() {
+		// TODO Auto-generated constructor stub
+		System.out.println(this.getClass());
+		System.out.println(System.getProperty("user.dir"));
+	}
+	
 	@GetMapping("/download/{fileName}")
 	public ResponseEntity<Object> attachMentsDownload(@PathVariable String fileName) throws IOException{
 		String path = System.getProperty("user.dir")+"/src/main/resources/attachments/"+fileName;

@@ -11,6 +11,6 @@ public class Follow {
 	
 	private int followNo;
 	private String userId;
-	private String followingUserId;
+	private User followingUserId;
 
 }

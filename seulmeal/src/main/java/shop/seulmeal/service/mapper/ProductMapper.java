@@ -21,7 +21,7 @@ public interface ProductMapper {
 	public void deleteProduct(int productNo) throws Exception;
 	
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
-	public List<Foodcategory> listFoodCategory(Search search) throws Exception;
+	public List<Foodcategory> getListFoodCategory() throws Exception;
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 	
 	public void insertReview(Review review) throws Exception;
@@ -39,11 +39,11 @@ public interface ProductMapper {
 	// productParts
 	public int insertProudctParts(List<Parts> list)throws Exception;
 	public List<Parts> getProductParts(int productNo)throws Exception;
-	public int deleteProductParts(Parts parts)throws Exception;
+	public int deleteProductParts(int productPartsNo)throws Exception;
 	
 	// totalCount
 	public int getTotalProductCount(Search search) throws Exception;
 	public int getTotalFoodCategoryCount(Search search)throws Exception;
 	public int getTotalReviewCount(Search search)throws Exception;
-	public int getTotalPartsCount(Search search)throws Exception;
+	public int getTotalPartsCount(Map<String, Object> map)throws Exception;
 }

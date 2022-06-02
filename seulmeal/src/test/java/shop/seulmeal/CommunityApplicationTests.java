@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import shop.seulmeal.service.domain.Block;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Follow;
 import shop.seulmeal.service.domain.Like;
@@ -358,11 +357,9 @@ class CommunityApplicationTests {
 		
 		Follow follow01 = new Follow();
 		follow01.setUserId("ghm8614");
-		follow01.setFollowingUserId("jeong");
 		
 		Follow follow02 = new Follow();
 		follow02.setUserId("ghm8614");
-		follow02.setFollowingUserId("minhye");
 
 		// ==== 검증 ====
 		//팔로우
@@ -375,21 +372,8 @@ class CommunityApplicationTests {
 		
 		//팔로우 삭제
 		assertThat(communityMapper.deleteFollow(follow01)).isEqualTo(1);
-	}
+	}	
 	
-	//@Test : o
-	void block() {
-		
-		communityMapper.deleteBlockAll();
-		
-		Block block = new Block();
-		block.setUserId("ghm8614");
-		block.setBlockedUserId("jeong");
-		
-		assertThat(communityMapper.insertBlock(block)).isEqualTo(1);
-		assertThat(communityMapper.deleteBlock(block)).isEqualTo(1);
-		assertThat(communityMapper.getListBlock("ghm8614").size()).isEqualTo(0);
-	}
 	
 	void contextLoads() {
 	}

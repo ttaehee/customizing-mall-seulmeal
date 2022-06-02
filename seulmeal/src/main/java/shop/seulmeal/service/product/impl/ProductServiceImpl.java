@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
 import shop.seulmeal.service.mapper.ProductMapper;
@@ -63,15 +64,9 @@ public class ProductServiceImpl implements ProductService {
 		productMapper.insertFoodCategory(foodCategoryName);
 	}
 
-	public Map<String, Object> listFoodCategory(Search search) throws Exception {
-		List<Foodcategory> list = productMapper.listFoodCategory(search);
-		int totalCount = productMapper.getTotalFoodCategoryCount(search);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("totalCount", new Integer(totalCount));
+	public List<Foodcategory> getListFoodCategory() throws Exception {
 		
-		return map;
+		return  productMapper.getListFoodCategory();
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {
@@ -110,6 +105,63 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void deleteReview(int reviewNo) throws Exception {
 		productMapper.deleteReview(reviewNo);
+	}
+	
+	
+	// Parts 관련
+	@Override
+	public int insertParts(Parts parts) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.insertParts(parts);
+	}
+
+	@Override
+	public Parts getParts(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.getParts(map);
+	}
+
+	@Override
+	public int updateParts(Parts parts) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.updateParts(parts);
+	}
+	
+	@Override
+	public int deleteParts(int no) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.deleteParts(no);
+	}
+
+	@Override
+	public Map<String, Object> getListParts(Search search) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		
+		map.put("list", productMapper.getListParts(map));
+		map.put("totalCount", productMapper.getTotalPartsCount(map));
+		
+		return map;
+	}
+	
+	// ProductParts 관련	
+	@Override
+	public int insertProudctParts(List<Parts> list) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.insertProudctParts(list);
+	}
+
+	@Override
+	public List<Parts> getProductParts(int productNo) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.getProductParts(productNo);
+	}
+
+	@Override
+	public int deleteProductParts(int productPartsNo) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.deleteProductParts(productPartsNo);
 	}
 
 	

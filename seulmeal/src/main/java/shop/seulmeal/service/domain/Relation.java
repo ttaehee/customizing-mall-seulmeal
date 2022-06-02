@@ -1,5 +1,6 @@
 package shop.seulmeal.service.domain;
 
+import java.sql.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -9,10 +10,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Block {
+public class Relation {
 
-	private int blockNo;
+	private int relationNo;
 	private String userId;
-	private String blockedUserId;
-
+	private User relationUser;
+	private String relationStatus;
+	private Date regDate;
+	
 }

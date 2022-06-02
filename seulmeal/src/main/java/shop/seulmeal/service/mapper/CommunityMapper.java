@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import shop.seulmeal.service.domain.Block;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Follow;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.Report;
 
 @Mapper
@@ -51,9 +51,9 @@ public interface CommunityMapper {
 	public int updateRelation(Follow follow);
 
 	//Block
-	public int insertBlock(Block block);
+	public int insertBlock(Relation relation);
 	public List<String> getListBlock(String userId);//
-	public int deleteBlock(Block block);
+	public int deleteBlock(Relation relation);
 	
 	//TestCode
 	public int deletePostAll();

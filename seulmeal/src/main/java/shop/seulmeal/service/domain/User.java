@@ -41,7 +41,7 @@ public class User {
 	private String foodCategoryName3;
 	private List<Parts> parts;
 	//private List<Follow> follow;
-	private List<Block> block;
+	private List<Relation> relation;
 	//private List<Wish> wish;
 	
 	
