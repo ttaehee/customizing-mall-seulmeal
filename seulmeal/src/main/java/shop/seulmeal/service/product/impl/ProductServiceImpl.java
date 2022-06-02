@@ -92,11 +92,8 @@ public class ProductServiceImpl implements ProductService {
 			productMapper.getProduct(review.getProduct().getProductNo());
 		product.setReviewCount(
 			productMapper.getReviewCountInProduct(review.getProduct().getProductNo()));
-		
-		double A = (double)productMapper.getAverageRating(review.getProduct().getProductNo());
-		
-		product.setAverageRating(A);
-		
+		product.setAverageRating(
+			productMapper.getAverageRating(review.getProduct().getProductNo()));
 		productMapper.updateProduct(product);
 	}
 
