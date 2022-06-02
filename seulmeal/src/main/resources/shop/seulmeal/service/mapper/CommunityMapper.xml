@@ -63,17 +63,20 @@
 	</select>
 
 	<!--  전체 게시글 목록 -->
-	<!--  '1' : 조회순, '2' : 베스트순, '3': 최신순-->
-	<select id="getListPost" parameterType="shop.seulmeal.common.Search" resultMap="postSelectMap">
+	<!--  '1' : 조회순, '2' : 베스트순, '3': 최신순--><!-- map : search / userId -->
+	<select id="getListPost" parameterType="map" resultMap="postSelectMap">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
 				FROM	(SELECT * FROM post	  
 						  	<where>
 						  		post_status = '0'
 						  		AND status = '0'
-						  		<if test="searchKeyword != null">
+						  		<if test="searchKeyword != null and userId == null">
 						  			AND (title LIKE ('%'||#{searchKeyword}||'%') OR content LIKE ('%'||#{searchKeyword}||'%'))
 						  		</if>	
+						  		<if test="userId != null">
+						  			AND user_id = #{userId}	
+						  		</if>
 						  	</where>
 						 			
 							ORDER BY
@@ -85,12 +88,24 @@
 								</choose>
 							</if>
 							<if test="searchCondition == null">
-								like_count
+								reg_date
 							</if>
 							 )inner_table
-				WHERE ROWNUM &lt;= #{endRowNum})
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+				WHERE ROWNUM &lt;= #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
+	
+		<!-- X -->
+	<!--  내 게시글 목록-->
+	<select id="getListMyPost" parameterType="String" resultMap="postSelectMap">
+		SELECT * FROM post
+		<where>
+			post_status = '0'
+			AND status = '0'
+			AND user_id = #{userId}
+		</where>
+	</select>
+	
 	
 	<!-- ROW Count -->
 	<select id="getPostTotalCount" parameterType="shop.seulmeal.common.Search" resultType="int">
@@ -105,22 +120,6 @@
 	  	</where> ) countTable
 	</select>
 	
-
-
-
-	
-	
-	<!-- X -->
-	<!--  내 게시글 목록-->
-	<select id="getListMyPost" parameterType="String" resultMap="postSelectMap">
-		SELECT * FROM post
-		<where>
-			post_status = '0'
-			AND status = '0'
-			AND user_id = #{userId}
-		</where>
-	</select>
-
 	<update id="updatePost" parameterType="Post">
 		UPDATE post
 		<set> 
@@ -364,9 +363,7 @@
 
 
 	<!-- 5. Follow -->
-	
-	
-	<insert id="insertFollow">
+	<insert id="insertFollow" parameterType="Relation">
 		INSERT INTO 
 			relation(
 				relation_no, 
@@ -408,7 +405,7 @@
 	</select>
 	
 
-	<delete id="deleteFollow">
+	<delete id="deleteFollow" parameterType="Relation">
 		DELETE FROM 
 			relation
 		<where>
@@ -418,7 +415,9 @@
 		</where>
 	</delete>
 
-	<update id="updateRelation">
+
+	<update id="updateRelation" parameterType="Relation">
+
 		UPDATE 
             relation
         <set> 
@@ -440,6 +439,7 @@
 
 
 	<!-- 6. Block -->
+
 	<resultMap type="Relation" id="relationSelectMap">
 		<result property="relationNo" column="relation_no" jdbcType="NUMERIC" />
 		<result property="relationUser.userId" column="user_id" jdbcType="VARCHAR" />
@@ -450,7 +450,8 @@
 		<result property="regDate" column="reg_date" jdbcType="DATE" />
 	</resultMap>
 	
-	<insert id="insertBlock">
+
+	<insert id="insertBlock" parameterType="Relation">
 		INSERT INTO relation(relation_no, user_id, relation_user_id, reg_date, relation_status)
 		VALUES(seq_relation_no.nextval, #{userId}, #{relationUser.userId}, SYSDATE, '1')
 	</insert>
@@ -494,7 +495,7 @@
 	</select>
 	
 	
-	<delete id="deleteBlock">
+	<delete id="deleteBlock" parameterType="Relation">
 		DELETE FROM 
 			relation
 		<where>
