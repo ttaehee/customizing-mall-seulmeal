@@ -20,8 +20,9 @@ public interface CommunityMapper {
 	public int insertPost(Post post);
 	public Post getPost(int postNo);
 	public int postViewsUp(int postNo);//
-	public List<Post> getListPost(Search search);// 검색 + 정렬1
-	public List<Post> getListMyPost(String userId);//1
+	public List<Post> getListPost(Map<String,Object> map);// 검색 + 정렬1
+	//public List<Post> getListPost(Search search);// 검색 + 정렬1
+	//public List<Post> getListMyPost(String userId);//1
 	public int updatePost(Post post);
 	public int deletePost(int postNo);
 	public int getPostTotalCount(Search search);//1
@@ -58,7 +59,8 @@ public interface CommunityMapper {
 	//User 
 	//Block
 	public int insertBlock(Relation relation);
-	public List<String> getListBlock(String userId);//
+	public List<Relation> getListBlock(Map<String,Object> map);
+	public int getTotalBlackCount(Map<String,Object> map);
 	public int deleteBlock(Relation relation);
 	
 	
