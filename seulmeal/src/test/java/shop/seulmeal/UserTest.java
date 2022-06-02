@@ -32,10 +32,10 @@ public class UserTest {
 	@Autowired
 	private UserMapper userMapper;
 	
-	@Autowired
-	private ProductMapper productMapper;
 	
-		
+	
+	int pageUnit = 5;	
+	int pageSize = 5;	
 	
 	//@Test
 	void insertUser() throws Exception{
@@ -62,7 +62,7 @@ public class UserTest {
 		
 	}
 	
-	@Test
+	//@Test
 	void getUser() throws Exception{
 		User user = new User();
 		
@@ -113,7 +113,15 @@ public class UserTest {
 	//@Test
 	void getListUser() throws Exception {
 		
+		Search search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		System.out.println(search);
+		Map<String, Object> map = new HashMap<>();
 		
+		userMapper.getListUser(search);
 		
 		
 	}
@@ -131,6 +139,37 @@ public class UserTest {
 		assertThat(userMapper.insertPoint(point)).isEqualTo(1);
 		
 	}
+	
+	//@Test
+	void getProfile() throws Exception {
+		
+		User user = new User();
+		
+		user.setUserId("a");
+		
+		user=userMapper.getUser("a");
+		System.out.println("getUser : "+user);
+		
+		assertEquals(user.getNickName(), "s");
+		assertEquals(user.getGrade(), "0");
+		
+	}
+	
+	//@Test
+	void getListPoint() throws Exception {
+		
+			
+		Search search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		System.out.println(search);
+		Map<String, Object> map = new HashMap<>();
+		
+		userMapper.getListPoint(search);
+	}
+	
 	
 	
 	
