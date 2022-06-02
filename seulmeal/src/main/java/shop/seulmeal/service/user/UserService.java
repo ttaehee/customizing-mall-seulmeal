@@ -1,5 +1,8 @@
 package shop.seulmeal.service.user;
 
+import java.util.List;
+
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.User;
 
 public interface UserService {
@@ -11,4 +14,6 @@ public interface UserService {
 	public void updateUser(User user) throws Exception;
 	
 	public void deleteUser(User user) throws Exception;
+	
+	public List<User> getListUser() throws Exception;
 }

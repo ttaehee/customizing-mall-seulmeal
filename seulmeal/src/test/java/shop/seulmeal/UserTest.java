@@ -9,15 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.mapper.UserMapper;
+import shop.seulmeal.service.user.UserService;
+
+
 
 @SpringBootTest
 public class UserTest {
@@ -25,11 +32,10 @@ public class UserTest {
 	@Autowired
 	private UserMapper userMapper;
 	
+	@Autowired
 	private ProductMapper productMapper;
 	
-	
-	
-	
+		
 	
 	//@Test
 	void insertUser() throws Exception{
@@ -56,7 +62,7 @@ public class UserTest {
 		
 	}
 	
-	//@Test
+	@Test
 	void getUser() throws Exception{
 		User user = new User();
 		
@@ -104,14 +110,25 @@ public class UserTest {
 		
 	}
 	
-	@Test
+	//@Test
 	void getListUser() throws Exception {
 		
-		Search search = new Search();
-		search.setCurrentPage(1);
-		search.setPageSize(3);
 		
 		
+		
+	}
+	
+	//@Test
+	void insertPoint() throws Exception {
+	
+		
+		Point point = new Point();
+		point.setUserId("ghm4905");
+		point.setPurchaseNo(2);
+		point.setPointStatus("1");
+		point.setPoint(6);
+		
+		assertThat(userMapper.insertPoint(point)).isEqualTo(1);
 		
 	}
 	
