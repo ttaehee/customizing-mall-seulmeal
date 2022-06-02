@@ -6,9 +6,22 @@
 	<mapper namespace="shop.seulmeal.service.mapper.UserMapper"> 
 		<insert id="insertUser">
 			INSERT
-		INTO users( user_id , user_name , password , birth , address, phone, email, grade , reg_date, nickname, confrim_status, foodcategory_name1, foodcategory_name2, foodcategory_name2, foodcategory_name3) 
-		VALUES	 (	#{userId} , #{userName} , #{password} , #{birth:DATE} , #{address:VARCHAR} , 
+		INTO users( user_id , user_name , password , birth , address, phone, email, grade , reg_date, nickname, confirm_status, foodcategory_name1, foodcategory_name2, foodcategory_name3) 
+		VALUES	 (	#{userId} , #{userName} , #{password} , TO_DATE(#{birth:DATE},'YY/MM/DD') , #{address:VARCHAR} , 
 							#{phone:VARCHAR} , #{email:VARCHAR} , #{grade:CHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR},#{foodCategoryName1:VARCHAR},#{foodCategoryName2:VARCHAR}, #{foodCategoryName3:VARCHAR} )
+		</insert>
+		
+		<insert id="insertHatesParts" parameterType="map">
+			INSERT INTO hates_parts(hates_parts_no, user_id, parts_no, parts_name)
+		SELECT seq_hates_parts_no.NEXTVAL, A.* FROM(
+			<foreach collection="list" item="parts" separator="UNION ALL">
+				SELECT 
+					#{parts.userId:VARCHAR} as user_id
+					#{parts.partNo:INTEGER} as parts_no,
+					#{parts.partsName:VARCHAR} as parts_name,
+					from dual
+			</foreach>
+		) A	
 		</insert>
 		
 		<select id="getUser" resultType="User">
@@ -20,16 +33,16 @@
 	   	<set>
 	   		user_name 	= #{userName} ,
 			password	= #{password},
-			birth 		= #{birth:VARCHAR} ,
+			birth 		= TO_DATE(#{birth:DATE},'YY/MM/DD') ,
 			address		= #{address:VARCHAR},
 			phone		= #{phone:VARCHAR},
-			email		= #{phone:VARCHAR},
+			email		= #{email:VARCHAR},
 			nickname	= #{nickName:VARCHAR},
 			profile_image	= #{profileImage:VARCHAR},
 			profile_message	= #{profileMessage:VARCHAR},
 			foodcategory_name1 = #{foodCategoryName1:VARCHAR},
 			foodcategory_name2 = #{foodCategoryName2:VARCHAR},
-			foddcategory_name3 = #{foodCategoryName3:VARCHAR}
+			foodcategory_name3 = #{foodCategoryName3:VARCHAR}
 	   	</set>
 	   	WHERE user_id = #{userId}
 	    
