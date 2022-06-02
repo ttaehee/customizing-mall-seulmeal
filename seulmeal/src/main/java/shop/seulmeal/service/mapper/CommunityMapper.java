@@ -59,7 +59,8 @@ public interface CommunityMapper {
 	//User 
 	//Block
 	public int insertBlock(Relation relation);
-	public List<String> getListBlock(String userId);//
+	public List<Relation> getListBlock(Map<String,Object> map);
+	public int getTotalBlackCount(Map<String,Object> map);
 	public int deleteBlock(Relation relation);
 	
 	

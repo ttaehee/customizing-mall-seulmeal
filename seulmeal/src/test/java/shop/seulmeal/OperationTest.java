@@ -19,8 +19,10 @@ import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.AttachmentsMapper;
+import shop.seulmeal.service.mapper.CommunityMapper;
 import shop.seulmeal.service.mapper.OperationMapper;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.mapper.UserMapper;
@@ -43,6 +45,9 @@ class OperationTest {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private CommunityMapper communityMapper;
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
@@ -252,5 +257,43 @@ class OperationTest {
 		list.add(parts2);
 		productService.insertProudctParts(list);
 	}
-
+	
+	//@Test
+	void blockInsert() {
+		Relation r = new Relation();
+		r.setUserId("jeong");
+		User user = new User();
+		user.setUserId("LJC");
+		r.setRelationUser(user);
+		communityMapper.insertBlock(r);
+	}
+	
+	@Test
+	void blockDelete() {
+		Relation r = new Relation();
+		r.setRelationNo(62);
+		communityMapper.deleteBlock(r);
+	}
+	
+	//@Test
+	void blockList() {
+		Search search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		//search.setSearchKeyword("");
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		map.put("search", search);
+		//map.put("userId", "ghm8614");
+		
+		List<Relation> list = communityMapper.getListBlock(map);
+		int a = communityMapper.getTotalBlackCount(map);
+		System.out.println(a);
+		
+		for (Relation relation : list) {
+			System.out.println("relation : "+relation);
+		}
+	}
 }
