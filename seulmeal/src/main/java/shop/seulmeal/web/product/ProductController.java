@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
@@ -27,6 +28,9 @@ public class ProductController {
 	@Autowired
 	@Qualifier("productServiceImpl")
 	private ProductService productService;
+	
+	int pageUnit = 5;	
+	int pageSize = 5;
 	
 	public ProductController() {
 		// TODO Auto-generated constructor stub
@@ -77,8 +81,42 @@ public class ProductController {
 	@GetMapping("getProduct/{prodNo}")
 	public String getProduct(@PathVariable int prodNo, Model model) throws Exception {
 		Product product = productService.getProduct(prodNo);
+		List<Parts> list =productService.getProductParts(product.getProductNo());
+		product.setParts(list);
 		
 		model.addAttribute("product",product);
 		return "/product/getProduct";
+	}
+	
+	@GetMapping("getListProduct")
+	public String getListProduct(Model model,@PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
+		Search search = new Search();
+		if(currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		
+		Map<String,Object> map = productService.getListProduct(search);
+		List<Product> list = (List)map.get("list");
+		List<Product> listr = new ArrayList();
+		
+		for (Product product : list) {
+			List<Parts> listp =productService.getProductParts(product.getProductNo());
+			product.setParts(listp);
+			listr.add(product);
+			System.out.println("product : "+product);
+		}
+		
+		Page resultPage = new Page(search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		
+		model.addAttribute("list",listr);
+		model.addAttribute("resultPage",resultPage);
+		model.addAttribute("search",search);
+		
+		return "/product/listProduct";
 	}
 }

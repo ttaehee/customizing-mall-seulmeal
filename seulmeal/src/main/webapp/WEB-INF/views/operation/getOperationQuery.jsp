@@ -65,12 +65,21 @@
             <div>삭제</div>
         </div>
         </div>
-        <div class="row justify-content-end">        	
-        	<c:forEach var="attachments" items="${post.attachments}">
-        		<div class="col-1">
-					<a href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
-				</div>			
-			</c:forEach>			
+        <div class="row justify-content-end">
+        	<div class="col-1">
+	        	<ul class="navbar-nav">
+			      	<li class="nav-item dropdown">
+			          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			            첨부파일
+			          </a>
+			          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+			          	<c:forEach var="attachments" items="${post.attachments}">		          	
+			            <li><a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a></li>
+			            </c:forEach>
+			          </ul>
+			        </li>
+		        </ul>
+        	</div>		
         </div>
         <div class="row" style="border-bottom: 2px solid; height: 700px;">
             <div class="col">${post.content}</div>            
@@ -88,7 +97,7 @@
 	        <div class="row justify-content-end">        	
 	        	<c:forEach var="attachments" items="${comment.attachments}">
 	        		<div class="col-1">
-						<a href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
+						<a href="/download/${attachments.attachmentName}">${attachments.attachmentName}</a>
 					</div>			
 				</c:forEach>		
 	        </div>

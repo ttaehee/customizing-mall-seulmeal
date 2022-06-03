@@ -19,11 +19,11 @@ import shop.seulmeal.service.mapper.AttachmentsMapper;
 public class AttachmentsServiceImpl implements AttachmentsService {
 	
 	//private String path =System.getProperty("user.dir")+"/src/main/resources/attachments/";
-	private String path ="C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/";
+	private String path ="C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/";
 	
 	@Autowired
 	private AttachmentsMapper attachmentsMapper;
-
+	
 	@Override
 	public int insertAttachments(MultipartFile[] uploadFile, Attachments attachments) throws IllegalStateException, IOException {
 		// TODO Auto-generated method stub

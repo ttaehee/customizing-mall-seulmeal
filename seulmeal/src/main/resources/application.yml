@@ -3,7 +3,10 @@ server:
   tomcat:
     additional-tld-skip-patterns: "*.jar"
 
-spring:
+spring: 
+  web:
+    resources:
+      static-locations: /resources/
   servlet:
     multipart:
       max-file-size: 10MB
@@ -11,12 +14,14 @@ spring:
       #location: ./src/main/resources/attachments/
       location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/
   datasource:
-    url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247
-    #url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=D:/oracle/Wallet_DB202204092247
+    #url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247
+    url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=D:/oracle/Wallet_DB202204092247
+
     username: admin
     password: Vywjdans!234
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-  mvc:
+  mvc: 
+    static-path-pattern: /resources/**
     view:
       suffix: .jsp
       prefix: /WEB-INF/views/
