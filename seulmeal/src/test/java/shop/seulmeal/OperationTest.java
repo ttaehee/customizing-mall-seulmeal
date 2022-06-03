@@ -218,11 +218,11 @@ class OperationTest {
 	//@Test
 	void foodCategory() throws Exception {
 		
-		List<Foodcategory> list = productService.getListFoodCategory();
+		//List<Foodcategory> list = productService.getListFoodCategory();
 		
-		for (Foodcategory foodcategory : list) {
-			System.out.println("푸카 : "+foodcategory);
-		}
+//		for (Foodcategory foodcategory : list) {
+//			System.out.println("푸카 : "+foodcategory);
+//		}
 	}
 	
 	//@Test
@@ -268,7 +268,7 @@ class OperationTest {
 		communityMapper.insertBlock(r);
 	}
 	
-	@Test
+	//@Test
 	void blockDelete() {
 		Relation r = new Relation();
 		r.setRelationNo(62);
@@ -295,5 +295,39 @@ class OperationTest {
 		for (Relation relation : list) {
 			System.out.println("relation : "+relation);
 		}
+	}
+	
+	//@Test
+	void getParts() throws Exception {
+		Search search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		Map<String,Object> map = new HashMap();
+		map.put("search", search);
+		List<Parts> list = productMapper.getListParts(map);
+		
+		for (Parts parts : list) {
+			System.out.println(parts);
+		}
+	}
+	
+	@Test
+	void insertProduct() throws Exception {
+		Product p = new Product();
+		p.setName("김치볶음");
+		p.setPrice(1000);
+		p.setCalorie(100);
+		p.setStock(2);		
+		Foodcategory f = new Foodcategory();
+		f.setFoodCategoryNo(1);
+		p.setFoodCategory(f);
+		p.setSubContent("김치볶음맛있다");
+		p.setContent("정말로 대박 맜있는 김치볶음");
+		p.setThumbnail("sss");
+		
+		productMapper.insertProduct(p);
+		
 	}
 }

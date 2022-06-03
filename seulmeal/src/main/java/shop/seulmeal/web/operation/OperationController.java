@@ -97,14 +97,20 @@ public class OperationController {
 	@GetMapping("getOperation/{postNo}")
 	public String insertOperation(@PathVariable int postNo, Model model) {
 		System.out.println(postNo);
+		// 조회수 증가
+		operationService.updateOperationView(postNo);
 		
+		// 자료 가져오기
 		Post post = operationService.getOperation(postNo);
 		
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("postNo", post.getPostNo());
+		
+		// 첨부파일 가져오기
 		List<Attachments> list = attachmentsService.getAttachments(map);
 		post.setAttachments(list);
 		
+		// 문의사항일시 답변가져오기
 		if(post.getPostStatus().equals("3")) {
 			List<Comment> cList = operationService.getListAnswer(post.getPostNo());
 			post.setComments(cList);

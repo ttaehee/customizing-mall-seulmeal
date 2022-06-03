@@ -28,7 +28,7 @@
 	<insert id="insertProduct">
 		INSERT INTO product (product_no, foodcategory_no, name, sub_content, price, calorie, content, stock, average_rating, like_count, review_count, reg_date, status, thumbnail)
 		VALUES ( seq_product_no.NEXTVAL, #{foodCategory.foodCategoryNo}, #{name}, #{subContent}, #{price}, #{calorie}, #{content},
-		#{stock}, 0, 0, 0, SYSDATE, 0, #{thumbnail} )
+		#{stock}, 0, 0, 0, SYSDATE, 0, #{thumbnail:VARCHAR} )
 		<selectKey keyProperty="productNo" resultType="int" order="AFTER">
 			SELECT seq_product_no.CURRVAL FROM DUAL
 		</selectKey>

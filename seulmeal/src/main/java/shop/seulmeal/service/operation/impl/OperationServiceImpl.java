@@ -23,7 +23,8 @@ public class OperationServiceImpl implements OperationService {
 		// TODO Auto-generated constructor stub
 		System.out.println(this.getClass());
 	}
-
+	
+	// 공지사항 + 이벤트 + 문의
 	@Override
 	public int insertOperation(Post post) {
 		// TODO Auto-generated method stub
@@ -60,6 +61,13 @@ public class OperationServiceImpl implements OperationService {
 		
 		return map;
 	}
+	
+	// 조회수 증가
+	@Override
+	public int updateOperationView(int no) {
+		// TODO Auto-generated method stub
+		return operationMapper.updateOperationView(no);
+	}
 
 	@Override
 	public int insertAnswer(Comment comment) {
@@ -84,5 +92,7 @@ public class OperationServiceImpl implements OperationService {
 		// TODO Auto-generated method stub
 		return operationMapper.deleteAnswer(comment);
 	}
+
+	
 
 }
