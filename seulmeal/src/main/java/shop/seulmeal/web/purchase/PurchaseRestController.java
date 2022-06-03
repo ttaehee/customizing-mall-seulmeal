@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.purchase.PurchaseService;
 
 @RestController
@@ -50,17 +53,9 @@ public class PurchaseRestController {
 		
 		return customParts;
 	}
+		
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 
 }

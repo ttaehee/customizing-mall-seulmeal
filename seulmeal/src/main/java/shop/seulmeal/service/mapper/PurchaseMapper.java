@@ -24,7 +24,7 @@ public interface PurchaseMapper {
 	public List<CustomParts> getListCustomParts(Map<String, Object> map);
 	
 	//커스터마이징재료 삭제 
-	public int deleteCustomParts(CustomParts customParts);
+	public int deleteCustomParts(int customProductNo);
 	
 	
 	//커스터마이징상품 추가 
@@ -34,7 +34,7 @@ public interface PurchaseMapper {
 	public CustomProduct getCustomProduct(int customProductNo);
 	
 	//커스터마이징상품 리스트(장바구니)
-	public List<CustomProduct> getListCustomProduct();
+	public List<CustomProduct> getListCustomProduct(Map<String, Object> map);
 	
 	//커스터마이징상품 수정(구매번호추가)
 	public int updateCustomProduct(CustomProduct customProduct);
@@ -50,7 +50,7 @@ public interface PurchaseMapper {
 	public Purchase getPurchase(int purchaseNo);
 	
 	//구매내역리스트
-	public List<Purchase> getListPurchase(Map map);
+	public List<Purchase> getListPurchase(Map<String, Object> map);
 	
 	//구매코드 변경 
 	public int updatePurchaseCode(Purchase purchase);
@@ -59,6 +59,6 @@ public interface PurchaseMapper {
 	public int deletePurchase(Purchase purchase);
 	
 	//개수
-	public int getTotalCount(Search search);
+	public int getTotalCount(Map<String, Object> map);
 
 }
