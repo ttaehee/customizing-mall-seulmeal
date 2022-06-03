@@ -19,27 +19,29 @@ public interface CommunityMapper {
 	//Post
 	public int insertPost(Post post);
 	public Post getPost(int postNo);
-	public int postViewsUp(int postNo);//
-	public List<Post> getListPost(Map<String,Object> map);// 검색 + 정렬1
-	//public List<Post> getListPost(Search search);// 검색 + 정렬1
-	//public List<Post> getListMyPost(String userId);//1
+	public int postViewsUp(int postNo);
 	public int updatePost(Post post);
 	public int deletePost(int postNo);
-	public int getPostTotalCount(Search search);//1
+	
+	public List<Post> getListPost(Map<String,Object> map);//Search(검색+정렬) + userId(myPost)
+	public int getPostTotalCount(Map<String,Object> map);//
 
 	
 	//Comment
 	public int insertComment(Comment comment);
-	public List<Comment> getListComment(int postNo);//
 	public int updateComment(Comment comment);
-	public int deleteComment(int commentNo);// userId?
-	public int getCommentTotalCount(int postNo);
+	public int deleteComment(int commentNo);
+	
+	public List<Comment> getListComment(Map<String,Object> map);
+	public int getCommentTotalCount(int postNo);//검색옵션 필요 x -> map X
 	
 	//Report
 	public int insertReportPost(Report report);
 	public int deleteReportPost(int postNo);
-	public List<Report> getListReportPost();//
-
+	
+	public List<Report> getListReportPost(Search search);
+	public int getReportTotalCount();
+	
 	//Like
 	public int checkLike();//
 	public int insertLike(Like like);
@@ -48,26 +50,30 @@ public interface CommunityMapper {
 	public int postLikeCountDown(int postNo);
 	public int getPostLikeCount(int postNo);
 	
-	//User 
-	//Follow
-	public int insertFollow(Relation relation);
-	public List<String> getListFollow(String userId);//
-	public List<String> getListFollower(String followingUserId);//
-	public int deleteFollow(Relation relation);
-	public int updateRelation(Relation relation);
-
-	//User 
-	//Block
-	public int insertBlock(Relation relation);
-	public List<Relation> getListBlock(Map<String,Object> map);
-	public int getTotalBlackCount(Map<String,Object> map);
-	public int deleteBlock(Relation relation);
+	//Relation (Users 테이블과 조인)
+	public int insertRelation(Relation relation);
+	public List<Relation> getListRelation(Map<String,Object> map);//userId, search, relationStatus
+	public int getRelationTotalCount(Map<String,Object> map);
+	public int updateRelation(Relation relation);//follow->block
+	public int deleteRelation(Relation relation);
 	
+	
+//	public int insertFollow(Relation relation);
+//	public List<String> getListFollow(String userId);
+//	public int deleteFollow(Relation relation);
+	
+	public List<String> getListFollower(Map<String,Object> map);//
+	public int getFollowerTotalCount(Map<String,Object> map);//
+
+//	public int insertBlock(Relation relation);
+//	public List<Relation> getListBlock(Map<String,Object> map);
+//	public int getTotalBlockCount(Map<String,Object> map);
+//	public int deleteBlock(Relation relation);
 	
 	//TestCode
 	public int deletePostAll();
 	public void deleteReportPostAll();
-	public void deleteFollowAll();
-	public void deleteBlockAll();	
-	
+//	public void deleteFollowAll();
+//	public void deleteBlockAll();	
+	public void deleteRelationAll();
 }

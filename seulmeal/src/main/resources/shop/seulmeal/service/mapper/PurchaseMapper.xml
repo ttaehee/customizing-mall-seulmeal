@@ -87,6 +87,7 @@
 	
 	<select id="getCustomProduct" resultType="customProduct">
 		SELECT *
+		FROM customproduct
 		<where>
 			customproduct_no = #{customProductNo}
 		</where>
@@ -99,14 +100,14 @@
 			    FROM customproduct cprod, customparts cparts
 				WHERE cprod.customproduct_no=cparts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
 				ORDER BY cprod.customproduct_no) inner_table
-			WHERE ROWNUM &lt; = #{endRowNum})
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+			WHERE ROWNUM &lt; = #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
 	
 	<update id="updateCustomProduct">
 		UPDATE customproduct
 		<set>
-			purchase_no=#{purchase.purchaseNo:NUMERIC}
+			purchase_no=#{purchase.purchaseNo:NUMERIC} AND cart_status = '0'
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}

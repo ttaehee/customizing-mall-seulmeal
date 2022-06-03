@@ -259,45 +259,6 @@ class OperationTest {
 	}
 	
 	//@Test
-	void blockInsert() {
-		Relation r = new Relation();
-		r.setUserId("jeong");
-		User user = new User();
-		user.setUserId("LJC");
-		r.setRelationUser(user);
-		communityMapper.insertBlock(r);
-	}
-	
-	//@Test
-	void blockDelete() {
-		Relation r = new Relation();
-		r.setRelationNo(62);
-		communityMapper.deleteBlock(r);
-	}
-	
-	//@Test
-	void blockList() {
-		Search search = new Search();
-		if(search.getCurrentPage() ==0 ){
-			search.setCurrentPage(1);
-		}
-		search.setPageSize(pageSize);
-		//search.setSearchKeyword("");
-		Map<String,Object> map = new HashMap<String,Object>();
-		
-		map.put("search", search);
-		//map.put("userId", "ghm8614");
-		
-		List<Relation> list = communityMapper.getListBlock(map);
-		int a = communityMapper.getTotalBlackCount(map);
-		System.out.println(a);
-		
-		for (Relation relation : list) {
-			System.out.println("relation : "+relation);
-		}
-	}
-	
-	//@Test
 	void getParts() throws Exception {
 		Search search = new Search();
 		if(search.getCurrentPage() ==0 ){

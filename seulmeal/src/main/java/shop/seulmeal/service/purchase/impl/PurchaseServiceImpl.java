@@ -51,9 +51,9 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public int deleteCustomParts(CustomParts customParts) {
+	public int deleteCustomParts(int customProductNo) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.deleteCustomParts(customParts);
+		return purchaseMapper.deleteCustomParts(customProductNo);
 	}
 	
 	
@@ -71,9 +71,17 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public List<CustomProduct> getListCustomProduct() {
+	public Map<String, Object> getListCustomProduct(Search search, String userId) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.getListCustomProduct();
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("userId", userId);
+		
+		map.put("cproductList", purchaseMapper.getListCustomProduct(map));
+		map.put("totalCount",purchaseMapper.getTotalCount(map));
+		
+		return map;
 	}
 
 	@Override
@@ -110,9 +118,9 @@ public class PurchaseServiceImpl implements PurchaseService{
 		map.put("userId", userId);
 		
 		List<Purchase> list=purchaseMapper.getListPurchase(map);
-		int totalCount=purchaseMapper.getTotalCount(search);
+		int totalCount=purchaseMapper.getTotalCount(map);
 		
-		map.put("list", list);
+		map.put("purchaseList", list);
 		map.put("totalCount", totalCount);
 		
 		return map;
@@ -128,12 +136,6 @@ public class PurchaseServiceImpl implements PurchaseService{
 	public int deletePurchase(Purchase purchase) {
 		// TODO Auto-generated method stub
 		return purchaseMapper.deletePurchase(purchase);
-	}
-	
-	@Override
-	public int getTotalCount(Search search) {
-		// TODO Auto-generated method stub
-		return purchaseMapper.getTotalCount(search);
 	}
 
 }
