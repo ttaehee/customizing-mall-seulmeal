@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -71,5 +72,13 @@ public class ProductController {
 		
 		System.out.println("상품 : "+product);
 		return "";
+	}
+	
+	@GetMapping("getProduct/{prodNo}")
+	public String getProduct(@PathVariable int prodNo, Model model) throws Exception {
+		Product product = productService.getProduct(prodNo);
+		
+		model.addAttribute("product",product);
+		return "/product/getProduct";
 	}
 }

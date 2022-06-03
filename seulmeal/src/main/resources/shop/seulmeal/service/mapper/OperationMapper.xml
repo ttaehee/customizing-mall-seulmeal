@@ -25,7 +25,6 @@
 			title = #{title:VARCHAR},
 			content = #{content:VARCHAR},
 			short_content = #{shortContent:VARCHAR},
-			views = #{views},
 			thumnail = #{thumnail:VARCHAR},
 			update_date = SYSDATE,
 			end_date = #{endDate:DATE}
@@ -42,6 +41,17 @@
 		</set>
 		<where>
 			post_no = #{postNo}
+		</where>
+	</update>
+	
+	<!-- view 조회수 증가 -->
+	<update id="updateOperationView">
+		UPDATE post
+		<set>
+			views = views +1
+		</set>
+		<where>
+			post_no =#{postNo}
 		</where>
 	</update>
 	
@@ -138,4 +148,6 @@
 			comment_no = #{commentNo}
 		</where>
 	</update>
+	
+	
 </mapper>
