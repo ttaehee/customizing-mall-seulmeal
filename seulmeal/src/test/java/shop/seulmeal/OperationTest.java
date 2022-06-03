@@ -291,5 +291,4 @@ class OperationTest {
 		productMapper.insertProduct(p);
 		
 	}
->>>>>>> refs/remotes/origin/master
 }
