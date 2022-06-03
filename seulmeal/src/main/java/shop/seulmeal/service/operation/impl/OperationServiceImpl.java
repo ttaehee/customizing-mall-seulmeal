@@ -24,7 +24,7 @@ public class OperationServiceImpl implements OperationService {
 		System.out.println(this.getClass());
 	}
 	
-	// 공지사항 + 이벤트 + 문의
+	// 공지사항 + 이벤트 + 문의CustomProductCustomProduct
 	@Override
 	public int insertOperation(Post post) {
 		// TODO Auto-generated method stub
