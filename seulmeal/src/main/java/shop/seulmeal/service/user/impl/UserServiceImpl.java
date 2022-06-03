@@ -32,6 +32,13 @@ public class UserServiceImpl implements UserService{
 		return userMapper.getUser(userId);
 	}
 
+
+	@Override
+	public List<User> getListUser() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
 	public int updateUser(User user) throws Exception {
 		// TODO Auto-generated method stub
@@ -44,13 +51,6 @@ public class UserServiceImpl implements UserService{
 		return userMapper.deleteUser(user);
 	}
 
-	@Override
-	public List<User> getListUser() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public int confirmUserId(String userId) throws Exception {
 		// TODO Auto-generated method stub
 		return userMapper.checkDuplicationUserId(userId);
@@ -125,8 +125,5 @@ public class UserServiceImpl implements UserService{
 
 	
 	
-	
-	
-
 	
 }

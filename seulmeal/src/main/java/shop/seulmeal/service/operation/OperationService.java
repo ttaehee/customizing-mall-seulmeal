@@ -15,6 +15,9 @@ public interface OperationService {
 	public int deleteOperation(Post post);
 	public Map<String,Object> getListOperation(Search search, int postStatus);
 	
+	// 조회수 증가
+	public int updateOperationView(int no);
+	
 	// 답변
 	public int insertAnswer(Comment comment);
 	public List<Comment> getListAnswer(int no);
