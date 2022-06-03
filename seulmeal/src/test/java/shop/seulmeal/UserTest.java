@@ -9,15 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.mapper.UserMapper;
+import shop.seulmeal.service.user.UserService;
+
+
 
 @SpringBootTest
 public class UserTest {
@@ -25,11 +32,10 @@ public class UserTest {
 	@Autowired
 	private UserMapper userMapper;
 	
-	private ProductMapper productMapper;
 	
 	
-	
-	
+	int pageUnit = 5;	
+	int pageSize = 5;	
 	
 	//@Test
 	void insertUser() throws Exception{
@@ -104,16 +110,66 @@ public class UserTest {
 		
 	}
 	
-	@Test
+	//@Test
 	void getListUser() throws Exception {
 		
 		Search search = new Search();
-		search.setCurrentPage(1);
-		search.setPageSize(3);
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		System.out.println(search);
+		Map<String, Object> map = new HashMap<>();
 		
+		userMapper.getListUser(search);
 		
 		
 	}
+	
+	//@Test
+	void insertPoint() throws Exception {
+	
+		
+		Point point = new Point();
+		point.setUserId("ghm4905");
+		point.setPurchaseNo(2);
+		point.setPointStatus("1");
+		point.setPoint(6);
+		
+		assertThat(userMapper.insertPoint(point)).isEqualTo(1);
+		
+	}
+	
+	//@Test
+	void getProfile() throws Exception {
+		
+		User user = new User();
+		
+		user.setUserId("a");
+		
+		user=userMapper.getUser("a");
+		System.out.println("getUser : "+user);
+		
+		assertEquals(user.getNickName(), "s");
+		assertEquals(user.getGrade(), "0");
+		
+	}
+	
+	//@Test
+	void getListPoint() throws Exception {
+		
+			
+		Search search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		System.out.println(search);
+		Map<String, Object> map = new HashMap<>();
+		
+		userMapper.getListPoint(search);
+	}
+	
 	
 	
 	

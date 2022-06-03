@@ -1,7 +1,9 @@
 package shop.seulmeal.service.purchase;
 
 import java.util.List;
+import java.util.Map;
 
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Purchase;
@@ -9,16 +11,16 @@ import shop.seulmeal.service.domain.Purchase;
 public interface PurchaseService {
 	
 	//커스터마이징재료 추가 
-	public int insertCustomParts(CustomParts customParts);
+	public int insertCustomParts(List<CustomParts> list);
 	
 	//커스터마이징상재료 상세 
 	public CustomParts getCustomParts(int customPartsNo);
 
 	//커스터마이징재료 리스트
-	public List<CustomParts> getListCustomParts();
+	public List<CustomParts> getListCustomParts(Search search, int customProductNo);
 	
 	//커스터마이징재료 삭제 
-	public int deleteCustomParts(CustomParts customParts);
+	public int deleteCustomParts(int customProductNo);
 	
 	
 	//커스터마이징상품 추가 
@@ -28,7 +30,7 @@ public interface PurchaseService {
 	public CustomProduct getCustomProduct(int customProductNo);
 	
 	//커스터마이징상품 리스트(장바구니)
-	public List<CustomProduct> getListCustomProduct();
+	public Map<String, Object> getListCustomProduct(Search search, String userId);
 	
 	//커스터마이징상품 수정(구매번호추가)
 	public int updateCustomProduct(CustomProduct customProduct);
@@ -44,15 +46,12 @@ public interface PurchaseService {
 	public Purchase getPurchase(int purchaseNo);
 	
 	//구매내역리스트
-	public List<Purchase> getListPurchase();
+	public Map<String, Object> getListPurchase(Search search, String userId);
 	
 	//구매코드 변경 
 	public int updatePurchaseCode(Purchase purchase);
 	
 	//구매내역 삭제 
 	public int deletePurchase(Purchase purchase);
-	
-	//개수
-	//public String makeCurrentPageSql(String sql , Search search) throws Exception ;
 
 }

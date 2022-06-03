@@ -13,7 +13,7 @@ public class Point {
 	
 	private int pointNo;
 	private String userId;
-	private Purchase purchase;
+	private int purchaseNo;
 	private String pointStatus;
 	private int point;
 	private Date regDate;

@@ -18,7 +18,8 @@ import shop.seulmeal.service.mapper.AttachmentsMapper;
 @Service("attachmentsServiceImpl")
 public class AttachmentsServiceImpl implements AttachmentsService {
 	
-	private String path =System.getProperty("user.dir")+"/src/main/resources/attachments/";
+	//private String path =System.getProperty("user.dir")+"/src/main/resources/attachments/";
+	private String path ="C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/";
 	
 	@Autowired
 	private AttachmentsMapper attachmentsMapper;

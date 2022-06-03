@@ -1,15 +1,20 @@
 package shop.seulmeal.service.purchase.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.mapper.PurchaseMapper;
 import shop.seulmeal.service.purchase.PurchaseService;
 
+@Service("purchaseServiceImpl")
 public class PurchaseServiceImpl implements PurchaseService{
 	
 	@Autowired
@@ -23,9 +28,9 @@ public class PurchaseServiceImpl implements PurchaseService{
 	
 	//커스터마이징재료 
 	@Override
-	public int insertCustomParts(CustomParts customParts) {
+	public int insertCustomParts(List<CustomParts> list) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.insertCustomParts(customParts);
+		return purchaseMapper.insertCustomParts(list);
 	}
 
 	@Override
@@ -35,15 +40,20 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public List<CustomParts> getListCustomParts() {
+	public List<CustomParts> getListCustomParts(Search search, int customProductNo) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.getListCustomParts();
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("search", search);
+		map.put("customProductNo", customProductNo);
+		
+		return purchaseMapper.getListCustomParts(map);
 	}
 
 	@Override
-	public int deleteCustomParts(CustomParts customParts) {
+	public int deleteCustomParts(int customProductNo) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.deleteCustomParts(customParts);
+		return purchaseMapper.deleteCustomParts(customProductNo);
 	}
 	
 	
@@ -61,9 +71,17 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public List<CustomProduct> getListCustomProduct() {
+	public Map<String, Object> getListCustomProduct(Search search, String userId) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.getListCustomProduct();
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("userId", userId);
+		
+		map.put("cproductList", purchaseMapper.getListCustomProduct(map));
+		map.put("totalCount",purchaseMapper.getTotalCount(map));
+		
+		return map;
 	}
 
 	@Override
@@ -92,9 +110,20 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public List<Purchase> getListPurchase() {
+	public Map<String, Object> getListPurchase(Search search, String userId) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.getListPurchase();
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("search", search);
+		map.put("userId", userId);
+		
+		List<Purchase> list=purchaseMapper.getListPurchase(map);
+		int totalCount=purchaseMapper.getTotalCount(map);
+		
+		map.put("purchaseList", list);
+		map.put("totalCount", totalCount);
+		
+		return map;
 	}
 
 	@Override

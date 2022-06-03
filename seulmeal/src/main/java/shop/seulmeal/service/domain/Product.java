@@ -25,10 +25,10 @@ public class Product {
 	private double averageRating;
 	private int likeCount;
 	private int reviewCount;
-	
+
 	// 상품에 들어간 재료
 	private List<Parts> parts;
-	
+
 	// 상품이 리뷰를 가지고 있다.
 	private List<Review> review;
 }

@@ -6,22 +6,22 @@
 	<mapper namespace="shop.seulmeal.service.mapper.UserMapper"> 
 		<insert id="insertUser">
 			INSERT
-		INTO users( user_id , user_name , password , birth , address, phone, email, grade , reg_date, nickname, confirm_status, foodcategory_name1, foodcategory_name2, foodcategory_name3) 
-		VALUES	 (	#{userId} , #{userName} , #{password} , TO_DATE(#{birth:DATE},'YY/MM/DD') , #{address:VARCHAR} , 
-							#{phone:VARCHAR} , #{email:VARCHAR} , #{grade:CHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR},#{foodCategoryName1:VARCHAR},#{foodCategoryName2:VARCHAR}, #{foodCategoryName3:VARCHAR} )
+			INTO users( user_id , user_name , password , birth , address, phone, email, grade , reg_date, nickname, confirm_status, foodcategory_name1, foodcategory_name2, foodcategory_name3) 
+			VALUES	 (	#{userId} , #{userName} , #{password} , TO_DATE(#{birth:DATE},'YY/MM/DD') , #{address:VARCHAR} , 
+								#{phone:VARCHAR} , #{email:VARCHAR} , #{grade:CHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR},#{foodCategoryName1:VARCHAR},#{foodCategoryName2:VARCHAR}, #{foodCategoryName3:VARCHAR} )
 		</insert>
 		
-		<insert id="insertHatesParts" parameterType="map">
+		<insert id="insertHatesParts" >
 			INSERT INTO hates_parts(hates_parts_no, user_id, parts_no, parts_name)
-		SELECT seq_hates_parts_no.NEXTVAL, A.* FROM(
-			<foreach collection="list" item="parts" separator="UNION ALL">
-				SELECT 
-					#{parts.userId:VARCHAR} as user_id
-					#{parts.partNo:INTEGER} as parts_no,
-					#{parts.partsName:VARCHAR} as parts_name,
-					from dual
-			</foreach>
-		) A	
+				SELECT seq_hates_parts_no.NEXTVAL, A.* FROM(
+					<foreach collection="list" item="parts" separator="UNION ALL">
+						SELECT 
+							#{parts.userId:VARCHAR} as user_id
+							#{parts.partNo:INTEGER} as parts_no,
+							#{parts.partsName:VARCHAR} as parts_name,
+							from dual
+					</foreach>
+				) A	
 		</insert>
 		
 		<select id="getUser" resultType="User">
@@ -49,27 +49,27 @@
 	    </update>
 		
 		<delete id="deleteUser">
-			update users set user_status = 1 where user_id = #{userId}	
+			UPDATE users SET user_status = 1 WHERE user_id = #{userId}	
 		</delete>
 		
-		<select id= "getListUser">
+		<select id= "getListUser" resultType="Map">
 			SELECT *
-	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
-	  					FROM		(	SELECT user_id , user_name, blacklist_status
-											FROM users
-											<if test="searchCondition != null">
-												<where>
-													<if test="searchCondition == 0 and searchKeyword !='' ">
-										 				user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' ORDER by user_name
-													</if>
-													<if test="searchCondition == 1 and searchKeyword !='' ">
-										 				blacklist_status = '1'
-													</if>
-												</where>
-											</if>
-											ORDER BY user_id ) inner_table
-						WHERE ROWNUM &lt;= #{endRowNum} )
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+		  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+		  					FROM		(	SELECT user_id , user_name, blacklist_status
+												FROM users
+												<if test="searchCondition != null">
+													<where>
+														<if test="searchCondition == 0 and searchKeyword !='' ">
+											 				user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' ORDER by user_name
+														</if>
+														<if test="searchCondition == 1 and searchKeyword !='' ">
+											 				blacklist_status = '1'
+														</if>
+													</where>
+												</if>
+												ORDER BY user_id ) inner_table
+							WHERE ROWNUM = #{endRowNum} )
+			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>
 		
 		<select id="checkDuplicationUserId">
@@ -80,7 +80,30 @@
 			SELECT nickname from users = #{nickName}
 		</select>
 		
+		<select id="checkDuplicationPhone">
+			SELECT phone from users = #{phone}
+		</select>
+		
+		<select id="checkDuplicationEmail">
+			SELECT email from users = #{email}
+		</select>
+		
 		<select id="getListUserTotalCount">
+			SELECT COUNT(*)
+			FROM( SELECT user_id , user_name , blacklist_status
+				FROM users
+					<if test="searchCondition != null">
+						<where>
+							<if test="searchCondition == 0 and searchKeyword !='' ">
+								user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE
+								'%'||#{searchKeyword}||'%' ORDER by user_name
+							</if>
+							<if test="searchCondition == 1 ">
+								blacklist_status = '1'
+							</if>
+						</where>
+					</if>
+				) countTable
 		</select>
 		
 		<update id="updateUserGrade">
@@ -91,60 +114,78 @@
 				WHEN purchase_count BETWEEN 3 AND 4 THEN '1'
 				WHEN purchase_count BETWEEN 5 AND 9 THEN '2'
 				ELSE '3'
-				END;
+				END
 		</update>
 		
 		<update id="updateUserTotalPoint">
-			UPDATE users SET total_point = total_point + #{value} WHERE user_id =#{userId};
+			UPDATE users SET total_point = total_point + #{value} WHERE user_id =#{userId}
 		</update>
 		
 		<insert id="insertBlackList">
 			INSERT 
 				WHEN block_count = 50 THEN
-				INTO relation VALUES(seq_relation_no.NEXTVAL, user_id, null, SYSDATE, '2') SELECT user_id, block_count FROM users;
+				INTO relation VALUES(seq_relation_no.NEXTVAL, user_id, null, SYSDATE, '2') SELECT user_id, block_count FROM users
 		</insert>
 		
 		<update id="updateBlackList">
 			update relation SET relation_status = '3' 
 				WHERE relation_status = '2' 
-				AND SYSDATE >= reg_date+90;	
+				AND SYSDATE >= reg_date+90
 		</update>
 		
 		<insert id="insertPoint">
-			insert into point (point_no, user_id, purchase_no, point_status, point, reg_date) 
-				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{amount}, SYSDATE);
+			INSERT INTO point (point_no, user_id, purchase_no, point_status, point, reg_date) 
+				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{point}, SYSDATE)
 		</insert>
 		
-		<select id="getListPoint">
-					SELECT *
-	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
-	  					FROM		(	SELECT point_no, user_id, purchase_no, point_status, point, reg_date
-											FROM point
-											<if test="searchCondition != null">
-												<where>
-													<if test="searchCondition == 0 and searchKeyword !='' ">
-										 				point_status = '0'
-													</if>
-													<if test="searchCondition == 1 and searchKeyword !='' ">
-										 				point_status = '1'
-													</if>
-													<if test="searchCondition == 2 and searchKeyword !='' ">
-										 				point_status = '2'
-													</if>
-												</where>
-											</if>
-											ORDER BY user_id ) inner_table
-						WHERE ROWNUM &lt;= #{endRowNum} )
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+		<select id="getListPoint" resultType="Map">
+			SELECT *
+			FROM ( SELECT inner_table.* , ROWNUM AS row_seq
+				FROM ( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
+					FROM point
+						<if test="searchCondition != null">
+							<where>
+								<if test="searchCondition == 0">
+									point_status = '0'
+								</if>
+								<if test="searchCondition == 1">
+									point_status = '1'
+								</if>
+								<if test="searchCondition == 2">
+									point_status = '2'
+								</if>
+							</where>
+						</if>
+					ORDER BY user_id ) inner_table
+				WHERE ROWNUM = #{endRowNum} )
+			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 		</select>
+		
+		<select id="getListPointTotalCount">
+			SELECT COUNT(*)
+			FROM( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
+				FROM point
+					<if test="searchCondition != null">
+						<where>
+							<if test="searchCondition == 0">
+								point_status = '0'
+							</if>
+							<if test="searchCondition == 1">
+								point_status = '1'
+							</if>
+							<if test="searchCondition == 2">
+								point_status = '2'
+							</if>
+				
+						</where>
+					</if>
+				) countTable
+		</select>
+		
 		
 		<select id="getProfile">
 			SELECT user_id, nickname, grade, profile_image, profile_message, foodcategory_name1, foodcategory_name2, foodcategory_name3 
 				FROM users WHERE user_id = #{userId}
 		</select>
-		
-		
-		
-		
 	
 	</mapper>     
