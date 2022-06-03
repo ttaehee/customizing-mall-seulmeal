@@ -4,15 +4,24 @@
            "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 
 <mapper namespace="shop.seulmeal.service.mapper.PurchaseMapper"> 
-
+	
+	<resultMap id="customPartsSelectMap" type="customParts">
+		<result property="parts.partsNo" 		column="parts_no" 	jdbcType="NUMERIC"/> 
+		<!--  
+		<association property="parts" javaType="parts" >
+			<result property="partsNo" 			column="parts_no" 		jdbcType="NUMERIC"/>
+		</association>
+		-->
+	</resultMap>
+	
 	<resultMap id="customProductSelectMap" type="customProduct">
     	<result property="customProductNo" 		column="customproduct_no" 	jdbcType="NUMERIC"/>
 	
-		<association property="buyer" javaType="user" >
+		<association property="user" javaType="user" >
 			<result property="userId" 	 		column="user_id" 			jdbcType="VARCHAR"/>
 		</association>
 		
-		<association property="purchaseProd" javaType="product" >
+		<association property="product" javaType="product" >
 			<result property="productNo" 		column="product_no" 		jdbcType="NUMERIC"/>
 		</association>
 	</resultMap>
@@ -22,9 +31,15 @@
 	<insert id="insertCustomParts">
 		INSERT INTO customparts
 		(customparts_no, customproduct_no, productparts_no, parts_no, gram)
-		values((seq_customparts_no.NEXTVAL),#{customProduct.customProductNo:NUMERIC}, 
-		#{productParts.productPartsNo:NUMERIC}, #{parts.partsNo:NUMERIC}, 
-		#{gram:NUMERIC})
+		SELECT seq_customparts_no.NEXTVAL, inner_table.*
+		FROM(
+			<foreach collection="list" item="item" index="index" separator="union all">
+				SELECT #{item.customProductNo:NUMERIC} as customProduct_no,
+				#{item.productPartsNo:NUMERIC} as productParts_no,
+				#{item.parts.partsNo:NUMERIC} as parts_no,
+				#{item.gram:NUMERIC} as gram
+				FROM dual
+			</foreach>)inner_table
 		<selectKey keyProperty="customPartsNo" resultType="int" order="AFTER">
 			SELECT seq_customparts_no.CURRVAL FROM DUAL
 		</selectKey>
@@ -40,12 +55,16 @@
 	<select id="getListCustomParts" resultType="customParts" parameterType="map">
 		SELECT *
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
-			FROM (SELECT prod.*, parts.*
-			    FROM customparts cparts
-				WHERE prod.customproduct_no=parts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
-				ORDER BY custom_product.customproduct_no) inner_table
-			WHERE ROWNUM &lt; = #{endRowNum})
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+			FROM (SELECT cparts.customparts_no, cparts.gram gram, vt.productparts_no, vt.name name, parts.price price, parts.calorie calorie
+			    FROM customparts cparts, parts, 
+			    (SELECT pparts.productparts_no productparts_no, parts.name name
+			    FROM productparts pparts, parts
+			    WHERE pparts.parts_no=parts.parts_no) vt
+				WHERE cparts.parts_no=parts.parts_no AND cparts.productparts_no=vt.productparts_no
+				AND cparts.customproduct_no=#{customProductNo}
+				ORDER BY cparts.customparts_no) inner_table
+			WHERE ROWNUM &lt; = #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
 	
 	<delete id="deleteCustomParts" parameterType="int">
@@ -133,24 +152,26 @@
 		SELECT *
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
 			FROM (SELECT * FROM purchase
-				WHERE status='0'
+				WHERE user_id=#{userId} AND status='0'
 				<if test="searchCondition != null">
 					<if test="searchCondition == 0">
 						AND reg_date=SYSDATE
 					</if>
 					<if test="searchCondition == 1">
-						AND reg_date=#{regDate}
+						<![CDATA[
+						AND reg_date>=SYSDATE-7
+						]]>
 					</if>
 					<if test="searchCondition == 2">
-						AND reg_date=#{regDate}
+						AND reg_date &gt;= DATE_ADD(SYSDATE, INTERVAL -1 MONTH )
 					</if>
 					<if test="searchCondition == 3">
-						AND reg_date=#{regDate}
+						AND reg_date &gt;= add_month(SYSDATE,-3)
 					</if>
 				</if>
 				ORDER BY purchase_no) inner_table
-			WHERE ROWNUM &lt; = #{endRowNum})
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+			WHERE ROWNUM &lt; = #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
 	
 	<update id="updatePurchaseCode">

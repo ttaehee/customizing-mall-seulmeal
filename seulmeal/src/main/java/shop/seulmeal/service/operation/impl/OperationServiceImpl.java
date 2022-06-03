@@ -64,25 +64,25 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public int insertAnswer(Comment comment) {
 		// TODO Auto-generated method stub
-		return 0;
+		return operationMapper.insertAnswer(comment);
 	}
 
 	@Override
 	public List<Comment> getListAnswer(int no) {
 		// TODO Auto-generated method stub
-		return null;
+		return operationMapper.getListAnswer(no);
 	}
 
 	@Override
 	public int updateAnswer(Comment comment) {
 		// TODO Auto-generated method stub
-		return 0;
+		return operationMapper.updateAnswer(comment);
 	}
 
 	@Override
 	public int deleteAnswer(Comment comment) {
 		// TODO Auto-generated method stub
-		return 0;
+		return operationMapper.deleteAnswer(comment);
 	}
 
 }
