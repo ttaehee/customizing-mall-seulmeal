@@ -7,6 +7,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+	@font-face {
+	    font-family: 'GmarketSansMedium';
+	    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}
+	
+	body {
+		font-family: 'GmarketSansMedium';
+	}
+</style>
 </head>
 <body> <!-- #BAD7DF -->
 	<jsp:include page="./layer/header.jsp"></jsp:include>
@@ -20,7 +32,7 @@
 	  </div>
 	  <div class="carousel-inner">
 	    <div class="carousel-item active" >
-	      <img src="https://t.ly/j26ep" class="d-block w-100" alt="..." style="height:500px;">
+	      <img src="resources/attachments/image/tetris.png" class="d-block w-100" alt="..." style="height:500px;">
 	      <div class="carousel-caption d-none d-md-block">
 	        <h5>First slide label</h5>
 	        <p>Some representative placeholder content for the first slide.</p>

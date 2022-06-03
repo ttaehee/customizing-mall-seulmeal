@@ -32,8 +32,8 @@ public class AttachmentsController {
 	
 	@GetMapping("/download/{fileName}")
 	public ResponseEntity<Object> attachMentsDownload(@PathVariable String fileName) throws IOException{
-		String path = System.getProperty("user.dir")+"/src/main/resources/attachments/"+fileName;
-		
+		//String path = System.getProperty("user.dir")+"/src/main/resources/attachments/"+fileName;
+		String path = "C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/"+fileName;
 		Path filePath = Paths.get(path);
 		Resource resource = new InputStreamResource(Files.newInputStream(filePath));
 		
