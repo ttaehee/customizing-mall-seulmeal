@@ -29,6 +29,7 @@ public interface CommunityMapper {
 	
 	//Comment
 	public int insertComment(Comment comment);
+	public Comment getComment(int commentNo);
 	public int updateComment(Comment comment);
 	public int deleteComment(int commentNo);
 	
@@ -46,11 +47,13 @@ public interface CommunityMapper {
 	public int checkLike();//
 	public int insertLike(Like like);
 	public int deleteLike(Like like);
-	public int postLikeCountUp(int postNo);
-	public int postLikeCountDown(int postNo);
+	public int postLikeCountUp(Integer postNo);
+	public int postLikeCountDown(Integer postNo);
+//	public int commentLikeCountUp(Integer commentNo);
+//	public int commentLikeCountDown(Integer commentNo);
 	public int getPostLikeCount(int postNo);
 	
-	//Relation (Users 테이블과 조인)
+	//Relation 
 	public int insertRelation(Relation relation);
 	public List<Relation> getListRelation(Map<String,Object> map);//userId, search, relationStatus
 	public int getRelationTotalCount(Map<String,Object> map);
@@ -73,7 +76,5 @@ public interface CommunityMapper {
 	//TestCode
 	public int deletePostAll();
 	public void deleteReportPostAll();
-//	public void deleteFollowAll();
-//	public void deleteBlockAll();	
 	public void deleteRelationAll();
 }
