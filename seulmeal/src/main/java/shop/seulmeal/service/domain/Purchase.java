@@ -1,6 +1,7 @@
 package shop.seulmeal.service.domain;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,4 +27,6 @@ public class Purchase {
 	private String paymentCondition;
 	private String imp_uid;
 	private int amount;
+	
+	private List<CustomProduct> customProduct;
 }

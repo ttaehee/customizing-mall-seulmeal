@@ -6,28 +6,53 @@
 <mapper namespace="shop.seulmeal.service.mapper.PurchaseMapper"> 
 	
 	<resultMap id="customPartsSelectMap" type="customParts">
-		<result property="parts.partsNo" 		column="parts_no" 	jdbcType="NUMERIC"/> 
-		<!--  
+		<result property="customPartsNo" 		column="customparts_no"   jdbcType="NUMERIC"/> 
+		<result property="customProductNo" 		column="customproduct_no" jdbcType="NUMERIC"/> 
+		<result property="gram" 				column="gram" 			  jdbcType="NUMERIC"/> 
+		<result property="productPartsNo" 		column="productparts_no"  jdbcType="NUMERIC"/> 
+		<result property="productPartsName" 	column="minus_name" 	  jdbcType="VARCHAR"/> 
 		<association property="parts" javaType="parts" >
-			<result property="partsNo" 			column="parts_no" 		jdbcType="NUMERIC"/>
+			<result property="partsNo" 			column="parts_no" 		  jdbcType="NUMERIC"/>
+			<result property="name" 			column="plus_name" 		  jdbcType="VARCHAR"/>
+			<result property="price" 			column="plus_price" 	  jdbcType="NUMERIC"/>
+			<result property="calorie" 			column="plus_calorie" 	  jdbcType="NUMERIC"/>
 		</association>
-		-->
 	</resultMap>
 	
 	<resultMap id="customProductSelectMap" type="customProduct">
     	<result property="customProductNo" 		column="customproduct_no" 	jdbcType="NUMERIC"/>
-	
+		<result property="count" 				column="count" 				jdbcType="NUMERIC"/>
+		<result property="cartStatus" 			column="cart_status" 		jdbcType="VARCHAR"/>
+		<result property="regDate" 				column="reg_date" 			jdbcType="DATE"/>
 		<association property="user" javaType="user" >
 			<result property="userId" 	 		column="user_id" 			jdbcType="VARCHAR"/>
 		</association>
-		
 		<association property="product" javaType="product" >
 			<result property="productNo" 		column="product_no" 		jdbcType="NUMERIC"/>
+			<result property="name" 			column="name" 				jdbcType="VARCHAR"/>
+			<result property="price" 			column="price" 				jdbcType="NUMERIC"/>
+			<result property="calorie" 			column="calorie" 			jdbcType="NUMERIC"/>
+		</association>
+		<association property="purchase" javaType="purchase" >
+			<result property="purchaseNo" 		column="purchase_no" 		jdbcType="NUMERIC"/>
+		</association>
+		<collection property="customParts" column="customproduct_no" javaType="java.util.ArrayList" 
+					ofType="customParts" select="getListCustomParts">
+		</collection>
+	</resultMap>
+	
+	<resultMap id="purchaseSelectMap" type="purchase">
+		<result property="purchaseNo" 			column="purchase_no" 	jdbcType="NUMERIC"/> 
+		<result property="price" 				column="price"		 	jdbcType="NUMERIC"/> 
+		<result property="deliveryPrice" 		column="delivery_price"  jdbcType="NUMERIC"/> 
+		<result property="address" 				column="address" 		jdbcType="VARCHAR"/> 
+		<association property="user" javaType="user" >
+			<result property="userId" 			column="user_id" 		jdbcType="VARCHAR"/>
 		</association>
 	</resultMap>
+	
 
-
-	<!-- custom_pars -->
+	<!-- custom_parts -->
 	<insert id="insertCustomParts">
 		INSERT INTO customparts
 		(customparts_no, customproduct_no, productparts_no, parts_no, gram)
@@ -52,19 +77,11 @@
 		</where>
 	</select>
 	
-	<select id="getListCustomParts" resultType="customParts" parameterType="map">
-		SELECT *
-		FROM (SELECT inner_table.*, ROWNUM AS row_seq
-			FROM (SELECT cparts.customparts_no, cparts.gram gram, vt.productparts_no, vt.name name, parts.price price, parts.calorie calorie
-			    FROM customparts cparts, parts, 
-			    (SELECT pparts.productparts_no productparts_no, parts.name name
-			    FROM productparts pparts, parts
-			    WHERE pparts.parts_no=parts.parts_no) vt
-				WHERE cparts.parts_no=parts.parts_no AND cparts.productparts_no=vt.productparts_no
-				AND cparts.customproduct_no=#{customProductNo}
-				ORDER BY cparts.customparts_no) inner_table
-			WHERE ROWNUM &lt; = #{search.endRowNum})
-		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	<select id="getListCustomParts" resultMap="customPartsSelectMap" parameterType="map">
+		SELECT c.customproduct_no, c.productparts_no, c.minus_name, p.parts_no, p.name plus_name, p.price plus_price, p.calorie, c.gram
+		FROM customparts c, parts p
+		WHERE (p.parts_no=c.parts_no OR p.parts_no=c.productparts_no) AND c.customproduct_no=#{customProductNo}
+		ORDER BY c.customparts_no
 	</select>
 	
 	<delete id="deleteCustomParts" parameterType="int">
@@ -93,13 +110,13 @@
 		</where>
 	</select>
 	
-	<select id="getListCustomProduct" resultType="customProduct" parameterType="map">
+	<select id="getListCustomProduct" resultMap="customProductSelectMap" parameterType="map">
 		SELECT *
-		FROM (SELECT inner_table.*, ROWNUM AS row_seq
-			FROM (SELECT cprod.customproduct_no, prod.name, prod.price, prod.calorie
-			    FROM customproduct cprod, product prod
-				WHERE cprod.product_no=prod.product_no AND user_id=#{userId} AND cart_status='1'
-				ORDER BY cprod.customproduct_no) inner_table
+		FROM (SELECT vt.*, ROWNUM AS row_seq
+			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.price, pd.calorie
+			    FROM customproduct cpd, product pd
+				WHERE cpd.product_no=pd.product_no AND cpd.user_id=#{userId} AND cpd.cart_status='1'
+				ORDER BY cpd.customproduct_no) vt
 			WHERE ROWNUM &lt; = #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
@@ -149,7 +166,7 @@
 		</where>
 	</select>
 	
-	<select id="getListPurchase" resultType="purchase" parameterType="map">
+	<select id="getListPurchase" resultMap="purchaseSelectMap" parameterType="map">
 		SELECT *
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
 			FROM (SELECT p.*, cp.count, pt.price productprice

@@ -43,11 +43,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 	public List<CustomParts> getListCustomParts(Search search, int customProductNo) {
 		// TODO Auto-generated method stub
 		
-		Map<String, Object> map=new HashMap<>();
-		map.put("search", search);
-		map.put("customProductNo", customProductNo);
-		
-		return purchaseMapper.getListCustomParts(map);
+		return purchaseMapper.getListCustomParts(customProductNo);
 	}
 
 	@Override
@@ -77,7 +73,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("search", search);
 		map.put("userId", userId);
-		
+	
 		map.put("cproductList", purchaseMapper.getListCustomProduct(map));
 		map.put("totalCount",purchaseMapper.getTotalCount(map));
 		

@@ -51,8 +51,8 @@ class PurchaseApplicationTests {
 		parts.setPartsNo(1);
 		
 		customParts.setCustomProductNo(1);
-		customParts.setProductPartsNo(1);
-		customParts.setParts(parts);
+		//customParts.setProductPartsNo(1);
+		//customParts.setParts(parts);
 		customParts.setGram(50);
 			
 		List<CustomParts> list=new ArrayList<CustomParts>();
@@ -88,20 +88,12 @@ class PurchaseApplicationTests {
 		
 		System.out.println("search : "+search);
 		
-		Map<String, Object> map=new HashMap<>();
-		map.put("customProductNo",1);
-		map.put("search", search);
+		List<CustomParts> list=purchaseMapper.getListCustomParts(5);
 		
-		List<CustomParts> list=purchaseMapper.getListCustomParts(map);
+		System.out.println("list 결과 : "+list);		
 		
-		System.out.println("list 결과 : "+list);
-		
-		map.put("partsNo",1);
-		
-		for(CustomParts customParts : list) {
-			customParts.setCustomProductNo(1);
-			customParts.setParts(productMapper.getParts(map));
-			System.out.println("커스터마이징재 : "+customParts);
+		for(CustomParts cp:list) {
+			System.out.println("커스터마이징 재료 : "+cp);
 		}
 
 	}	
@@ -129,7 +121,6 @@ class PurchaseApplicationTests {
 		customProduct.setProduct(product);
 		customProduct.setCount(7);
 		customProduct.setCartStatus("1");
-		customProduct.setStatus("0");
 			
 		int result=purchaseMapper.insertCustomProduct(customProduct);
 		System.out.println("결과 : "+result);
@@ -137,26 +128,31 @@ class PurchaseApplicationTests {
 		assertEquals(purchaseMapper.getCustomProduct(3).getCount(), 7);
 	}
 	
-	//@Test 
+	@Test 
 	void getListCustomProduct() {
 		
 		Search search = new Search();
-		if(search.getCurrentPage() ==0 ){
+		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
 		
-		System.out.println("search : "+search);
+		Map<String, Object> map =new HashMap<>();
 		
-		Map<String, Object> map=new HashMap<>();
-		map.put("userId","ghm4905");
 		map.put("search", search);
+		map.put("userId","ghm4905");
 		
-		List<CustomProduct> list=purchaseMapper.getListCustomProduct(map);
+		//커스터마이징상품 리스트 
+		List<CustomProduct> list = purchaseMapper.getListCustomProduct(map);
+		System.out.println("커스터마이징상품 : "+list);
 		
-		for(CustomProduct customProduct : list) {
-			System.out.println("커스터마이징상 : "+customProduct);
-		}
+		//커스터마이징재료 리스트 
+		//for(CustomProduct cp : list) {
+		//	List<CustomParts> listParts=purchaseMapper.getListCustomParts(cp.getCustomProductNo());
+		//	System.out.println("커스터마이징재료 : "+listParts);
+		//	cp.setCustomParts(listParts);
+		//	System.out.println("커스터마이징상품+재료 : "+cp);
+		//}
 
 	}		
 	
@@ -185,7 +181,7 @@ class PurchaseApplicationTests {
 
 		System.out.println("결과 : "+purchaseMapper.getCustomProduct(3));
 		
-		assertEquals(purchaseMapper.getCustomProduct(3).getStatus(), 1);
+		assertEquals(purchaseMapper.getCustomProduct(3).getCartStatus(), 1);
 	}	
 	
 	//@Test
@@ -225,7 +221,7 @@ class PurchaseApplicationTests {
 		assertEquals(purchase.getPrice(), 10000);
 	}
 	
-	@Test
+	//@Test
 	void getListPurchase() throws Exception {
 		
 		Search search = new Search();

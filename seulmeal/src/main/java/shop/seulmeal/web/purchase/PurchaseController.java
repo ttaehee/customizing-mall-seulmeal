@@ -129,12 +129,12 @@ public class PurchaseController {
 		//커스터마이징상품 리스
 		Map<String, Object> map =  purchaseService.getListCustomProduct(search, userId);
 		
-		List<CustomProduct> list= (List<CustomProduct>)(map.get("cproductList"));
+		//List<CustomProduct> list= (List<CustomProduct>)(map.get("cproductList"));
 		
 		//커스터마이징재료 리스트 
-		for(CustomProduct cp : list) {
-			map.put("cpartsList", purchaseService.getListCustomParts(search, cp.getCustomProductNo()));
-		}
+		//for(CustomProduct cp : list) {
+		//	cp.setCustomParts(purchaseService.getListCustomParts(search, cp.getCustomProductNo()));
+		//}
 
 		Page resultPage 
 			= new Page(search.getCurrentPage(), 
@@ -142,7 +142,6 @@ public class PurchaseController {
 		System.out.println(resultPage);
 
 		model.addAttribute("customProductList", map.get("cproductList"));
-		model.addAttribute("customPartsList", map.get("cpartsList"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 		

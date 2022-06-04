@@ -21,7 +21,7 @@ public interface PurchaseMapper {
 	public CustomParts getCustomParts(int customPartsNo);
 
 	//커스터마이징재료 리스트
-	public List<CustomParts> getListCustomParts(Map<String, Object> map);
+	public List<CustomParts> getListCustomParts(int customProductNo);
 	
 	//커스터마이징재료 삭제 
 	public int deleteCustomParts(int customProductNo);

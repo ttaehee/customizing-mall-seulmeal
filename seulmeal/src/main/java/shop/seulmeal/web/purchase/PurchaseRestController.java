@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.purchase.PurchaseService;
 
 @RestController
@@ -34,25 +36,17 @@ public class PurchaseRestController {
 	int pageUnit;
 	//@Value("#{commonProperties['pageSize']}")
 	int pageSize;
+
 	
-	
-	@PostMapping("api/insertCustomParts")
-	public CustomParts insertCustomParts(List<Parts> partsList, CustomParts customParts) throws Exception{
-		
-		System.out.println("/purchase/api/insertCustomParts : POST");
-		
-		List<CustomParts> list=new ArrayList<CustomParts>();
-		
-		for(Parts parts : partsList) {
-			customParts.setParts(parts);
-			list.add(customParts);
-		}
-		
-		purchaseService.insertCustomParts(list);
-		
-		
-		return customParts;
-	}
+	@PostMapping("api/updatePurchaseCode")
+	public Purchase updatePurchaseCode( @RequestBody Purchase purchase) throws Exception{
+
+	      System.out.println("/purchase/api/updateProduct : POST");
+	      
+	      purchaseService.updatePurchaseCode(purchase);
+	      
+	      return purchase;
+	   }   
 		
 	
 	

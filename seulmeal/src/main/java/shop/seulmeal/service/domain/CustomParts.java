@@ -1,5 +1,7 @@
 package shop.seulmeal.service.domain;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,8 +11,10 @@ import lombok.ToString;
 @Setter
 public class CustomParts {
 	private int customPartsNo;
-	private Parts parts;
+	private int customProductNo;
 	private int gram;
 	private int productPartsNo; //제외재료 
-	private int customProductNo;
+	private String productPartsName;
+	private Parts parts; //추가재료 
+	
 }
