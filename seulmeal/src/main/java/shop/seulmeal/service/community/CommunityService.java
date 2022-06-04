@@ -1,6 +1,5 @@
 package shop.seulmeal.service.community;
 
-import java.util.List;
 import java.util.Map;
 
 import shop.seulmeal.common.Search;
@@ -18,30 +17,34 @@ public interface CommunityService {
 	public Map<String,Object> getListPost(Search search, String userId);
 	public int updatePost(Post post);
 	public int deletePost(int postNo);
-	 
+	
 	//Comment
 	public int insertComment(Comment comment);
-	public List<Comment> getListComment(int postNo);//
+	public Comment getComment(int commentNo);
+	public Map<String,Object> getListcomment(Search search, int postNo);
 	public int updateComment(Comment comment);
-	public int deleteComment(int commentNo);//
-
+	public int deleteComment(int commentNo);
+	 
 	//Report
 	public int insertReportPost(Report report);
+	public Map<String,Object> getListReportPost(Search search);
 	public int deleteReportPost(int postNo);
-	public List<Report> getListReportPost();//
-	
+
 	//Like
 	public int insertLike(Like like);
-	public int deleteLike(Like like);	
-
-	//Relation	public int insertFollow(Relation relation);
-	public List<String> getListFollow(String userId);//
-	public List<String> getListFollower(String followingUserId);//
-	public int deleteFollow(Relation relation);
-	public int updateRelation(Relation relation);
+	public int deleteLike(Like like);
+	public int getPostLikeCount(int postNo);
 	
+	//Relation
+	public int insertFollow(Relation relation);
+	public Map<String,Object> getListFollow(Search search, String userId, String relationStatus);
+	public Map<String,Object> getListFollower(Search search, String relationUserId);
+	public int deleteFollow(Relation relation);
+	public int updateRelation(Relation relation);//follow->block
+
 	public int insertBlock(Relation relation);
-	public List<Relation> getListBlock(Map<String,Object> map);
+	public Map<String,Object> getListBlock(Search search, String userId, String relationStatus);
 	public int deleteBlock(Relation relation);
+	
 	
 }

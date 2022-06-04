@@ -67,6 +67,41 @@
 	<select id="getListPost" parameterType="map" resultMap="postSelectMap">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
+				FROM	(SELECT p.*, u.nickname, u.profile_image, u.profile_message
+ 						FROM post p, users u	  
+						  	<where>
+						  		p.user_id = u.user_id
+	  							AND post_status = '0'
+	  							AND status = '0'
+						  		<if test="userId != null">
+						  			AND p.user_id = #{userId}	
+						  		</if>
+						  		<if test="userId == null and search.searchKeyword != null">
+						  			AND (title LIKE ('%'||#{search.searchKeyword}||'%') OR content LIKE ('%'||#{search.searchKeyword}||'%'))
+						  		</if>	
+						  	</where>
+						 			
+							ORDER BY
+							<if test="search.searchCondition == null">
+								p.reg_date
+							</if>
+							<if test="search.searchCondition != null">
+								<choose>
+									<when test="search.searchCondition == 1">views</when>
+									<when test="search.searchCondition == 2">like_count</when>
+									<when test="search.searchCondition == 3">reg_date</when>
+								</choose>
+							</if>
+							 )inner_table
+				WHERE ROWNUM &lt;= #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	</select>
+	
+		<!--  전체 게시글 목록 -->
+	<!--  '1' : 조회순, '2' : 베스트순, '3': 최신순--><!-- map : search / userId -->
+	<!-- select id="getListPost" parameterType="map" resultMap="postSelectMap"
+		SELECT *
+		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
 				FROM	(SELECT * FROM post	  
 						  	<where>
 						  		post_status = '0'
@@ -93,10 +128,29 @@
 							 )inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
-	</select>
+	</select-->
+	
 	
 	<!-- 게시글 전체 수 -->
 	<select id="getPostTotalCount" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+	  	FROM(	SELECT p.*, u.nickname, u.profile_image, u.profile_message
+ 				FROM post p, users u	  
+	  	<where>
+	  		p.user_id = u.user_id
+	  		AND post_status = '0'
+	  		AND status = '0'
+	  		<if test="userId != null">
+				AND p.user_id = #{userId}	
+			</if>
+	  		<if test="userId == null and search.searchKeyword != null">
+	  			AND (title like ('%'||#{search.searchKeyword}||'%') OR content like ('%'||#{search.searchKeyword}||'%'))	
+	  		</if>
+	  	</where> ) countTable
+	</select>
+	
+	<!-- 게시글 전체 수 -->
+	<!-- select id="getPostTotalCount" parameterType="map" resultType="int"
 		SELECT COUNT(*)
 	  	FROM(	SELECT * FROM post	  
 	  	<where>
@@ -109,7 +163,7 @@
 	  			AND (title like ('%'||#{search.searchKeyword}||'%') OR content like ('%'||#{search.searchKeyword}||'%'))	
 	  		</if>
 	  	</where> ) countTable
-	</select>
+	</select-->
 	
 	<update id="updatePost" parameterType="Post">
 		UPDATE post
@@ -191,6 +245,15 @@
 			SELECT seq_comment_no.CURRVAL FROM DUAL
 			</selectKey>
 	</insert>
+
+	<select id="getComment" parameterType="int" resultType="Comment">
+		SELECT *
+		FROM comments
+		<where>
+			comment_no = #{commentNo}
+			AND status = '0'
+		</where>
+	</select>
 
 	<update id="updateComment" parameterType="Comment">
 		UPDATE 
@@ -292,15 +355,8 @@
         WHERE status = '0'
         AND post_no = #{postNo}
 	</update>
-
-	<!--  X , 페이징 처리 -->
-	<!-- select id="getListReportPost" resultMap="reportSelectMap">
-		SELECT report_no, post_no, reporter_id, reason, reg_date, status
-        FROM report
-        ORDER BY reg_date DESC
-	</select-->
 	
-		<!-- SQL : SELECT LIST -->
+	<!-- SQL : SELECT LIST -->
 	<select  id="getListReportPost"  parameterType="shop.seulmeal.common.Search"	resultMap="reportSelectMap">
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq

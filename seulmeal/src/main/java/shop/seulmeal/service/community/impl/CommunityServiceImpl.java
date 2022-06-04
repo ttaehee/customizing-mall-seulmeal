@@ -1,7 +1,6 @@
 package shop.seulmeal.service.community.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,16 @@ import shop.seulmeal.service.mapper.CommunityMapper;
 public class CommunityServiceImpl implements CommunityService {
 
 	@Autowired
-	CommunityMapper communityMapper;
-	
+	private CommunityMapper communityMapper;
+
+	// C
+	public CommunityServiceImpl() {
+		System.out.println(this.getClass());
+	}
+
+	// M
+
+	// Post
 	@Override
 	public int insertPost(Post post) {
 		return communityMapper.insertPost(post);
@@ -33,10 +40,16 @@ public class CommunityServiceImpl implements CommunityService {
 		return communityMapper.getPost(postNo);
 	}
 
-	//
 	@Override
-	public Map<String,Object> getListPost(Search search, String userId) {
-		return null;
+	public Map<String, Object> getListPost(Search search, String userId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("userId", userId);
+
+		map.put("postList", communityMapper.getListPost(map));
+		map.put("postTotalCount", communityMapper.getPostTotalCount(map));
+
+		return map;
 	}
 
 	@Override
@@ -49,86 +62,139 @@ public class CommunityServiceImpl implements CommunityService {
 		return communityMapper.deletePost(postNo);
 	}
 
-	
-	//Comment
+	// Comment
 	@Override
 	public int insertComment(Comment comment) {
-		return 0;
+		return communityMapper.insertComment(comment);
 	}
 
 	@Override
-	public List<Comment> getListComment(int postNo) {
-		return null;
+	public Comment getComment(int commentNo) {
+		return communityMapper.getComment(commentNo);
+	}
+	
+	@Override
+	public Map<String, Object> getListcomment(Search search, int postNo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("postNo", postNo);
+
+		map.put("commentList", communityMapper.getListComment(map));
+		map.put("commentTotalCount", communityMapper.getCommentTotalCount(postNo));
+
+		return map;
 	}
 
 	@Override
 	public int updateComment(Comment comment) {
-		return 0;
+		return communityMapper.updateComment(comment);
 	}
 
 	@Override
 	public int deleteComment(int commentNo) {
-		return 0;
+		return communityMapper.deleteComment(commentNo);
+	}
+
+	// Report
+	@Override
+	public int insertReportPost(Report report) {
+		return communityMapper.insertReportPost(report);
 	}
 
 	@Override
-	public int insertReportPost(Report report) {
-		return 0;
+	public Map<String, Object> getListReportPost(Search search) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("reportList", communityMapper.getListReportPost(search));
+		map.put("reportTotalCount", communityMapper.getReportTotalCount());
+
+		return map;
 	}
 
 	@Override
 	public int deleteReportPost(int postNo) {
-		return 0;
+		return communityMapper.deleteReportPost(postNo);
 	}
 
-	@Override
-	public List<Report> getListReportPost() {
-		return null;
-	}
-
+	// Like
 	@Override
 	public int insertLike(Like like) {
-		return 0;
+		communityMapper.postLikeCountUp(like.getPostNo());
+		return communityMapper.insertLike(like);
 	}
 
 	@Override
 	public int deleteLike(Like like) {
-		return 0;
+		communityMapper.postLikeCountDown(like.getPostNo());
+		return communityMapper.deleteLike(like);
 	}
 
 	@Override
-	public List<String> getListFollow(String userId) {
-		return null;
+	public int getPostLikeCount(int postNo) {
+		return communityMapper.getPostLikeCount(postNo);
+	}
+
+	// Relation
+	@Override
+	public int insertFollow(Relation relation) {
+		return communityMapper.insertRelation(relation);
 	}
 
 	@Override
-	public List<String> getListFollower(String followingUserId) {
-		return null;
+	public Map<String, Object> getListFollow(Search search, String userId, String relationStatus) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("userId", userId);
+		map.put("relationStatus", relationStatus);
+
+		map.put("followList", communityMapper.getListRelation(map));
+		map.put("followTotalCount", communityMapper.getRelationTotalCount(map));
+
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getListFollower(Search search, String relationUserId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("relationUserId", relationUserId);
+
+		map.put("followerList", communityMapper.getListFollower(map));
+		map.put("followerTotalCount", communityMapper.getFollowerTotalCount(map));
+
+		return map;
 	}
 
 	@Override
 	public int deleteFollow(Relation relation) {
-		return 0;
+		return communityMapper.deleteRelation(relation);
 	}
 
 	@Override
 	public int updateRelation(Relation relation) {
-		return 0;
+		return communityMapper.updateRelation(relation);
 	}
 
 	@Override
 	public int insertBlock(Relation relation) {
-		return 0;
+		return communityMapper.insertRelation(relation);
 	}
 
 	@Override
-	public List<Relation> getListBlock(Map<String, Object> map) {
-		return null;
+	public Map<String, Object> getListBlock(Search search, String userId, String relationStatus) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("userId", userId);
+		map.put("relationStatus", relationStatus);
+
+		map.put("blockList", communityMapper.getListRelation(map));
+		map.put("blockTotalCount", communityMapper.getRelationTotalCount(map));
+
+		return map;
 	}
 
 	@Override
 	public int deleteBlock(Relation relation) {
-		return 0;
+		return communityMapper.deleteRelation(relation);
 	}
 
 

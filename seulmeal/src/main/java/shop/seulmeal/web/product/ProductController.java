@@ -88,8 +88,9 @@ public class ProductController {
 		return "/product/getProduct";
 	}
 	
-	@GetMapping("getListProduct")
-	public String getListProduct(Model model,@PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
+	@GetMapping(value = {"getListProduct/{searchCondition}",
+						"getListProduct"})
+	public String getListProduct(Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
 		Search search = new Search();
 		if(currentPage != null) {
 			search.setCurrentPage(new Integer(currentPage));
