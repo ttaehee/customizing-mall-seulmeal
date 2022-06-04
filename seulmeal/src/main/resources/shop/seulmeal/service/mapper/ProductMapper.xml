@@ -43,58 +43,47 @@
 
 	<select id="getListProduct" resultMap="productSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
-		( SELECT thumbnail, product_no , name , price, sub_content FROM product
-		<if test="searchCondition != null">
+		( SELECT thumbnail, product_no , p.name as pName , price, sub_content, f.* FROM product p, foodcategory f
 			<where>
-				<if test="searchCondition == 0 and searchKeyword !='' ">
-					foodCategory_name like '%'||#{searchKeyword}||'%'
+				p.foodcategory_no = f.foodcategory_no
+				<if test="searchKeyword != null">
+					AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
 				</if>
-				<if test="searchCondition == 1 and searchKeyword !='' ">
-					name like '%'||#{searchKeyword}||'%'
-				</if>
-				<if test="searchCondition == 2 and searchKeyword !='' ">
-					sub_content like '%'||#{searchKeyword}||'%'
+				<if test="searchCondition != null">
+					AND p.foodcategory_no = #{searchCondition}				
 				</if>
 			</where>
-		</if>
 		ORDER BY product_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
 
 
 	<select id="getTotalProductCount" resultType="int">
-		SELECT COUNT(*) FROM ( SELECT product_no , name , price, sub_content FROM product
-		<if test="searchCondition != null">
+		SELECT COUNT(*) FROM ( SELECT product_no FROM product p, foodcategory f
 			<where>
-				<if test="searchCondition == 0 and searchKeyword !='' ">
-					foodCategory_name = #{searchKeyword}
+				p.foodcategory_no = f.foodcategory_no
+				<if test="searchKeyword != null">
+					AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
 				</if>
-				<if test="searchCondition == 1 and searchKeyword !='' ">
-					name = #{searchKeyword}
-				</if>
-				<if test="searchCondition == 2 and searchKeyword !='' ">
-					sub_content = #{searchKeyword}
+				<if test="searchCondition != null">
+					AND p.foodcategory_no = #{searchCondition}				
 				</if>
 			</where>
-		</if>
-		) countTable
+		ORDER BY product_no) countTable
 	</select>
 
 
 	<update id="updateProduct">
 		UPDATE product
 		<set>
-			foodcategory_no = #{foodCategory.foodCategoryNo},
-			name = #{name},
-			sub_content = #{subContent},
-			price = #{price},
-			calorie = #{calorie},
-			content = #{content},
-			stock = #{stock},
-			thumbnail = #{thumbnail},
-			review_Count = #{reviewCount},
-			like_Count = #{likeCount},
-			average_Rating= #{averageRating}
+			foodcategory_no = #{foodCategory.foodCategoryNo:INTEGER},
+			name = #{name:VARCAHR},
+			sub_content = #{subContent:VARCAHR},
+			price = #{price:INTEGER},
+			calorie = #{calorie:INTEGER},
+			content = #{content:VARCHAR},
+			stock = #{stock:INTEGER},
+			thumbnail = #{thumbnail:VARCHAR}
 		</set>
 		WHERE product_no = #{productNo}
 	</update>
@@ -126,11 +115,11 @@
 	</insert>
 
 	<select id="getTotalFoodCategoryCount" resultType="int">
-		SELECT COUNT(*) FROM ( SELECT foodcategory_no , foodcategory_name , status FROM foodcategory ) countTable
+		SELECT COUNT(*) FROM ( SELECT * FROM foodcategory ) countTable
 	</select>
 
 	<select id="getListFoodCategory" resultType="foodcategory">
-		SELECT foodcategory_no , name , status FROM foodCategory WHERE status = '0'
+		SELECT * FROM foodCategory WHERE status = '0'
 	</select>
 
 	<update id="deleteFoodCategory">

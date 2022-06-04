@@ -4,11 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
         
 	<mapper namespace="shop.seulmeal.service.mapper.UserMapper">
-	
-		<resultMap type="shop.seulmeal.service.domain.User" id="userSelectMap">
-			<result property=""/>
-		</resultMap>
-	
+		
 	 
 		<insert id="insertUser">
 			INSERT

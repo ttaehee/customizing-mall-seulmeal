@@ -2,6 +2,8 @@ package shop.seulmeal.web.operation;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.service.attachments.AttachmentsService;
+import shop.seulmeal.service.confirm.ConfirmService;
 import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
@@ -29,6 +32,9 @@ public class OperationRestController {
 	
 	@Autowired
 	private AttachmentsService attachmentsService;
+	
+	@Autowired
+	private ConfirmService confirmService;
 	
 	@PostMapping(value ="insertAnswer", consumes = {"multipart/form-data"})
 	public Comment insertAnswer(@RequestParam(value="uploadfile", required = false) MultipartFile[] uploadfile,
@@ -72,6 +78,23 @@ public class OperationRestController {
 			json.put("result","false");
 		}
 		
+		return json;
+	}
+	
+	@PostMapping("confirm")
+	public JSONObject confirmUser(@RequestBody User user, HttpSession session) {
+		System.out.println("유저 : "+user);
+		String num = confirmService.confirmNum();
+		if(user.getEmail() != null) {
+			confirmService.sendMail(num, user.getEmail());
+			session.setAttribute(user.getEmail(), num);
+		} else if(user.getPhone() != null) {
+			confirmService.sendSMS(user.getPhone(), num);
+			session.setAttribute(user.getPhone(), num);
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("result", "sucess");
 		return json;
 	}
 }

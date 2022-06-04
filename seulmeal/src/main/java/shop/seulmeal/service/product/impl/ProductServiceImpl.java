@@ -68,15 +68,10 @@ public class ProductServiceImpl implements ProductService {
 		productMapper.insertFoodCategory(foodCategoryName);
 	}
 
-	public Map<String, Object> getListFoodCategory() throws Exception {
-		List<Foodcategory> list = productMapper.getListFoodCategory();
-		int totalCount = productMapper.getTotalFoodCategoryCount();
+	public List<Foodcategory> getListFoodCategory() throws Exception {
+		List<Foodcategory> list = productMapper.getListFoodCategory();		
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("totalCount", new Integer(totalCount));
-
-		return map;
+		return list;
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {

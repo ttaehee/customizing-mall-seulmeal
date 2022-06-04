@@ -3,22 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link href="../../resources/css/body.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<style type="text/css">
-	@font-face {
-	    font-family: 'GmarketSansMedium';
-	    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
-	}
-	
-	body {
-		font-family: 'GmarketSansMedium';
-	}
-</style>
 </head>
 <body> <!-- #BAD7DF -->
 	<jsp:include page="./layer/header.jsp"></jsp:include>
@@ -72,6 +61,7 @@
 	  </section>
 	</main>
 	<a href="/operation/getChatBot">챗봇이동</a>
+	<jsp:include page="confirm.jsp"></jsp:include>
 	<jsp:include page="./layer/footer.jsp"></jsp:include>
 </body>
 </html>

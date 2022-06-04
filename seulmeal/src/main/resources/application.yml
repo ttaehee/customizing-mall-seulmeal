@@ -4,6 +4,18 @@ server:
     additional-tld-skip-patterns: "*.jar"
 
 spring: 
+  mail: 
+    properties:
+      mail:
+       smtp:
+        auth: true
+        timeout: 5000
+        starttls:
+          enable: true 
+    password: spldhctwcwpvubmm
+    username: ijhghji
+    port: 587
+    host: smtp.gmail.com
   web:
     resources:
       static-locations: /resources/
@@ -14,8 +26,8 @@ spring:
       #location: ./src/main/resources/attachments/
       location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/
   datasource:
-    url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247
-    #url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=D:/oracle/Wallet_DB202204092247
+    #url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247
+    url: jdbc:log4jdbc:oracle:thin:@db202204092247_high?TNS_ADMIN=D:/oracle/Wallet_DB202204092247
 
     username: admin
     password: Vywjdans!234

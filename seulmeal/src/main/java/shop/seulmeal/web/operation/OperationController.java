@@ -49,9 +49,7 @@ public class OperationController {
 	private OperationService operationService;
 	
 	@Autowired
-	private AttachmentsService attachmentsService;
-	
-	
+	private AttachmentsService attachmentsService;	
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
@@ -97,8 +95,6 @@ public class OperationController {
 	@GetMapping("getOperation/{postNo}")
 	public String insertOperation(@PathVariable int postNo, Model model) {
 		System.out.println(postNo);
-		// 조회수 증가
-		operationService.updateOperationView(postNo);
 		
 		// 자료 가져오기
 		Post post = operationService.getOperation(postNo);

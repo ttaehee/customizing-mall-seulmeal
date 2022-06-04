@@ -1,11 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>NavBar</title>
-</head>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="../../resources/css/body.css">
 <script type="text/javascript">
 	function join(){
 		window.location.href = '/user/addUser';
@@ -15,7 +11,15 @@
 		window.location.href = '/user/login';
 	}
 </script>
-<body>
+	<div style="background:#BAD7DF; display:flex; justify-content:space-between;">
+		<h3>오늘 할일</h3>
+		<h4>신규 주문</h4>
+		<h4>교환/반품 승인</h4>
+		<h4>게시글 신고</h4>
+		<h4>재고 소진</h4>
+		<h4>문의 답변대기</h4>
+	</div>
+
 	<div style="background:#BAD7DF;">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
 		<div id="google_translate_element" class="hd_lang"></div>
@@ -49,9 +53,9 @@
 	            전체카테고리
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-	            <li><a class="dropdown-item" href="#">한식</a></li>
-	            <li><a class="dropdown-item" href="#">중식</a></li>
-	            <li><a class="dropdown-item" href="#">양식</a></li>
+	          	<c:forEach var="foodcategory" items="${fList}">
+	          		<li><a class="dropdown-item" href="/product/getListProduct/${foodcategory.foodCategoryNo}">${foodcategory.name}</a></li>
+				</c:forEach>
 	          </ul>
 	        </li>
 	        <li class="nav-item">
@@ -80,6 +84,3 @@
 	    </div>
 	  </div>
 	</nav> 	    
-
-</body>
-</html>
