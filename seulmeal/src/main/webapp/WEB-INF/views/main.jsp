@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link href="../../resources/css/body.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
@@ -20,7 +21,7 @@
 	  </div>
 	  <div class="carousel-inner">
 	    <div class="carousel-item active" >
-	      <img src="https://t.ly/j26ep" class="d-block w-100" alt="..." style="height:500px;">
+	      <img src="resources/attachments/image/tetris.png" class="d-block w-100" alt="..." style="height:500px;">
 	      <div class="carousel-caption d-none d-md-block">
 	        <h5>First slide label</h5>
 	        <p>Some representative placeholder content for the first slide.</p>
@@ -60,6 +61,7 @@
 	  </section>
 	</main>
 	<a href="/operation/getChatBot">챗봇이동</a>
+	<jsp:include page="confirm.jsp"></jsp:include>
 	<jsp:include page="./layer/footer.jsp"></jsp:include>
 </body>
 </html>

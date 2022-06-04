@@ -22,6 +22,9 @@ public interface OperationMapper {
 	// 조회수 증가
 	public int updateOperationView(int no);
 	
+	// 문의 답변 완료
+	public int updateAnswerStatus(int no);
+	
 	// 답변
 	public int insertAnswer(Comment comment);
 	public List<Comment> getListAnswer(int no);

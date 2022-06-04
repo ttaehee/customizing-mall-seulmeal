@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.BlackList;
+import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.UserMapper;
 import shop.seulmeal.service.user.UserService;
 
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
 	
 	@Autowired
@@ -21,49 +24,59 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int insertUser(User user) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.insertUser(user);
 	}
 
 	@Override
 	public User getUser(String userId) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return userMapper.getUser(userId);
 	}
 
 
 	@Override
-	public List<User> getListUser() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> getListUser(Search search) throws Exception {
+
+		Map<String, Object> map=new HashMap<>();
+		map.put("search", search);
+
+		
+		List<User> list=userMapper.getListUser(search);
+		int totalCount=userMapper.getListUserTotalCount(map);
+		
+		map.put("purchaseList", list);
+		map.put("totalCount", totalCount);
+		
+		return map;
 	}
 
 	@Override
 	public int updateUser(User user) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.updateUser(user);
 	}
 
 	@Override
 	public int deleteUser(User user) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.deleteUser(user);
 	}
 
 	public int confirmUserId(String userId) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.checkDuplicationUserId(userId);
 	}
 
 	@Override
-	public int confirmUserPhone(String phome) throws Exception {
+	public User confirmUserPhone(String phone) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.checkDuplicationPhone(phone);
 	}
 
 	@Override
-	public int confirmUserEmail(String email) throws Exception {
+	public User confirmUserEmail(String email) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.checkDuplicationEmail(email);
 	}
 
 	@Override
@@ -75,7 +88,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int confirmUserNickname(String nickname) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.checkDuplicationNickName(nickname);
 	}
 
 	@Override
@@ -97,9 +110,35 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public int insertBlackList() throws Exception {
+	public int insertBlackList(BlackList blackList) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.insertBlackList(blackList);
+	}
+	
+	@Override
+	public int updateBlackList(BlackList blakList) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.updateBlackList(blakList);
+	}
+
+
+	@Override
+	public int insertPont(Point point) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public List<Point> getListPoint(Search search, String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	
+
+	
+	
 	
 }

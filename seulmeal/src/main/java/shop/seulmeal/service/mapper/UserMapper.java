@@ -3,6 +3,7 @@ package shop.seulmeal.service.mapper;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,11 +32,11 @@ public interface UserMapper {
 	
 	public int checkDuplicationNickName(String nickName) throws Exception;
 		
-	public int checkDuplicationPhone(String phone) throws Exception;
+	public User checkDuplicationPhone(String phone) throws Exception;
 	
-	public int checkDuplicationEmail(String email) throws Exception;
+	public User checkDuplicationEmail(String email) throws Exception;
 	//
-	public int getListUserTotalCount(Search search) throws Exception;
+	public int getListUserTotalCount(Map<String, Object> map) throws Exception;
 	
 	public int updateUserGrade() throws Exception;
 	
@@ -51,9 +52,9 @@ public interface UserMapper {
 	
 	//public Point getPoint(Point point) throws Exception;
 	
-	public List<Point> getListPoint(Search search) throws Exception;
+	public List<Point> getListPoint(Map<String, Object> map) throws Exception;
 	//
-	public int getListPointTotalCount(int no) throws Exception;
+	public int getListPointTotalCount(Map<String, Object> map) throws Exception;
 	
 	public User getProfile(User user) throws Exception;
 	

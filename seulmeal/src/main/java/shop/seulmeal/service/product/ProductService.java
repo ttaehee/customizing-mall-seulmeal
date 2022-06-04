@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
@@ -25,7 +26,7 @@ public interface ProductService {
 	// foodCategory 관련
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
 
-	public Map<String, Object> getListFoodCategory() throws Exception;
+	public List<Foodcategory> getListFoodCategory() throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 	

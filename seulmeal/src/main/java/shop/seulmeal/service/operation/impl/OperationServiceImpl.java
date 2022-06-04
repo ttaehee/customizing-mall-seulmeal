@@ -24,7 +24,7 @@ public class OperationServiceImpl implements OperationService {
 		System.out.println(this.getClass());
 	}
 	
-	// 공지사항 + 이벤트 + 문의
+	// 공지사항 + 이벤트 + 문의CustomProductCustomProduct
 	@Override
 	public int insertOperation(Post post) {
 		// TODO Auto-generated method stub
@@ -34,6 +34,9 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public Post getOperation(int no) {
 		// TODO Auto-generated method stub
+		// 조회수 증가
+		operationMapper.updateOperationView(no);
+		
 		return operationMapper.getOperation(no);
 	}
 
@@ -62,16 +65,13 @@ public class OperationServiceImpl implements OperationService {
 		return map;
 	}
 	
-	// 조회수 증가
-	@Override
-	public int updateOperationView(int no) {
-		// TODO Auto-generated method stub
-		return operationMapper.updateOperationView(no);
-	}
 
 	@Override
 	public int insertAnswer(Comment comment) {
 		// TODO Auto-generated method stub
+		// 답변 완료
+		operationMapper.updateAnswerStatus(comment.getPostNo());
+		
 		return operationMapper.insertAnswer(comment);
 	}
 

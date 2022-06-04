@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import shop.seulmeal.service.mapper.CommunityMapper;
 import shop.seulmeal.service.mapper.OperationMapper;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.mapper.UserMapper;
+import shop.seulmeal.service.naver.impl.EmailService;
+import shop.seulmeal.service.naver.impl.NaverServiceImpl;
 import shop.seulmeal.service.product.ProductService;
 
 @SpringBootTest
@@ -48,6 +51,12 @@ class OperationTest {
 	
 	@Autowired
 	private CommunityMapper communityMapper;
+	
+	@Autowired
+	private NaverServiceImpl naverServiceImpl;
+	
+	@Autowired
+	private EmailService emailserivce;
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
@@ -274,7 +283,7 @@ class OperationTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	void insertProduct() throws Exception {
 		Product p = new Product();
 		p.setName("김치볶음");
@@ -290,5 +299,29 @@ class OperationTest {
 		
 		productMapper.insertProduct(p);
 		
+	}
+	
+	//@Test
+	void naver() {
+		String phone = "01035937843";
+		Random generator = new Random();
+        generator.setSeed(System.currentTimeMillis());
+        
+        int num = (generator.nextInt(1000000) % 1000000);
+        String message = "인증번호는 ["+num+"] 입니다";
+        
+		naverServiceImpl.sendSMS(phone,message);
+	}
+	
+	//@Test
+	void email() {
+		String to = "ijhghji@gmail.com";
+		Random generator = new Random();
+        generator.setSeed(System.currentTimeMillis());
+        
+        int num = (generator.nextInt(1000000) % 1000000);
+        String message = "인증번호는 ["+num+"] 입니다";
+        
+        emailserivce.sendMail(message, to);
 	}
 }

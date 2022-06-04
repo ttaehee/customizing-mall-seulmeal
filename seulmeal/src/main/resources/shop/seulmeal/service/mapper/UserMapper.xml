@@ -3,7 +3,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
         
-	<mapper namespace="shop.seulmeal.service.mapper.UserMapper"> 
+	<mapper namespace="shop.seulmeal.service.mapper.UserMapper">
+	 
 		<insert id="insertUser">
 			INSERT
 			INTO users( user_id , user_name , password , birth , address, phone, email, grade , reg_date, nickname, confirm_status, foodcategory_name1, foodcategory_name2, foodcategory_name3) 
@@ -11,7 +12,7 @@
 								#{phone:VARCHAR} , #{email:VARCHAR} , #{grade:CHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR},#{foodCategoryName1:VARCHAR},#{foodCategoryName2:VARCHAR}, #{foodCategoryName3:VARCHAR} )
 		</insert>
 		
-		<insert id="insertHatesParts" >
+		<insert id="insertHatesParts" parameterType="map">
 			INSERT INTO hates_parts(hates_parts_no, user_id, parts_no, parts_name)
 				SELECT seq_hates_parts_no.NEXTVAL, A.* FROM(
 					<foreach collection="list" item="parts" separator="UNION ALL">
@@ -24,7 +25,7 @@
 				) A	
 		</insert>
 		
-		<select id="getUser" resultType="User">
+		<select id="getUser" resultType="shop.seulmeal.service.domain.User">
 	        	SELECT * FROM users WHERE user_id = #{userId}
 	    </select>
 	    
@@ -52,11 +53,11 @@
 			UPDATE users SET user_status = 1 WHERE user_id = #{userId}	
 		</delete>
 		
-		<select id= "getListUser" resultType="Map">
+		<select id= "getListUser" resultType="shop.seulmeal.service.domain.User" parameterType="shop.seulmeal.common.Search">
 			SELECT *
 		  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 		  					FROM		(	SELECT user_id , user_name, blacklist_status
-												FROM users
+												FROM users 
 												<if test="searchCondition != null">
 													<where>
 														<if test="searchCondition == 0 and searchKeyword !='' ">
@@ -68,27 +69,27 @@
 													</where>
 												</if>
 												ORDER BY user_id ) inner_table
-							WHERE ROWNUM = #{endRowNum} )
+							WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>
 		
 		<select id="checkDuplicationUserId">
-			SELECT user_id from users = #{userId}
+			SELECT user_id from users where user_id= #{userId}
 		</select>
 		
 		<select id="checkDuplicationNickName">
-			SELECT nickname from users = #{nickName}
+			SELECT nickname from users where nickname= #{nickName}
 		</select>
 		
-		<select id="checkDuplicationPhone">
-			SELECT phone from users = #{phone}
+		<select id="checkDuplicationPhone" resultType="shop.seulmeal.service.domain.User">
+			SELECT user_id, user_name from users where phone= #{phone}
 		</select>
 		
-		<select id="checkDuplicationEmail">
-			SELECT email from users = #{email}
+		<select id="checkDuplicationEmail" resultType="shop.seulmeal.service.domain.User">
+			SELECT user_id, user_name from users where email= #{email}
 		</select>
 		
-		<select id="getListUserTotalCount">
+		<select id="getListUserTotalCount" resultType="int" parameterType="map">
 			SELECT COUNT(*)
 			FROM( SELECT user_id , user_name , blacklist_status
 				FROM users
@@ -130,7 +131,7 @@
 		<update id="updateBlackList">
 			update relation SET relation_status = '3' 
 				WHERE relation_status = '2' 
-				AND SYSDATE >= reg_date+90
+				AND SYSDATE &gt;= reg_date+90
 		</update>
 		
 		<insert id="insertPoint">
@@ -138,52 +139,24 @@
 				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{point}, SYSDATE)
 		</insert>
 		
-		<select id="getListPoint" resultType="Map">
+		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="map" >
 			SELECT *
 			FROM ( SELECT inner_table.* , ROWNUM AS row_seq
 				FROM ( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
-					FROM point
-						<if test="searchCondition != null">
-							<where>
-								<if test="searchCondition == 0">
-									point_status = '0'
-								</if>
-								<if test="searchCondition == 1">
-									point_status = '1'
-								</if>
-								<if test="searchCondition == 2">
-									point_status = '2'
-								</if>
-							</where>
-						</if>
+					FROM point where point_status = #{pointStatus}
 					ORDER BY user_id ) inner_table
-				WHERE ROWNUM = #{endRowNum} )
+				WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 		</select>
 		
-		<select id="getListPointTotalCount">
+		<select id="getListPointTotalCount" resultType="int" parameterType="map" >
 			SELECT COUNT(*)
 			FROM( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
-				FROM point
-					<if test="searchCondition != null">
-						<where>
-							<if test="searchCondition == 0">
-								point_status = '0'
-							</if>
-							<if test="searchCondition == 1">
-								point_status = '1'
-							</if>
-							<if test="searchCondition == 2">
-								point_status = '2'
-							</if>
-				
-						</where>
-					</if>
-				) countTable
+				FROM point where point_status = #{pointStatus}) countTable
 		</select>
 		
 		
-		<select id="getProfile">
+		<select id="getProfile" resultType="shop.seulmeal.service.domain.User">
 			SELECT user_id, nickname, grade, profile_image, profile_message, foodcategory_name1, foodcategory_name2, foodcategory_name3 
 				FROM users WHERE user_id = #{userId}
 		</select>

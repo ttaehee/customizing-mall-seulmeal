@@ -55,6 +55,15 @@
 		</where>
 	</update>
 	
+	<!-- 답변 완료 변경 -->
+	<update id="updateAnswerStatus">
+		UPDATE post
+		<set>
+			answer_stats = 1
+		</set>
+			post_no=#{postNo}
+	</update>
+	
 	<!-- list -->
 	<select id="getListOperation" resultType="post" parameterType="map">
 		SELECT *
@@ -88,7 +97,7 @@
 	<!-- ROW Count -->
 	<select id="getTotalCount" resultType="int" parameterType="map">
 		SELECT COUNT(*)
-	  	FROM(	SELECT * FROM post
+	  	FROM(	SELECT post_no FROM post
   							<where>
 								post_status = #{postStatus}
 								AND status = '0' 
@@ -110,7 +119,7 @@
 								</if>
 							</where> ) countTable
 	</select>
-	
+		
 	<!-- 답변 -->
 	<insert id="insertAnswer">
 		INSERT INTO comments(comment_no,user_id,post_no,content,reg_date,update_date)
