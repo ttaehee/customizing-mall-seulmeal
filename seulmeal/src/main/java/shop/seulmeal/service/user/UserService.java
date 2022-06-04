@@ -1,6 +1,7 @@
 package shop.seulmeal.service.user;
 
 import java.util.List;
+import java.util.Map;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.BlackList;
@@ -17,7 +18,7 @@ public interface UserService {
 	
 	public int deleteUser(User user) throws Exception;
 	
-	public List<User> getListUser() throws Exception;
+	public Map<String, Object> getListUser(Search search) throws Exception;
 	
 	public int confirmUserId(String userId) throws Exception; 
 	
@@ -41,7 +42,7 @@ public interface UserService {
 	
 	public int insertPont(Point point) throws Exception;
 	
-	public List<Point> getListPoint() throws Exception;
+	public List<Point> getListPoint(Search search, String userId) throws Exception;
 	
 	
 	

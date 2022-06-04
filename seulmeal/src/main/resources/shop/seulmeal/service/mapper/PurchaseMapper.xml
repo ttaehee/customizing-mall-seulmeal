@@ -96,9 +96,9 @@
 	<select id="getListCustomProduct" resultType="customProduct" parameterType="map">
 		SELECT *
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
-			FROM (SELECT cprod.*,cparts.*
-			    FROM customproduct cprod, customparts cparts
-				WHERE cprod.customproduct_no=cparts.customproduct_no AND user_id=#{user.userId} AND cart_status='1'
+			FROM (SELECT cprod.customproduct_no, prod.name, prod.price, prod.calorie
+			    FROM customproduct cprod, product prod
+				WHERE cprod.product_no=prod.product_no AND user_id=#{userId} AND cart_status='1'
 				ORDER BY cprod.customproduct_no) inner_table
 			WHERE ROWNUM &lt; = #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
@@ -133,8 +133,8 @@
 		payment_condition, imp_uid, amount)
 		values((seq_purchase_no.NEXTVAL),#{user.userId},#{price:NUMERIC}, 
 		#{deliveryPrice:NUMERIC}, #{address:VARCHAR}, #{name:VARCHAR}, 
-		#{phone:VARCHAR}, #{message:VARCHAR}, #{purchaseStatus:CHAR}, 
-		#{reason:VARCHAR}, #{image:VARCHAR}, #{status:CHAR}, 
+		#{phone:VARCHAR}, #{message:VARCHAR}, '0', 
+		#{reason:VARCHAR}, #{image:VARCHAR}, '0', 
 		SYSDATE, #{paymentCondition:CHAR},#{imp_uid:VARCHAR}, 
 		#{amount:NUMERIC})
 		<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
@@ -152,25 +152,27 @@
 	<select id="getListPurchase" resultType="purchase" parameterType="map">
 		SELECT *
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
-			FROM (SELECT * FROM purchase
-				WHERE user_id=#{userId} AND status='0'
+			FROM (SELECT p.*, cp.count, pt.price productprice
+				FROM purchase p, customproduct cp, product pt
+				WHERE p.purchase_no=cp.purchase_no AND pt.product_no=cp.product_no
+				AND p.user_id=#{userId} AND p.status='0' AND p.purchase_status IS NOT NULL
 				<if test="searchCondition != null">
 					<if test="searchCondition == 0">
-						AND reg_date=SYSDATE
+						AND p.reg_date=SYSDATE
 					</if>
 					<if test="searchCondition == 1">
 						<![CDATA[
-						AND reg_date>=SYSDATE-7
+						AND p.reg_date>=SYSDATE-7
 						]]>
 					</if>
 					<if test="searchCondition == 2">
-						AND reg_date &gt;= DATE_ADD(SYSDATE, INTERVAL -1 MONTH )
+						AND p.reg_date &gt;= DATE_ADD(SYSDATE, INTERVAL -1 MONTH )
 					</if>
 					<if test="searchCondition == 3">
-						AND reg_date &gt;= add_month(SYSDATE,-3)
+						AND p.reg_date &gt;= add_month(SYSDATE,-3)
 					</if>
 				</if>
-				ORDER BY purchase_no) inner_table
+				ORDER BY p.purchase_no) inner_table
 			WHERE ROWNUM &lt; = #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>

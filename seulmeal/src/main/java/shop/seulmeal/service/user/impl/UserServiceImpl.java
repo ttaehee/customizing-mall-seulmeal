@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.BlackList;
 import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.UserMapper;
 import shop.seulmeal.service.user.UserService;
@@ -34,9 +35,19 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public List<User> getListUser() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> getListUser(Search search) throws Exception {
+
+		Map<String, Object> map=new HashMap<>();
+		map.put("search", search);
+
+		
+		List<User> list=userMapper.getListUser(search);
+		int totalCount=userMapper.getListUserTotalCount(map);
+		
+		map.put("purchaseList", list);
+		map.put("totalCount", totalCount);
+		
+		return map;
 	}
 
 	@Override
@@ -118,10 +129,14 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<Point> getListPoint() throws Exception {
+	public List<Point> getListPoint(Search search, String userId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+	
 
 	
 	

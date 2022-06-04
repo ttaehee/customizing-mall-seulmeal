@@ -66,13 +66,13 @@ public class UserTest {
 	void getUser() throws Exception{
 		User user = new User();
 		
-		user.setUserId("testUser");
+		user.setUserId("a");
 		
-		user=userMapper.getUser("testUser");
+		user=userMapper.getUser("a");
 		System.out.println("getUser : "+user);
 		
-		assertEquals(user.getUserName(), "testName");
-		assertEquals(user.getPassword(), "testPassword");
+		assertEquals(user.getUserName(), "a");
+		assertEquals(user.getPassword(), "1234");
 		assertEquals(user.getAddress(), "서울");
 		
 	}
@@ -110,7 +110,7 @@ public class UserTest {
 		
 	}
 	
-	//@Test
+	@Test
 	void getListUser() throws Exception {
 		
 		Search search = new Search();
@@ -118,11 +118,16 @@ public class UserTest {
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
+		search.setSearchKeyword("a");
+		
 		System.out.println(search);
 		Map<String, Object> map = new HashMap<>();
+		map.put("Search", search);
+		map.put(null, map);
 		
 		userMapper.getListUser(search);
-		
+		System.out.println("search===>>"+search);
+		System.out.println("map===>>"+map);
 		
 	}
 	
@@ -156,21 +161,25 @@ public class UserTest {
 	}
 	
 	//@Test
-	void getListPoint() throws Exception {
+//	void getListPoint() throws Exception {
+//		
+//			
+//		Search search = new Search();
+//		if(search.getCurrentPage() ==0 ){
+//			search.setCurrentPage(1);
+//		}
+//		search.setPageSize(pageSize);
+//		System.out.println(search);
+//		Map<String, Object> map = new HashMap<>();
+//		
+//		userMapper.getListPoint(search);
+//	}
+	
 		
-			
-		Search search = new Search();
-		if(search.getCurrentPage() ==0 ){
-			search.setCurrentPage(1);
-		}
-		search.setPageSize(pageSize);
-		System.out.println(search);
-		Map<String, Object> map = new HashMap<>();
-		
-		userMapper.getListPoint(search);
-	}
-	
-	
-	
+	/*
+	 * List<Parts> list = new ArrayList<Parts>(); list.add(parts); list.add(parts);
+	 * 
+	 * //int a = productMapper.insertProudctParts(list);
+	 */	
 	
 }
