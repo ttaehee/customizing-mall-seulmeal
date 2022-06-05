@@ -32,12 +32,12 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public Post getOperation(int no) {
+	public Post getOperation(Post post) {
 		// TODO Auto-generated method stub
 		// 조회수 증가
-		operationMapper.updateOperationView(no);
+		operationMapper.updateOperationView(post.getPostNo());
 		
-		return operationMapper.getOperation(no);
+		return operationMapper.getOperation(post);
 	}
 
 	@Override
