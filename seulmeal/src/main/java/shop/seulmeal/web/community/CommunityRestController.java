@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.seulmeal.service.community.CommunityService;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.User;
 
 @RestController
@@ -59,7 +60,13 @@ public class CommunityRestController {
 	}
 	
 	
-	public void insertFollow() {
+	@RequestMapping("insertFollow/{relationUserId}")
+	public void insertFollow(@PathVariable String relationUserId, HttpSession session) {
+		
+		Relation relation = new Relation();
+		relation.setUserId(((User)session.getAttribute("user")).getUserId());
+		
+		relation.setRelationUser(null);
 		
 		
 	}
