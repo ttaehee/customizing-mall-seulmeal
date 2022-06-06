@@ -52,7 +52,7 @@
 		<if test="postStatus != 3">
 			SELECT * FROM post
 			<where>
-				post_no = #{value}
+				post_no = #{postNo}
 			</where>
 		</if>
 		<if test="postStatus == 3">

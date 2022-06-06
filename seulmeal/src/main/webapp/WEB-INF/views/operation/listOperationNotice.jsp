@@ -17,7 +17,7 @@
 			<a href="/operation/insertOperation/1">공지 등록</a>
 			<hr/>
 			<div class="col-md-3"></div>
-			<div class="col-md-6">
+			<div class="col-md-6" style="width: 100%;">
 				<c:forEach var="post" items="${list}">
 					<c:set var="i" value="${i+1}" />
 					<div class="row">

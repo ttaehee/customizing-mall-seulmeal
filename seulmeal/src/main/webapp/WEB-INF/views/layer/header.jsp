@@ -11,6 +11,8 @@
 		window.location.href = '/user/login';
 	}
 </script>
+	<!-- 어드민 -->
+	<!-- 
 	<div style="background:#BAD7DF; display:flex; justify-content:space-between;">
 		<h3>오늘 할일</h3>
 		<h4>신규 주문</h4>
@@ -19,7 +21,8 @@
 		<h4>재고 소진</h4>
 		<h4>문의 답변대기</h4>
 	</div>
-
+	 -->
+	 
 	<div style="background:#BAD7DF;">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
 		<div id="google_translate_element" class="hd_lang"></div>
@@ -34,10 +37,10 @@
 	      }
 	    </script>
 	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-	    <div>
-			<span style="margin-right:10px;" onClick="join()">회원가입</span>
-			<span style="margin-right:10px;"onClick="login()">로그인</span>
-		</div>
+	    <div class="col-md-3 text-end">
+        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()">Login</button>
+        	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
+      	</div>
 	</div>
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-light" style="background:#BAD7DF;">		
@@ -82,5 +85,10 @@
 	        </li>
 	      </ul>
 	    </div>
+	    
+	    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+          <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+        </form>
+        
 	  </div>
 	</nav> 	    
