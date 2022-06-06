@@ -10,7 +10,7 @@ import shop.seulmeal.service.domain.Post;
 public interface OperationService {
 	// 공지사항 + 이벤트 + 문의
 	public int insertOperation(Post post);
-	public Post getOperation(int no);
+	public Post getOperation(Post post);
 	public int updateOperation(Post post);
 	public int deleteOperation(Post post);
 	public Map<String,Object> getListOperation(Search search, int postStatus);

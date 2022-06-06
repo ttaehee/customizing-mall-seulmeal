@@ -70,7 +70,7 @@ public class OperationRestController {
 	@PostMapping("confirmQueryPassword")
 	public JSONObject confirmQueryPassword(@RequestBody Post post ) {
 		JSONObject json = new JSONObject(); 
-		Post sPost = operationService.getOperation(post.getPostNo());
+		Post sPost = operationService.getOperation(post);
 		
 		if(sPost.getPassword() == post.getPassword()) {
 			json.put("result","true");

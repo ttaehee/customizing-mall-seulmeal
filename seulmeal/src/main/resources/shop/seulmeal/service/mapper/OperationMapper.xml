@@ -4,6 +4,42 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="shop.seulmeal.service.mapper.OperationMapper">
+	<resultMap type="post"	id="postSelectMap">
+		<id property="postNo" column="post_no" jdbcType="NUMERIC" />
+		<result property="title" column="title" jdbcType="NUMERIC" />
+		<result property="content" column="content" jdbcType="VARCHAR" />
+		<result property="shortContent" column="short_content" jdbcType="VARCHAR" />
+		<result property="views" column="views" jdbcType="NUMERIC" />
+		<result property="commentCount" column="comment_count" jdbcType="NUMERIC" />
+		<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
+		<result property="thumnail" column="thumnail" jdbcType="VARCHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
+		<result property="updateDate" column="update_date" jdbcType="DATE" />
+		<result property="endDate" column="end_date" jdbcType="DATE" />
+		<result property="postStatus" column="post_status" jdbcType="VARCHAR" />
+		<result property="publicStatus" column="public_status" jdbcType="VARCHAR" />
+		<result property="password" column="password" jdbcType="NUMERIC" />
+		<result property="answerStatus" column="answer_status" jdbcType="VARCHAR" />
+		<result property="status" column="status" jdbcType="VARCHAR" />
+		<association property="user" javaType="user">
+			<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		</association>
+		<collection property="comments" ofType="comment">
+			<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
+			<result property="postNo" column="post_no" jdbcType="NUMERIC" />
+			<result property="content" column="content_c" jdbcType="VARCHAR" />
+			<result property="layer" column="layer" jdbcType="CHAR" />
+			<result property="regDate" column="reg_date_c" jdbcType="DATE" />
+			<result property="updateDate" column="update_date" jdbcType="DATE" />
+			<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
+			<result property="parentCommentNo" column="parent_comment_no" jdbcType="NUMERIC" />
+			<result property="status" column="status" jdbcType="VARCHAR" />
+			<association property="user" javaType="user">
+				<result property="userId" column="user_id_c" jdbcType="VARCHAR" />
+			</association>
+		</collection>
+	</resultMap>
+	
 	<insert id="insertOperation">
 		INSERT INTO post(post_no,user_id, title, content, short_content, thumnail, reg_date, update_date, end_date, post_status,public_status,password)
 		values((seq_post_no.NEXTVAL),#{user.userId},#{title},#{content},#{shortContent:VARCHAR},#{thumnail:VARCHAR},SYSDATE,SYSDATE,#{endDate:DATE},#{postStatus},#{publicStatus:VARCHAR},#{password:VARCHAR})
@@ -12,11 +48,21 @@
 		</selectKey>
 	</insert>
 	
-	<select id="getOperation" resultType="post">
-		SELECT * FROM post
-		<where>
-			post_no = #{value}
-		</where>
+	<select id="getOperation" resultMap="postSelectMap">
+		<if test="postStatus != 3">
+			SELECT * FROM post
+			<where>
+				post_no = #{value}
+			</where>
+		</if>
+		<if test="postStatus == 3">
+			SELECT p.*,c.comment_no, c.content content_c, c.user_id user_id_c, c.reg_date reg_date_c FROM post p, comments c
+			<where>
+				p.post_no=c.post_no(+)
+				AND post_status = 3 AND p.status=0
+			</where>
+				AND p.post_no = #{postNo}
+		</if>
 	</select>
 	
 	<update id="updateOperation">
@@ -65,10 +111,10 @@
 	</update>
 	
 	<!-- list -->
-	<select id="getListOperation" resultType="post" parameterType="map">
+	<select id="getListOperation" resultMap="postSelectMap" parameterType="map">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT * FROM post
+				FROM	(SELECT * FROM post p
 							<where>
 								post_status = #{postStatus}
 								AND status = '0' 
@@ -158,5 +204,60 @@
 		</where>
 	</update>
 	
+	<resultMap id="customPartsSelectMap" type="customParts">
+		<result property="customPartsNo" 		column="customparts_no"   jdbcType="NUMERIC"/> 
+		<result property="customProductNo" 		column="customproduct_no" jdbcType="NUMERIC"/> 
+		<result property="gram" 				column="gram" 			  jdbcType="NUMERIC"/> 
+		<result property="productPartsNo" 		column="productparts_no"  jdbcType="NUMERIC"/> 
+		<result property="productPartsName" 	column="minus_name" 	  jdbcType="VARCHAR"/> 
+		<association property="parts" javaType="parts" >
+			<result property="partsNo" 			column="parts_no" 		  jdbcType="NUMERIC"/>
+			<result property="name" 			column="plus_name" 		  jdbcType="VARCHAR"/>
+			<result property="price" 			column="plus_price" 	  jdbcType="NUMERIC"/>
+			<result property="calorie" 			column="plus_calorie" 	  jdbcType="NUMERIC"/>
+		</association>
+	</resultMap>
 	
+	<!-- 커스텀 프로덕트 -->
+	<resultMap id="customProductSelectMap" type="customProduct">
+    	<id property="customProductNo" 		column="customproduct_no" 	jdbcType="NUMERIC"/>
+		<result property="count" 				column="count" 				jdbcType="NUMERIC"/>
+		<result property="cartStatus" 			column="cart_status" 		jdbcType="VARCHAR"/>
+		<result property="regDate" 				column="reg_date" 			jdbcType="DATE"/>
+		<association property="user" javaType="user" >
+			<result property="userId" 	 		column="user_id" 			jdbcType="VARCHAR"/>
+		</association>
+		<association property="product" javaType="product" >
+			<result property="productNo" 		column="product_no" 		jdbcType="NUMERIC"/>
+			<result property="name" 			column="name" 				jdbcType="VARCHAR"/>
+			<result property="price" 			column="price" 				jdbcType="NUMERIC"/>
+			<result property="calorie" 			column="calorie" 			jdbcType="NUMERIC"/>
+		</association>
+		<association property="purchase" javaType="purchase" >
+			<result property="purchaseNo" 		column="purchase_no" 		jdbcType="NUMERIC"/>
+		</association>
+		<collection property="customParts" ofType="customParts">
+			<result property="customPartsNo" column="customParts_no" jdbcType="NUMERIC" />
+			<result property="gram" column="gram" jdbcType="NUMERIC" />
+			<result property="productPartsNo" column="productParts_no" jdbcType="NUMERIC" />
+			<result property="productPartsName" column="munus_name" jdbcType="NUMERIC" />
+			<association property="parts" javaType="parts">
+				<result property="partsNo" column="parts_no" jdbcType="NUMERIC" />
+				<result property="name" column="name" jdbcType="VARCHAR" />
+				<result property="price" column="price" jdbcType="NUMERIC" />
+				<result property="calorie" column="calorie" jdbcType="NUMERIC" />
+				<result property="status" column="status" jdbcType="VARCHAR" />
+			</association>
+		</collection>
+	</resultMap>
+	
+	<select id="selectCus" resultMap="customPartsSelectMap">
+		SELECT * FROM customproduct c, customparts cp, product p, parts pp, productparts pps
+		WHERE c.customproduct_no = cp.customproduct_no(+)
+		AND c.product_no = p.product_no(+)
+		AND cp.parts_no = pp.parts_no(+)
+		AND cp.productparts_no = pps.productparts_no(+)
+		AND c.customproduct_no = #{value}
+		ORDER BY c.customproduct_no
+	</select>
 </mapper>
