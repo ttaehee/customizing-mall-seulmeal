@@ -11,13 +11,15 @@ import shop.seulmeal.service.domain.Purchase;
 public interface PurchaseService {
 	
 	//커스터마이징재료 추가 
-	public int insertCustomParts(List<CustomParts> list);
+	public int insertMinusParts(Map<String, Object> map);
+	public int insertPlusParts(Map<String, Object> map);
+	//public int insertCustomParts(Map<String, Object> map);
 	
 	//커스터마이징상재료 상세 
-	public CustomParts getCustomParts(int customPartsNo);
-
+	public CustomParts getCustomParts(int CustomPartsNo);
+	
 	//커스터마이징재료 리스트
-	public List<CustomParts> getListCustomParts(Search search, int customProductNo);
+	public List<CustomParts> getListCustomParts(int customProductNo);
 	
 	//커스터마이징재료 삭제 
 	public int deleteCustomParts(int customProductNo);

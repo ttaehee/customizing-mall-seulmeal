@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import shop.seulmeal.common.Search;
 
 import shop.seulmeal.service.domain.CustomParts;
+import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Purchase;
 
@@ -15,10 +16,12 @@ import shop.seulmeal.service.domain.Purchase;
 public interface PurchaseMapper {
 	
 	//커스터마이징재료 추가 
-	public int insertCustomParts(List<CustomParts> list);
+	public int insertMinusParts(Map<String, Object> map);
+	public int insertPlusParts(Map<String, Object> map);
+	//public int insertCustomParts(Map<String, Object> map);
 	
 	//커스터마이징상재료 상세 
-	public CustomParts getCustomParts(int customPartsNo);
+	public CustomParts getCustomParts(int CustomPartsNo);
 
 	//커스터마이징재료 리스트
 	public List<CustomParts> getListCustomParts(int customProductNo);
@@ -30,16 +33,16 @@ public interface PurchaseMapper {
 	//커스터마이징상품 추가 
 	public int insertCustomProduct(CustomProduct customProduct);
 	
-	//커스터마이징상품 상세 
+	//커스터마이징상품 상세 (커스터마이징옵션 수정페이지에서 출력)
 	public CustomProduct getCustomProduct(int customProductNo);
 	
 	//커스터마이징상품 리스트(장바구니)
 	public List<CustomProduct> getListCustomProduct(Map<String, Object> map);
 	
-	//커스터마이징상품 수정(구매번호추가)
+	//커스터마이징상품 수정(구매번호추가), 커스터마이징재료 수정은 delete 후 다시 insert
 	public int updateCustomProduct(CustomProduct customProduct);
 	
-	//커스터마이징상품 삭제(장바구니사용여부 수정)
+	//커스터마이징상품 삭제(장바구니리스트에서 삭제 눌렀을때)
 	public int deleteCustomProduct(int customProductNo);
 	
 	

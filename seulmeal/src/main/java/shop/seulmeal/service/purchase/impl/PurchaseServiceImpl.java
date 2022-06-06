@@ -28,19 +28,25 @@ public class PurchaseServiceImpl implements PurchaseService{
 	
 	//커스터마이징재료 
 	@Override
-	public int insertCustomParts(List<CustomParts> list) {
+	public int insertMinusParts(Map<String, Object> map) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.insertCustomParts(list);
+		return purchaseMapper.insertMinusParts(map);
+	}
+	
+	@Override
+	public int insertPlusParts(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return purchaseMapper.insertPlusParts(map);
 	}
 
-	@Override
+	@Override 
 	public CustomParts getCustomParts(int customPartsNo) {
 		// TODO Auto-generated method stub
 		return purchaseMapper.getCustomParts(customPartsNo);
 	}
 
 	@Override
-	public List<CustomParts> getListCustomParts(Search search, int customProductNo) {
+	public List<CustomParts> getListCustomParts(int customProductNo) {
 		// TODO Auto-generated method stub
 		
 		return purchaseMapper.getListCustomParts(customProductNo);

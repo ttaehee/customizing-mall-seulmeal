@@ -56,24 +56,24 @@ public class PurchaseController {
 	
 	//커스터마이징 옵션선택 화면출력 
 	@GetMapping("insertCustomProduct/{productNo}")
-	public String insertCustomProduct(@PathVariable int proudctNo, Model model) throws Exception {
+	public String insertCustomProduct(@PathVariable int productNo, Model model) throws Exception {
 		
-		System.out.println("/insertCustomProduct productNo : "+ proudctNo);
+		System.out.println("/insertCustomProduct productNo : "+ productNo);
 		
-		Product product=productService.getProduct(proudctNo);
-		List<Parts> partsList=productService.getProductParts(proudctNo);
+		Product product=productService.getProduct(productNo);
+		List<Parts> partsList=productService.getProductParts(productNo);
 		
-		model.addAttribute(product);
-		model.addAttribute(partsList);
+		model.addAttribute("product",product);
+		model.addAttribute("partsList",partsList);
 		
-		return "purchase/getPurchaseCustomProduct";
+		return "purchase/insertPurchaseCustomProduct";
 		
 	}
 	
 	//커스터마이징 상품 인서트 
 	@PostMapping("insertCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
-	public String insertCustomProduct(List<Integer> pparts, List<Parts> plusParts, CustomProduct customProduct, Product product, String userId, String cartStatus, Model model) {
+	public String insertCustomProduct(List<CustomParts> minus, List<CustomParts> plus, CustomProduct customProduct, Product product, String userId, String cartStatus, Model model) {
 		
 		System.out.println("/insertPurchase :Post");
 		
@@ -82,42 +82,32 @@ public class PurchaseController {
 		
 		customProduct.setUser(user);
 		customProduct.setProduct(product);
+		customProduct.setMinusParts(minus);
+		customProduct.setPlusParts(plus);
 		
 		purchaseService.insertCustomProduct(customProduct);
 		
-		
-		List<CustomParts> list=new ArrayList<CustomParts>();
-		
-		//제외재료번호 리스트 
-		for(int ppartsNo : pparts) {
-			CustomParts cp = new CustomParts();
-			cp.setProductPartsNo(ppartsNo);
-			cp.setCustomProductNo(customProduct.getCustomProductNo());
-			list.add(cp);
-		}
-		
-		//추가재료 리스트 
-		for(Parts parts : plusParts) {
-			CustomParts cp = new CustomParts();
-			cp.setParts(parts);
-			cp.setCustomProductNo(customProduct.getCustomProductNo());
-			list.add(cp);
-		}
-		
-		purchaseService.insertCustomParts(list);
+		Map<String, Object> map=new HashMap<>();
+		map.put("customProductNo",customProduct.getCustomProductNo());
+		map.put("minusParts",minus);
+		map.put("plusParts",plus);
+			
+		purchaseService.insertMinusParts(map);
+		purchaseService.insertPlusParts(map);
 		
 		model.addAttribute("customProduct",customProduct);
 		
 		if(cartStatus.equals("0")) {
-			return "purchase/getListCustomProduct";
+			return "purchase/getListCustomProduct/"+userId;
 		}else {
 			return "purchase/insertPurchase/"+customProduct.getCustomProductNo();
 		}
 		
 	}
 	
+	//장바구니 리스트 
 	@GetMapping("getListCustomProduct/{userId}")
-	public String getListCustomProduct(@PathVariable String userId, Model model, HttpSession session) {
+	public String getListCustomProduct(@PathVariable String userId, Model model) {
 		System.out.println("/getListCustomProduct : "+ userId);
 		
 		Search search = new Search();
@@ -128,13 +118,6 @@ public class PurchaseController {
 		
 		//커스터마이징상품 리스
 		Map<String, Object> map =  purchaseService.getListCustomProduct(search, userId);
-		
-		//List<CustomProduct> list= (List<CustomProduct>)(map.get("cproductList"));
-		
-		//커스터마이징재료 리스트 
-		//for(CustomProduct cp : list) {
-		//	cp.setCustomParts(purchaseService.getListCustomParts(search, cp.getCustomProductNo()));
-		//}
 
 		Page resultPage 
 			= new Page(search.getCurrentPage(), 
@@ -166,7 +149,7 @@ public class PurchaseController {
 	//커스터마이징 상품 옵션수정(커스터마이징재료 삭제 후 추가)
 	@PostMapping("updateCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
-	public String updateCustomProduct(int customProductNo, String userId, List<Integer> pparts, List<Parts> plusParts, Model model) {
+	public String updateCustomProduct(int customProductNo, String userId, List<CustomParts> minus, List<CustomParts> plus, Model model) {
 		
 		System.out.println("/deletePurchase :Post");
 		
@@ -174,23 +157,13 @@ public class PurchaseController {
 		
         List<CustomParts> list=new ArrayList<CustomParts>();
 		
-		//제외재료번호 리스트 
-		for(int ppartsNo : pparts) {
-			CustomParts cp = new CustomParts();
-			cp.setProductPartsNo(ppartsNo);
-			cp.setCustomProductNo(customProductNo);
-			list.add(cp);
-		}
-		
-		//추가재료 리스트 
-		for(Parts parts : plusParts) {
-			CustomParts cp = new CustomParts();
-			cp.setParts(parts);
-			cp.setCustomProductNo(customProductNo);
-			list.add(cp);
-		}
-		
-		purchaseService.insertCustomParts(list);
+        Map<String, Object> map=new HashMap<>();
+		map.put("customProductNo",customProductNo);
+		map.put("minusParts",minus);
+		map.put("plusParts",plus);
+			
+		purchaseService.insertMinusParts(map);
+		purchaseService.insertPlusParts(map);
 		
 		return "purchase/getListCustomProduct/"+userId;
 	}		
@@ -207,7 +180,8 @@ public class PurchaseController {
 		return "purchase/getListCustomProduct/"+userId;
 	}	
 	
-	/*
+	
+	//구매정보입력 화면 출력 
 	@GetMapping("insertPurchase/{customProductNo}")
 	public String insertPurchase(@PathVariable int customProudctNo, Model model) {
 		
@@ -220,6 +194,7 @@ public class PurchaseController {
 		
 	}
 	
+	//구매 인서트 
 	@PostMapping("insertPurchase")
 	@Transactional(rollbackFor= {Exception.class})
 	public String insertPurchase(int customProductNo, Purchase purchase, String userId, Model model) {
@@ -232,14 +207,13 @@ public class PurchaseController {
 		purchase.setUser(user);
 		purchaseService.insertPurchase(purchase);
 		
-		purchaseService.updateCustomProduct(customProductNo);
+		//커스터마이징 상품 구매번호 업데이트해야
 		
 		model.addAttribute("purchase",purchase);
 		
 		return "redirect:getPurchase/"+purchase.getPurchaseNo();	
 		
 	}
-	*/
 	
 	@GetMapping("getPurchase/{purchaseNo}")
 	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {
@@ -279,7 +253,17 @@ public class PurchaseController {
 		return "purchase/listPurchase";
 	}
 	
-	
+	//구매내역 삭제 
+	@PostMapping("deletePurchase")
+	@Transactional(rollbackFor= {Exception.class})
+	public String deletePurchase(int purchaseNo, String userId) {
+		
+		System.out.println("/deletePurchase :Post");
+		
+		purchaseService.deleteCustomProduct(purchaseNo);
+		
+		return "purchase/getListCustomProduct/"+userId;
+	}		
 	
 	
 	
