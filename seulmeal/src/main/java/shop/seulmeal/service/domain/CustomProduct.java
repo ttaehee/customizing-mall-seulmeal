@@ -20,5 +20,6 @@ public class CustomProduct {
 	private Date regDate;
 	
 	// customParts를 가지고 있다
-	private List<CustomParts> customParts;
+	private List<CustomParts> minusParts; //제외재료 
+	private List<CustomParts> plusParts; //추가재료 
 }
