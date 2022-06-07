@@ -5,6 +5,7 @@ import java.util.Map;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
+import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
@@ -26,7 +27,7 @@ public interface ProductService {
 	// foodCategory 관련
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
 
-	public Map<String, Object> getListFoodCategory() throws Exception;
+	public Map<String, Object> getListFoodCategory(Search search) throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 	
@@ -39,7 +40,7 @@ public interface ProductService {
 
 	public Review getReview(int reviewNo) throws Exception;
 
-	public Map<String, Object> getListReview() throws Exception;
+	public Map<String, Object> getListReview(Search search) throws Exception;
 
 	public void deleteReview(int reviewNo) throws Exception;
 	
@@ -64,6 +65,8 @@ public interface ProductService {
 	public int deleteProductParts(int productPartsNo) throws Exception;
 	
 	// ProductLike 관련
-	
+	public void insertProductLike(Like like) throws Exception;
+	public Map<String, Object> getListProductLike(int userId) throws Exception;
+	public void deleteProductLike(Like like) throws Exception;
 
 }

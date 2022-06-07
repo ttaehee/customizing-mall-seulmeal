@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
+import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
+import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.product.ProductService;
 
@@ -71,8 +73,8 @@ public class ProductServiceImpl implements ProductService {
 		productMapper.insertFoodCategory(foodCategoryName);
 	}
 
-	public Map<String, Object> getListFoodCategory() throws Exception {
-		List<Foodcategory> list = productMapper.getListFoodCategory();
+	public Map<String, Object> getListFoodCategory(Search search) throws Exception {
+		List<Foodcategory> list = productMapper.getListFoodCategory(search);
 		int totalCount = productMapper.getTotalFoodCategoryCount();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -112,8 +114,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Map<String, Object> getListReview() throws Exception {
-		List<Review> list = productMapper.getListReview();
+	public Map<String, Object> getListReview(Search search) throws Exception {
+		List<Review> list = productMapper.getListReview(search);
 		int totalCount = productMapper.getTotalReviewCount();
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -186,4 +188,23 @@ public class ProductServiceImpl implements ProductService {
 		return productMapper.deleteProductParts(productPartsNo);
 	}
 
+	public void insertProductLike(Like like) throws Exception{
+		productMapper.insertProductLike(like);
+	}
+	public Map<String, Object> getListProductLike(int userId) throws Exception{
+		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(10);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+
+		map.put("list", productMapper.getListProductLike(search));
+		map.put("totalCount", productMapper.getTotalProductLikeCount(userId));
+
+		return map;
+	}
+	public void deleteProductLike(Like like) throws Exception{
+		productMapper.deleteProductLike(like);
+	}
 }
