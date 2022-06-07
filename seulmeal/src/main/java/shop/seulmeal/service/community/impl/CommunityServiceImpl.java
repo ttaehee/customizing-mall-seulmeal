@@ -1,6 +1,7 @@
 package shop.seulmeal.service.community.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,7 @@ public class CommunityServiceImpl implements CommunityService {
 	// Comment
 	@Override
 	public int insertComment(Comment comment) {
+		communityMapper.postCommentCountUp(comment.getPostNo());
 		return communityMapper.insertComment(comment);
 	}
 
@@ -92,6 +94,7 @@ public class CommunityServiceImpl implements CommunityService {
 
 	@Override
 	public int deleteComment(int commentNo) {
+		//communityMapper.postCommentCountUp(); Comment comment?
 		return communityMapper.deleteComment(commentNo);
 	}
 
@@ -118,24 +121,61 @@ public class CommunityServiceImpl implements CommunityService {
 	// Like
 	@Override
 	public int insertLike(Like like) {
+		
+		// userId가 like 눌렀는지 체크
+		Like dbLike = communityMapper.checkLike(like);
+		
+		// 이미 눌렀을 때,  실행 x
+		if(dbLike != null) {
+			System.out.println("///////이미 좋아요 눌렀음, insert 실패");
+			return -1;
+		}
+		
+		// 누르지 않았을 때
 		communityMapper.postLikeCountUp(like.getPostNo());
+
 		return communityMapper.insertLike(like);
 	}
 
 	@Override
 	public int deleteLike(Like like) {
+		
+		// userId가 like 눌렀는지 체크
+		Like dbLike = communityMapper.checkLike(like);
+
+		// 이미 눌렀을 때,  실행 x
+		if(dbLike == null) {
+			System.out.println("///////좋아요 누르지 않았음, delete 실패");
+			return -1;
+		}
+		
 		communityMapper.postLikeCountDown(like.getPostNo());
 		return communityMapper.deleteLike(like);
 	}
 
 	@Override
-	public int getPostLikeCount(int postNo) {
-		return communityMapper.getPostLikeCount(postNo);
+	public Post getLikePost(int postNo) {
+		return communityMapper.getPost(postNo);
 	}
 
 	// Relation
 	@Override
 	public int insertFollow(Relation relation) {
+		
+		Relation dbRelation = communityMapper.getRelation(relation);
+		
+		if (dbRelation != null) {
+			if(dbRelation.getRelationStatus().equals("0")) {// userId가 relationUserId를 친추한 경우
+				System.out.println("//////db에 이미 follow 존재, 데이터 삽입 x");
+				return -1;
+			}else if(dbRelation.getRelationStatus().equals("1")) {// userId가 relationUserId를 이미 블락한 경우
+				System.out.println("//////db에 이미 block 존재, 데이터 삽입 x");
+				return -1;
+			}
+		}
+		
+		System.out.println("/////db 존재 x, insert follow!");
+		
 		return communityMapper.insertRelation(relation);
 	}
 
@@ -166,16 +206,34 @@ public class CommunityServiceImpl implements CommunityService {
 
 	@Override
 	public int deleteFollow(Relation relation) {
-		return communityMapper.deleteRelation(relation);
+		
+		Relation dbRelation = communityMapper.getRelation(relation);
+		
+		return (dbRelation != null & dbRelation.getRelationStatus().equals("0")) ? communityMapper.deleteRelation(relation):-1;
 	}
 
-	@Override
+	@Override//불필요?
 	public int updateRelation(Relation relation) {
 		return communityMapper.updateRelation(relation);
 	}
 
 	@Override
 	public int insertBlock(Relation relation) {
+
+		Relation dbRelation = communityMapper.getRelation(relation);
+		
+		if (dbRelation != null) {
+			if(dbRelation.getRelationStatus().equals("0")) {// userId가 relationUserId를 친추한 경우, 
+				communityMapper.updateRelation(dbRelation);
+				System.out.println("//////db에 이미 follow 존재, 데이터 상태 변경");
+				return 1;
+			}else if(dbRelation.getRelationStatus().equals("1")) {// userId가 relationUserId를 이미 블락한 경우
+				System.out.println("//////db에 이미 block 존재, 데이터 삽입 x");
+				return -1;
+			}
+		}
+		
+		System.out.println("/////db 존재 x, insert block!");
 		return communityMapper.insertRelation(relation);
 	}
 
@@ -194,7 +252,10 @@ public class CommunityServiceImpl implements CommunityService {
 
 	@Override
 	public int deleteBlock(Relation relation) {
-		return communityMapper.deleteRelation(relation);
+		
+		Relation dbRelation = communityMapper.getRelation(relation);
+		
+		return (dbRelation != null & dbRelation.getRelationStatus().equals("1")) ? communityMapper.deleteRelation(relation):-1;
 	}
 
 

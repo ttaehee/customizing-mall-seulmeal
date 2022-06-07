@@ -33,7 +33,7 @@ public interface CommunityService {
 	//Like
 	public int insertLike(Like like);
 	public int deleteLike(Like like);
-	public int getPostLikeCount(int postNo);
+	public Post getLikePost(int postNo);
 	
 	//Relation
 	public int insertFollow(Relation relation);

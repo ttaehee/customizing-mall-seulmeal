@@ -13,6 +13,7 @@
 <!-- 우리 css, font -->
 <link href="../../resources/css/body.css">
 
+
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -22,6 +23,10 @@
 	.header{
 		transition: background 0.6s;
 		text-align: center;
+
+<script type="text/javascript">
+	function join(){
+		window.location.href = '/user/insertUser';
 	}
 	
 	.navbar.fixed{

@@ -12,6 +12,9 @@
 		id="postSelectMap">
 		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
 		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.nickName" column="nickname" jdbcType="VARCHAR" />
+		<result property="user.profileImage" column="profile_image" jdbcType="VARCHAR" />
+		<result property="user.profileMessage" column="profile_message" jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="NUMERIC" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
 		<result property="shortContent" column="short_content" jdbcType="VARCHAR" />
@@ -54,12 +57,14 @@
 	</insert>
 
 	<select id="getPost" parameterType="int" resultMap="postSelectMap">
-		SELECT * FROM post
-		<where>
-			post_no = #{postNo}
-			AND post_status = '0'
-			AND status = '0'
-		</where>
+		SELECT p.*, u.nickname, u.profile_image
+ 			FROM post p, users u	  
+			<where>
+				p.user_id = u.user_id
+				AND p.post_no = #{postNo}
+	  			AND p.post_status = '0'
+	  			AND p.status = '0'
+			</where>
 	</select>
 
 	<!--  전체 게시글 목록 -->
@@ -234,7 +239,7 @@
 			comments(comment_no, user_id, nickname, post_no, content, layer, reg_date, parent_comment_no, status)
 		VALUES (seq_comment_no.nextval, 
 			#{user.userId},
-			#{user.nickName}, 
+			#{user.nickName:VARCHAR}, 
 			#{postNo}, 
 			#{content}, 
 			#{layer}, 
@@ -246,7 +251,7 @@
 			</selectKey>
 	</insert>
 
-	<select id="getComment" parameterType="int" resultType="Comment">
+	<select id="getComment" parameterType="int" resultMap="commentSelectMap">
 		SELECT *
 		FROM comments
 		<where>
@@ -316,6 +321,26 @@
 			AND status = '0'
 		</where>
 	</select>
+	
+	<update id="postCommentCountUp" parameterType="int">
+		UPDATE post
+		<set>
+			comment_count = comment_count + 1
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
+	</update>
+	
+	<update id="postCommentCountDown" parameterType="int">
+		UPDATE post
+		<set>
+			comment_count = comment_count - 1
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
+	</update>	
 
 
 	<!-- 3. Report -->
@@ -384,9 +409,23 @@
 	<!-- 4. Like -->
 	
 	<!-- 좋아요 체크 X-->
-	<update id="checkLike" parameterType="Like">
-
-	</update>
+	
+	<resultMap type="shop.seulmeal.service.domain.Like" id="likeSelectMap">
+		<result property="likeNo" column="like_no" jdbcType="NUMERIC" />
+		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
+		<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="commentNo" column="comment_no" jdbcType="VARCHAR" />
+		<result property="productNo" column="product_no" jdbcType="DATE" />
+	</resultMap>	
+	
+	
+	<select id="checkLike" parameterType="Like" resultMap="likeSelectMap">
+		SELECT * FROM likes
+		<where>
+			user_id = #{userId}
+			AND post_no = #{postNo}
+		</where>
+	</select>
 
 	<!-- 좋아요 -->
 	<insert id="insertLike" parameterType="Like">
@@ -448,7 +487,8 @@
 	
 	<resultMap type="Relation" id="relationSelectMap">
 		<result property="relationNo" column="relation_no" jdbcType="NUMERIC" />
-		<result property="relationUser.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="relationUser.userId" column="relation_user_id" jdbcType="VARCHAR" />
 		<result property="relationUser.nickName" column="nickname" jdbcType="VARCHAR" />
 		<result property="relationUser.profileImage" column="profile_image" jdbcType="VARCHAR" />
 		<result property="relationUser.profileMessage" column="profile_message" jdbcType="VARCHAR" />
@@ -456,6 +496,13 @@
 		<result property="regDate" column="reg_date" jdbcType="DATE" />
 	</resultMap>
 	
+	<resultMap type="Relation" id="relationSelectMap2">
+		<result property="relationNo" column="relation_no" jdbcType="NUMERIC" />
+		<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="relationUser.userId" column="relation_user_id" jdbcType="VARCHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
+		<result property="relationStatus" column="relation_status" jdbcType="VARCHAR" />
+	</resultMap>
 	
 	<!-- insert id="insertFollow" parameterType="Relation">
 		INSERT INTO 
@@ -632,7 +679,7 @@
         	relation_status = '1'
         </set>
         <where>
-			ralation_status = '0'
+			relation_status = '0'
 			AND relation_no = #{relationNo}
         </where>
 	</update>
@@ -650,6 +697,27 @@
 	<delete id="deleteRelationAll" >
 		DELETE FROM relation
 	</delete>
+
+
+	<!-- relation -->
+	<select id="getRelation" parameterType="Relation" resultMap="relationSelectMap2">
+		SELECT * FROM relation
+				<where>
+					user_id = #{userId}
+					AND relation_user_id = #{relationUser.userId}  
+				</where>							
+	</select>
+
+
+
+	<!-- relation 리스트
+	<select id="getListRelation" parameterType="Relation">
+		SELECT * FROM relation
+				<where>
+					user_id = #{userId}
+					AND relation_user_id = #{relationUserId}  
+				</where>							
+	</select-->
 
 
 	<!--  팔로워 유저 list -->

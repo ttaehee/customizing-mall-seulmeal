@@ -7,9 +7,15 @@
 	 
 		<insert id="insertUser">
 			INSERT
-			INTO users( user_id , user_name , password , birth , address, phone, email, grade , reg_date, nickname, confirm_status, foodcategory_name1, foodcategory_name2, foodcategory_name3) 
+			INTO users( user_id , user_name , password , birth , address, phone, email,  reg_date, nickname, confirm_status) 
 			VALUES	 (	#{userId} , #{userName} , #{password} , TO_DATE(#{birth:DATE},'YY/MM/DD') , #{address:VARCHAR} , 
-								#{phone:VARCHAR} , #{email:VARCHAR} , #{grade:CHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR},#{foodCategoryName1:VARCHAR},#{foodCategoryName2:VARCHAR}, #{foodCategoryName3:VARCHAR} )
+								#{phone:VARCHAR} , #{email:VARCHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR} )
+		</insert>
+		
+		<insert id="inserUserInformation">
+			insert into users(foodCategoryName1, foodCategoryName2, foodCategoryName3, profileImage, profileMessage)
+			values(#{foodCategoryName1:VARCHAR}, #{foodCategoryName2:VARCHAR}, #{foodCategoryName3:VARCHAR}, #{profileImage:VARCHAR}, #{profileMessage:VARCHAR})
+		
 		</insert>
 		
 		<insert id="insertHatesParts" parameterType="map">
@@ -17,7 +23,7 @@
 				SELECT seq_hates_parts_no.NEXTVAL, A.* FROM(
 					<foreach collection="list" item="parts" separator="UNION ALL">
 						SELECT 
-							#{parts.userId:VARCHAR} as user_id
+							#{userId:VARCHAR} as user_id
 							#{parts.partNo:INTEGER} as parts_no,
 							#{parts.partsName:VARCHAR} as parts_name,
 							from dual
@@ -26,7 +32,11 @@
 		</insert>
 		
 		<select id="getUser" resultType="shop.seulmeal.service.domain.User">
-	        	SELECT * FROM users WHERE user_id = #{userId}
+	        	SELECT * FROM users WHERE user_id = #{userId:VARCHAR}
+	    </select>
+	    
+	    <select id="getUserHatesParts" resultType="shop.seulmeal.service.domain.Parts">
+	    	select * from hates_parts where user_id = #{userId:VARCHAR}
 	    </select>
 	    
 	    <update id="updateUser">
@@ -89,7 +99,7 @@
 			SELECT user_id, user_name from users where email= #{email}
 		</select>
 		
-		<select id="getListUserTotalCount" resultType="int" parameterType="map">
+		<select id="getListUserTotalCount" resultType="int" parameterType="shop.seulmeal.common.Search">
 			SELECT COUNT(*)
 			FROM( SELECT user_id , user_name , blacklist_status
 				FROM users
@@ -139,7 +149,7 @@
 				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{point}, SYSDATE)
 		</insert>
 		
-		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="map" >
+		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="shop.seulmeal.common.Search" >
 			SELECT *
 			FROM ( SELECT inner_table.* , ROWNUM AS row_seq
 				FROM ( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
@@ -149,7 +159,7 @@
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 		</select>
 		
-		<select id="getListPointTotalCount" resultType="int" parameterType="map" >
+		<select id="getListPointTotalCount" resultType="int" parameterType="shop.seulmeal.common.Search" >
 			SELECT COUNT(*)
 			FROM( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
 				FROM point where point_status = #{pointStatus}) countTable
