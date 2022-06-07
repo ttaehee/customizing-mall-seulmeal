@@ -46,7 +46,7 @@ public interface CommunityMapper {
 	public int getReportTotalCount();
 	
 	//Like
-	public int checkLike();//
+	public Like checkLike(Like like);//추가
 	public int insertLike(Like like);
 	public int deleteLike(Like like);
 	public int postLikeCountUp(Integer postNo);
@@ -55,22 +55,15 @@ public interface CommunityMapper {
 	//Relation 
 	public int insertRelation(Relation relation);
 	public List<Relation> getListRelation(Map<String,Object> map);//userId, search, relationStatus
+	public List<Relation> getListRelation(Relation relation);//추가
 	public int getRelationTotalCount(Map<String,Object> map);
 	public int updateRelation(Relation relation);//follow->block
 	public int deleteRelation(Relation relation);
-	
-	
-//	public int insertFollow(Relation relation);
-//	public List<String> getListFollow(String userId);
-//	public int deleteFollow(Relation relation);
+	public Relation getRelation(Relation relation);
 	
 	public List<String> getListFollower(Map<String,Object> map);//
 	public int getFollowerTotalCount(Map<String,Object> map);//
 
-//	public int insertBlock(Relation relation);
-//	public List<Relation> getListBlock(Map<String,Object> map);
-//	public int getTotalBlockCount(Map<String,Object> map);
-//	public int deleteBlock(Relation relation);
 	
 	//TestCode
 	public int deletePostAll();

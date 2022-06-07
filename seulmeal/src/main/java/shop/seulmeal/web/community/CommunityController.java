@@ -1,5 +1,6 @@
 package shop.seulmeal.web.community;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -16,14 +17,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.attachments.AttachmentsService;
 import shop.seulmeal.service.community.CommunityService;
+import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Report;
+import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
@@ -88,9 +93,14 @@ public class CommunityController {
 	}
 	
 	@PostMapping("/insertPost") // o
-	public String insertPost(@ModelAttribute Post post) {
-		
+	public String insertPost(@ModelAttribute Post post, MultipartFile[] uploadfile,Attachments attachments,HttpSession session) throws IllegalStateException, IOException {
+
+		post.setUser(((User)session.getAttribute("user")));
 		communityService.insertPost(post);
+		
+		attachments.setPostNo(Integer.toString(post.getPostNo()));
+		
+		attachmentsService.insertAttachments(uploadfile, attachments);
 		
 		return "redirect:getPost/"+ post.getPostNo(); 
 	}
@@ -101,9 +111,7 @@ public class CommunityController {
 		Post post = communityService.getPost(postNo);
 		
 		//무한스크롤?
-//		Search search = new Search();
-//		search.setCurrentPage();
-//		search.setPageSize();
+
 //		Map<String,Object> map = communityService.getListcomment(search, postNo);
 		
 //		model.addAttribute("post", post);
