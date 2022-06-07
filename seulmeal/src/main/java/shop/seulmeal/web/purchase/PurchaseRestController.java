@@ -48,6 +48,7 @@ public class PurchaseRestController {
 	      return purchase;
 	   }   
 		
+	//deletePurchase 도 레스트로 변경,,?
 	
 	
 

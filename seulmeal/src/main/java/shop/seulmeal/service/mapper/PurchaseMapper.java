@@ -59,7 +59,7 @@ public interface PurchaseMapper {
 	public int updatePurchaseCode(Purchase purchase);
 	
 	//구매내역 삭제 
-	public int deletePurchase(Purchase purchase);
+	public int deletePurchase(int purchaseNo);
 	
 	//개수
 	public int getTotalCount(Map<String, Object> map);

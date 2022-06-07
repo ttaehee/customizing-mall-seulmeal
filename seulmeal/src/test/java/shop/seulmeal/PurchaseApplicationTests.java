@@ -195,7 +195,7 @@ class PurchaseApplicationTests {
 		System.out.println("커스터마이징상품 : "+purchaseMapper.getCustomProduct(52));
 	}			
 	
-	//@Test 
+	@Test 
 	void getListCustomProduct() {
 		
 		Search search = new Search();
@@ -218,17 +218,15 @@ class PurchaseApplicationTests {
 	//@Test
 	void updateCustomProduct() {
 		CustomProduct customProduct=new CustomProduct();
-		Purchase purchase=new Purchase();
-		purchase.setPurchaseNo(3);
 		
-		customProduct.setCustomProductNo(1);
-		customProduct.setPurchase(purchase);
+		customProduct.setCustomProductNo(5);
+		customProduct.setPurchaseNo(3);
 		
 		purchaseMapper.updateCustomProduct(customProduct);
 
-		System.out.println("결과 : "+purchaseMapper.getCustomProduct(3));
+		System.out.println("결과 : "+purchaseMapper.getCustomProduct(5));
 		
-		assertEquals(purchaseMapper.getCustomProduct(3).getPurchase().getPurchaseNo(), 2);
+		assertEquals(purchaseMapper.getCustomProduct(5).getPurchaseNo(), 3);
 	}
 	
 	//@Test
@@ -324,15 +322,8 @@ class PurchaseApplicationTests {
 	
 	//@Test
 	void deletePurchase() {
-		Purchase purchase=new Purchase();
-		
-		purchase.setPurchaseNo(2);
-		
-		purchaseMapper.deletePurchase(purchase);
-		purchase=purchaseMapper.getPurchase(2);
-		System.out.println("결과 : "+purchase);
-		
-		assertEquals(purchase.getStatus(), "1");
+		int result=purchaseMapper.deletePurchase(2);
+		System.out.println("결과 : "+result);
 	}
 
 }

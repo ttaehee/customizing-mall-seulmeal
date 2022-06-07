@@ -54,6 +54,6 @@ public interface PurchaseService {
 	public int updatePurchaseCode(Purchase purchase);
 	
 	//구매내역 삭제 
-	public int deletePurchase(Purchase purchase);
+	public int deletePurchase(int purchaseNo);
 
 }

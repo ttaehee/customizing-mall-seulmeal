@@ -135,9 +135,9 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public int deletePurchase(Purchase purchase) {
+	public int deletePurchase(int purchaseNo) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.deletePurchase(purchase);
+		return purchaseMapper.deletePurchase(purchaseNo);
 	}
 
 }
