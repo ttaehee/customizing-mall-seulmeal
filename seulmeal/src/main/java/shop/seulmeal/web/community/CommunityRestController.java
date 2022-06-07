@@ -4,7 +4,9 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,27 +62,54 @@ public class CommunityRestController {
 	}
 	
 	
-	@RequestMapping("insertFollow/{relationUserId}")
-	public void insertFollow(@PathVariable String relationUserId, HttpSession session) {
+	@PostMapping("insertFollow/{relationUserId}") // o
+	public void insertFollow(@PathVariable String relationUserId, @RequestParam String userId) {
 		
 		Relation relation = new Relation();
-		relation.setUserId(((User)session.getAttribute("user")).getUserId());
+		relation.setRelationStatus("0");
+		relation.setUserId(userId);
+//		relation.setUserId(((User)session.getAttribute("user")).getUserId());
 		
-		relation.setRelationUser(null);
+		User user = new User();
+		user.setUserId(relationUserId);
+		relation.setRelationUser(user);
 		
-		
-	}
-	
-	public void deleteFollow() {
-		
-	}
-	
-	public void insertBlock() {
+		communityService.insertFollow(relation);
 		
 	}
 	
-	public void deleteBlock() {
+	@DeleteMapping("deleteFollow/{relationNo}") // o 
+	public void deleteFollow(@PathVariable int relationNo) {
 		
+		Relation relation = new Relation();
+		relation.setRelationStatus("0");
+		relation.setRelationNo(relationNo);
+		
+		communityService.deleteFollow(relation);
+	}
+	
+	
+	@PostMapping("insertBlock/{relationUserId}")
+	public void insertBlock(@PathVariable String relationUserId, @RequestParam String userId) {
+		Relation relation = new Relation();
+		relation.setRelationStatus("1");
+		relation.setUserId(userId);
+//		relation.setUserId(((User)session.getAttribute("user")).getUserId());
+		
+		User user = new User();
+		user.setUserId(relationUserId);
+		relation.setRelationUser(user);
+		
+		communityService.insertBlock(relation);
+	}
+	
+	@DeleteMapping("deleteBlock/{relationNo}") 
+	public void deleteBlock(@PathVariable int relationNo) {
+		Relation relation = new Relation();
+		relation.setRelationStatus("1");
+		relation.setRelationNo(relationNo);
+		
+		communityService.deleteBlock(relation);
 	}
 	
 	
