@@ -44,15 +44,15 @@
 	<select id="getListProduct" resultMap="productSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
 		( SELECT thumbnail, product_no , p.name as pName , price, sub_content, f.* FROM product p, foodcategory f
-			<where>
-				p.foodcategory_no = f.foodcategory_no
-				<if test="searchKeyword != null">
-					AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
-				</if>
-				<if test="searchCondition != null">
-					AND p.foodcategory_no = #{searchCondition}				
-				</if>
-			</where>
+		<where>
+			p.foodcategory_no = f.foodcategory_no
+			<if test="searchKeyword != null">
+				AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
+			</if>
+			<if test="searchCondition != null">
+				AND p.foodcategory_no = #{searchCondition}
+			</if>
+		</where>
 		ORDER BY product_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
@@ -60,15 +60,15 @@
 
 	<select id="getTotalProductCount" resultType="int">
 		SELECT COUNT(*) FROM ( SELECT product_no FROM product p, foodcategory f
-			<where>
-				p.foodcategory_no = f.foodcategory_no
-				<if test="searchKeyword != null">
-					AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
-				</if>
-				<if test="searchCondition != null">
-					AND p.foodcategory_no = #{searchCondition}				
-				</if>
-			</where>
+		<where>
+			p.foodcategory_no = f.foodcategory_no
+			<if test="searchKeyword != null">
+				AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
+			</if>
+			<if test="searchCondition != null">
+				AND p.foodcategory_no = #{searchCondition}
+			</if>
+		</where>
 		ORDER BY product_no) countTable
 	</select>
 
@@ -93,7 +93,7 @@
 		<set> status = 1	</set>
 		WHERE product_no = #{productNo}
 	</update>
-	
+
 	<update id="restoreProduct">
 		UPDATE product
 		<set> status = 0	</set>
@@ -127,7 +127,7 @@
 		<set> status = 1	</set>
 		WHERE foodCategory_no = #{foodCategoryNo}
 	</update>
-	
+
 	<update id="restoreFoodCategory">
 		UPDATE foodCategory
 		<set> status = 0	</set>
@@ -158,10 +158,10 @@
 
 	<update id="updateReview">
 		UPDATE review
-		<set> title = #{title}, 
-				content = #{content}, 
-				rating = #{rating}
-		</set> 
+		<set> title = #{title},
+			content = #{content},
+			rating = #{rating}
+		</set>
 		WHERE review_no = #{reviewNo}
 	</update>
 
@@ -194,7 +194,7 @@
 		<set> status = '1'	</set>
 		WHERE review_no = #{reviewNo}
 	</update>
-	
+
 	<update id="restoreReview">
 		UPDATE review
 		<set> status = '0'	</set>
@@ -317,4 +317,22 @@
 			productparts_no = #{productPartsNo}
 		</where>
 	</update>
+
+	<!-- PRODUCT LIKE -->
+	<insert id="insertProductLike">
+		INSERT INTO likes (like_no, user_id, product_no)
+		VALUES ( seq_likes_no.NEXTVAL, #{user.userId), #(product.productNo)
+	</insert>
+
+	<select id="getListProductLike">
+		
+
+	</select>
+
+	<delete id="deleteProductLike">
+		DELETE FROM likes
+		<where>
+			likes_no = #{likeNo}
+		</where>
+	</delete>
 </mapper>

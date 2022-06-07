@@ -59,8 +59,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	// test done + need toggle
 	public void deleteProduct(int productNo) throws Exception {
-
 		productMapper.deleteProduct(productNo);
+	}
+	
+	public void restoreProduct(int productNo) throws Exception {
+		productMapper.restoreProduct(productNo);
 	}
 
 	// Food Category CRUD
@@ -68,14 +71,24 @@ public class ProductServiceImpl implements ProductService {
 		productMapper.insertFoodCategory(foodCategoryName);
 	}
 
-	public List<Foodcategory> getListFoodCategory() throws Exception {
-		List<Foodcategory> list = productMapper.getListFoodCategory();		
-
-		return list;
+	public Map<String, Object> getListFoodCategory() throws Exception {
+		List<Foodcategory> list = productMapper.getListFoodCategory();
+		int totalCount = productMapper.getTotalFoodCategoryCount();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list",list);
+		map.put("totalCount", new Integer(totalCount));
+		
+		return map;
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {
 		productMapper.deleteFoodCategory(foodCategoryNo);
+	}
+	
+	@Override
+	public void restoreFoodCategory(int foodCategoryNo) throws Exception {
+		productMapper.restoreFoodCategory(foodCategoryNo);
 	}
 
 	// Review CRUD
@@ -113,6 +126,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void deleteReview(int reviewNo) throws Exception {
 		productMapper.deleteReview(reviewNo);
+	}
+	
+	@Override
+	public void restoreReview(int reviewNo) throws Exception {
+		productMapper.restoreReview(reviewNo);
 	}
 
 	// Parts 관련
@@ -166,23 +184,6 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public int deleteProductParts(int productPartsNo) throws Exception {
 		return productMapper.deleteProductParts(productPartsNo);
-	}
-
-	
-	
-	@Override
-	public void restoreProduct(int productNo) throws Exception {
-		productMapper.restoreProduct(productNo);
-	}
-
-	@Override
-	public void restoreFoodCategory(int foodCategoryNo) throws Exception {
-		productMapper.restoreFoodCategory(foodCategoryNo);
-	}
-
-	@Override
-	public void restoreReview(int reviewNo) throws Exception {
-		productMapper.restoreReview(reviewNo);
 	}
 
 }
