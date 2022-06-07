@@ -31,10 +31,12 @@ public interface CommunityMapper {
 	public int insertComment(Comment comment);
 	public Comment getComment(int commentNo);
 	public int updateComment(Comment comment);
-	public int deleteComment(int commentNo);
+	public int deleteComment(int commentNo);// Comment comment?
 	
 	public List<Comment> getListComment(Map<String,Object> map);
 	public int getCommentTotalCount(int postNo);//검색옵션 필요 x -> map X
+	public void postCommentCountUp(int postNo);
+	public void postCommentCountDown(int postNo);
 	
 	//Report
 	public int insertReportPost(Report report);
@@ -49,9 +51,6 @@ public interface CommunityMapper {
 	public int deleteLike(Like like);
 	public int postLikeCountUp(Integer postNo);
 	public int postLikeCountDown(Integer postNo);
-//	public int commentLikeCountUp(Integer commentNo);
-//	public int commentLikeCountDown(Integer commentNo);
-	public int getPostLikeCount(int postNo);
 	
 	//Relation 
 	public int insertRelation(Relation relation);

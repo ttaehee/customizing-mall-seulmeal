@@ -69,18 +69,7 @@ class OperationTest {
 	@Value("${chatBot.secretKey}")
 	String api;
 	
-	//@Test
-	void getCus() {
-		CustomProduct cp = operationMapper.selectCus(1);
-		
-		System.out.println("CustomProduct : "+cp);
-		System.out.println("================================");
-		System.out.println("Product : "+cp.getProduct());
-		System.out.println("================================");
-		for (CustomParts customParts : cp.getCustomParts()) {
-			System.out.println("커스텀 파츠 : "+customParts);
-		}
-	}
+	
 	
 	@Test
 	void operation() {

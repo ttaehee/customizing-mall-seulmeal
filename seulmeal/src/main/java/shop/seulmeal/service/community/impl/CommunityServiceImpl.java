@@ -65,6 +65,7 @@ public class CommunityServiceImpl implements CommunityService {
 	// Comment
 	@Override
 	public int insertComment(Comment comment) {
+		communityMapper.postCommentCountUp(comment.getPostNo());
 		return communityMapper.insertComment(comment);
 	}
 
@@ -92,6 +93,7 @@ public class CommunityServiceImpl implements CommunityService {
 
 	@Override
 	public int deleteComment(int commentNo) {
+		//communityMapper.postCommentCountUp(); Comment comment?
 		return communityMapper.deleteComment(commentNo);
 	}
 
@@ -129,8 +131,8 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public int getPostLikeCount(int postNo) {
-		return communityMapper.getPostLikeCount(postNo);
+	public Post getLikePost(int postNo) {
+		return communityMapper.getPost(postNo);
 	}
 
 	// Relation

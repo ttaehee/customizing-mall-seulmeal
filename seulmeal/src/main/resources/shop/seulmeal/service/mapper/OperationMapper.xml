@@ -52,7 +52,7 @@
 		<if test="postStatus != 3">
 			SELECT * FROM post
 			<where>
-				post_no = #{value}
+				post_no = #{postNo}
 			</where>
 		</if>
 		<if test="postStatus == 3">
@@ -204,60 +204,6 @@
 		</where>
 	</update>
 	
-	<resultMap id="customPartsSelectMap" type="customParts">
-		<result property="customPartsNo" 		column="customparts_no"   jdbcType="NUMERIC"/> 
-		<result property="customProductNo" 		column="customproduct_no" jdbcType="NUMERIC"/> 
-		<result property="gram" 				column="gram" 			  jdbcType="NUMERIC"/> 
-		<result property="productPartsNo" 		column="productparts_no"  jdbcType="NUMERIC"/> 
-		<result property="productPartsName" 	column="minus_name" 	  jdbcType="VARCHAR"/> 
-		<association property="parts" javaType="parts" >
-			<result property="partsNo" 			column="parts_no" 		  jdbcType="NUMERIC"/>
-			<result property="name" 			column="plus_name" 		  jdbcType="VARCHAR"/>
-			<result property="price" 			column="plus_price" 	  jdbcType="NUMERIC"/>
-			<result property="calorie" 			column="plus_calorie" 	  jdbcType="NUMERIC"/>
-		</association>
-	</resultMap>
 	
-	<!-- 커스텀 프로덕트 -->
-	<resultMap id="customProductSelectMap" type="customProduct">
-    	<id property="customProductNo" 		column="customproduct_no" 	jdbcType="NUMERIC"/>
-		<result property="count" 				column="count" 				jdbcType="NUMERIC"/>
-		<result property="cartStatus" 			column="cart_status" 		jdbcType="VARCHAR"/>
-		<result property="regDate" 				column="reg_date" 			jdbcType="DATE"/>
-		<association property="user" javaType="user" >
-			<result property="userId" 	 		column="user_id" 			jdbcType="VARCHAR"/>
-		</association>
-		<association property="product" javaType="product" >
-			<result property="productNo" 		column="product_no" 		jdbcType="NUMERIC"/>
-			<result property="name" 			column="name" 				jdbcType="VARCHAR"/>
-			<result property="price" 			column="price" 				jdbcType="NUMERIC"/>
-			<result property="calorie" 			column="calorie" 			jdbcType="NUMERIC"/>
-		</association>
-		<association property="purchase" javaType="purchase" >
-			<result property="purchaseNo" 		column="purchase_no" 		jdbcType="NUMERIC"/>
-		</association>
-		<collection property="customParts" ofType="customParts">
-			<result property="customPartsNo" column="customParts_no" jdbcType="NUMERIC" />
-			<result property="gram" column="gram" jdbcType="NUMERIC" />
-			<result property="productPartsNo" column="productParts_no" jdbcType="NUMERIC" />
-			<result property="productPartsName" column="munus_name" jdbcType="NUMERIC" />
-			<association property="parts" javaType="parts">
-				<result property="partsNo" column="parts_no" jdbcType="NUMERIC" />
-				<result property="name" column="name" jdbcType="VARCHAR" />
-				<result property="price" column="price" jdbcType="NUMERIC" />
-				<result property="calorie" column="calorie" jdbcType="NUMERIC" />
-				<result property="status" column="status" jdbcType="VARCHAR" />
-			</association>
-		</collection>
-	</resultMap>
 	
-	<select id="selectCus" resultMap="customPartsSelectMap">
-		SELECT * FROM customproduct c, customparts cp, product p, parts pp, productparts pps
-		WHERE c.customproduct_no = cp.customproduct_no(+)
-		AND c.product_no = p.product_no(+)
-		AND cp.parts_no = pp.parts_no(+)
-		AND cp.productparts_no = pps.productparts_no(+)
-		AND c.customproduct_no = #{value}
-		ORDER BY c.customproduct_no
-	</select>
 </mapper>
