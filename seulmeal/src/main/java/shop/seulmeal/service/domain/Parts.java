@@ -16,6 +16,7 @@ public class Parts {
 	private int calorie;
 	private Date regDate;
 	private String status;
+	private int gram; //custom에서 사
 	
 	// productNo
 	private int productNo;

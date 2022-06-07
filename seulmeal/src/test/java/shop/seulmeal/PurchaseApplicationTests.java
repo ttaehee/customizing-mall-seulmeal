@@ -46,25 +46,45 @@ class PurchaseApplicationTests {
 	
 	//@Test
 	void insertCustomParts() {
-		CustomParts customParts=new CustomParts();
-		Parts parts=new Parts();
-		parts.setPartsNo(1);
 		
-		customParts.setCustomProductNo(1);
-		customParts.setProductPartsNo(1);
-		customParts.setParts(parts);
-		customParts.setGram(50);
+		List<CustomParts> minus=new ArrayList<>();
+		CustomParts cp1=new CustomParts();
+		cp1.setProductPartsNo(8);
+		cp1.setMinusName("소고기");
+		cp1.setCustomProductNo(5);
+		minus.add(cp1);
+		
+		List<CustomParts> plus=new ArrayList<>();
+		CustomParts cp2=new CustomParts();
+		Parts parts1=new Parts();
+		parts1.setPartsNo(1);
+		parts1.setName("양파");
+		cp2.setParts(parts1);
+		cp2.setGram(50);
+		cp2.setCustomProductNo(5);
+		plus.add(cp2);
+		
+		CustomParts cp3=new CustomParts();
+		Parts parts2=new Parts();
+		parts2.setPartsNo(8);
+		parts2.setName("소고기");
+		cp3.setParts(parts2);
+		cp3.setCustomProductNo(5);
+		cp2.setGram(100);
+		plus.add(cp3);
+		
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("customProductNo",5);
+		map.put("minusParts",minus);
+		map.put("plusParts",plus);
 			
-		List<CustomParts> list=new ArrayList<CustomParts>();
+		int result2=purchaseMapper.insertMinusParts(map);
+		int result3=purchaseMapper.insertPlusParts(map);
+
+		System.out.println("결과 : "+result2);
+		System.out.println("결과 : "+result3);
 		
-		for(int i=0; i<5; i++) {
-			list.add(customParts);
-		}
-					
-		int result=purchaseMapper.insertCustomParts(list);
-		System.out.println("결과 : "+result);
-		
-		assertEquals(purchaseMapper.getCustomParts(11).getGram(), 50);
 	}
 	
 	//@Test
@@ -73,8 +93,7 @@ class PurchaseApplicationTests {
 		
 		customParts=purchaseMapper.getCustomParts(11);
 		System.out.println("결과 : "+customParts);
-		
-		assertEquals(customParts.getGram(), 50);
+
 	}
 	
 	//@Test
@@ -88,21 +107,13 @@ class PurchaseApplicationTests {
 		
 		System.out.println("search : "+search);
 		
-		Map<String, Object> map=new HashMap<>();
-		map.put("customProductNo",1);
-		map.put("search", search);
+		List<CustomParts> list=purchaseMapper.getListCustomParts(5);
 		
-		List<CustomParts> list=purchaseMapper.getListCustomParts(map);
+		System.out.println("list 결과 : "+list);		
 		
-		System.out.println("list 결과 : "+list);
-		
-		map.put("partsNo",1);
-		
-		for(CustomParts customParts : list) {
-			customParts.setCustomProductNo(1);
-			customParts.setParts(productMapper.getParts(map));
-			System.out.println("커스터마이징재 : "+customParts);
-		}
+		//for(CustomParts cp:list) {
+		//	System.out.println("커스터마이징 재료 : "+cp);
+		//}
 
 	}	
 	
@@ -123,40 +134,84 @@ class PurchaseApplicationTests {
 		User user=new User();
 		user.setUserId("ghm4905");
 		Product product=new Product();
-		product.setProductNo(3);
+		product.setProductNo(4);
 		
 		customProduct.setUser(user);
 		customProduct.setProduct(product);
-		customProduct.setCount(7);
+		customProduct.setCount(5);
 		customProduct.setCartStatus("1");
-		customProduct.setStatus("0");
-			
-		int result=purchaseMapper.insertCustomProduct(customProduct);
-		System.out.println("결과 : "+result);
 		
-		assertEquals(purchaseMapper.getCustomProduct(3).getCount(), 7);
+		int result1=purchaseMapper.insertCustomProduct(customProduct);
+
+		
+		List<CustomParts> minus=new ArrayList<>();
+		CustomParts cp1=new CustomParts();
+		cp1.setProductPartsNo(7);
+		cp1.setMinusName("오이");
+		cp1.setCustomProductNo(customProduct.getCustomProductNo());
+		minus.add(cp1);
+		//customProduct.setMinusParts(minus);
+		
+		
+		List<CustomParts> plus=new ArrayList<>();
+		CustomParts cp2=new CustomParts();
+		Parts parts1=new Parts();
+		parts1.setPartsNo(1);
+		parts1.setName("양파");
+		cp2.setParts(parts1);
+		cp2.setGram(50);
+		cp2.setCustomProductNo(customProduct.getCustomProductNo());
+		plus.add(cp2);
+		
+		CustomParts cp3=new CustomParts();
+		Parts parts2=new Parts();
+		parts2.setPartsNo(2);
+		parts2.setName("당근");
+		cp3.setParts(parts2);
+		cp3.setCustomProductNo(customProduct.getCustomProductNo());
+		cp2.setGram(100);
+		plus.add(cp3);
+		//customProduct.setPlusParts(plus);
+		
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("customProductNo",customProduct.getCustomProductNo());
+		map.put("minusParts",minus);
+		map.put("plusParts",plus);
+			
+		int result2=purchaseMapper.insertMinusParts(map);
+		int result3=purchaseMapper.insertPlusParts(map);
+		System.out.println("결과 : "+result1);
+		System.out.println("결과 : "+result2);
+		System.out.println("결과 : "+result3);
+
+		//assertEquals(purchaseMapper.getCustomProduct(3).getCount(), 7);
 	}
+	
+	//@Test 
+	void getCustomProduct() {
+		purchaseMapper.getCustomProduct(52);
+		
+		System.out.println("커스터마이징상품 : "+purchaseMapper.getCustomProduct(52));
+	}			
 	
 	//@Test 
 	void getListCustomProduct() {
 		
 		Search search = new Search();
-		if(search.getCurrentPage() ==0 ){
+		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
 		
-		System.out.println("search : "+search);
+		Map<String, Object> map =new HashMap<>();
 		
-		Map<String, Object> map=new HashMap<>();
-		map.put("userId","ghm4905");
 		map.put("search", search);
+		map.put("userId","ghm4905");
 		
-		List<CustomProduct> list=purchaseMapper.getListCustomProduct(map);
-		
-		for(CustomProduct customProduct : list) {
-			System.out.println("커스터마이징상 : "+customProduct);
-		}
+		//커스터마이징상품 리스트 
+		List<CustomProduct> list = purchaseMapper.getListCustomProduct(map);
+		System.out.println("커스터마이징상품 : "+list);
 
 	}		
 	
@@ -185,7 +240,7 @@ class PurchaseApplicationTests {
 
 		System.out.println("결과 : "+purchaseMapper.getCustomProduct(3));
 		
-		assertEquals(purchaseMapper.getCustomProduct(3).getStatus(), 1);
+		assertEquals(purchaseMapper.getCustomProduct(3).getCartStatus(), 1);
 	}	
 	
 	//@Test
@@ -225,7 +280,7 @@ class PurchaseApplicationTests {
 		assertEquals(purchase.getPrice(), 10000);
 	}
 	
-	@Test
+	//@Test
 	void getListPurchase() throws Exception {
 		
 		Search search = new Search();
@@ -242,12 +297,14 @@ class PurchaseApplicationTests {
 		
 		List<Purchase> list=purchaseMapper.getListPurchase(map);
 		
-		System.out.println("list:"+list);
 		
-		for(Purchase purchase : list) {
-			System.out.println("구매리스트 : "+purchase);
-			purchase=null;
-		}
+		System.out.println("==================================");
+		System.out.println("list:"+list);
+		System.out.println("==================================");
+		
+		//for(Purchase purchase : list) {
+		//	System.out.println("구매리스트 : "+purchase);
+		//}
 
 	}			
 	

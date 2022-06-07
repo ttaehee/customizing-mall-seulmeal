@@ -93,11 +93,12 @@ public class OperationController {
 	}
 	
 	@GetMapping("getOperation/{postNo}")
-	public String insertOperation(@PathVariable int postNo, Model model) {
+	public String insertOperation(@PathVariable int postNo,Model model) {
 		System.out.println(postNo);
-		
+		Post post = new Post();
+		post.setPostNo(postNo);
 		// 자료 가져오기
-		Post post = operationService.getOperation(postNo);
+		post = operationService.getOperation(post);
 		
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("postNo", post.getPostNo());
@@ -126,8 +127,10 @@ public class OperationController {
 	@GetMapping("updateOperation/{postNo}")
 	public String updateOperation(@PathVariable int postNo, Model model) {
 		System.out.println(postNo);
+		Post post = new Post();
+		post.setPostNo(postNo);
 		
-		Post post = operationService.getOperation(postNo);
+		post = operationService.getOperation(post);
 		
 		model.addAttribute("post",post);
 		

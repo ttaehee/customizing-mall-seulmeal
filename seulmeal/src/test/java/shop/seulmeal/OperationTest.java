@@ -16,6 +16,8 @@ import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
+import shop.seulmeal.service.domain.CustomParts;
+import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Post;
@@ -66,6 +68,22 @@ class OperationTest {
 	
 	@Value("${chatBot.secretKey}")
 	String api;
+	
+	
+	
+	@Test
+	void operation() {
+		Post post = new Post();
+		post.setPostNo(127);
+		post.setPostStatus("3");
+		
+		post = operationMapper.getOperation(post);
+		
+		System.out.println("글임 : "+post);
+		for (Comment comment : post.getComments()) {
+			System.out.println("답변입니다 : "+comment);
+		}
+	}
 	
 	//@Test
 	void contextLoads() throws Exception {

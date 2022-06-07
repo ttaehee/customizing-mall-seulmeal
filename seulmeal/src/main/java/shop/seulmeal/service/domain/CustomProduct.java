@@ -17,9 +17,9 @@ public class CustomProduct {
 	private Purchase purchase;
 	private int count;
 	private String cartStatus;
-	private String status;
 	private Date regDate;
 	
 	// customParts를 가지고 있다
-	private List<CustomParts> CustomParts;
+	private List<CustomParts> minusParts; //제외재료 
+	private List<CustomParts> plusParts; //추가재료 
 }

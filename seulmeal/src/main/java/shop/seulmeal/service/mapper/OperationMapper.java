@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import shop.seulmeal.service.domain.Comment;
+import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Post;
 
 @Mapper
@@ -13,7 +14,7 @@ public interface OperationMapper {
 	
 	// 공지사항 + 이벤트 + 문의
 	public int insertOperation(Post post);
-	public Post getOperation(int no);
+	public Post getOperation(Post post);
 	public int updateOperation(Post post);
 	public int deleteOperation(Post post);
 	public List<Post> getListOperation(Map<String, Object> map);
@@ -30,5 +31,8 @@ public interface OperationMapper {
 	public List<Comment> getListAnswer(int no);
 	public int updateAnswer(Comment comment);
 	public int deleteAnswer(Comment comment);
+	
+	// 테스트
+	public CustomProduct selectCus(int no);
 	
 }

@@ -28,26 +28,28 @@ public class PurchaseServiceImpl implements PurchaseService{
 	
 	//커스터마이징재료 
 	@Override
-	public int insertCustomParts(List<CustomParts> list) {
+	public int insertMinusParts(Map<String, Object> map) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.insertCustomParts(list);
+		return purchaseMapper.insertMinusParts(map);
+	}
+	
+	@Override
+	public int insertPlusParts(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return purchaseMapper.insertPlusParts(map);
 	}
 
-	@Override
+	@Override 
 	public CustomParts getCustomParts(int customPartsNo) {
 		// TODO Auto-generated method stub
 		return purchaseMapper.getCustomParts(customPartsNo);
 	}
 
 	@Override
-	public List<CustomParts> getListCustomParts(Search search, int customProductNo) {
+	public List<CustomParts> getListCustomParts(int customProductNo) {
 		// TODO Auto-generated method stub
 		
-		Map<String, Object> map=new HashMap<>();
-		map.put("search", search);
-		map.put("customProductNo", customProductNo);
-		
-		return purchaseMapper.getListCustomParts(map);
+		return purchaseMapper.getListCustomParts(customProductNo);
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("search", search);
 		map.put("userId", userId);
-		
+	
 		map.put("cproductList", purchaseMapper.getListCustomProduct(map));
 		map.put("totalCount",purchaseMapper.getTotalCount(map));
 		
