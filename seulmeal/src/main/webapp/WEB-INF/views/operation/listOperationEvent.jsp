@@ -5,62 +5,96 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <title>이벤트 목록</title>
+<style type="text/css">
+	
+	.bi {
+	  vertical-align: -.125em;
+	  fill: currentColor;
+	}
+	
+	.text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
+	
+	.card-cover {
+	  background-repeat: no-repeat;
+	  background-position: center center;
+	  background-size: cover;
+	}
+	
+</style>
+
 </head>
 <body>
-<jsp:include page="../layer/header.jsp"></jsp:include>
+<script type="text/javascript">
+	$(function(){
+		$(".card-cover").on("click",function(){
+			const no =$(this).data("value");
+			window.location.href = '/operation/getOperation/'+no;
+		})
+	})
 	
-	
+	function insertEvent(){
+		window.location.href = '/operation/insertOperation/2';
+	}
+</script>
+<jsp:include page="../layer/header.jsp"></jsp:include>	
+	<br/>
 	<div class="container">
-		<div class="dropdown">
-		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-		    Dropdown button
-		  </button>
-		  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-		    <li><a href="/operation/getListOperation/2/0/0">진행중인 이벤트</a></li>
-		    <li><a href="/operation/getListOperation/2/0/1">종료된 이벤트</a></li>
-		    <li><a href="/operation/insertOperation/2">이벤트 등록</a></li>
-		  </ul>
-		</div>
-		<div class="row">
-			<c:forEach var="post" items="${list}">
-				<c:set var="i" value="${i+1}" />
-				<div class="col-sm-12">
-					<div class="card">
-				      <div class="card-body">
-				        <h5 class="card-title">${post.title }</h5>
-				        <p class="card-text">${post.shortContent}</p>
-				        <a href="/operation/getOperation/${post.postNo}" class="btn btn-primary">Go somewhere</a>
-				      </div>
-				    </div>
-			    </div>				
-			</c:forEach>			
-	    </div>
+		<div class="dropdown">		  
+			<div class="input-group col-md-3" style="justify-content: flex-end;">
+				<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
+				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+					이벤트 목록
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+					<li><a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a></li>
+					<li><a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a></li>
+					<li><a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a></li>
+				</ul>
+				<div class="form-outline">
+					<input type="search" id="form1" class="form-control" />
+				</div>		  
+					<button type="button" class="btn btn-primary">
+					<i class="bi bi-search"></i>
+				</button>
+			</div>		
+		</div>		
     </div>
     
-    <div class="container">
-	<div class="row">
-		<div class="col-md-3"></div>
-			<div class="col-md-6">
-				<nav aria-label="...">
-				  <ul class="pagination">
-			  		<li class="page-item disabled">
-				      <span class="page-link" data-value="1">Previous</span>
-				    </li>
-				  	<c:forEach var="i" begin="${page.beginUnitPage}" end="${page.endUnitPage}">
-				  		<li class="page-item"><a class="page-link" href="/operation/getListOperation/2/${i}">${i}</a></li>
-				  	</c:forEach>
-				  	<li class="page-item">
-				      <a class="page-link" href="#">Next</a>
-				    </li>
-				  </ul>
-				</nav>
-			</div>
-		</div>	
-	</div>
+    
+	<div class="container">
+		<div class="container px-4 py-5" id="custom-cards">
+			<c:forEach var="post" items="${list}">	
+				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3">
+					<div class="col">
+						<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../resources/attachments/image/tetris.png');">
+							<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+								<h2 class="display-6 fw-bold">${post.title}</h2>
+								<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}shortContent</h2>
+								<h2 class="endDateView">~${post.endDate}</h2>
+								<ul class="d-flex list-unstyled mt-auto">
+									<li class="me-auto">
+										<img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+									</li>
+									<li class="d-flex align-items-center me-3">
+										<i class="bi bi-emoji-heart-eyes"></i><br/>
+										<small>&nbsp;${post.views}</small>
+									</li>
+										<li class="d-flex align-items-center">
+										<i class="bi bi-calendar-date"></i>
+										<small>&nbsp;${post.endDate}</small>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
+	</div>	
+	
+	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 </body>
 </html>
