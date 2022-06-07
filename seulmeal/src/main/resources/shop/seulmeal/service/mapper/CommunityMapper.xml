@@ -12,6 +12,9 @@
 		id="postSelectMap">
 		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
 		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.nickName" column="nickname" jdbcType="VARCHAR" />
+		<result property="user.profileImage" column="profile_image" jdbcType="VARCHAR" />
+		<result property="user.profileMessage" column="profile_message" jdbcType="VARCHAR" />
 		<result property="title" column="title" jdbcType="NUMERIC" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
 		<result property="shortContent" column="short_content" jdbcType="VARCHAR" />
@@ -54,12 +57,14 @@
 	</insert>
 
 	<select id="getPost" parameterType="int" resultMap="postSelectMap">
-		SELECT * FROM post
-		<where>
-			post_no = #{postNo}
-			AND post_status = '0'
-			AND status = '0'
-		</where>
+		SELECT p.*, u.nickname, u.profile_image
+ 			FROM post p, users u	  
+			<where>
+				p.user_id = u.user_id
+				AND post_no = #{postNo}
+	  			AND post_status = '0'
+	  			AND status = '0'
+			</where>
 	</select>
 
 	<!--  전체 게시글 목록 -->
@@ -234,7 +239,7 @@
 			comments(comment_no, user_id, nickname, post_no, content, layer, reg_date, parent_comment_no, status)
 		VALUES (seq_comment_no.nextval, 
 			#{user.userId},
-			#{user.nickName}, 
+			#{user.nickName:VARCHAR}, 
 			#{postNo}, 
 			#{content}, 
 			#{layer}, 
@@ -246,7 +251,7 @@
 			</selectKey>
 	</insert>
 
-	<select id="getComment" parameterType="int" resultType="Comment">
+	<select id="getComment" parameterType="int" resultMap="commentSelectMap">
 		SELECT *
 		FROM comments
 		<where>
@@ -316,6 +321,26 @@
 			AND status = '0'
 		</where>
 	</select>
+	
+	<update id="postCommentCountUp" parameterType="int">
+		UPDATE post
+		<set>
+			comment_count = comment_count + 1
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
+	</update>
+	
+	<update id="postCommentCountDown" parameterType="int">
+		UPDATE post
+		<set>
+			comment_count = comment_count - 1
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
+	</update>	
 
 
 	<!-- 3. Report -->
