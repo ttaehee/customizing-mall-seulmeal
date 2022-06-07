@@ -33,7 +33,7 @@ public interface ProductMapper {
 	// FOODCATEGORY
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
 
-	public List<Foodcategory> getListFoodCategory(Search search) throws Exception;
+	public List<Foodcategory> getListFoodCategory() throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 

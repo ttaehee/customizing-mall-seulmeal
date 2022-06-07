@@ -27,7 +27,7 @@ public interface ProductService {
 	// foodCategory 관련
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
 
-	public Map<String, Object> getListFoodCategory(Search search) throws Exception;
+	public List<Foodcategory> getListFoodCategory() throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 	

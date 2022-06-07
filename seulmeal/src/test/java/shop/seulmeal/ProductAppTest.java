@@ -147,15 +147,15 @@ public class ProductAppTest {
 
 	 	search.setCurrentPage(1);
 	 	search.setPageSize(3);
-	 	Map<String,Object> map = productService.getListFoodCategory(search);
+	 	List<Foodcategory> list = productService.getListFoodCategory();
 	 	
-	 	List<Object> list = (List<Object>)map.get("list");
-	 	Assert.assertEquals(3, list.size());
+//	 	List<Object> list = (List<Object>)map.get("list");
+//	 	Assert.assertEquals(3, list.size());
 	 	
 	 	System.out.println(list);
 	 	
-	 	Integer totalCount = (Integer)map.get("totalCount");
-	 	System.out.println(totalCount);
+//	 	Integer totalCount = (Integer)map.get("totalCount");
+//	 	System.out.println(totalCount);
 
 	}
 
