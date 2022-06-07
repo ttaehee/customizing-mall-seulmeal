@@ -4,7 +4,7 @@
 <link href="../../resources/css/body.css">
 <script type="text/javascript">
 	function join(){
-		window.location.href = '/user/addUser';
+		window.location.href = '/user/insertUser';
 	}
 	
 	function login(){

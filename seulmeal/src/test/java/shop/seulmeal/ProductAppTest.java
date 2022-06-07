@@ -118,13 +118,13 @@ public class ProductAppTest {
 		search.setPageSize(3);
 		search.setSearchCondition("1");
 		search.setSearchKeyword("식");
-		Map<String, Object> map = productService.getListFoodCategory();
-
-		List<Object> list = (List<Object>) map.get("list");
-
-		Integer totalCount = (Integer) map.get("totalCount");
-
-		System.out.println(map);
+//		Map<String, Object> map = productService.getListFoodCategory();
+//
+//		List<Object> list = (List<Object>) map.get("list");
+//
+//		Integer totalCount = (Integer) map.get("totalCount");
+//
+//		System.out.println(map);
 	}
 
 	// test done +
