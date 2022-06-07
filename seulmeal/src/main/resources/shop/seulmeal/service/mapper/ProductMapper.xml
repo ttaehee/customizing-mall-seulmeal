@@ -16,7 +16,7 @@
 		<result property="calorie" column="calorie" jdbcType="NUMERIC" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
 		<result property="stock" column="stock" jdbcType="NUMERIC" />
-		<result property="averageRating" column="average_rating" jdbcType="DOUBLE" />
+		<result property="averageRating" column="average_rating" jdbcType="NUMERIC" />
 		<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
 		<result property="reviewCount" column="review_count" jdbcType="NUMERIC" />
 		<result property="regDate" column="reg_date" jdbcType="DATE" />
@@ -44,15 +44,23 @@
 	<select id="getListProduct" resultMap="productSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
 		( SELECT thumbnail, product_no , p.name as pName , price, sub_content, f.* FROM product p, foodcategory f
-			<where>
-				p.foodcategory_no = f.foodcategory_no
-				<if test="searchKeyword != null">
-					AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
+		<where>
+			p.foodcategory_no = f.foodcategory_no
+			<if test="searchCondition != null">
+				<if test="searchCondition == 0 and searchKeyword != '' ">
+					AND (f.name like '%'||{searchKeyword}||'%'
 				</if>
-				<if test="searchCondition != null">
-					AND p.foodcategory_no = #{searchCondition}				
+				<if test="searchCondition == 1 and searchKeyword != '' ">
+					AND p.name like '%'||{searchKeyword}||'%'
 				</if>
-			</where>
+				<if test="searchCondition == 2 and searchKeyword != '' ">
+					AND sub_content like '%'||{searchKeyword}||'%'
+				</if>
+				<if test="searchCondition == 3 and searchKeyword != '' ">
+					AND p.foodcategory_name like '%'||{searchKeyword}||'%'
+				</if>
+			</if>
+		</where>
 		ORDER BY product_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
@@ -60,15 +68,23 @@
 
 	<select id="getTotalProductCount" resultType="int">
 		SELECT COUNT(*) FROM ( SELECT product_no FROM product p, foodcategory f
-			<where>
-				p.foodcategory_no = f.foodcategory_no
-				<if test="searchKeyword != null">
-					AND (f.name like '%'||{searchKeyword}||'%' OR p.name like '%'||{searchKeyword}||'%' OR sub_content like '%'||{searchKeyword}||'%')
+		<where>
+			p.foodcategory_no = f.foodcategory_no
+			<if test="searchCondition != null">
+				<if test="searchCondition == 0 and searchKeyword != '' ">
+					AND (f.name like '%'||{searchKeyword}||'%'
 				</if>
-				<if test="searchCondition != null">
-					AND p.foodcategory_no = #{searchCondition}				
+				<if test="searchCondition == 1 and searchKeyword != '' ">
+					AND p.name like '%'||{searchKeyword}||'%'
 				</if>
-			</where>
+				<if test="searchCondition == 2 and searchKeyword != '' ">
+					AND sub_content like '%'||{searchKeyword}||'%'
+				</if>
+				<if test="searchCondition == 3 and searchKeyword != '' ">
+					AND p.foodcategory_name like '%'||{searchKeyword}||'%'
+				</if>
+			</if>
+		</where>
 		ORDER BY product_no) countTable
 	</select>
 
@@ -93,7 +109,7 @@
 		<set> status = 1	</set>
 		WHERE product_no = #{productNo}
 	</update>
-	
+
 	<update id="restoreProduct">
 		UPDATE product
 		<set> status = 0	</set>
@@ -108,6 +124,12 @@
 
 	<!-- ========== FOOD CATEGORY ========== -->
 
+	<resultMap id="foodCategorySelectMap" type="Foodcategory">
+		<result property="foodCategoryNo" column="foodcategory_no" jdbcType="NUMERIC" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="status" column="status" jdbcType="NUMERIC" />
+	</resultMap>
+
 
 	<insert id="insertFoodCategory">
 		INSERT INTO foodCategory (foodCategory_no, name,
@@ -118,8 +140,14 @@
 		SELECT COUNT(*) FROM ( SELECT * FROM foodcategory ) countTable
 	</select>
 
-	<select id="getListFoodCategory" resultType="foodcategory">
-		SELECT * FROM foodCategory WHERE status = '0'
+	<select id="getListFoodCategory" resultMap="foodCategorySelectMap">
+		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
+		( SELECT * FROM foodcategory
+		<where>
+			status = '0'
+		</where>
+		ORDER BY foodcategory_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
 
 	<update id="deleteFoodCategory">
@@ -127,7 +155,7 @@
 		<set> status = 1	</set>
 		WHERE foodCategory_no = #{foodCategoryNo}
 	</update>
-	
+
 	<update id="restoreFoodCategory">
 		UPDATE foodCategory
 		<set> status = 0	</set>
@@ -158,10 +186,10 @@
 
 	<update id="updateReview">
 		UPDATE review
-		<set> title = #{title}, 
-				content = #{content}, 
-				rating = #{rating}
-		</set> 
+		<set> title = #{title},
+			content = #{content},
+			rating = #{rating}
+		</set>
 		WHERE review_no = #{reviewNo}
 	</update>
 
@@ -180,13 +208,11 @@
 	</select>
 
 	<select id="getTotalReviewCount" resultType="int">
-		SELECT COUNT(*) FROM ( SELECT review_no , title , rating, reg_date, user_id
-		FROM review ) countTable
+		SELECT COUNT(*) FROM ( SELECT review_no , title , rating, reg_date, user_id FROM review ) countTable
 	</select>
 
 	<select id="getReviewCountInProduct" resultType="int">
-		SELECT count(*)
-		FROM review WHERE review.product_No = #{productNo}
+		SELECT count(*) FROM review WHERE review.product_No = #{productNo}
 	</select>
 
 	<update id="deleteReview">
@@ -194,7 +220,7 @@
 		<set> status = '1'	</set>
 		WHERE review_no = #{reviewNo}
 	</update>
-	
+
 	<update id="restoreReview">
 		UPDATE review
 		<set> status = '0'	</set>
@@ -317,4 +343,52 @@
 			productparts_no = #{productPartsNo}
 		</where>
 	</update>
+
+	<!-- PRODUCT LIKE -->
+	
+	<resultMap id="p_likeSelectMap" type="Like">
+		<result property="likeNo" column="like_no" jdbcType="NUMERIC"/>
+		<result property="userId" column="user_id" jdbcType="VARCHAR"/>
+		<result property="productNo" column="product_no" jdbcType="NUMERIC"/>
+	</resultMap>
+	
+	<insert id="insertProductLike" parameterType="Like">
+		INSERT INTO
+			likes(like_no, user_id, product_no)
+		VALUES
+			(seq_like_no.nextval, #{userId}, #{productNo:INTEGER})
+			
+		UPDATE product 
+		<set> 
+			likeCount = (SELECT COUNT(*) FROM likes 
+			<where>
+			 		user_id = #{userId} AND product_no = #{productNo}
+			</where>
+			 		) like_count_reload
+		</set>
+		<where>
+			product_no = #{productNo}
+		</where>
+	</insert>
+
+	<select id="getListProductLike" resultMap="p_likeSelectMap">
+		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
+		( SELECT ROWNUM, user_id, product_no FROM likes WHERE user_id = #{userId}
+		ORDER BY like_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE	row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select id="getTotalProductLikeCount" resultType="int">
+		SELECT COUNT(*) FROM likes WHERE user_id = #{userId}
+	</select>
+
+	<delete id="deleteProductLike" parameterType="Like">
+		DELETE FROM 
+			likes
+		<where> 
+			user_id = #{userId}
+			AND product_no = #{productNo}
+		</where> 
+	</delete>
+	
 </mapper>

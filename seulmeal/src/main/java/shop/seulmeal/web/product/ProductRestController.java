@@ -26,7 +26,6 @@ public class ProductRestController {
 	private ProductService productService;
 	
 	public ProductRestController() {
-		// TODO Auto-generated constructor stub
 		System.out.println(this.getClass());
 	}	
 	
