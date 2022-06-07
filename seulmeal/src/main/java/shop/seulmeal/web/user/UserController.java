@@ -1,5 +1,10 @@
 package shop.seulmeal.web.user;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.user.UserService;
 
@@ -36,11 +42,44 @@ public class UserController {
 	}
 	
 	@PostMapping("insertUser")
-	public String insertUser(@ModelAttribute("user") User user) throws Exception {
+	public String insertUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
+		System.out.println("::user : "+user);
 		userService.insertUser(user);
+		session.setAttribute("user", user);
 		
-		return "main";
+		return "redirect:/user/insertUserInformation";
+	}
+	
+	
+	  @GetMapping("insertUserInformation") 
+	  public String insertUserInformation() throws Exception{
+	  
+	 return "user/insertUserInformation"; 
+	 }
+	 
+	
+	@PostMapping("inserUserInformation")
+	public String insertUserInformation(@ModelAttribute("user") User user, Parts[] parts, HttpSession session ) throws Exception {
+		userService.insertUserInformation(user);
+		
+		List<Parts> list= new ArrayList<Parts>();
+		for(int i=0; i < parts.length; i++ ) {
+			Parts parts1 = new Parts();
+			parts1= parts[i];
+			list.add(parts1);
+		}
+		
+		User user2= (User)session.getAttribute("user");
+		Map<String, Object> map = new HashMap<String ,Object>();
+		map.put("userId", user2.getUserId());
+		map.put("list", list);
+		userService.insertHatesParts(map);
+		
+		user = userService.getUser(user2.getUserId());
+		user.setParts( userService.getUserHatesParts(user.getUserId()));
+		session.setAttribute("user", user);
+		return "redirect:/";
 	}
 	
 	@GetMapping("getUpdateUser/{userId}")
@@ -68,11 +107,12 @@ public class UserController {
 	@GetMapping("login")
 	public String login() throws Exception {
 		
-		return "user/login/";
+		return "user/login";
 	}
 	
 	@PostMapping("login")
 	public String login(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+		System.out.println("::user : "+user);
 		
 		User dbUser = userService.getUser(user.getUserId());
 		
@@ -80,7 +120,7 @@ public class UserController {
 			session.setAttribute("user", dbUser);
 		}
 		
-		return "main";
+		return "redirect:/";
 	}
 	
 	@GetMapping("logout")
