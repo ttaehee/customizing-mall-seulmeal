@@ -48,8 +48,8 @@
 	    <update id="updateUser">
 	    		UPDATE users
 	   	<set>
-	   		user_name 	= #{userName} ,
-			password	= #{password},
+	   		user_name 	= #{userName:VARCHAR} ,
+			password	= #{password:VARCHAR},
 			birth 		= #{birth:DATE} ,
 			address		= #{address:VARCHAR},
 			phone		= #{phone:VARCHAR},
@@ -144,10 +144,15 @@
 				INTO relation VALUES(seq_relation_no.NEXTVAL, user_id, null, SYSDATE, '2') SELECT user_id, block_count FROM users
 		</insert>
 		
+		<update id="resetBlockCount">
+			UPDATE users SET block_count=0 WHERE block_count = 50
+		</update>
+		
 		<update id="updateBlackList">
 			update relation SET relation_status = '3' 
 				WHERE relation_status = '2' 
 				AND SYSDATE &gt;= reg_date+90
+				
 		</update>
 		
 		<insert id="insertPoint">

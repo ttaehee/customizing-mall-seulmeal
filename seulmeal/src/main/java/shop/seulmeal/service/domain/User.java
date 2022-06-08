@@ -3,6 +3,8 @@ package shop.seulmeal.service.domain;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,6 +26,7 @@ public class User {
 	private String userId;
 	private String userName;
 	private String password;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;
 	private String address;
 	private String phone;

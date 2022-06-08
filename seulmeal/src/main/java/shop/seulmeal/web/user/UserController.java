@@ -45,7 +45,7 @@ public class UserController {
 	}
 	
 	@PostMapping("insertUser")
-	public String insertUser(@ModelAttribute("user") User user, @DateTimeFormat(pattern="YYYY-MM-DD") Date birth, HttpSession session) throws Exception {
+	public String insertUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
 		System.out.println("::user : "+user);
 		userService.insertUser(user);
@@ -216,15 +216,26 @@ public class UserController {
 	}
 	
 	@GetMapping("deleteUser")
-	public String deleteUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+	public String deleteUser() throws Exception {
 		
-		String sessionId=((User)session.getAttribute("user")).getUserId();
+		return "user/deleteUser";
+	}
+	
+	@PostMapping("deleteUser")
+	public String deleteUser( String password, HttpSession session) throws Exception {
+	
+		if(password.equals(((User)session.getAttribute("user")).getPassword())) {
+			userService.deleteUser(((User)session.getAttribute("user")).getUserId());
+			
+			session.invalidate();
+			
+			return "redirect:/";
+		} else {
+			return "<script>alert('비밀번호가 일치하지 않습니다');</script>";
+		}
 		
-		userService.deleteUser(sessionId);
 		
-		session.invalidate();
 		
-		return "redirect:/";
 	}
 	
 	@GetMapping("listUser/{currentPage}")
