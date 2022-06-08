@@ -86,7 +86,7 @@
 	          <a class="nav-link active" aria-current="page" href="/product/getListProduct">신상품</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link" href="#">게시판</a>
+	          <a class="nav-link" href="/community/communityMain">게시판</a>
 	        </li>
 	        <li class="nav-item">
 	          <a class="nav-link" href="#">베스트</a>

@@ -38,6 +38,8 @@
 		<result property="count" 				column="count" 				jdbcType="NUMERIC"/>
 		<result property="cartStatus" 			column="cart_status" 		jdbcType="CHAR"/>
 		<result property="regDate" 				column="reg_date" 			jdbcType="DATE"/>
+		<result property="purchaseNo" 			column="purchase_no" 		jdbcType="NUMERIC"/>
+		<result property="price" 				column="price" 				jdbcType="NUMERIC"/>
 		<association property="user" javaType="user" >
 			<result property="userId" 	 		column="user_id" 			jdbcType="VARCHAR"/>
 		</association>
@@ -48,9 +50,6 @@
 			<result property="price" 			column="price" 				jdbcType="NUMERIC"/>
 			<result property="calorie" 			column="calorie" 			jdbcType="NUMERIC"/>
 		</association>
-		<association property="purchase" javaType="purchase" >
-			<result property="purchaseNo" 		column="purchase_no" 		jdbcType="NUMERIC"/>
-		</association> 
 		<collection property="minusParts" column="customproduct_no" javaType="java.util.ArrayList" 
 			ofType="parts" select="getListMinusParts">
 		</collection>	 
@@ -173,10 +172,10 @@
 	<!-- custom_product -->
 	<insert id="insertCustomProduct">
 		INSERT INTO customproduct
-		(customproduct_no, user_id, product_no, count, 
+		(customproduct_no, user_id, product_no, count, price,
 		cart_status, reg_date)
 		values((seq_customproduct_no.NEXTVAL),#{user.userId}, #{product.productNo}, 
-		#{count:NUMERIC}, #{cartStatus:CHAR}, SYSDATE)
+		#{count:NUMERIC}, #{price:NUMERIC}, #{cartStatus:CHAR}, SYSDATE)
 		<selectKey keyProperty="customProductNo" resultType="int" order="AFTER">
 			SELECT seq_customproduct_no.CURRVAL FROM DUAL
 		</selectKey>
@@ -195,7 +194,7 @@
 	<select id="getListCustomProduct" resultMap="customProductSelectMap" parameterType="map">
 		SELECT *
 		FROM (SELECT vt.*, ROWNUM AS row_seq
-			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.price, pd.calorie
+			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, cpd.price, pd.calorie
 			    FROM customproduct cpd, product pd
 				WHERE cpd.product_no=pd.product_no AND cpd.user_id=#{userId} AND cpd.cart_status='1'
 				ORDER BY cpd.customproduct_no) vt
@@ -205,7 +204,7 @@
 	
 	<!-- 구매내역리스트에서 -->
 	<select id="getListCustomProductByPurchaseNo" resultMap="customProductSelectMap" parameterType="map">
-		SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.thumbnail, pd.price, pd.calorie
+		SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.thumbnail, cpd.price, pd.calorie
 		FROM customproduct cpd, product pd
 		WHERE cpd.product_no=pd.product_no AND cpd.purchase_no=#{purchaseNo}
 		ORDER BY cpd.customproduct_no
@@ -239,13 +238,13 @@
 		INSERT INTO purchase
 		(purchase_no, user_id, price, delivery_price, address, name, phone, 
 		message, purchase_status, reason, image, status, reg_date, 
-		payment_condition, imp_uid, amount)
+		payment_condition, imp_uid, amount, email)
 		values((seq_purchase_no.NEXTVAL),#{user.userId},#{price:NUMERIC}, 
 		#{deliveryPrice:NUMERIC}, #{address:VARCHAR}, #{name:VARCHAR}, 
 		#{phone:VARCHAR}, #{message:VARCHAR}, '0', 
 		#{reason:VARCHAR}, #{image:VARCHAR}, '0', 
 		SYSDATE, #{paymentCondition:CHAR},#{imp_uid:VARCHAR}, 
-		#{amount:NUMERIC})
+		#{amount:NUMERIC}, {email:VARCHAR})
 		<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
 			SELECT seq_purchase_no.CURRVAL FROM DUAL
 		</selectKey>
@@ -284,6 +283,16 @@
 			WHERE ROWNUM &lt; = #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
+	
+	<update id="updatePurchase">
+		UPDATE purchase
+		<set>
+			imp_uid=#{imp_uid:VARCHAR}, amount=#{amount:VARCHAR}
+		</set>
+		<where>
+			purchase_no = #{purchaseNo}
+		</where>
+	</update>
 	
 	<update id="updatePurchaseCode">
 		UPDATE purchase
