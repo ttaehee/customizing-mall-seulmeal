@@ -70,17 +70,27 @@ public class PurchaseController {
 	//커스터마이징 상품 인서트 
 	@PostMapping("/insertCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
-	public String insertCustomProduct(List<CustomParts> minus, List<CustomParts> plus, CustomProduct customProduct, Product product, String userId, String cartStatus, Model model) {
+	public String insertCustomProduct(List<CustomParts> minus, List<Parts> plusParts, CustomProduct customProduct, Product product, String userId, String cartStatus, Model model) {
 		
 		System.out.println("/insertPurchase :Post");
 		
 		User user=new User();
 		user.setUserId(userId);
 		
+		int price=product.getPrice();
+		CustomParts cp=new CustomParts();
+		List<CustomParts> plus=new ArrayList<>();
+		for(Parts p: plusParts) {
+			price += p.getPrice();
+			cp.setParts(p);
+			plus.add(cp);
+		}
+		
 		customProduct.setUser(user);
 		customProduct.setProduct(product);
 		customProduct.setMinusParts(minus);
 		customProduct.setPlusParts(plus);
+		customProduct.setPrice(price);
 		
 		purchaseService.insertCustomProduct(customProduct);
 		
@@ -187,31 +197,7 @@ public class PurchaseController {
 		
 		model.addAttribute("customProductList", customProduct);
 		
-		return "redirect:/purchase/insertPurchase";
-		
-	}
-	
-	//구매 인서트 
-	@PostMapping("/insertPurchase")
-	@Transactional(rollbackFor= {Exception.class})
-	public String insertPurchase(List<CustomProduct> customProduct, Purchase purchase, String userId, Model model) {
-		
-		System.out.println("/insertPurchase :Post");
-		
-		User user=new User();
-		user.setUserId(userId);
-		
-		purchase.setUser(user);
-		purchaseService.insertPurchase(purchase);
-		
-		for(CustomProduct cp : customProduct) {
-			cp.setPurchaseNo(purchase.getPurchaseNo());
-			purchaseService.updateCustomProduct(cp);
-		}
-		
-		model.addAttribute("purchase",purchase);
-		
-		return "/purchase/getPurchase/"+purchase.getPurchaseNo();	
+		return "redirect:/purchase/api/insertPurchase";
 		
 	}
 	
@@ -263,29 +249,6 @@ public class PurchaseController {
 		purchaseService.deletePurchase(purchaseNo);
 		
 		return "/purchase/getListPurchase/"+userId;
-	}		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}			
 	
 }

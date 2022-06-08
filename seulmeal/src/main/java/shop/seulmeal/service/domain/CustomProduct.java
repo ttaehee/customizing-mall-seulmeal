@@ -16,6 +16,7 @@ public class CustomProduct {
 	private Product product;
 	private int purchaseNo;
 	private int count;
+	private int price;
 	private String cartStatus;
 	private Date regDate;
 	

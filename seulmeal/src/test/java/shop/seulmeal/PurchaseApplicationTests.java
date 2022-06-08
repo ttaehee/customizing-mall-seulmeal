@@ -129,50 +129,55 @@ class PurchaseApplicationTests {
 	
 	
 	//@Test
-	void insertCustomProduct() {
+	void insertCustomProduct() throws Exception {
 		CustomProduct customProduct=new CustomProduct();
 		User user=new User();
 		user.setUserId("ghm4905");
-		Product product=new Product();
-		product.setProductNo(4);
+		Product product=productMapper.getProduct(4);
 		
 		customProduct.setUser(user);
 		customProduct.setProduct(product);
 		customProduct.setCount(5);
 		customProduct.setCartStatus("1");
 		
-		int result1=purchaseMapper.insertCustomProduct(customProduct);
+		int price=product.getPrice();
 
 		
 		List<CustomParts> minus=new ArrayList<>();
 		CustomParts cp1=new CustomParts();
 		cp1.setProductPartsNo(7);
 		cp1.setMinusName("오이");
-		cp1.setCustomProductNo(customProduct.getCustomProductNo());
 		minus.add(cp1);
-		//customProduct.setMinusParts(minus);
-		
+		//customProduct.setMinusParts(minus);	
 		
 		List<CustomParts> plus=new ArrayList<>();
 		CustomParts cp2=new CustomParts();
 		Parts parts1=new Parts();
 		parts1.setPartsNo(1);
 		parts1.setName("양파");
+		parts1.setPrice(221);	
+		price += parts1.getPrice();
 		cp2.setParts(parts1);
 		cp2.setGram(50);
-		cp2.setCustomProductNo(customProduct.getCustomProductNo());
 		plus.add(cp2);
 		
 		CustomParts cp3=new CustomParts();
 		Parts parts2=new Parts();
 		parts2.setPartsNo(2);
 		parts2.setName("당근");
+		parts2.setPrice(168);
+		price += parts2.getPrice();
 		cp3.setParts(parts2);
-		cp3.setCustomProductNo(customProduct.getCustomProductNo());
 		cp2.setGram(100);
 		plus.add(cp3);
 		//customProduct.setPlusParts(plus);
 		
+		customProduct.setPrice(price);
+		
+		int result1=purchaseMapper.insertCustomProduct(customProduct);
+		cp1.setCustomProductNo(customProduct.getCustomProductNo());
+		cp2.setCustomProductNo(customProduct.getCustomProductNo());
+		cp3.setCustomProductNo(customProduct.getCustomProductNo());
 		
 		Map<String, Object> map=new HashMap<>();
 		map.put("customProductNo",customProduct.getCustomProductNo());
@@ -195,7 +200,7 @@ class PurchaseApplicationTests {
 		System.out.println("커스터마이징상품 : "+purchaseMapper.getCustomProduct(52));
 	}			
 	
-	@Test 
+	//@Test 
 	void getListCustomProduct() {
 		
 		Search search = new Search();
@@ -278,7 +283,7 @@ class PurchaseApplicationTests {
 		assertEquals(purchase.getPrice(), 10000);
 	}
 	
-	//@Test
+	@Test
 	void getListPurchase() throws Exception {
 		
 		Search search = new Search();

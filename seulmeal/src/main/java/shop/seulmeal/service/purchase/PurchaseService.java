@@ -3,6 +3,8 @@ package shop.seulmeal.service.purchase;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.NameValuePair;
+
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
@@ -50,10 +52,24 @@ public interface PurchaseService {
 	//구매내역리스트
 	public Map<String, Object> getListPurchase(Search search, String userId);
 	
+	//결제정보 추가 
+	public int updatePurchase(Purchase purchase);
+	
 	//구매코드 변경 
 	public int updatePurchaseCode(Purchase purchase);
 	
 	//구매내역 삭제 
 	public int deletePurchase(int purchaseNo);
-
+	
+	//아임포트 인증(토큰)받아주는 함수
+	public String getImportToken();
+	
+	// Map을 사용해서 Http요청 파라미터를 만들어 주는 함수
+	public List<NameValuePair> convertParameter(Map<String,String> paramMap);
+	
+	// 결제취소
+	public int cancelPayment(String token, String mid);
+	
+	// 아임포트 결제정보에서 amount 조회
+	public String getAmount(String token, int mId);
 }

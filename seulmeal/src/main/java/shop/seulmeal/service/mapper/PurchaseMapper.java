@@ -55,6 +55,9 @@ public interface PurchaseMapper {
 	//구매내역리스트
 	public List<Purchase> getListPurchase(Map<String, Object> map);
 	
+	//구매 후 imp_uid, amount 결제정보추가 
+	public int updatePurchase(Purchase purchase);
+	
 	//구매코드 변경 
 	public int updatePurchaseCode(Purchase purchase);
 	

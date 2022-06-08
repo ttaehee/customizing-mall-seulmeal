@@ -14,10 +14,10 @@ public class Purchase {
 	private int purchaseNo;
 	private User user;
 	private int price;
-	private int deliveryPrice;
 	private String address;
 	private String name;
 	private String phone;
+	private String email;
 	private String message;
 	private String purchaseStatus;
 	private String reason;
