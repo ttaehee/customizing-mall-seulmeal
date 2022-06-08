@@ -5,7 +5,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <title>이벤트 목록</title>
 <style type="text/css">
 	
@@ -26,18 +25,7 @@
 
 </head>
 <body>
-<script type="text/javascript">
-	$(function(){
-		$(".card-cover").on("click",function(){
-			const no =$(this).data("value");
-			window.location.href = '/operation/getOperation/'+no;
-		})
-	})
-	
-	function insertEvent(){
-		window.location.href = '/operation/insertOperation/2';
-	}
-</script>
+
 <jsp:include page="../layer/header.jsp"></jsp:include>	
 	<br/>
 	<div class="container">
@@ -96,5 +84,17 @@
 	
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
+<script type="text/javascript">
+	$(function(){
+		$(".card-cover").on("click",function(){
+			const no =$(this).data("value");
+			window.location.href = '/operation/getOperation/'+no;
+		})
+	})
+	
+	function insertEvent(){
+		window.location.href = '/operation/insertOperation/2';
+	}
+</script>
 </body>
 </html>

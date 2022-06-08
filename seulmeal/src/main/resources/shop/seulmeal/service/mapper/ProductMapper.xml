@@ -46,19 +46,13 @@
 		( SELECT thumbnail, product_no , p.name as pName , price, sub_content, f.* FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
+			<if test="searchKeyword != '' ">
+				AND (
+				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'
+				OR sub_content like '%'||#{searchKeyword}||'%' OR sub_content like '%'||#{searchKeyword}||'%')
+			</if>
 			<if test="searchCondition != null">
-				<if test="searchCondition == 0 and searchKeyword != '' ">
-					AND (f.name like '%'||{searchKeyword}||'%'
-				</if>
-				<if test="searchCondition == 1 and searchKeyword != '' ">
-					AND p.name like '%'||{searchKeyword}||'%'
-				</if>
-				<if test="searchCondition == 2 and searchKeyword != '' ">
-					AND sub_content like '%'||{searchKeyword}||'%'
-				</if>
-				<if test="searchCondition == 3 and searchKeyword != '' ">
-					AND p.foodcategory_name like '%'||{searchKeyword}||'%'
-				</if>
+				AND p.foodcategory_no = #{searchCondition}
 			</if>
 		</where>
 		ORDER BY product_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
@@ -67,25 +61,19 @@
 
 
 	<select id="getTotalProductCount" resultType="int">
-		SELECT COUNT(*) FROM ( SELECT product_no FROM product p, foodcategory f
+		SELECT COUNT(*) FROM ( 
+		SELECT product_no FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
-			<if test="searchCondition != null">
-				<if test="searchCondition == 0 and searchKeyword != '' ">
-					AND (f.name like '%'||{searchKeyword}||'%'
-				</if>
-				<if test="searchCondition == 1 and searchKeyword != '' ">
-					AND p.name like '%'||{searchKeyword}||'%'
-				</if>
-				<if test="searchCondition == 2 and searchKeyword != '' ">
-					AND sub_content like '%'||{searchKeyword}||'%'
-				</if>
-				<if test="searchCondition == 3 and searchKeyword != '' ">
-					AND p.foodcategory_name like '%'||{searchKeyword}||'%'
-				</if>
+			<if test="searchKeyword != '' ">
+				AND (
+				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'
+				OR sub_content like '%'||#{searchKeyword}||'%' OR sub_content like '%'||#{searchKeyword}||'%')
 			</if>
-		</where>
-		ORDER BY product_no) countTable
+			<if test="searchCondition != null">
+				AND p.foodcategory_no = #{searchCondition}
+			</if>			
+		</where>) countTable
 	</select>
 
 
@@ -141,13 +129,11 @@
 	</select>
 
 	<select id="getListFoodCategory" resultMap="foodCategorySelectMap">
-		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
-		( SELECT * FROM foodcategory
+		SELECT * FROM foodcategory
 		<where>
 			status = '0'
 		</where>
-		ORDER BY foodcategory_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+		ORDER BY foodcategory_no
 	</select>
 
 	<update id="deleteFoodCategory">

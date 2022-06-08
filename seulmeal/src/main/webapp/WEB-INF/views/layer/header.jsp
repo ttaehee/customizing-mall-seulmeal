@@ -22,22 +22,16 @@
 <style>
 	.header{
 		transition: background 0.6s;
-		text-align: center;
-
-<script type="text/javascript">
-	function join(){
-		window.location.href = '/user/insertUser';
-	}
+		text-align: center;	
+	}	
 	
-	.navbar.fixed{
+	.navbar.fixed {
 		z-index: 100;
 		position: fixed;
 		left: 0;
 		top: 0;
 		width: 100%;
 	}
-	
-	
 </style>
 	<!-- 어드민 -->
 	<c:if test="${user.role == 1}">
@@ -113,32 +107,48 @@
 	      </ul>
 	    </div>
 	    
-	    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+	    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 searchProduct">
+          <input type="search" class="form-control form-control-dark searchP" name="searchKeyword" placeholder="Search..." aria-label="Search">
+          <button onclick="searchProduct()">검색</button> 
+          <!--<button type="submit">검색</button>-->
         </form>
         
 	  </div>
 	</nav> 
 	
-	<script type="text/javascript">
-		function join(){
-			window.location.href = '/user/addUser';
+<script type="text/javascript">
+	console.log($(".searchP").val())
+	
+	function searchProduct(){
+		let url = "/product/getListProduct";
+		if('${searchCondition}' !== ''){
+			url += "/${searchCondition}";
 		}
 		
-		function login(){
-			window.location.href = '/user/login';
+		if($(".searchP").val() !== ''){
+			$(".searchProduct").attr("action",url).submit();
 		}
 		
-		const nav = $(".navbar").offset().top;
+	}
+	
+	function join(){
+		window.location.href = '/user/insertUser';
+	}
+	
+	function login(){
+		window.location.href = '/user/login';
+	}
+	
+	const nav = $(".navbar").offset().top;
+	
+	$(window).scroll(function(){
+		const window = $(this).scrollTop();
 		
-		$(window).scroll(function(){
-			const window = $(this).scrollTop();
-			
-			if(nav <= window){
-				$(".navbar").addClass("fixed");
-			} else {
-				$(".navbar").removeClass("fixed");
-			}
-		})
-		
-	</script>	    
+		if(nav <= window){
+			$(".navbar").addClass("fixed");
+		} else {
+			$(".navbar").removeClass("fixed");
+		}
+	})
+	
+</script>	    
