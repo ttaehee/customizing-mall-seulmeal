@@ -1,29 +1,50 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!-- bootStrap css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<!-- bootStrap icon -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+<!-- 우리 css, font -->
 <link href="../../resources/css/body.css">
-<script type="text/javascript">
-	function join(){
-		window.location.href = '/user/addUser';
-	}
+
+
+<!-- jquery -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
+
+<style>
+	.header{
+		transition: background 0.6s;
+		text-align: center;	
+	}	
 	
-	function login(){
-		window.location.href = '/user/login';
+	.navbar.fixed {
+		z-index: 100;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
 	}
-</script>
+</style>
 	<!-- 어드민 -->
-	<!-- 
-	<div style="background:#BAD7DF; display:flex; justify-content:space-between;">
-		<h3>오늘 할일</h3>
-		<h4>신규 주문</h4>
-		<h4>교환/반품 승인</h4>
-		<h4>게시글 신고</h4>
-		<h4>재고 소진</h4>
-		<h4>문의 답변대기</h4>
-	</div>
-	 -->
-	 
-	<div style="background:#BAD7DF;">
+	<c:if test="${user.role == 1}">
+		<div style="background:#BAD7DF; display:flex; justify-content:space-between;">
+			<h3>오늘 할일</h3>
+			<h4>신규 주문</h4>
+			<h4>교환/반품 승인</h4>
+			<h4>게시글 신고</h4>
+			<h4>재고 소진</h4>
+			<h4>문의 답변대기</h4>
+		</div>
+	</c:if>
+	<div class="header" style="background:#BAD7DF;">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
 		<div id="google_translate_element" class="hd_lang"></div>
 	    <script>
@@ -71,7 +92,7 @@
 	          <a class="nav-link" href="#">베스트</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">특가/이벤트</a>
+	          <a class="nav-link" href="/operation/getListOperation/2">특가/이벤트</a>
 	        </li>
 	        <li class="nav-item dropdown">
 	          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -86,9 +107,48 @@
 	      </ul>
 	    </div>
 	    
-	    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+	    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 searchProduct">
+          <input type="search" class="form-control form-control-dark searchP" name="searchKeyword" placeholder="Search..." aria-label="Search">
+          <button onclick="searchProduct()">검색</button> 
+          <!--<button type="submit">검색</button>-->
         </form>
         
 	  </div>
-	</nav> 	    
+	</nav> 
+	
+<script type="text/javascript">
+	console.log($(".searchP").val())
+	
+	function searchProduct(){
+		let url = "/product/getListProduct";
+		if('${searchCondition}' !== ''){
+			url += "/${searchCondition}";
+		}
+		
+		if($(".searchP").val() !== ''){
+			$(".searchProduct").attr("action",url).submit();
+		}
+		
+	}
+	
+	function join(){
+		window.location.href = '/user/insertUser';
+	}
+	
+	function login(){
+		window.location.href = '/user/login';
+	}
+	
+	const nav = $(".navbar").offset().top;
+	
+	$(window).scroll(function(){
+		const window = $(this).scrollTop();
+		
+		if(nav <= window){
+			$(".navbar").addClass("fixed");
+		} else {
+			$(".navbar").removeClass("fixed");
+		}
+	})
+	
+</script>	    

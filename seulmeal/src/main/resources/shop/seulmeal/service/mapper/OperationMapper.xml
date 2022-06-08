@@ -112,6 +112,7 @@
 	
 	<!-- list -->
 	<select id="getListOperation" resultMap="postSelectMap" parameterType="map">
+		<if test="postStatus != 2">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
 				FROM	(SELECT * FROM post p
@@ -119,17 +120,11 @@
 								post_status = #{postStatus}
 								AND status = '0' 
 								<if test="search.searchCondition==0">
-									<if test="postStatus == 2">
-										AND end_date &gt; SYSDATE
-									</if>
 									<if test="postStatus == 3">
 										AND answer_status = 0
 									</if>									
 								</if>
 								<if test="search.searchCondition==1">
-									<if test="postStatus == 2">
-										AND end_date &lt; SYSDATE
-									</if>
 									<if test="postStatus == 3">
 										AND answer_status = 1
 									</if>
@@ -138,6 +133,22 @@
 							ORDER BY reg_date )inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+		</if>
+		
+		<if test="postStatus == 2">
+			SELECT post_no, title, short_content, end_date, reg_date, views, thumnail
+			FROM post
+			<where>
+				post_status = #{postStatus}
+				AND status = '0'
+				<if test="search.searchCondition==0">
+					AND end_date &gt; SYSDATE
+				</if>
+				<if test="search.searchCondition==1">
+					AND end_date &lt; SYSDATE
+				</if>
+			</where>
+		</if>
 	</select>
 	
 	<!-- ROW Count -->

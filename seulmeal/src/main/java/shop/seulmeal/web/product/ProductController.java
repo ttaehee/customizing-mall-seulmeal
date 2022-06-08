@@ -90,8 +90,8 @@ public class ProductController {
 	
 	@GetMapping(value = {"getListProduct/{searchCondition}",
 						"getListProduct"})
-	public String getListProduct(Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
-		Search search = new Search();
+	public String getListProduct(Model model,Search search, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
+		
 		if(currentPage != null) {
 			search.setCurrentPage(new Integer(currentPage));
 		}
@@ -100,6 +100,8 @@ public class ProductController {
 		}
 		search.setPageSize(pageSize);
 		search.setSearchCondition(searchCondition);
+		System.out.println(search);
+		
 		
 		Map<String,Object> map = productService.getListProduct(search);
 		List<Product> list = (List)map.get("list");

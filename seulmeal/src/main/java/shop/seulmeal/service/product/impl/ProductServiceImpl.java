@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
+import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
+import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.ProductMapper;
 import shop.seulmeal.service.product.ProductService;
 
@@ -40,6 +42,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Map<String, Object> getListProduct(Search search) throws Exception {
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
 		List<Product> list = productMapper.getListProduct(search);
 		int totalCount = productMapper.getTotalProductCount(search);
 
@@ -59,8 +64,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	// test done + need toggle
 	public void deleteProduct(int productNo) throws Exception {
-
 		productMapper.deleteProduct(productNo);
+	}
+	
+	public void restoreProduct(int productNo) throws Exception {
+		productMapper.restoreProduct(productNo);
 	}
 
 	// Food Category CRUD
@@ -69,13 +77,23 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public List<Foodcategory> getListFoodCategory() throws Exception {
-		List<Foodcategory> list = productMapper.getListFoodCategory();		
-
+		List<Foodcategory> list = productMapper.getListFoodCategory();
+//		int totalCount = productMapper.getTotalFoodCategoryCount();
+//		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("list",list);
+//		map.put("totalCount", new Integer(totalCount));
+		
 		return list;
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {
 		productMapper.deleteFoodCategory(foodCategoryNo);
+	}
+	
+	@Override
+	public void restoreFoodCategory(int foodCategoryNo) throws Exception {
+		productMapper.restoreFoodCategory(foodCategoryNo);
 	}
 
 	// Review CRUD
@@ -99,8 +117,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Map<String, Object> getListReview() throws Exception {
-		List<Review> list = productMapper.getListReview();
+	public Map<String, Object> getListReview(Search search) throws Exception {
+		List<Review> list = productMapper.getListReview(search);
 		int totalCount = productMapper.getTotalReviewCount();
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -113,6 +131,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void deleteReview(int reviewNo) throws Exception {
 		productMapper.deleteReview(reviewNo);
+	}
+	
+	@Override
+	public void restoreReview(int reviewNo) throws Exception {
+		productMapper.restoreReview(reviewNo);
 	}
 
 	// Parts 관련
@@ -168,21 +191,23 @@ public class ProductServiceImpl implements ProductService {
 		return productMapper.deleteProductParts(productPartsNo);
 	}
 
-	
-	
-	@Override
-	public void restoreProduct(int productNo) throws Exception {
-		productMapper.restoreProduct(productNo);
+	public void insertProductLike(Like like) throws Exception{
+		productMapper.insertProductLike(like);
 	}
+	public Map<String, Object> getListProductLike(int userId) throws Exception{
+		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(10);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
 
-	@Override
-	public void restoreFoodCategory(int foodCategoryNo) throws Exception {
-		productMapper.restoreFoodCategory(foodCategoryNo);
+		map.put("list", productMapper.getListProductLike(search));
+		map.put("totalCount", productMapper.getTotalProductLikeCount(userId));
+
+		return map;
 	}
-
-	@Override
-	public void restoreReview(int reviewNo) throws Exception {
-		productMapper.restoreReview(reviewNo);
+	public void deleteProductLike(Like like) throws Exception{
+		productMapper.deleteProductLike(like);
 	}
-
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.BlackList;
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
@@ -26,11 +27,27 @@ public class UserServiceImpl implements UserService{
 		// TODO Auto-generated method stub
 		return userMapper.insertUser(user);
 	}
+	
+	public int insertUserInformation(User user) throws Exception{
+		return userMapper.inserUserInformation(user);
+	}
 
+	@Override
+	public int insertHatesParts(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.insertHatesParts(map);
+	}
+	
 	@Override
 	public User getUser(String userId) throws Exception {
 		// TODO Auto-generated method stub
 		return userMapper.getUser(userId);
+	}
+	
+	@Override
+	public List<Parts> getUserHatesParts(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getUserHatesParts(userId);
 	}
 
 
@@ -42,9 +59,9 @@ public class UserServiceImpl implements UserService{
 
 		
 		List<User> list=userMapper.getListUser(search);
-		int totalCount=userMapper.getListUserTotalCount(map);
+		int totalCount=userMapper.getListUserTotalCount(search);
 		
-		map.put("purchaseList", list);
+		map.put("list", list);
 		map.put("totalCount", totalCount);
 		
 		return map;
@@ -57,9 +74,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public int deleteUser(User user) throws Exception {
+	public int deleteUser(String userId) throws Exception {
 		// TODO Auto-generated method stub
-		return userMapper.deleteUser(user);
+		return userMapper.deleteUser(userId);
 	}
 
 	public int confirmUserId(String userId) throws Exception {
@@ -123,16 +140,37 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public int insertPont(Point point) throws Exception {
+	public int insertPoint(Point point) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return userMapper.insertPoint(point);
 	}
 
 	@Override
-	public List<Point> getListPoint(Search search, String userId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object>  getListPoint(Search search) throws Exception {
+
+
+		Map<String, Object> map=new HashMap<>();
+		map.put("search", search);
+
+		
+		List<Point> list=userMapper.getListPoint(search);
+		int totalCount=userMapper.getListPointTotalCount(search);
+		
+		map.put("List", list);
+		map.put("totalCount", totalCount);
+		
+		return map;
 	}
+
+	@Override
+	public User getProfile(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getProfile(userId);
+	}
+
+	
+
+	
 
 
 

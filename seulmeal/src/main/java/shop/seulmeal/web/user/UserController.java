@@ -1,8 +1,15 @@
 package shop.seulmeal.web.user;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +17,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import shop.seulmeal.common.Page;
+import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.user.UserService;
 
@@ -36,25 +45,58 @@ public class UserController {
 	}
 	
 	@PostMapping("insertUser")
-	public String insertUser(@ModelAttribute("user") User user) throws Exception {
+	public String insertUser(@ModelAttribute("user") User user, @DateTimeFormat(pattern="YYYY-MM-DD") Date birth, HttpSession session) throws Exception {
 		
+		System.out.println("::user : "+user);
 		userService.insertUser(user);
+		session.setAttribute("user", user);
 		
-		return "main";
+		return "redirect:/user/insertUserInformation";
+	}
+	
+	
+	  @GetMapping("insertUserInformation") 
+	  public String insertUserInformation() throws Exception{
+	  
+	 return "user/insertUserInformation"; 
+	 }
+	 
+	
+	@PostMapping("inserUserInformation")
+	public String insertUserInformation(@ModelAttribute("user") User user, Parts[] parts, HttpSession session ) throws Exception {
+		userService.insertUserInformation(user);
+		
+		List<Parts> list= new ArrayList<Parts>();
+		for(int i=0; i < parts.length; i++ ) {
+			Parts parts1 = new Parts();
+			parts1= parts[i];
+			list.add(parts1);
+		}
+		
+		User user2= (User)session.getAttribute("user");
+		Map<String, Object> map = new HashMap<String ,Object>();
+		map.put("userId", user2.getUserId());
+		map.put("list", list);
+		userService.insertHatesParts(map);
+		
+		user = userService.getUser(user2.getUserId());
+		user.setParts( userService.getUserHatesParts(user.getUserId()));
+		session.setAttribute("user", user);
+		return "redirect:/";
 	}
 	
 	@GetMapping("getUpdateUser/{userId}")
-	public String getUser(@PathVariable("userId") String userId, Model model) throws Exception {
+	public String getUpdateUser(@PathVariable("userId") String userId, Model model) throws Exception {
 		
 		User user = userService.getUser(userId);
 		
 		model.addAttribute("user", user);
 		
-		return "user/getUser";
+		return "user/getUpdateUser";
 	}
 	
 	@PostMapping("getUpdateUser")
-	public String updateUser(@ModelAttribute("user") User user, Model model, HttpSession session) throws Exception {
+	public String getUpdateUser(@ModelAttribute("user") User user, Model model, HttpSession session) throws Exception {
 		
 		userService.updateUser(user);
 		
@@ -62,17 +104,18 @@ public class UserController {
 		if(sessionId.equals(user.getUserId())) {
 			session.setAttribute("user", user);
 		}
-		return "user/getUser";	
+		return "redirect:/user/getUpdateUser/"+sessionId;	
 	}
 	
 	@GetMapping("login")
 	public String login() throws Exception {
 		
-		return "user/login/";
+		return "user/login";
 	}
 	
 	@PostMapping("login")
 	public String login(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+		System.out.println("::user : "+user);
 		
 		User dbUser = userService.getUser(user.getUserId());
 		
@@ -80,14 +123,14 @@ public class UserController {
 			session.setAttribute("user", dbUser);
 		}
 		
-		return "main";
+		return "redirect:/";
 	}
 	
 	@GetMapping("logout")
 	public String logout(HttpSession session) throws Exception {
 		
 		session.invalidate();
-		return "main";
+		return "redirect:/";
 	}
 	
 	
@@ -173,9 +216,53 @@ public class UserController {
 	}
 	
 	@GetMapping("deleteUser")
-	public String deleteUser() throws Exception {
+	public String deleteUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
-		return "user/deleteUser";
+		String sessionId=((User)session.getAttribute("user")).getUserId();
+		
+		userService.deleteUser(sessionId);
+		
+		session.invalidate();
+		
+		return "redirect:/";
+	}
+	
+	@GetMapping("listUser/{currentPage}")
+	public String getUserList( Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
+		
+		Search search = new Search();
+		if(currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		System.out.println(search);
+		
+		Map<String , Object> map=userService.getListUser(search);
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		System.out.println(resultPage);
+
+		model.addAttribute("list", map.get("list"));
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
+		
+		
+		return "user/listUser";
+	}
+	
+	@GetMapping("getUser/{userId}")
+	public String getUser(@PathVariable("userId") String userId, Model model) throws Exception {
+		
+		User user = userService.getUser(userId);
+		
+		model.addAttribute("user", user);
+		
+		return "user/getUser";
 	}
 	
 	@GetMapping("chargeuserPoint")

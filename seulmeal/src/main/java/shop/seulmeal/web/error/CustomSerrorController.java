@@ -24,7 +24,7 @@ public class CustomSerrorController implements ErrorController {
 				return "errors/404";
 			}
 			
-			if(statusCode == HttpStatus.FORBIDDEN.value()) {
+			if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
 				return "errors/500";
 			}
 		}

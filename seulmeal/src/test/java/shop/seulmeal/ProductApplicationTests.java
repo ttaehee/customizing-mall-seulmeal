@@ -22,7 +22,7 @@ import shop.seulmeal.service.product.ProductService;
 
 @SpringBootTest
 @WebAppConfiguration
-public class ProductAppTest {
+public class ProductApplicationTests {
 
 	@Autowired
 	@Qualifier("productServiceImpl")
@@ -51,12 +51,7 @@ public class ProductAppTest {
 		productService.insertProduct(product);
 
 	}
-
-	public void testGetProduct() throws Exception {
-		Product product = productService.getProduct(1);
-		System.out.println(product);
-	}
-
+	@Test
 	public void testListProduct() throws Exception {
 		Search search = new Search();
 	 	search.setCurrentPage(1);
@@ -66,7 +61,8 @@ public class ProductAppTest {
 	 	List<Object> list = (List<Object>)map.get("list");
 	 	Assert.assertEquals(3, list.size());
 	 	
-	 	System.out.println(list);
+		//==> console 확인
+	 	//System.out.println(list);
 	 	
 	 	Integer totalCount = (Integer)map.get("totalCount");
 	 	System.out.println(totalCount);
@@ -82,7 +78,8 @@ public class ProductAppTest {
 	 	list = (List<Object>)map.get("list");
 	 	Assert.assertEquals(3, list.size());
 	 	
-	 	System.out.println(list);
+	 	//==> console 확인
+	 	//System.out.println(list);
 	 	
 	 	totalCount = (Integer)map.get("totalCount");
 	 	System.out.println(totalCount);
@@ -91,6 +88,7 @@ public class ProductAppTest {
 
 	public void testGetProductAndUpdateProduct() throws Exception {
 		Product product = productService.getProduct(1);
+		System.out.println(product);
 
 		Foodcategory food = new Foodcategory();
 		food.setFoodCategoryNo(3);
@@ -121,18 +119,6 @@ public class ProductAppTest {
 		product = productService.getProduct(1);
 		System.out.println(product.getStatus());
 	}
-	
-	public void testRestoreProduct() throws Exception {
-		Product product = productService.getProduct(1);
-
-		int A = product.getProductNo();
-		System.out.println(product.getStatus());
-
-		productService.restoreProduct(A);
-
-		product = productService.getProduct(1);
-		System.out.println(product.getStatus());
-	}
 
 	
 	// FOOD CATEGORY
@@ -144,28 +130,22 @@ public class ProductAppTest {
 
 	public void testListFoodCategory() throws Exception {
 		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(3);
+		search.setSearchCondition("1");
+		search.setSearchKeyword("식");
+		List<Foodcategory> list = productService.getListFoodCategory();
 
-	 	search.setCurrentPage(1);
-	 	search.setPageSize(3);
-	 	List<Foodcategory> list = productService.getListFoodCategory();
-	 	
-//	 	List<Object> list = (List<Object>)map.get("list");
-//	 	Assert.assertEquals(3, list.size());
-	 	
-	 	System.out.println(list);
-	 	
-//	 	Integer totalCount = (Integer)map.get("totalCount");
-//	 	System.out.println(totalCount);
-
+//		List<Object> list = (List<Object>) map.get("list");
+//
+//		Integer totalCount = (Integer) map.get("totalCount");
+//
+//		System.out.println(map);
 	}
 
 	// test done +
 	public void testDeleteFoodCategory() throws Exception {
 		productService.deleteFoodCategory(6);
-	}
-	
-	public void testRestoreFoodCategory() throws Exception {
-		productService.restoreFoodCategory(6);
 	}
 	
 	// REVIEW
@@ -199,20 +179,9 @@ public class ProductAppTest {
 		productService.updateReview(review);
 
 	}
-	
+
 	public void testGetListReview() throws Exception {
-		Search search = new Search();
-	 	search.setCurrentPage(1);
-	 	search.setPageSize(3);
-	 	Map<String,Object> map = productService.getListReview(search);
-	 	
-	 	List<Object> list = (List<Object>)map.get("list");
-	 	Assert.assertEquals(3, list.size());
-	 	
-	 	System.out.println(list);
-	 	
-	 	Integer totalCount = (Integer)map.get("totalCount");
-	 	System.out.println(totalCount);
+
 	}
 	
 	public void testDeleteReview() throws Exception {

@@ -51,8 +51,11 @@ public class OperationController {
 	@Autowired
 	private AttachmentsService attachmentsService;	
 	
-	int pageUnit = 5;	
-	int pageSize = 5;
+	@Value("${operation.query.pageUnit}")
+	int pageUnit;
+	
+	@Value("${operation.query.pageSize}")
+	int pageSize;
 	
 	public OperationController() {
 		// TODO Auto-generated constructor stub

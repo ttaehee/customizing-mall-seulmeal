@@ -43,7 +43,7 @@ public class UserTest {
 		user.setUserId("testUser1");
 		user.setUserName("testName1");
 		user.setPassword("testPassword1");
-		user.setBirth("00/01/01");
+		//user.setBirth("00/01/01");
 		user.setAddress("서울");
 		user.setPhone("00031");
 		user.setEmail("xcvbe1");
@@ -102,7 +102,7 @@ public class UserTest {
 		User user = new User();
 		user.setUserId("testUser");
 		
-		userMapper.deleteUser(user);
+		userMapper.deleteUser(user.getUserId());
 		user=userMapper.getUser("testUser");
 		System.out.println("deleteUser : "+user);
 		
