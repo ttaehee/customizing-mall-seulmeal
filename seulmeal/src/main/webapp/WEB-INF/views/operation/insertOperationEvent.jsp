@@ -5,10 +5,22 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="../../../resources/css/summernote/summernote-lite.css">
+<!--<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet"> -->
 <title>이벤트 등록</title>
+<style type="text/css">
+	.col-md-12{
+		margin-top: 20px;
+	}
+</style>
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script> -->
+<script src="/resources/javascript/summernote/summernote-lite.js"></script>
+<script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
+
 <div class="container">
 		<div class="container px-4 py-5" id="custom-cards">
 			<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3">
@@ -17,20 +29,24 @@
 						<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
 							<h1 id="titleView" class="fw-bold">Title</h1>
 							<h2 id="shortContentView" class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">ShortContent</h2>
-							<h2 class="endDateView">2022-08-11</h2>
-							<ul class="d-flex list-unstyled mt-auto">
-								<li class="me-auto">
-									<img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-								</li>
-								<li class="d-flex align-items-center me-3">
-									<i class="bi bi-emoji-heart-eyes"></i><br/>
-									<small>0</small>
-								</li>
-									<li class="d-flex align-items-center">
-									<i class="bi bi-calendar-date"></i>
-									<small id="end_date">2022-08-11</small>
-								</li>
-							</ul>
+							<h2 class="endDateView">2022-08-11</h2>							
+							<div style="display:flex; justify-content:space-between;">
+								<ul class="d-flex list-unstyled mt-auto">
+									<li class="me-auto">
+										<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
+									</li>							
+								</ul>
+								<ul class="d-flex list-unstyled mt-auto">
+									<li class="d-flex align-items-center me-3" style="font-size:1.5rem; margin-right:5px;">
+										<i class="bi bi-emoji-heart-eyes"></i><br/>
+										<small>&nbsp;0</small>
+									</li>
+									<li class="d-flex align-items-center"  style="font-size:1.5rem; margin-left:5px;">
+										<i class="bi bi-calendar-date"></i>
+										<small id="end_date">&nbsp;2022-08-11</small>
+									</li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -38,16 +54,35 @@
 		</div>
 	</div>
 	
-<form action="/operation/insertOperation" method="POST">
-	제목 : <input id="title" name="title" />
-	짧은내용 : <input id="shortContent" name="shortContent" />
-	썸네일 : <input type="file" id="image" accept="image/*" onchange="readURL(event);"/>
-	기간 : <input id="endDate" type="date" name="endDate" />
-	내용 : <input name="content" />
-	아이디 : <input name="userId" />
-	<input type="hidden" name="postStatus" value="2" />
-	<button type="submit">저장</button>
-</form>
+	<div class="container">
+	<form action="/operation/insertOperation" method="POST" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-md-12">
+				제목 : <input id="title" name="title" />
+				짧은내용 : <input id="shortContent" name="shortContent" />
+				기간 : <input id="endDate" type="date" name="endDate" />
+				썸네일 : <input type="file" name="thumnailFile" id="image" accept="image/*" onchange="readURL(event);"/>
+			</div>
+			
+			<div class="col-md-12">
+				<textarea id="summernote" name="content"></textarea>		
+			</div>
+		
+			<input type="hidden" name="postStatus" value="2" />
+		
+		</div>
+		<div style="display:flex; justify-content: space-between;">
+			<div >
+				<input type="file" value="첨부파일임" name="uploadfile" multiple="multiple" />
+			</div>
+			<div>
+				<button type="submit" class="btn btn-primary">
+					등록
+				</button>
+			</div>
+		</div>	
+	</form>
+	</div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script>
 	function readURL(){
@@ -72,6 +107,31 @@
 		$("#end_date").text($(this).val());
 		$(".endDateView").text($(this).val());
 	});
+	
+	$(document).ready(function () {
+		$('#summernote').summernote({
+			height: 500,                // 에디터 높이
+			minHeight: 500,            // 최소 높이
+			maxHeight: null,            // 최대 높이
+			focus: true,                // 에디터 로딩후 포커스를 맞출지 여부
+			lang: "ko-KR",				// 한글 설정
+			placeholder: '최대 2048자까지 쓸 수 있습니다',	//placeholder 설정
+			toolbar: [				    
+			    ['fontname', ['fontname']],
+			    ['fontsize', ['fontsize']],
+			    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+			    ['color', ['forecolor','color']],
+			    ['table', ['table']],
+			    ['para', ['ul', 'ol', 'paragraph']],
+			    ['height', ['height']],
+			    ['insert',['picture','link','video']],
+			    ['view', ['fullscreen', 'help']]
+			  ],
+			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+		});		
+    });
+	
 </script>
 </body>
 </html>

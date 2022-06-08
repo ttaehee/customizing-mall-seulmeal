@@ -29,9 +29,9 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>	
 	<br/>
 	<div class="container">
-		<div class="dropdown">		  
-			<div class="input-group col-md-3" style="justify-content: flex-end;">
-				<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
+		<div class="dropdown">
+			<div class="float-right" style="display:flex;">
+				<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>		
 				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 					이벤트 목록
 				</button>
@@ -46,7 +46,7 @@
 					<button type="button" class="btn btn-primary">
 					<i class="bi bi-search"></i>
 				</button>
-			</div>		
+			</div>			
 		</div>		
     </div>
     
@@ -56,31 +56,42 @@
 			<c:forEach var="post" items="${list}">	
 				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3">
 					<div class="col">
-						<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../resources/attachments/image/tetris.png');">
+						<c:if test="${post.thumnail != null}">
+							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../resources/attachments/${post.thumnail}');">
+						</c:if>
+						<c:if test="${post.thumnail == null}">
+							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../resources/attachments/image/tetris.png');">
+						</c:if>
+						
 							<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
 								<h2 class="display-6 fw-bold">${post.title}</h2>
 								<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}shortContent</h2>
 								<h2 class="endDateView">~${post.endDate}</h2>
-								<ul class="d-flex list-unstyled mt-auto">
-									<li class="me-auto">
-										<img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-									</li>
-									<li class="d-flex align-items-center me-3">
-										<i class="bi bi-emoji-heart-eyes"></i><br/>
-										<small>&nbsp;${post.views}</small>
-									</li>
-										<li class="d-flex align-items-center">
-										<i class="bi bi-calendar-date"></i>
-										<small>&nbsp;${post.endDate}</small>
-									</li>
-								</ul>
+								<div style="display:flex; justify-content:space-between;">
+									<ul class="d-flex list-unstyled mt-auto">
+										<li class="me-auto">
+											<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
+										</li>							
+									</ul>
+									<ul class="d-flex list-unstyled mt-auto">
+										<li class="d-flex align-items-center me-3" style="font-size:1.5rem; margin-right:5px;">
+											<i class="bi bi-emoji-heart-eyes"></i><br/>
+											<small>&nbsp;${post.views}</small>
+										</li>
+										<li class="d-flex align-items-center"  style="font-size:1.5rem; margin-left:5px;">
+											<i class="bi bi-calendar-date"></i>
+											<small>&nbsp;${post.endDate}</small>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</c:forEach>
-		</div>
-	</div>	
+		</div>		
+	</div>
+	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
