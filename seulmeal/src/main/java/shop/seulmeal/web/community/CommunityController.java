@@ -27,6 +27,7 @@ import shop.seulmeal.service.community.CommunityService;
 import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
@@ -59,31 +60,32 @@ public class CommunityController {
 	
 	//M
 	// 무한스크롤
-	@GetMapping("/communityMain") // x
-	public String communityMain(@ModelAttribute Search search, String userId ,HttpSession session,Model model) {
+	@GetMapping("/communityMain") // o
+	@ResponseBody
+	public Map<String,Object> communityMain(@RequestParam(required = false) String searchKeyword, @RequestParam(required = false)String searchCondition,String userId, Model model) throws Exception {
 		
-		//1. communityService.getListPost(null, null);
-		//2. userService.getUser()? 유저프로필 -> Session.getAttribute() 로 대체가능?
-		//3. productService.getListProduct(null) 추천밀키트 리스트
+		//1. communityService.getListPost();
+		//2. userService.getUser()? 유저프로필 -> jsp에서 세션 사용
+		//3. productService.getListProduct() 추천밀키트 리스트
 		
-		if(search.getCurrentPage() ==0 ){
-			search.setCurrentPage(1);
-		}
-		final int PAGE_SIZE = 1;
-		search.setPageSize(PAGE_SIZE);
-		
-		//communityService.getListPost(search, (User)session.getAttribute("user").getUserId);
+		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(1);
+		search.setSearchKeyword(searchKeyword);
+		search.setSearchCondition(searchCondition);
 		Map<String,Object> map = communityService.getListPost(search, userId);
 		
-		Page resultPage = new Page(search.getCurrentPage(),(int)map.get("postTotalCount"),pageUnit, PAGE_SIZE);
 		
+		Search productSearch = new Search();
+		productSearch.setCurrentPage(1);
+		productSearch.setPageSize(3);
+		Map<String,Object> productMap = productService.getListProduct(productSearch);
 		
 		model.addAttribute("postList", (List<Post>)map.get("postList"));
-		model.addAttribute("resultPage", resultPage);
-		model.addAttribute("search",search);
-
+		model.addAttribute("productList", (List<Product>)productMap.get("list"));
 		
-		return "/community/communityMain";
+//		return "/community/communityMain";
+		return map;
 	}
 	
 	//Post
@@ -105,19 +107,23 @@ public class CommunityController {
 		return "redirect:getPost/"+ post.getPostNo(); 
 	}
 	
-	@GetMapping("/getPost/{postNo}") // x
-	public String getPost(@PathVariable int postNo, Model model) {
+	@GetMapping("/getPost/{postNo}") // o
+	@ResponseBody
+	public Map getPost(@PathVariable int postNo, Model model) {
 		
 		Post post = communityService.getPost(postNo);
 		
-		//무한스크롤?
+		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(pageSize);
+		Map<String,Object> map = communityService.getListcomment(search, postNo);
+		
+		model.addAttribute("post", post);
+		model.addAttribute("commentList", (List<Comment>)map.get("commentList"));
+		
+//		return "community/getCommunityPost";
+		return map;
 
-//		Map<String,Object> map = communityService.getListcomment(search, postNo);
-		
-//		model.addAttribute("post", post);
-//		model.addAttribute("post", (List<Comment>)map.get("commentList"));
-		
-		return "community/getCommunityPost";
 	}
 
 	
@@ -153,6 +159,7 @@ public class CommunityController {
 	@PostMapping("/insertComment") // o
 	public String insertComment(@ModelAttribute Comment comment) {
 		
+		System.out.println("/////////"+comment);
 		communityService.insertComment(comment);
 		
 		return "redirect:getPost/"+ comment.getPostNo(); 
@@ -226,7 +233,28 @@ public class CommunityController {
 		return "redirect:/community/getListReportPost"; 
 	}
 	
+	@GetMapping("getProfile")
+	@ResponseBody
+	public User getProfile() {
+		
+//		userService.
+		
+		return null;
+	}
 	
+//	@GetMapping("updateProfile")
+//	public String updateProfile() {
+//		
+//		return "/community/updateCommunityProfile";
+//	}
+//	
+//	@PostMapping("updateProfile")
+//	public String updateProfile(@ModelAttribute User user) {
+//		
+//		
+//		
+//		return "/community/updateCommunityProfile";
+//	}
+//	
 	
-
 }

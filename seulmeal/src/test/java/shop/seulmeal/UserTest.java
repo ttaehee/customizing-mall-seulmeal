@@ -43,7 +43,7 @@ public class UserTest {
 		user.setUserId("testUser1");
 		user.setUserName("testName1");
 		user.setPassword("testPassword1");
-		user.setBirth("00/01/01");
+//		user.setBirth("00/01/01");
 		user.setAddress("서울");
 		user.setPhone("00031");
 		user.setEmail("xcvbe1");
