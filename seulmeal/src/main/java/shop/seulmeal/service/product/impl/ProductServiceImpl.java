@@ -42,6 +42,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Map<String, Object> getListProduct(Search search) throws Exception {
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
 		List<Product> list = productMapper.getListProduct(search);
 		int totalCount = productMapper.getTotalProductCount(search);
 
