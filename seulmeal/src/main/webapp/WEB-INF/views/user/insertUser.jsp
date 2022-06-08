@@ -66,7 +66,7 @@
 	   <div class="form-group">
 	    <label for="Email3" class="col-sm-2 control-label">생년월일</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="birth" name="birth" placeholder="Email">
+	      <input type="date" class="form-control" id="birth" name="birth" placeholder="Email">
 	    </div>
 	  </div>
 	  

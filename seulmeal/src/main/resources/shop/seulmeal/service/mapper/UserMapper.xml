@@ -5,10 +5,16 @@
         
 	<mapper namespace="shop.seulmeal.service.mapper.UserMapper">
 	 
+	 <resultMap id="userSelectMap" type="shop.seulmeal.service.domain.User">
+		<result property="userId" 		column="user_id"    jdbcType="VARCHAR"/>
+		<result property="userName" 		column="user_name"  jdbcType="VARCHAR"/> 
+		<result property="blackListStatus" 		column="blacklist_status"   jdbcType="CHAR"/>
+	</resultMap>
+	 
 		<insert id="insertUser">
 			INSERT
 			INTO users( user_id , user_name , password , birth , address, phone, email,  reg_date, nickname, confirm_status) 
-			VALUES	 (	#{userId} , #{userName} , #{password} , TO_DATE(#{birth:DATE},'YY/MM/DD') , #{address:VARCHAR} , 
+			VALUES	 (	#{userId} , #{userName} , #{password} , #{birth:DATE} , #{address:VARCHAR} , 
 								#{phone:VARCHAR} , #{email:VARCHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR} )
 		</insert>
 		
@@ -44,7 +50,7 @@
 	   	<set>
 	   		user_name 	= #{userName} ,
 			password	= #{password},
-			birth 		= TO_DATE(#{birth:DATE},'YY/MM/DD') ,
+			birth 		= #{birth:DATE} ,
 			address		= #{address:VARCHAR},
 			phone		= #{phone:VARCHAR},
 			email		= #{email:VARCHAR},
@@ -63,7 +69,7 @@
 			UPDATE users SET user_status = 1 WHERE user_id = #{userId}	
 		</delete>
 		
-		<select id= "getListUser" resultType="shop.seulmeal.service.domain.User" parameterType="shop.seulmeal.common.Search">
+		<select id= "getListUser" resultMap="userSelectMap" parameterType="shop.seulmeal.common.Search">
 			SELECT *
 		  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 		  					FROM		(	SELECT user_id , user_name, blacklist_status
@@ -168,7 +174,7 @@
 		
 		<select id="getProfile" resultType="shop.seulmeal.service.domain.User">
 			SELECT user_id, nickname, grade, profile_image, profile_message, foodcategory_name1, foodcategory_name2, foodcategory_name3 
-				FROM users WHERE user_id = #{userId}
+				FROM users WHERE user_id = #{userId:VARCHAR}
 		</select>
 	
 	</mapper>     

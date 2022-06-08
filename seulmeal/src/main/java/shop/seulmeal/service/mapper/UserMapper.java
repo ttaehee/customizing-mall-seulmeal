@@ -30,7 +30,7 @@ public interface UserMapper {
 	
 	public int updateUser(User user) throws Exception;
 	
-	public int deleteUser(User user) throws Exception;
+	public int deleteUser(String userId) throws Exception;
 	
 	public List<User> getListUser(Search search) throws Exception;
 	
@@ -62,7 +62,7 @@ public interface UserMapper {
 	//
 	public int getListPointTotalCount(Search search) throws Exception;
 	
-	public User getProfile(User user) throws Exception;
+	public User getProfile(String userId) throws Exception;
 	
 	
 	
