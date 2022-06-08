@@ -168,6 +168,14 @@ public class UserServiceImpl implements UserService{
 		return userMapper.getProfile(userId);
 	}
 
+	@Override
+	public int updateProfile(User user) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.updateProfile(user);
+	}
+	
+	
+
 	
 
 	

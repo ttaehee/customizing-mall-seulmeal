@@ -48,8 +48,8 @@
 	    <update id="updateUser">
 	    		UPDATE users
 	   	<set>
-	   		user_name 	= #{userName} ,
-			password	= #{password},
+	   		user_name 	= #{userName:VARCHAR} ,
+			password	= #{password:VARCHAR},
 			birth 		= #{birth:DATE} ,
 			address		= #{address:VARCHAR},
 			phone		= #{phone:VARCHAR},
@@ -176,5 +176,18 @@
 			SELECT user_id, nickname, grade, profile_image, profile_message, foodcategory_name1, foodcategory_name2, foodcategory_name3 
 				FROM users WHERE user_id = #{userId:VARCHAR}
 		</select>
+		
+		<update id="updateProfile">
+	    		UPDATE users
+		   	<set>
+				nickname	= #{nickName:VARCHAR},
+				profile_image	= #{profileImage:VARCHAR},
+				profile_message	= #{profileMessage:VARCHAR},
+				foodcategory_name1 = #{foodCategoryName1:VARCHAR},
+				foodcategory_name2 = #{foodCategoryName2:VARCHAR},
+				foodcategory_name3 = #{foodCategoryName3:VARCHAR}
+		   	</set>
+		   	WHERE user_id = #{userId}
+		</update>
 	
 	</mapper>     

@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +31,7 @@ import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.community.CommunityService;
+import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Relation;
@@ -80,6 +83,47 @@ public class CommunityRestController {
 
 		return map;
 	}
+	
+	//Comment
+	@PostMapping("/insertComment") // o
+	public void insertComment(@RequestBody Comment comment) {
+		
+		System.out.println("/////////"+comment);
+		communityService.insertComment(comment);
+	
+	}
+	
+	
+	//RestController?
+	@GetMapping("/updateComment/{commentNo}") // o
+	public String updateComment(@PathVariable int commentNo, Model model) {
+		
+		Comment comment = communityService.getComment(commentNo);
+
+		model.addAttribute("comment", comment);
+		
+		return "redirect:/community/getPost/"+ comment.getPostNo(); 
+	}
+	
+	//RestController?
+	@PutMapping("/updateComment/{commentNo}") // o
+	public String updateComment(@PathVariable int commentNo, @ModelAttribute Comment comment) {
+		
+		communityService.updateComment(comment);
+		
+		return "redirect:/community/getPost/"+ comment.getPostNo(); 
+	}
+	
+	//parameter Comment?
+	@PutMapping("/deleteComment/{commentNo}") // ^
+	public String deleteComment(@PathVariable int commentNo) {
+		
+		communityService.deleteComment(commentNo);
+		Comment comment = communityService.getComment(commentNo);
+		
+		return "redirect:/community/getPost/"+ comment.getPostNo(); 
+	}
+	
 
 	@PostMapping("insertLike/{postNo}") // oo
 	public Post insertLike(@PathVariable int postNo, String userId) {

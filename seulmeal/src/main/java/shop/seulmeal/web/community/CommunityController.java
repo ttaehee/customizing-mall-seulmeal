@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,8 @@ public class CommunityController {
 	//M
 	// 무한스크롤
 	@GetMapping("/communityMain") // o
-	@ResponseBody
-	public Map<String,Object> communityMain(@RequestParam(required = false) String searchKeyword, @RequestParam(required = false)String searchCondition,String userId, Model model) throws Exception {
+//	@ResponseBody
+	public String communityMain(@RequestParam(required = false) String searchKeyword, @RequestParam(required = false)String searchCondition,String userId, Model model) throws Exception {
 		
 		//1. communityService.getListPost();
 		//2. userService.getUser()? 유저프로필 -> jsp에서 세션 사용
@@ -84,8 +85,8 @@ public class CommunityController {
 		model.addAttribute("postList", (List<Post>)map.get("postList"));
 		model.addAttribute("productList", (List<Product>)productMap.get("list"));
 		
-//		return "/community/communityMain";
-		return map;
+		return "community/communityMain";
+//		return map;
 	}
 	
 	//Post
@@ -155,46 +156,7 @@ public class CommunityController {
 	}
 	
 	
-	//Comment
-	@PostMapping("/insertComment") // o
-	public String insertComment(@ModelAttribute Comment comment) {
-		
-		System.out.println("/////////"+comment);
-		communityService.insertComment(comment);
-		
-		return "redirect:getPost/"+ comment.getPostNo(); 
-	}
-	
-	
-	//RestController?
-	@GetMapping("/updateComment/{commentNo}") // o
-	public String updateComment(@PathVariable int commentNo, Model model) {
-		
-		Comment comment = communityService.getComment(commentNo);
 
-		model.addAttribute("comment", comment);
-		
-		return "redirect:/community/getPost/"+ comment.getPostNo(); 
-	}
-	
-	//RestController?
-	@PutMapping("/updateComment/{commentNo}") // o
-	public String updateComment(@PathVariable int commentNo, @ModelAttribute Comment comment) {
-		
-		communityService.updateComment(comment);
-		
-		return "redirect:/community/getPost/"+ comment.getPostNo(); 
-	}
-	
-	//parameter Comment?
-	@PutMapping("/deleteComment/{commentNo}") // ^
-	public String deleteComment(@PathVariable int commentNo) {
-		
-		communityService.deleteComment(commentNo);
-		Comment comment = communityService.getComment(commentNo);
-		
-		return "redirect:/community/getPost/"+ comment.getPostNo(); 
-	}
 	
 	//Post
 	@PostMapping("/insertReportPost") // o
@@ -233,28 +195,39 @@ public class CommunityController {
 		return "redirect:/community/getListReportPost"; 
 	}
 	
-	@GetMapping("getProfile")
+	@GetMapping("getProfile/{userId}")
 	@ResponseBody
-	public User getProfile() {
+	public User getProfile(@PathVariable String userId) throws Exception {
 		
-//		userService.
+		User user = userService.getProfile(userId);
+		communityService.getListPost(null, userId);
 		
 		return null;
 	}
 	
-//	@GetMapping("updateProfile")
-//	public String updateProfile() {
-//		
-//		return "/community/updateCommunityProfile";
-//	}
-//	
-//	@PostMapping("updateProfile")
-//	public String updateProfile(@ModelAttribute User user) {
-//		
-//		
-//		
-//		return "/community/updateCommunityProfile";
-//	}
-//	
+	@GetMapping("updateProfile")	//oo
+	//@ResponseBody
+	public String updateProfile(String userId, HttpSession session, Model model) throws Exception {
+		
+		User user = userService.getProfile(userId);
+		
+		model.addAttribute("user", user);
+		
+		return "/community/updateCommunityProfile";
+//		return user;
+	}
+
+	
+	@PostMapping("updateProfile")	// oo
+//	@ResponseBody
+	public String updateProfile(String userId, @ModelAttribute User user, HttpSession session, Model model) throws Exception {
+		
+		userService.updateProfile(user);
+		session.setAttribute("user", user);
+		
+		return "redirect:/community/getProfile/"+user.getUserId();
+//		return user;
+	}
+	
 	
 }

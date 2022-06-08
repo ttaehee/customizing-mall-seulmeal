@@ -63,6 +63,8 @@ public interface UserMapper {
 	public int getListPointTotalCount(Search search) throws Exception;
 	
 	public User getProfile(String userId) throws Exception;
+
+	public int updateProfile(User user) throws Exception;
 	
 	
 	
