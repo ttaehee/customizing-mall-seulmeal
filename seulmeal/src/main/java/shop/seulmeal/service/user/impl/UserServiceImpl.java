@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService{
 		List<User> list=userMapper.getListUser(search);
 		int totalCount=userMapper.getListUserTotalCount(search);
 		
-		map.put("List", list);
+		map.put("list", list);
 		map.put("totalCount", totalCount);
 		
 		return map;
@@ -74,9 +74,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public int deleteUser(User user) throws Exception {
+	public int deleteUser(String userId) throws Exception {
 		// TODO Auto-generated method stub
-		return userMapper.deleteUser(user);
+		return userMapper.deleteUser(userId);
 	}
 
 	public int confirmUserId(String userId) throws Exception {
@@ -160,6 +160,12 @@ public class UserServiceImpl implements UserService{
 		map.put("totalCount", totalCount);
 		
 		return map;
+	}
+
+	@Override
+	public User getProfile(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getProfile(userId);
 	}
 
 	

@@ -23,7 +23,7 @@ public interface UserService {
 	
 	public int updateUser(User user) throws Exception;
 	
-	public int deleteUser(User user) throws Exception;
+	public int deleteUser(String userId) throws Exception;
 	
 	public Map<String, Object> getListUser(Search search) throws Exception;
 	
@@ -51,7 +51,7 @@ public interface UserService {
 	
 	public Map<String, Object> getListPoint(Search search) throws Exception;
 	
-	
+	public User getProfile(String userId) throws Exception;
 	
 	
 

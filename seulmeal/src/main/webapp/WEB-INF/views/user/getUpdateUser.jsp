@@ -79,10 +79,11 @@
 	  <div class="form-group">
 	    <div class="col-sm-offset-2 col-sm-10">
 	      <button type="submit" class="btn btn-default">저장</button>
-	       <button type="submit" class="btn btn-default">탈퇴</button>
+	       
 	    </div>
 	  </div>
 	</form>
+	<button type="button" onclick="location.href='/user/deleteUser'" class="btn btn-default">탈퇴</button>
 </div>
     <jsp:include page="../layer/footer.jsp"></jsp:include>
 </body>

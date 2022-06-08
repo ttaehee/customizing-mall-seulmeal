@@ -132,7 +132,7 @@
 	}
 	
 	function join(){
-		window.location.href = '/user/addUser';
+		window.location.href = '/user/insertUser';
 	}
 	
 	function login(){
