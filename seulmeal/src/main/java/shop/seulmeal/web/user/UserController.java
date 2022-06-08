@@ -265,6 +265,61 @@ public class UserController {
 		return "user/getUser";
 	}
 	
+	@PostMapping("deleteUser")
+	public String deleteUser( String password, HttpSession session) throws Exception {
+	
+		if(password.equals(((User)session.getAttribute("user")).getPassword())) {
+			userService.deleteUser(((User)session.getAttribute("user")).getUserId());
+			
+			session.invalidate();
+			
+			return "redirect:/";
+		} else {
+			return "<script>alert('비밀번호가 일치하지 않습니다');</script>";
+		}
+		
+		
+		
+	}
+	
+	@GetMapping("listUser/{currentPage}")
+	public String getUserList( Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
+		
+		Search search = new Search();
+		if(currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		System.out.println(search);
+		
+		Map<String , Object> map=userService.getListUser(search);
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		System.out.println(resultPage);
+
+		model.addAttribute("list", map.get("list"));
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
+		
+		
+		return "user/listUser";
+	}
+	
+	@GetMapping("getUser/{userId}")
+	public String getUser(@PathVariable("userId") String userId, Model model) throws Exception {
+		
+		User user = userService.getUser(userId);
+		
+		model.addAttribute("user", user);
+		
+		return "user/getUser";
+	}
+	
 	@GetMapping("chargeuserPoint")
 	public String chargeUserPoint() throws Exception {
 		
