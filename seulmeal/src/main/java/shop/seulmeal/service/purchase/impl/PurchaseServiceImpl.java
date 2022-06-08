@@ -236,7 +236,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 	
 	@Override
 	// 아임포트 결제정보에서 amount 조회
-	public String getAmount(String token, int mId) {
+	public String getAmount(String token, String mId) {
 		String amount = "";
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpGet get = new HttpGet(IMPORT_PAYMENTINFO_URL + mId + "/paid");

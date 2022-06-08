@@ -87,7 +87,7 @@ public class PurchaseRestController {
 		
 		JSONObject json=new JSONObject();
 		if(success ==1) {
-			String portAmount=purchaseService.getAmount(token, purchase.getPurchaseNo());
+			String portAmount=purchaseService.getAmount(token, Integer.toString(purchase.getPurchaseNo()));
 			
 			if(purchase.getPrice() == Integer.parseInt(portAmount)) {
 				json.put("purchase", purchase);

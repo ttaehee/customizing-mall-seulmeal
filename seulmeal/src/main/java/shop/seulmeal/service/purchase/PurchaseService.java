@@ -71,5 +71,5 @@ public interface PurchaseService {
 	public int cancelPayment(String token, String mid);
 	
 	// 아임포트 결제정보에서 amount 조회
-	public String getAmount(String token, int mId);
+	public String getAmount(String token, String mId);
 }
