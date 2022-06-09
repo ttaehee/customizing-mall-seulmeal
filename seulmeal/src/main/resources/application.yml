@@ -24,10 +24,10 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
 
+      location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/
+
       #location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/
-#location: /src/main/resources/attachments/
       #location: ./src/main/resources/attachments/
-      location: ./src/main/resources/attachments/
       #location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/
 
   datasource:

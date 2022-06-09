@@ -265,6 +265,24 @@ public class UserController {
 		return "user/getUser";
 	}
 	
+	@PostMapping("deleteUser")
+	public String deleteUser( String password, HttpSession session) throws Exception {
+	
+		if(password.equals(((User)session.getAttribute("user")).getPassword())) {
+			userService.deleteUser(((User)session.getAttribute("user")).getUserId());
+			
+			session.invalidate();
+			
+			return "redirect:/";
+		} else {
+			return "<script>alert('비밀번호가 일치하지 않습니다');</script>";
+		}
+		
+		
+		
+	}
+	
+	
 	@GetMapping("chargeuserPoint")
 	public String chargeUserPoint() throws Exception {
 		

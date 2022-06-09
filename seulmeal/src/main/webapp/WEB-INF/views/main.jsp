@@ -5,8 +5,6 @@
 <html>
 <head>
 <link href="../../resources/css/body.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <title>SeulMeal Main</title>
 <style type="text/css">	
@@ -22,12 +20,44 @@
 	  background-position: center center;
 	  background-size: cover;
 	}	
+	
+	.carousel-control.left, .carousel-control.right {
+    background-image: none
+}
 </style>
 </head>
 <body> <!-- #BAD7DF -->
 	<jsp:include page="./layer/header.jsp"></jsp:include>
 	
 	<!-- carousel iamge-slie -->
+	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="resources/attachments/image/tetris.png" alt="First slide" style="height:500px;">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="resources/attachments/image/tetris.png" alt="Second slide" style="height:500px;">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="resources/attachments/image/tetris.png" alt="Third slide" style="height:500px;">
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+	
+	<!-- 
 	<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
 	  <div class="carousel-indicators">
 	    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -66,17 +96,15 @@
 	    <span class="visually-hidden">Next</span>
 	  </button>
 	</div>
-	
+	 -->
 	<main role="main">
-	  <section class="jumbotron text-center">
-	  	
-	    <div class="container px-4 py-5" id="custom-cards">
+	<section class="jumbotron text-center">
+	<div class="container px-4 py-5" id="custom-cards">
     <h2 class="pb-2 border-bottom">이 상품 어떠세?</h2>
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-	<c:forEach var="product" items="${list}">
-		
+	<c:forEach var="product" items="${list}">		
 			<div class="col">
-				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../resources/attachments/image/tetris.png');">
+				<div data-value="${product.productNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../resources/attachments/image/tetris.png');">
 					<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
 						<h2 class="display-6fw-bold">${product.name}</h2>
 						<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${product.subContent}</h2>
@@ -97,17 +125,29 @@
 						</ul>
 					</div>
 				</div>
-			</div>
-		
+			</div>			
 	</c:forEach>
     </div>
-	    </div>
+	</div>
 	    
-	  </section>
-	</main>
-	<a href="/operation/getChatBot">챗봇이동</a>
+	</section>
+	<jsp:include page="./chatBot/chatBot.jsp"></jsp:include>
+	</main>		
 	<jsp:include page="confirm.jsp"></jsp:include>
 	<jsp:include page="./layer/footer.jsp"></jsp:include>
 	
+<script type="text/javascript">
+	
+	$(function(){
+		$(".overflow-hidden").on("click",function(){
+			const no =$(this).data("value");
+			window.location.href = '/product/getProduct/'+no;
+		})
+		
+		$('.carousel').carousel({
+		  interval: 1000
+		})
+	})
+</script>
 </body>
 </html>

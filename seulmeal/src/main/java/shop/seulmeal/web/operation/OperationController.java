@@ -2,6 +2,7 @@ package shop.seulmeal.web.operation;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -57,6 +59,8 @@ public class OperationController {
 	@Value("${operation.query.pageSize}")
 	int pageSize;
 	
+	private String path ="C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/";
+	
 	public OperationController() {
 		// TODO Auto-generated constructor stub
 		System.out.println(this.getClass());
@@ -78,10 +82,19 @@ public class OperationController {
 	
 	@PostMapping("insertOperation")
 	@Transactional
-	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile, Attachments attachments) throws IllegalStateException, IOException {
+	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile, MultipartFile thumnailFile, Attachments attachments) throws IllegalStateException, IOException {
 		User user = new User();
-		user.setUserId(userId);
+		user.setUserId("jeong");
 		post.setUser(user);
+		
+		// 썸내일 저장
+		if(!thumnailFile.isEmpty()) {
+			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
+			post.setThumnail(name);
+			
+			File newFileName = new File(path,name);
+			thumnailFile.transferTo(newFileName);
+		}
 		
 		System.out.println("POST 가져온거 :"+post);
 		operationService.insertOperation(post);

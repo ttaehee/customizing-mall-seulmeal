@@ -6,23 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <title>상품상세조회</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<!-- css body 적용 -->
-	<!--  ///////////////////////// Bootstrap, jQuery CDN ////////////////////////// -->
+	<!--  ///////////////////////// Bootstrap, jQuery CDN ////////////////////////// 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>-->
 	
-	<!-- Bootstrap Dropdown Hover CSS -->
-   <link href="/css/animate.min.css" rel="stylesheet">
-   <link href="/css/bootstrap-dropdownhover.min.css" rel="stylesheet">
-   
-    <!-- Bootstrap Dropdown Hover JS -->
-   <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
 <style>	
 	@font-face {
 	    font-family: 'GmarketSansMedium';
@@ -110,10 +100,91 @@
     .card-bottom{
     	position: absolute;
     	bottom: 0;
-    	width : 100%;
+    	width:100%;
     }
     
 </style>
+
+</head>
+<body>
+	<!-- ToolBar Start /////////////////////////////////////-->
+	<jsp:include page="../layer/header.jsp"></jsp:include>
+   	<!-- ToolBar End /////////////////////////////////////-->
+	<div class="container">
+		<div class="row">
+	  		<div class="col-md-6" style="height:700px">
+	  			<c:if test="${!empty product.name}">
+	  				<img src="../images/uploadFiles/${product.name}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
+	  			</c:if>
+	  			<c:if test="${empty product.name}">
+	  				<img src="http://folo.co.kr/img/gm_noimage.png" alt="..." class="img-thumbnail">
+	  			</c:if>
+				<div class="card-bottom" style="position: absolute; bottom: 0;">
+					<h3>평점 :
+						<c:if test="${!empty product.averageRating}">
+							${product.averageRating}
+						</c:if>
+						<c:if test="${empty product.averageRating}">
+							평가 없음
+						</c:if>
+					</h3>
+				</div>
+	  		</div>
+			<div class="col-md-6" style="height:700px">
+				<div style="text-align:center;"><h1 style="font-size:50px;">${product.name}</h1></div>
+				<div style="display:flex; justify-content: space-between;">
+					<div></div>
+					<h2>${product.price } 원</h2>
+				</div>
+				<div class="box-line">
+					<div style="display:flex; justify-content: space-between;">
+						<h4>${user.userId} 님을 위한 혜택</h4>
+						<input id="coupon" type="hidden" name="coupon" value="" />
+						<button class="btn btn-primary couponBtn" >쿠폰 받기</button>
+					</div>
+					<hr/>
+					<div>
+						<div style="display:flex; justify-content: space-between;">
+							<h5>최대 할인가</h5>
+							<h4 style="color:red;">${product.price }원</h4>
+						</div>
+						<div style="display:flex; justify-content: space-between;">
+							<h5>등록 일자</h5>
+							<h4>${product.regDate}</h4>
+						</div>
+						<div style="border: 1px solid #dce0e3; padding:10px; background-color: #f7f8fa; height:180px;">
+							<h4>간단 설명</h4>
+							<h5>${product.subContent}</h5>
+							<h4>들어간 재료</h4>
+							<c:forEach var="parts" items="${product.parts}">
+								<h5>${parts.name}</h5>
+							</c:forEach>							
+						</div>
+					</div>
+					<br/>
+				</div>
+				<!-- -->
+				<div class="col-md-6" style="width:100%;">						
+							<div style="margin-top:10px;">
+								<c:if test="${product.stock !=0}"> 
+									<button class="btn btn-primary col-md-2" style="width:100%;">구매하기</button>	
+								</c:if>
+								<c:if test="${product.stock ==0}">
+									<button class="btn btn-primary col-md-2" disabled="disabled">구매하기</button>	
+								</c:if>
+							</div>
+						<div style="margin-top:10px;">
+							<div style="display:flex; justify-content: space-between; margin-top: 10px">
+								<button class="btn btn-primary" style="width:32%;">문의하기</button>
+								<button class="btn btn-primary" style="width:32%;">장바구니</button>
+								<button class="btn btn-primary" style="width:32%;">관련상품</button>
+							</div>
+						</div>
+				</div> 
+				
+			</div>
+		</div>
+	</div>
 <script type="text/javascript">
 	const fncCoupon = (()=>{
 	    const num = [];
@@ -194,87 +265,5 @@
 		 })
 	});
 </script>
-</head>
-<body>
-	<!-- ToolBar Start /////////////////////////////////////-->
-	<jsp:include page="../layer/header.jsp"></jsp:include>
-   	<!-- ToolBar End /////////////////////////////////////-->
-	<div class="container">
-		<div class="row">
-	  		<div class="col-md-6" style="height:700px">
-	  			<c:if test="${!empty product.name}">
-	  				<img src="../images/uploadFiles/${product.name}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
-	  			</c:if>
-	  			<c:if test="${empty product.name}">
-	  				<img src="http://folo.co.kr/img/gm_noimage.png" alt="..." class="img-thumbnail">
-	  			</c:if>
-				<div class="card-bottom" style="position: absolute; bottom: 0;">
-					<h3>평점 :
-						<c:if test="${!empty product.averageRating}">
-							${product.averageRating}
-						</c:if>
-						<c:if test="${empty product.averageRating}">
-							평가 없음
-						</c:if>
-					</h3>
-				</div>
-	  		</div>
-			<div class="col-md-6" style="height:700px">
-				<div style="text-align:center;"><h1 style="font-size:50px;">${product.name}</h1></div>
-				<div style="display:flex; justify-content: space-between;">
-					<div></div>
-					<h2>${product.price } 원</h2>
-				</div>
-				<div class="box-line">
-					<div style="display:flex; justify-content: space-between;">
-						<h4>${user.userId} 님을 위한 혜택</h4>
-						<input id="coupon" type="hidden" name="coupon" value="" />
-						<button class="btn btn-primary couponBtn" >쿠폰 받기</button>
-					</div>
-					<hr/>
-					<div>
-						<div style="display:flex; justify-content: space-between;">
-							<h5>최대 할인가</h5>
-							<h4 style="color:red;">${product.price }원</h4>
-						</div>
-						<div style="display:flex; justify-content: space-between;">
-							<h5>등록 일자</h5>
-							<h4>${product.regDate}</h4>
-						</div>
-						<div style="border: 1px solid #dce0e3; padding:10px; background-color: #f7f8fa; height:180px;">
-							<h4>간단 설명</h4>
-							<h5>${product.subContent}</h5>
-							<h4>들어간 재료</h4>
-							<c:forEach var="parts" items="${product.parts}">
-								<h5>${parts.name}</h5>
-							</c:forEach>							
-						</div>
-					</div>
-					<br/>
-				</div>
-				<div class="row">
-					<div class="card-bottom">
-						<c:if test="${product.stock !=0}">
-							<div style="padding:10px;">
-								<button class="btn btn-primary col-md-2" style="width:100%;">구매하기</button>	
-							</div>
-						</c:if>
-						<c:if test="${product.stock ==0}">
-							<div style="padding:10px;">
-								<button class="btn btn-primary col-md-2" style="width:100%;" disabled="disabled">구매하기</button>	
-							</div>
-						</c:if>
-						<div style="padding:10px; margin-top:10px;">
-							<div style="display:flex; justify-content: space-between; margin-top: 10px">
-								<button class="btn btn-primary" style="width:32%;">문의하기</button>
-								<button class="btn btn-primary" style="width:32%;">장바구니</button>
-								<button class="btn btn-primary" style="width:32%;">관련상품</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </body>
 </html>

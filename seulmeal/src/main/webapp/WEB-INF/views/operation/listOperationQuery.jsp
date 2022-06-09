@@ -23,7 +23,7 @@
 				<h1 class="pt-5 mb-4 fw-bold">문의 목록</h1><h5 class="align-bottom">문의 목록입니다.</h5>				
 			</div>
 			<div class="dropdown pt-5 mb-4 col-6">		  
-			<div class="input-group col-md-3" style="justify-content: flex-end;">
+			<div class="float-right" style="display:flex;">				
 				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 					문의 관련
 				</button>
@@ -73,7 +73,7 @@
 		</table>
 		
 		<hr/>
-		<a class="btn btn-primary float-end">문의 작성</a>
+		<a class="btn btn-primary float-right">문의 작성</a>
 		
 		<div class="row">
 			<div class="col-md-5"></div>

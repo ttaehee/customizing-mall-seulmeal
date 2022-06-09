@@ -2,10 +2,19 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<!-- jquery -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+
 <!-- bootStrap css -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 
 <!-- bootStrap icon -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
@@ -14,10 +23,6 @@
 <link href="../../resources/css/body.css">
 
 
-<!-- jquery -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
 
 <style>
 	.header{
@@ -32,6 +37,8 @@
 		top: 0;
 		width: 100%;
 	}
+	
+	ul.nav li.dropdown:hover > ul.dropdown-menu { display:block; margin:0; }
 </style>
 	<!-- 어드민 -->
 	<c:if test="${user.role == 1}">
@@ -58,7 +65,7 @@
 	      }
 	    </script>
 	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-	    <div class="col-md-3 text-end">
+	    <div class="float-right">
         	<button type="button" class="btn btn-outline-primary me-2" onclick="login()">Login</button>
         	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
       	</div>
@@ -71,7 +78,7 @@
 	      <span class="navbar-toggler-icon"></span>
 	    </button>
 	    <div class="collapse navbar-collapse" id="navbarNav">
-	      <ul class="navbar-nav">
+	      <ul class="navbar-nav nav">
 	      	<li class="nav-item dropdown">
 	          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 	            전체카테고리
@@ -106,18 +113,28 @@
 	        </li>
 	      </ul>
 	    </div>
-	    
-	    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 searchProduct">
-          <input type="search" class="form-control form-control-dark searchP" name="searchKeyword" placeholder="Search..." aria-label="Search">
-          <button onclick="searchProduct()">검색</button> 
-          <!--<button type="submit">검색</button>-->
-        </form>
-        
+	    <!-- 검색창 -->
+		<form class="searchProduct">
+			<div style="display:flex;">	
+				<div class="form-outline">
+					<input name="searchKeyword" type="search" class="form-control searchP" />
+				</div>		  
+				<button onclick="searchProduct()" type="button" class="btn btn-primary">
+					<i class="bi bi-search"></i>
+				</button>
+			</div>
+		</form>        
 	  </div>
 	</nav> 
 	
 <script type="text/javascript">
 	console.log($(".searchP").val())
+	
+	$(".searchP").on("keypress",(e)=>{
+		if(e.keyCode === 13){
+			$(".searchProduct").attr("action","/product/getListProduct").submit();
+		}
+	})
 	
 	function searchProduct(){
 		let url = "/product/getListProduct";
@@ -151,4 +168,8 @@
 		}
 	})
 	
+	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+	  return new bootstrap.Tooltip(tooltipTriggerEl)
+	})
 </script>	    
