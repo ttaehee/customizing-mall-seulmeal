@@ -94,10 +94,10 @@
 								<choose>
 									<when test="search.searchCondition == 1">views</when>
 									<when test="search.searchCondition == 2">like_count</when>
-									<when test="search.searchCondition == 3">reg_date</when>
+									<when test="search.searchCondition == 3">p.reg_date</when>
 								</choose>
 							</if>
-							 )inner_table
+							 DESC )inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
@@ -237,7 +237,8 @@
 	<insert id="insertComment" parameterType="Comment">
 		INSERT INTO 
 			comments(comment_no, user_id, nickname, post_no, content, layer, reg_date, parent_comment_no, status)
-		VALUES (seq_comment_no.nextval, 
+		VALUES 
+			(seq_comment_no.nextval, 
 			#{user.userId},
 			#{user.nickName:VARCHAR}, 
 			#{postNo}, 

@@ -1,6 +1,7 @@
 package shop.seulmeal.web.user;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +17,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import shop.seulmeal.common.Page;
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.user.UserService;
@@ -42,7 +45,7 @@ public class UserController {
 	}
 	
 	@PostMapping("insertUser")
-	public String insertUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+	public String insertUser(@ModelAttribute("user") User user, @DateTimeFormat(pattern="YYYY-MM-DD") Date birth, HttpSession session) throws Exception {
 		
 		System.out.println("::user : "+user);
 		userService.insertUser(user);
@@ -83,17 +86,17 @@ public class UserController {
 	}
 	
 	@GetMapping("getUpdateUser/{userId}")
-	public String getUser(@PathVariable("userId") String userId, Model model) throws Exception {
+	public String getUpdateUser(@PathVariable("userId") String userId, Model model) throws Exception {
 		
 		User user = userService.getUser(userId);
 		
 		model.addAttribute("user", user);
 		
-		return "user/getUser";
+		return "user/getUpdateUser";
 	}
 	
 	@PostMapping("getUpdateUser")
-	public String updateUser(@ModelAttribute("user") User user, Model model, HttpSession session) throws Exception {
+	public String getUpdateUser(@ModelAttribute("user") User user, Model model, HttpSession session) throws Exception {
 		
 		userService.updateUser(user);
 		
@@ -101,7 +104,7 @@ public class UserController {
 		if(sessionId.equals(user.getUserId())) {
 			session.setAttribute("user", user);
 		}
-		return "user/getUser";	
+		return "redirect:/user/getUpdateUser/"+sessionId;	
 	}
 	
 	@GetMapping("login")
@@ -127,7 +130,7 @@ public class UserController {
 	public String logout(HttpSession session) throws Exception {
 		
 		session.invalidate();
-		return "main";
+		return "redirect:/";
 	}
 	
 	
@@ -213,10 +216,72 @@ public class UserController {
 	}
 	
 	@GetMapping("deleteUser")
-	public String deleteUser() throws Exception {
+	public String deleteUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
-		return "user/deleteUser";
+		String sessionId=((User)session.getAttribute("user")).getUserId();
+		
+		userService.deleteUser(sessionId);
+		
+		session.invalidate();
+		
+		return "redirect:/";
 	}
+	
+	@GetMapping("listUser/{currentPage}")
+	public String getUserList( Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
+		
+		Search search = new Search();
+		if(currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		System.out.println(search);
+		
+		Map<String , Object> map=userService.getListUser(search);
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		System.out.println(resultPage);
+
+		model.addAttribute("list", map.get("list"));
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
+		
+		
+		return "user/listUser";
+	}
+	
+	@GetMapping("getUser/{userId}")
+	public String getUser(@PathVariable("userId") String userId, Model model) throws Exception {
+		
+		User user = userService.getUser(userId);
+		
+		model.addAttribute("user", user);
+		
+		return "user/getUser";
+	}
+	
+	@PostMapping("deleteUser")
+	public String deleteUser( String password, HttpSession session) throws Exception {
+	
+		if(password.equals(((User)session.getAttribute("user")).getPassword())) {
+			userService.deleteUser(((User)session.getAttribute("user")).getUserId());
+			
+			session.invalidate();
+			
+			return "redirect:/";
+		} else {
+			return "<script>alert('비밀번호가 일치하지 않습니다');</script>";
+		}
+		
+		
+		
+	}
+	
 	
 	@GetMapping("chargeuserPoint")
 	public String chargeUserPoint() throws Exception {
