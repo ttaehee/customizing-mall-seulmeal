@@ -47,11 +47,12 @@ public class OperationRestController {
 		comment.setContent(content);
 		System.out.println(comment);
 		operationService.insertAnswer(comment);
-		
-		attachments.setCommentNo(Integer.toString(comment.getCommentNo()));
-		
-		attachmentsService.insertAttachments(uploadfile, attachments);
-				
+		System.out.println(uploadfile.length);
+		if(uploadfile.length > 1) {
+			attachments.setCommentNo(Integer.toString(comment.getCommentNo()));
+			
+			attachmentsService.insertAttachments(uploadfile, attachments);
+		}
 		return comment;
 	}
 	

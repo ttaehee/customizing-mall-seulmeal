@@ -58,8 +58,8 @@ public class OperationController {
 	
 	@Value("${operation.query.pageSize}")
 	int pageSize;
-	
-	private String path ="C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/";
+		
+	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
 	
 	public OperationController() {
 		// TODO Auto-generated constructor stub
@@ -87,7 +87,7 @@ public class OperationController {
 		user.setUserId("jeong");
 		post.setUser(user);
 		
-		// 썸내일 저장
+		// �뜽�궡�씪 ���옣
 		if(!thumnailFile.isEmpty()) {
 			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
 			post.setThumnail(name);
@@ -96,13 +96,15 @@ public class OperationController {
 			thumnailFile.transferTo(newFileName);
 		}
 		
-		System.out.println("POST 가져온거 :"+post);
+		System.out.println("POST 媛��졇�삩嫄� :"+post);
 		operationService.insertOperation(post);
 		
-		attachments.setPostNo(Integer.toString(post.getPostNo()));
-		
-		attachmentsService.insertAttachments(uploadfile, attachments);
-		
+		System.out.println(uploadfile.length);
+		if(uploadfile.length > 1) {
+			attachments.setPostNo(Integer.toString(post.getPostNo()));
+			
+			attachmentsService.insertAttachments(uploadfile, attachments);
+		}
 		model.addAttribute("post",post);
 		
 		return "redirect:getOperation/"+post.getPostNo();		
@@ -113,17 +115,17 @@ public class OperationController {
 		System.out.println(postNo);
 		Post post = new Post();
 		post.setPostNo(postNo);
-		// 자료 가져오기
+		// �옄猷� 媛��졇�삤湲�
 		post = operationService.getOperation(post);
 		
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("postNo", post.getPostNo());
 		
-		// 첨부파일 가져오기
+		// 泥⑤��뙆�씪 媛��졇�삤湲�
 		List<Attachments> list = attachmentsService.getAttachments(map);
 		post.setAttachments(list);
 		
-		// 문의사항일시 답변가져오기
+		// 臾몄쓽�궗�빆�씪�떆 �떟蹂�媛��졇�삤湲�
 		if(post.getPostStatus().equals("3")) {
 			List<Comment> cList = operationService.getListAnswer(post.getPostNo());
 			post.setComments(cList);
@@ -161,7 +163,7 @@ public class OperationController {
 	
 	@PostMapping("updateOperation")
 	public String updateOperation(Post post, Model model) {
-		System.out.println("업데이트 수정할 내용 : "+post);
+		System.out.println("�뾽�뜲�씠�듃 �닔�젙�븷 �궡�슜 : "+post);
 		operationService.updateOperation(post);
 		
 		model.addAttribute("post",post);

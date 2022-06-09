@@ -122,4 +122,18 @@ public class ProductController {
 		
 		return "/product/listProduct";
 	}
+	
+	@GetMapping(value = {"updateProduct/{productNo}"})
+	public String updateProduct(@PathVariable int productNo, Model model) throws Exception {
+		Product product = productService.getProduct(productNo);
+		model.addAttribute("product", product);
+		return "forward:/product/updateProduct/{productNo}";
+	}
+	
+	@PostMapping(value = {"updateProduct/{productNo}"})
+	public String updateProduct(@PathVariable int productNo, Product product) throws Exception {
+		productService.updateProduct(product);
+		return "redirect:/product/getProduct/"+productNo;
+	}
+	
 }

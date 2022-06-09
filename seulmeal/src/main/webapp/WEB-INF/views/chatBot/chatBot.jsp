@@ -30,7 +30,7 @@ body {
 	  width: 100px;
 	  height: 100px;
 	  top: 50px;
-	  background-image: url('../../resources/attachments/image/tetris.png');
+	  background-image: url('../../resources/attachments/image/free-icon-chatbot-2040946.png');
 	  color: #fffffff;
 	  margin-top:500px;
 	  background-repeat: no-repeat;
@@ -43,10 +43,10 @@ body {
 <body>
 <div style="display:flex; justify-content:space-between; margin-left:90%;">
 	<div class="sideBanner psBtn" >
-		<span class="txt-label">
+		<!-- <span class="txt-label">
 			seulMeal 챗봇
 		</span>
-	</div>
+	</div> -->
 </div>
 
 <div id="ps" style="display:none;">
@@ -153,8 +153,8 @@ body {
 			$(".pNo").val(pNo);
 			$("#ps").dialog({
 				title : "seulMeal ChatBot!!",
-				width : 500,
-				height : 300,
+				width : 700,
+				height : 700,
 				modal : true
 			})
 		})

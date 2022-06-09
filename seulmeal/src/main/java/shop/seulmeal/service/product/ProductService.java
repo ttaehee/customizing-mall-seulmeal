@@ -15,6 +15,8 @@ public interface ProductService {
 	public void insertProduct(Product product) throws Exception;
 
 	public void updateProduct(Product product) throws Exception;
+	
+	public int updateProductStock(int productNo, int stock) throws Exception;
 
 	public Map<String, Object> getListProduct(Search search) throws Exception;
 
@@ -66,7 +68,10 @@ public interface ProductService {
 	
 	// ProductLike 관련
 	public void insertProductLike(Like like) throws Exception;
-	public Map<String, Object> getListProductLike(int userId) throws Exception;
+	
+	public Map<String, Object> getListProductLike(Search search, String userId) throws Exception;
+	
 	public void deleteProductLike(Like like) throws Exception;
 
 }
+

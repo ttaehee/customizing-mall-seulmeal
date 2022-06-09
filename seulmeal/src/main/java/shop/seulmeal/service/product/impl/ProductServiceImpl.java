@@ -39,6 +39,13 @@ public class ProductServiceImpl implements ProductService {
 	public void updateProduct(Product product) throws Exception {
 		productMapper.updateProduct(product);
 	}
+	
+	public int updateProductStock(int productNo, int stock) throws Exception {
+		Product product = productMapper.getProduct(productNo);
+		product.setStock(stock);
+		productMapper.updateProduct(product);
+		return stock;
+	}
 
 	@Override
 	public Map<String, Object> getListProduct(Search search) throws Exception {
@@ -77,14 +84,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public List<Foodcategory> getListFoodCategory() throws Exception {
-		List<Foodcategory> list = productMapper.getListFoodCategory();
-//		int totalCount = productMapper.getTotalFoodCategoryCount();
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("list",list);
-//		map.put("totalCount", new Integer(totalCount));
-		
-		return list;
+		return (List<Foodcategory>)productMapper.getListFoodCategory();
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {
@@ -100,10 +100,6 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void insertReview(Review review) throws Exception {
 		productMapper.insertReview(review);
-		Product product = productMapper.getProduct(review.getProduct().getProductNo());
-		product.setReviewCount(productMapper.getReviewCountInProduct(review.getProduct().getProductNo()));
-		product.setAverageRating(productMapper.getAverageRating(review.getProduct().getProductNo()));
-		productMapper.updateProduct(product);
 	}
 
 	@Override
@@ -141,7 +137,6 @@ public class ProductServiceImpl implements ProductService {
 	// Parts 관련
 	@Override
 	public int insertParts(Parts parts) throws Exception {
-		
 		return productMapper.insertParts(parts);
 	}
 
@@ -194,17 +189,16 @@ public class ProductServiceImpl implements ProductService {
 	public void insertProductLike(Like like) throws Exception{
 		productMapper.insertProductLike(like);
 	}
-	public Map<String, Object> getListProductLike(int userId) throws Exception{
-		Search search = new Search();
-		search.setCurrentPage(1);
-		search.setPageSize(10);
-		
+	public Map<String, Object> getListProductLike(Search search, String userId) throws Exception{
+	
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
 		map.put("search", search);
-
-		map.put("list", productMapper.getListProductLike(search));
+		List<Like> list = productMapper.getListProductLike(map);
+		map.remove("userId", userId);
+		map.put("list", list);
 		map.put("totalCount", productMapper.getTotalProductLikeCount(userId));
-
+		
 		return map;
 	}
 	public void deleteProductLike(Like like) throws Exception{

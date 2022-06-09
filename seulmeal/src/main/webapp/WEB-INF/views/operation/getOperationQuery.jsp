@@ -16,8 +16,7 @@
 	}
 	
 	function ajaxAnswer(){
-		const form = $("#answerForm")[0];
-		
+		const form = $("#answerForm")[0];		
 		const formData = new FormData(form);
 		
 		$.ajax({
