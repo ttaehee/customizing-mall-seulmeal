@@ -55,7 +55,19 @@
 				AND p.foodcategory_no = #{searchCondition}
 			</if>
 		</where>
-		ORDER BY product_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
+		ORDER BY 
+			<choose>
+				<when test="searchSort = '1'"> p.reg_date ASC</when>
+				<when test="searchSort = '2'"> p.reg_date DESC</when>
+				<when test="searchSort = '3'"> p.price ASC</when>
+				<when test="searchSort = '4'"> p.price DESC</when>
+				<when test="searchSort = '5'"> p.like_count ASC</when>
+				<when test="searchSort = '6'"> p.like_count DESC</when>
+				<when test="searchSort = '7'"> p.review_count ASC</when>
+				<when test="searchSort = '8'"> p.review_count DESC</when>
+			<otherwise>p.name ASC</otherwise>
+			</choose>
+			 ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
 
@@ -81,8 +93,8 @@
 		UPDATE product
 		<set>
 			foodcategory_no = #{foodCategory.foodCategoryNo:INTEGER},
-			name = #{name:VARCAHR},
-			sub_content = #{subContent:VARCAHR},
+			name = #{name:VARCHAR},
+			sub_content = #{subContent:VARCHAR},
 			price = #{price:INTEGER},
 			calorie = #{calorie:INTEGER},
 			content = #{content:VARCHAR},
@@ -103,11 +115,6 @@
 		<set> status = 0	</set>
 		WHERE product_no = #{productNo}
 	</update>
-
-	<select id="getAverageRating" resultType="double">
-		SELECT ROUND(AVG(rating), 1) AS Avg_Rate FROM
-		(SELECT rating FROM review WHERE review.product_No = #{productNo} ) COUNT
-	</select>
 
 
 	<!-- ========== FOOD CATEGORY ========== -->
@@ -163,20 +170,45 @@
 	</resultMap>
 
 	<insert id="insertReview">
-		INSERT INTO review (product_no, review_no, user_id,
-		title, content, rating, reg_date, status)
-		VALUES (#{product.productNo},
-		seq_review_no.NEXTVAL, #{user.userId}, #{title}, #{content},
-		#{rating}, SYSDATE, '0')
+	 { call
+		declare
+        begin
+        
+		INSERT INTO review (product_no, review_no, user_id, title, content, rating, reg_date, status)
+		VALUES (#{product.productNo}, seq_review_no.NEXTVAL, #{user.userId}, #{title}, #{content},	#{rating}, SYSDATE, '0');
+		
+		UPDATE product
+		<set>
+		review_count = (SELECT count(*) FROM review WHERE review.product_no = #{product.productNo} AND review.status = '0' ),
+		average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product.product_no = #{product.productNo} AND review.status = '0') COUNT)
+		</set>
+		<where>
+		product_no = #{product.productNo}
+		</where>;
+	end }
 	</insert>
 
 	<update id="updateReview">
+	 { call
+		declare
+        begin
+        
 		UPDATE review
-		<set> title = #{title},
+		<set>
+			title = #{title},
 			content = #{content},
 			rating = #{rating}
 		</set>
-		WHERE review_no = #{reviewNo}
+		WHERE review_no = #{reviewNo};
+		
+		UPDATE product
+		<set>
+		average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product.product_no = #{review.productNo} AND review.status = '0' ) COUNT)
+		</set>
+		<where>
+		product_no = #{product.productNo}
+		</where>;
+	end }
 	</update>
 
 	<select id="getReview" resultMap="reviewSelectMap">
@@ -195,10 +227,6 @@
 
 	<select id="getTotalReviewCount" resultType="int">
 		SELECT COUNT(*) FROM ( SELECT review_no , title , rating, reg_date, user_id FROM review ) countTable
-	</select>
-
-	<select id="getReviewCountInProduct" resultType="int">
-		SELECT count(*) FROM review WHERE review.product_No = #{productNo}
 	</select>
 
 	<update id="deleteReview">
@@ -339,28 +367,32 @@
 	</resultMap>
 	
 	<insert id="insertProductLike" parameterType="Like">
+	{	call	declare	begin
+	
 		INSERT INTO
 			likes(like_no, user_id, product_no)
 		VALUES
-			(seq_like_no.nextval, #{userId}, #{productNo:INTEGER})
+			(seq_like_no.nextval, #{userId}, #{productNo});
 			
 		UPDATE product 
 		<set> 
-			likeCount = (SELECT COUNT(*) FROM likes 
+			like_count = (SELECT COUNT(*) FROM likes 
 			<where>
-			 		user_id = #{userId} AND product_no = #{productNo}
+			 		product_no = #{productNo}
 			</where>
-			 		) like_count_reload
+			 		)
 		</set>
 		<where>
 			product_no = #{productNo}
-		</where>
+		</where>;
+		
+	end	}
+		
 	</insert>
 
-	<select id="getListProductLike" resultMap="p_likeSelectMap">
+	<select id="getListProductLike" parameterType="Map" resultMap="p_likeSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
-		( SELECT ROWNUM, user_id, product_no FROM likes WHERE user_id = #{userId}
-		ORDER BY like_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
+		( SELECT p.name FROM product p, likes l WHERE user_id = #{userId} AND p.product_no = l.product_no ORDER BY like_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE	row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
 	
@@ -369,12 +401,26 @@
 	</select>
 
 	<delete id="deleteProductLike" parameterType="Like">
+	{ call declare begin
 		DELETE FROM 
 			likes
 		<where> 
 			user_id = #{userId}
 			AND product_no = #{productNo}
-		</where> 
+		</where>;
+		
+		UPDATE product 
+		<set> 
+			like_count = (SELECT COUNT(*) FROM likes 
+			<where>
+			 		product_no = #{productNo}
+			</where>
+			 		)
+		</set>
+		<where>
+			product_no = #{productNo}
+		</where>;
+		end }
 	</delete>
 	
-</mapper>
+	</mapper>

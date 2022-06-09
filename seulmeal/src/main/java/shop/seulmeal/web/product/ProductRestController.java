@@ -45,4 +45,10 @@ public class ProductRestController {
 		System.out.println(parts);
 		return parts;
 	}
+	
+	@PostMapping("updateProductStock")
+	public int updateProductStock(int productNo, int stock) throws Exception {
+		productService.updateProductStock(productNo, stock);
+		return stock;
+	}
 }
