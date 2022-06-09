@@ -66,8 +66,30 @@
 	    </script>
 	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 	    <div class="float-right">
+        	
+        	<c:if test="${ empty user }">
         	<button type="button" class="btn btn-outline-primary me-2" onclick="login()">Login</button>
         	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
+        	</c:if>
+        	
+        	<c:if test="${ !empty user }">
+        	 <li class="nav-item dropdown">
+	          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	            ${user.userName}
+	          </a>
+	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	            <li><a class="dropdown-item" href="user/getUpdateUser/{user.userId}">내 정보</a></li>
+	            <li><a class="dropdown-item" href="user/listUserPoint/{currentPage}">내 포인트</a></li>
+	            <li><a class="dropdown-item" href="#">내 구매내역</a></li>
+	            <li><a class="dropdown-item" href="#">내 게시글</a></li>
+	           <c:if test="${user.role == 1}">
+	           <li><a class="dropdown-item" href="#">관리자페이지</a></li>
+	           </c:if>
+	            <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
+	          </ul>
+	        </li>
+        	</c:if>
+        	
       	</div>
 	</div>
 	</div>

@@ -43,17 +43,19 @@ public interface UserService {
 	
 	public int naverLogin() throws Exception;
 	
-	public int insertBlackList(BlackList blackList) throws Exception;
-	
-	public int updateBlackList(BlackList blackList) throws Exception;
-	
 	public int insertPoint(Point point) throws Exception;
 	
-	public Map<String, Object> getListPoint(Search search) throws Exception;
+	public Map<String, Object> getListPoint(Search search, String userId) throws Exception;
 	
 	public User getProfile(String userId) throws Exception;
 	
 	public int updateProfile(User user) throws Exception;
+	
+	public int updateBlockCount(String userId) throws Exception;
+	
+	public void updateBlackList() throws Exception;
+	
+	public void updateGrade() throws Exception;
 
 	
 }
