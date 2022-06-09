@@ -22,10 +22,10 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 50MB
-      location: ./src/main/resources/attachments/
+      location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/
       
 
-  datasource:
+  datasource:    
     url: jdbc:log4jdbc:oracle:thin:@db202204092247_medium?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247
     username: admin
     password: Vywjdans!234
