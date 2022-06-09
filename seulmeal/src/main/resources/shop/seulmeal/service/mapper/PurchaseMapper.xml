@@ -10,11 +10,11 @@
 		<result property="customProductNo" 		column="customproduct_no"  jdbcType="NUMERIC"/> 
 		<result property="productPartsNo" 		column="productparts_no"   jdbcType="NUMERIC"/>
 		<result property="minusName" 			column="minus_name" 	   jdbcType="VARCHAR"/>
-		<result property="gram" 				column="gram" 			   jdbcType="NUMERIC"/> 
 	</resultMap>
 	
 	<resultMap id="plusPartsSelectMap" type="customParts">
 		<result property="customPartsNo" 		column="customparts_no"   jdbcType="NUMERIC"/>
+		<result property="gram" 		column="gram"   jdbcType="NUMERIC"/>
 		<association property="parts" javaType="parts" >
 			<result property="partsNo" 			column="parts_no" 		  jdbcType="NUMERIC"/>
 			<result property="name" 			column="name" 			  jdbcType="VARCHAR"/>
@@ -47,7 +47,7 @@
 			<result property="productNo" 		column="product_no" 		jdbcType="NUMERIC"/>
 			<result property="name" 			column="name" 				jdbcType="VARCHAR"/>
 			<result property="thumbnail" 		column="thumbnail" 			jdbcType="VARCHAR"/>
-			<result property="price" 			column="price" 				jdbcType="NUMERIC"/>
+			<result property="price" 			column="product_price" 		jdbcType="NUMERIC"/>
 			<result property="calorie" 			column="calorie" 			jdbcType="NUMERIC"/>
 		</association>
 		<collection property="minusParts" column="customproduct_no" javaType="java.util.ArrayList" 
@@ -61,7 +61,6 @@
 	<resultMap id="purchaseSelectMap" type="purchase">
 		<result property="purchaseNo" 			column="purchase_no" 		jdbcType="NUMERIC"/> 
 		<result property="price" 				column="price"		 		jdbcType="NUMERIC"/> 
-		<result property="deliveryPrice" 		column="delivery_price"     jdbcType="NUMERIC"/> 
 		<result property="address" 				column="address" 			jdbcType="VARCHAR"/> 
 		<result property="name" 				column="name" 				jdbcType="VARCHAR"/> 
 		<result property="phone" 				column="phone" 				jdbcType="VARCHAR"/> 
@@ -74,8 +73,11 @@
 		<result property="paymentCondition" 	column="payment_condition" 	jdbcType="CHAR"/> 
 		<result property="imp_uid" 				column="imp_uid" 			jdbcType="VARCHAR"/> 
 		<result property="amount" 				column="amount" 			jdbcType="NUMERIC"/> 
+		<result property="email" 				column="email" 				jdbcType="VARCHAR"/>
 		<association property="user" javaType="user" >
 			<result property="userId" 			column="user_id" 			jdbcType="VARCHAR"/>
+			<result property="userName" 		column="user_name" 			jdbcType="VARCHAR"/>
+			<result property="phone" 			column="phone" 				jdbcType="VARCHAR"/>
 		</association>
 		<collection property="customProduct" column="purchase_no" javaType="java.util.ArrayList" 
 					ofType="customProduct" select="getListCustomProductByPurchaseNo">
@@ -183,8 +185,9 @@
 	
 	<!--커스터마이징옵션 수정페이지에서 출력 -->
 	<select id="getCustomProduct" resultMap="customProductSelectMap" parameterType="int">
-		SELECT *
-		FROM customproduct
+		SELECT c.count, c.price, p.name, p.price product_price, p.thumbnail
+		FROM customproduct c, product p
+		WHERE c.product_no=p.product_no
 		<where>
 			customproduct_no = #{customProductNo}
 		</where>
@@ -236,21 +239,17 @@
 	<!-- purchase -->
 	<insert id="insertPurchase">
 		INSERT INTO purchase
-		(purchase_no, user_id, price, delivery_price, address, name, phone, 
-		message, purchase_status, reason, image, status, reg_date, 
-		payment_condition, imp_uid, amount, email)
-		values((seq_purchase_no.NEXTVAL),#{user.userId},#{price:NUMERIC}, 
-		#{deliveryPrice:NUMERIC}, #{address:VARCHAR}, #{name:VARCHAR}, 
-		#{phone:VARCHAR}, #{message:VARCHAR}, '0', 
-		#{reason:VARCHAR}, #{image:VARCHAR}, '0', 
-		SYSDATE, #{paymentCondition:CHAR},#{imp_uid:VARCHAR}, 
-		#{amount:NUMERIC}, {email:VARCHAR})
+		(purchase_no, user_id, price, address, name, phone, 
+		message, status, reg_date, payment_condition, email)
+		values((seq_purchase_no.NEXTVAL),#{user.userId:VARCHAR},#{price:NUMERIC}, 
+		#{address:VARCHAR}, #{name:VARCHAR}, #{phone:VARCHAR}, #{message:VARCHAR},
+		'1', SYSDATE, #{paymentCondition:CHAR}, #{email:VARCHAR})
 		<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
 			SELECT seq_purchase_no.CURRVAL FROM DUAL
 		</selectKey>
 	</insert>
 	
-	<select id="getPurchase" resultType="purchase">
+	<select id="getPurchase" resultMap="purchaseSelectMap">
 		SELECT * FROM purchase
 		<where>
 			purchase_no = #{purchaseNo}
@@ -287,7 +286,7 @@
 	<update id="updatePurchase">
 		UPDATE purchase
 		<set>
-			imp_uid=#{imp_uid:VARCHAR}, amount=#{amount:VARCHAR}
+			imp_uid=#{imp_uid:VARCHAR}, amount=#{amount:VARCHAR}, purchase_status='1', status='0'
 		</set>
 		<where>
 			purchase_no = #{purchaseNo}

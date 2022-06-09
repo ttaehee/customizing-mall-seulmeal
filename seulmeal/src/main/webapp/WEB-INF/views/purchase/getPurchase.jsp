@@ -1,188 +1,99 @@
-
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-    
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-    
-<%-- /////////////////////// EL / JSTL Àû¿ëÀ¸·Î ÁÖ¼® Ã³¸® ////////////////////////
-<%@ page import="com.model2.mvc.service.domain.*" %>
-    
-<% 
-Purchase purchase=(Purchase)request.getAttribute("purchase");
-String userId=((User)session.getAttribute("user")).getUserId();
-%>   /////////////////////// EL / JSTL Àû¿ëÀ¸·Î ÁÖ¼® Ã³¸® //////////////////////// --%>
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<html>
+<!DOCTYPE html>
+<html lang="ko">
+
 <head>
-<title>±¸¸Å»ó¼¼Á¶È¸</title>
-
-<link rel="stylesheet" href="/css/admin.css" type="text/css">
+	<meta charset="UTF-8">
+	<title>êµ¬ë§¤ ìƒì„¸</title>
 
 </head>
 
-<body bgcolor="#ffffff" text="#000000">
+<body>
+<jsp:include page="../layer/header.jsp"></jsp:include>
 
-<table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width="15" height="37">
-			<img src="/images/ct_ttl_img01.gif"	width="15" height="37"/>
-		</td>
-		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left: 10px;">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="93%" class="ct_ttl01">±¸¸Å»ó¼¼Á¶È¸</td>
-					<td width="20%" align="right">&nbsp;</td>
-				</tr>
-			</table>
-		</td>
-		<td width="12" height="37">
-			<img src="/images/ct_ttl_img03.gif"	width="12" height="37"/>
-		</td>
-	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top: 13px;">
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			¹°Ç°¹øÈ£ <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="105">
-					${purchase.purchaseProd.prodNo}</td>
-					<td></td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			±¸¸ÅÀÚ¾ÆÀÌµğ <img	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${user.userId}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-
-	<tr>
-		<td width="104" class="ct_write">±¸¸Å¹æ¹ı</td>
-		<td bgcolor="D6D6D6" width="${purchase.paymentOption}"></td>
-		<td class="ct_write01">
-		<%-- /////////////////////// EL / JSTL Àû¿ëÀ¸·Î ÁÖ¼® Ã³¸® ////////////////////////
-			<%if(purchase.getPaymentOption().trim().equals("1")){%>
-				Çö±İ±¸¸Å
-			<% }else{ %>
-			    ½Å¿ë±¸¸Å
-			<%} %>	/////////////////////// EL / JSTL Àû¿ëÀ¸·Î ÁÖ¼® Ã³¸® //////////////////////// --%>
-			
+	<h2>êµ¬ë§¤ì •ë³´</h2>
+	êµ¬ë§¤ë²ˆí˜¸ : ${purchase.purchaseNo} <br/>
+	êµ¬ë§¤ì¼ì : ${purchase.regDate} <br/>
+	êµ¬ë§¤ìì´ë¦„ : ${purchase.name} <br/>
+	êµ¬ë§¤ì íœ´ëŒ€ì „í™” : ${purchase.phone} <br/>
+	êµ¬ë§¤ì²˜ë¦¬ìƒíƒœ : 
 		<c:choose>
-		    <c:when test="${purchase.paymentOption eq '1'}">
-		    <a>Çö±İ±¸¸Å</a>
-		    </c:when>
-		    <c:when test="${purchase.paymentOption eq '2'}">
-		    <a>½Å¿ë±¸¸Å</a>
-		    </c:when>
-		</c:choose>
-		
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">±¸¸ÅÀÚÀÌ¸§</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${purchase.receiverName}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">±¸¸ÅÀÚ¿¬¶ôÃ³</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${purchase.receiverPhone}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">±¸¸ÅÀÚÁÖ¼Ò</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${purchase.divyAddr}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">±¸¸Å¿äÃ»»çÇ×</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${purchase.divyRequest}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">¹è¼ÛÈñ¸ÁÀÏ</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${purchase.divyDate}</td>
-	</tr>
-
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-
-	<tr>
-		<td width="104" class="ct_write">ÁÖ¹®ÀÏ</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${purchase.orderDate}</td>
-	</tr>
-
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
+			<c:when test="${purchase.purchaseStatus eq '0'}">ìƒí’ˆì¤€ë¹„ì¤‘</c:when>
+			<c:when test="${purchase.purchaseStatus eq '1'}">ë°°ì†¡ì¤‘</c:when>
+			<c:when test="${purchase.purchaseStatus eq '2'}">ë°°ì†¡ì™„ë£Œ</c:when>
+			<c:when test="${purchase.purchaseStatus eq '3'}">êµ¬ë§¤í™•ì •</c:when>
+		</c:choose><br/>
+	ì ë¦½ í¬ì¸íŠ¸ :  <br/><br/>
 	
-</table>
+	<h2>ê²°ì œì •ë³´</h2>
+	ì´ êµ¬ë§¤ê¸ˆì•¡ : 100 <br/>
+	í¬ì¸íŠ¸ì‚¬ìš© :  0 <br/>
+	ì´ ê²°ì œê¸ˆì•¡ : ${purchase.amount} <br/>
+	ê²°ì œë°©ë²• : 
+		<c:choose>
+			<c:when test="${purchase.paymentCondition eq '0'}">ì¹´ë“œê²°ì œ</c:when>
+			<c:when test="${purchase.paymentCondition eq '1'}">í¬ì¸íŠ¸ê²°ì œ</c:when>
+			<c:when test="${purchase.paymentCondition eq '2'}">í¬ì¸íŠ¸ê²°ì œ + ì¹´ë“œê²°ì œ</c:when>
+		</c:choose><br/><br/>
+		<div>${purchase }</div>
+	 <table class="table table-hover table-striped" >
+      
+        <thead>
+          <tr>
+            <th align="center">êµ¬ë§¤ì¼ì[êµ¬ë§¤ë²ˆí˜¸]</th>
+            <th align="center">ì´ë¯¸ì§€</th>
+            <th align="center">ìˆ˜ëŸ‰</th>
+            <th align="center" >ìƒí’ˆëª…</th>
+            <th align="center" >ì˜µì…˜</th>
+            <th align="center">ìƒí’ˆêµ¬ë§¤ê¸ˆì•¡</th>
+            <th align="center">êµ¬ë§¤ì²˜ë¦¬ìƒíƒœ</th>
+          </tr>
+        </thead>
+       
+		<tbody>
+			<c:forEach var="cpd" items="${purchase.customProduct}">
+			<tr class="ct_list_pop">
+			    <td align="left">${purchase.regDate}(${purchase.purchaseNo})</td>
+				  <td align="left" data-value="${cpd.product.productNo}" title="Click : ìƒí’ˆí™•ì¸" >${cpd.product.thumbnail}</td>
+				  <td align="left">${cpd.count}</td>
+				  <td align="left">${cpd.product.name}</td>
+				  <td align="left">
+				  <c:forEach var="pp" items="${cpd.plusParts}">
+				  	+ ${pp.parts.name}, ${pp.parts.price}, ${pp.gram}<br/>
+				  	</c:forEach>
+				  <c:forEach var="mp" items="${cpd.minusParts}">
+				  	- ${mp.minusName}
+				  	</c:forEach> 
+				  	 </td>
+				  <td align="left">${cpd.price}</td>
+		 	  
+		 	  
+		 	  <td align="left">
+				<c:choose>
+					<c:when test="${purchase.purchaseStatus eq '0'}">ìƒí’ˆì¤€ë¹„ì¤‘</c:when>
+					<c:when test="${purchase.purchaseStatus eq '1'}">ë°°ì†¡ì¤‘</c:when>
+					<c:when test="${purchase.purchaseStatus eq '2'}">ë°°ì†¡ì™„ë£Œ</c:when>
+					<c:when test="${purchase.purchaseStatus eq '3'}">êµ¬ë§¤í™•ì •</c:when>
+				</c:choose><br/>
+				</td>
+		
+			  </tr>  
+			  </c:forEach> 
+        </tbody>
+      
+      </table>
+	
+	<h2>ë°°ì†¡ì •ë³´</h2>
+	ë°›ìœ¼ì‹œëŠ”ë¶„ : ${purchase.name} <br/>
+	ì£¼ì†Œ : ${purchase.address} <br/>
+	íœ´ëŒ€ì „í™” : ${purchase.phone} <br/>
+	ë°°ì†¡ë©”ì‹œì§€ : ${purchase.message} <br/>
+	
+	<button id="ok">í™•ì¸</button>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top: 10px;">
-	<tr>
-		<td width="53%"></td>
-		<td align="right">
-			<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01"	style="padding-top: 3px;">
-						<a href="/updatePurchaseView.do?tranNo=${purchase.tranNo}">¼öÁ¤</a>
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
-					</td>
-					<td width="30"></td>
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01"	style="padding-top: 3px;">
-						<a href="javascript:history.go(-1);">È®ÀÎ</a>
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif"width="14" height="23"/>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-
+<jsp:include page="../layer/footer.jsp"></jsp:include>	
 </body>
 </html>

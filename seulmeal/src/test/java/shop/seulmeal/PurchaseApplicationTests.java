@@ -251,10 +251,9 @@ class PurchaseApplicationTests {
 		Purchase purchase=new Purchase();
 		User user=new User();
 		user.setUserId("ghm4905");
-		user.setUserName("김태히");
-		user.setPhone("4905");
 		
 		purchase.setUser(user);
+		purchase.setPhone("4905");
 		purchase.setPrice(10000);
 		purchase.setAddress("강남");
 		purchase.setName("홍길동");
@@ -270,19 +269,15 @@ class PurchaseApplicationTests {
 		assertEquals(purchase.getPrice(), 10000);
 	}
 	
-	//@Test
+	@Test
 	void getPurchase() {
+		
 		Purchase purchase=new Purchase();
-		
-		purchase.setPurchaseNo(2);
-		
 		purchase=purchaseMapper.getPurchase(2);
 		System.out.println("결과 : "+purchase);
-		
-		assertEquals(purchase.getPrice(), 10000);
 	}
 	
-	@Test
+	//@Test
 	void getListPurchase() throws Exception {
 		
 		Search search = new Search();
