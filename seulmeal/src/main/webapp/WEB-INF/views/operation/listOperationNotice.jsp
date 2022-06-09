@@ -5,29 +5,56 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <title>공지사항 목록</title>
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
-		<div class="row">
-			<a href="/operation/insertOperation/1">공지 등록</a>
-			<hr/>
-			<div class="col-md-3"></div>
-			<div class="col-md-6" style="width: 100%;">
-				<c:forEach var="post" items="${list}">
-					<c:set var="i" value="${i+1}" />
-					<div class="row">
-						<div class="col-md-1">${i}</div>
-						<div class="col-md-3"><a href="/operation/getOperation/${post.postNo}">${post.title}</a></div>
-						<div class="col-md-3">${post.regDate}</div>
-						<div class="col-md-2"><button>삭제</button></div>
-						<hr/>
-					</div>
-				</c:forEach>
+		<div class="row" style="border-top: thick double #BAD7DF; border-bottom: thick double #BAD7DF; margin-bottom: 1rem; margin-top: 2rem;">
+			<div class="col-6">
+				<h1 class="pt-5 mb-4 fw-bold">공지사항</h1>
+			</div>
+			<div class="dropdown pt-5 mb-4 col-6">		  
+			<div class="float-right" style="display:flex;">
+				<div class="form-outline">
+					<input type="search" id="form1" class="form-control" />
+				</div>		  
+					<button type="button" class="btn btn-primary">
+					<i class="bi bi-search"></i>
+				</button>
 			</div>
 		</div>
+		</div>
+		
+		
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>날짜</th>
+					<th>조회수</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="post" items="${list}">
+				<tr>
+					<th>${post.postNo}</th>
+					<th>
+						<a href="/operation/getOperation/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
+					</th>
+					<th>${post.user.userId}</th>
+					<th>${post.regDate}</th>
+					<th>${post.views}</th>
+				</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		
+		<hr/>
+		<a class="btn btn-primary float-right" href="/operation/insertOperation/1">문의 작성</a>		
+		
 	</div>
 	<jsp:include page="../common/pageNavigator_new.jsp"/>
 <jsp:include page="../layer/footer.jsp"></jsp:include>

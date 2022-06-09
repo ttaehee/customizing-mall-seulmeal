@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="../../resources/css/body.css">
+<link rel="stylesheet" href="../../resources/css/body.css">
 <meta charset="UTF-8">
 <title>SeulMeal Main</title>
 <style type="text/css">	
@@ -22,8 +22,25 @@
 	}	
 	
 	.carousel-control.left, .carousel-control.right {
-    background-image: none
-}
+	    background-image: none
+	}
+
+	
+	.bi {
+		vertical-align: -.125em;
+		fill: currentColor;
+	}
+	
+	.text-shadow-1 { 
+		text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25);
+	}
+	
+	.card-cover {
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: cover;
+	}
+	
 </style>
 </head>
 <body> <!-- #BAD7DF -->
@@ -31,31 +48,42 @@
 	
 	<!-- carousel iamge-slie -->
 	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-  </ol>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img class="d-block w-100" src="resources/attachments/image/tetris.png" alt="First slide" style="height:500px;">
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="resources/attachments/image/tetris.png" alt="Second slide" style="height:500px;">
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="resources/attachments/image/tetris.png" alt="Third slide" style="height:500px;">
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
+		<ol class="carousel-indicators">
+			<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+			<c:forEach var="post" items="${listE}">
+				<c:set var="i" value="${ i+1 }" />
+				<li data-target="#carouselExampleIndicators" data-slide-to="${i}"></li>
+			</c:forEach>
+		</ol>
+		<div class="carousel-inner">
+			<div class="carousel-item active">
+				<img class="d-block w-100" src="../../resources/attachments/image/tetris.png" alt="First slide" style="height:500px;">
+			</div>
+			<c:forEach var="post" items="${listE}">
+				<div class="carousel-item" data-value="${post.postNo}" id="eventBanner">
+					<c:if test="${post.thumnail == null}">
+						<img class="d-block w-100" src="../../resources/attachments/image/tetris.png" alt="First slide" style="height:500px;">
+					</c:if>
+					<c:if test="${post.thumnail != null}">
+						<img class="d-block w-100" src="../../resources/attachments/${post.thumnail}" alt="Second slide" style="height:500px;">
+					</c:if>			
+					<div class="carousel-caption d-none d-md-block">
+						<h2 class="display-6 fw-bold">${post.title}</h2>
+						<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}shortContent</h2>
+						<h2 class="endDateView">~${post.endDate}</h2>
+					</div>
+				</div>
+			</c:forEach>   
+		</div>
+		<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		</a>
+		<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	</div>
 	
 	<!-- 
 	<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
@@ -98,7 +126,7 @@
 	</div>
 	 -->
 	<main role="main">
-	<section class="jumbotron text-center">
+	<section class="text-center">
 	<div class="container px-4 py-5" id="custom-cards">
     <h2 class="pb-2 border-bottom">이 상품 어떠세?</h2>
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
@@ -147,6 +175,12 @@
 		$('.carousel').carousel({
 		  interval: 1000
 		})
+		
+		$("#eventBanner").on("click",function(){
+			const no = $(this).data("value");
+			console.log(no)
+			window.location.href="/operation/getOperation/"+no;
+		});
 	})
 </script>
 </body>

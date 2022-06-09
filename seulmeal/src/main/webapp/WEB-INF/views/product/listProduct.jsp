@@ -38,7 +38,7 @@
 							<div style="display:flex; justify-content:space-between;">
 								<ul class="d-flex list-unstyled mt-auto">
 									<li class="me-auto">
-										<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>				
+										<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
 									</li>							
 								</ul>
 								<ul class="d-flex list-unstyled mt-auto">
