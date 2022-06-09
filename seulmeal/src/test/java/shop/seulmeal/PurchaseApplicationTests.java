@@ -256,7 +256,6 @@ class PurchaseApplicationTests {
 		
 		purchase.setUser(user);
 		purchase.setPrice(10000);
-		purchase.setDeliveryPrice(3000);
 		purchase.setAddress("강남");
 		purchase.setName("홍길동");
 		purchase.setPhone("1111");
