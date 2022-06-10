@@ -33,14 +33,16 @@
 	})
 </script>
 <body>
-<form action="/product/updateProduct" method="POST">
-	품번 : ${product.productNo }<br/>
+<form name = Foodcategory>
 	<select name="no">
 		<c:forEach var="foodcategory" items="${list}">
 			<c:set var="i" value="${i+1}" />
 			<option value="${foodcategory.foodCategoryNo}">${foodcategory.name}</option>
 		</c:forEach>
 	</select><br/>
+</form>
+<form action="/product/updateProduct/${product.productNo }" method="POST">
+
 	이름 : <input name="name" value="${product.name }"/><br/>
 	짧은 내용 : <input name="subContent" value="${product.subContent}"/><br/>
 	가격 : <input name="price" value="${product.price}"/><br/>

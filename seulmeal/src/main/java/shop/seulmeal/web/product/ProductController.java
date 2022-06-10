@@ -1,6 +1,7 @@
 package shop.seulmeal.web.product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import shop.seulmeal.common.Page;
@@ -81,7 +81,7 @@ public class ProductController {
 		}
 
 		System.out.println("상품 : " + product);
-		return "";
+		return "redirect:/product/getProduct/"+product.getProductNo();
 	}
 
 	@GetMapping("getProduct/{prodNo}")
@@ -138,29 +138,103 @@ public class ProductController {
 		return "/product/updateProduct";
 	}
 
-	@PutMapping(value = { "updateProduct" })
-	public String updateProduct(@ModelAttribute Product product) throws Exception {
-		System.out.println(product);
+	@PostMapping(value = { "updateProduct/{productNo}" })
+	public String updateProduct(@ModelAttribute Foodcategory f, @PathVariable int productNo, Product product) throws Exception {
+		product.setProductNo(productNo);
+		product.setFoodCategory(f);
 		productService.updateProduct(product);
 		System.out.println("POST : updateProduct");
-		return "/product/getProduct/" + product.getProductNo();
+		return "redirect:/product/getProduct/" + product.getProductNo();
 	}
 
 	@GetMapping(value = { "insertReview/{productNo}" })
 	public String insertReview(@PathVariable int productNo, HttpSession session, Model model) throws Exception {
-		Product product = productService.getProduct(productNo);
 		model.addAttribute("user", session.getAttribute("user"));
-		model.addAttribute("product", product);
+		model.addAttribute("product", (Product)productService.getProduct(productNo));
 		return "/product/insertReview";
 	}
 
-	@PostMapping(value = { "insertReview"} )
-	public String insertReview(Review review, HttpSession session) throws Exception {
-		User user = (User)session.getAttribute("user");
-		review.setUser(user);	
-				
-		System.out.println(review);
+	@PostMapping(value = { "insertReview/{productNo}"} )
+	public String insertReview(@PathVariable int productNo, HttpSession session, Review review) throws Exception {
+		review.setUser((User)session.getAttribute("user"));
+		review.setProduct((Product)productService.getProduct(productNo));
 		
-		return "/product/getReview/"+review.getReviewNo();
+		productService.insertReview(review);
+		return "redirect:/product/getReview/"+review.getReviewNo();
 	}
+	
+	@GetMapping(value = {"insertParts"} )
+	public String insertParts(Parts parts, Model model) throws Exception {
+		model.addAttribute(parts);
+		return "/product/insertParts";
+	}
+	
+	@PostMapping(value = {"insertParts"})
+	public String insertParts(Parts parts) throws Exception {
+		productService.insertParts(parts);
+		return "redirect:/product/listParts";
+	}
+	
+	@GetMapping(value = {"listParts"})
+	public String getListParts(Model model, Search search, @PathVariable(required = false) String currentPage,
+				@PathVariable(required = false) String searchCondition) throws Exception {
+
+			if (currentPage != null) {
+				search.setCurrentPage(new Integer(currentPage));
+			}
+			if (search.getCurrentPage() == 0) {
+				search.setCurrentPage(1);
+			}
+			search.setPageSize(pageSize);
+			search.setSearchCondition(searchCondition);
+			System.out.println(search);
+
+			Map<String, Object> map = productService.getListParts(search);
+			List<Parts> list = (List) map.get("list");
+			List<Parts> listr = new ArrayList();
+
+			for (Parts parts : list) {
+				listr.add(parts);
+			}
+
+			Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+					pageSize);
+
+			model.addAttribute("list", listr);
+			model.addAttribute("resultPage", resultPage);
+			model.addAttribute("search", search);
+
+			return "/product/listParts";
+	}
+	
+	@GetMapping(value = {"updateParts/{partsNo}"})
+	public String updateParts(@PathVariable int partsNo, Model model) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("partsNo", partsNo);
+		
+		model.addAttribute("parts", (Parts)productService.getParts(map));
+		
+		
+		return "/product/updateParts";
+	}
+	
+	@PostMapping(value = {"updateParts/{partsNo}"})
+	public String updateParts(@PathVariable int partsNo, Parts parts) throws Exception {
+		parts.setPartsNo(partsNo);
+		productService.updateParts(parts);
+		return "redirect:/product/listParts";
+	}
+	
+	
+	@GetMapping(value = {"listFoodCategory"})
+	public String getListFoodCategory(Model model) throws Exception {
+
+			List<Foodcategory> list = productService.getListFoodCategory();
+
+			model.addAttribute("list", list);
+
+			return "/product/listFoodCategory";
+	}
+	
+	
 }
