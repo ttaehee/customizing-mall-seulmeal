@@ -105,8 +105,9 @@
 	</div>
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	
-	
+<div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
+</div>
 <script type="text/javascript">
 	$(function(){
 		$(".card-cover").on("click",function(){
