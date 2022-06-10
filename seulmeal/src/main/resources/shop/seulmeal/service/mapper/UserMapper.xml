@@ -175,7 +175,7 @@
 			SELECT *
 			FROM ( SELECT inner_table.* , ROWNUM AS row_seq
 				FROM ( SELECT point_no, purchase_no, point_status, point, reg_date
-					FROM point where user_id = #{userId}
+					FROM point WHERE user_id = #{userId}
 					<if test="searchCondition != null">
 					<if test="searchCondition == 0">
 						AND point_status='0'
@@ -188,14 +188,14 @@
 					</if>
 				</if>
 					ORDER BY point_no ) inner_table
-				WHERE ROWNUM &lt;= #{endRowNum} )
-			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+				WHERE ROWNUM &lt;= #{search.endRowNum} )
+			WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 		</select>
 		
 		<select id="getListPointTotalCount" resultType="int" parameterType="map" >
 			SELECT COUNT(*)
 			FROM( SELECT point_no, purchase_no, point_status, point, reg_date
-				FROM point where  where user_id = #{userId}
+				FROM point where user_id = #{userId}
 				<if test="searchCondition != null">
 					<if test="searchCondition == 0">
 						AND point_status='0'

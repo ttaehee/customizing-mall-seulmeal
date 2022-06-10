@@ -283,10 +283,9 @@
 		<set>
 			name = #{name:VARCHAR},
 			price = #{price:INTEGER},
-			calorie =
-			#{calorie:INTEGER}
+			calorie = #{calorie:INTEGER}
 		</set>
-		<where> partsNo = #{partsNo}
+		<where> parts_no = #{partsNo}
 		</where>
 	</update>
 

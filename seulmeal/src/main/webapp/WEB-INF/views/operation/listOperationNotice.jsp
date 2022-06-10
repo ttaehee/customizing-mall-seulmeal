@@ -42,7 +42,7 @@
 				<tr>
 					<th>${post.postNo}</th>
 					<th>
-						<a href="/operation/getOperation/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
+						<a href="/operation/getOperation/1/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
 					</th>
 					<th>${post.user.userId}</th>
 					<th>${post.regDate}</th>
@@ -53,10 +53,10 @@
 		</table>
 		
 		<hr/>
-		<a class="btn btn-primary float-right" href="/operation/insertOperation/1">문의 작성</a>		
-		
+		<a class="btn btn-primary float-right" href="/operation/insertOperation/1">공지 작성</a>		
+		<jsp:include page="../common/pageNavigator_new.jsp"/>
 	</div>
-	<jsp:include page="../common/pageNavigator_new.jsp"/>
+	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 </body>
 </html>

@@ -24,6 +24,8 @@ public class AttachmentsController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
+	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
+	
 	public AttachmentsController() {
 		// TODO Auto-generated constructor stub
 		System.out.println(this.getClass());
@@ -33,7 +35,7 @@ public class AttachmentsController {
 	@GetMapping("/download/{fileName}")
 	public ResponseEntity<Object> attachMentsDownload(@PathVariable String fileName) throws IOException{
 		//String path = System.getProperty("user.dir")+"/src/main/resources/attachments/"+fileName;
-		String path = "C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/resources/attachments/"+fileName;
+		path +=fileName;
 		Path filePath = Paths.get(path);
 		Resource resource = new InputStreamResource(Files.newInputStream(filePath));
 		

@@ -110,11 +110,12 @@ public class OperationController {
 		return "redirect:getOperation/"+post.getPostNo();		
 	}
 	
-	@GetMapping("getOperation/{postNo}")
-	public String insertOperation(@PathVariable int postNo,Model model) {
+	@GetMapping("getOperation/{postStatus}/{postNo}")
+	public String insertOperation(@PathVariable int postNo,@PathVariable String postStatus,Model model) {
 		System.out.println(postNo);
 		Post post = new Post();
 		post.setPostNo(postNo);
+		post.setPostStatus(postStatus);
 		// �옄猷� 媛��졇�삤湲�
 		post = operationService.getOperation(post);
 		
@@ -124,7 +125,7 @@ public class OperationController {
 		// 泥⑤��뙆�씪 媛��졇�삤湲�
 		List<Attachments> list = attachmentsService.getAttachments(map);
 		post.setAttachments(list);
-		
+		System.out.println(post);
 		// 臾몄쓽�궗�빆�씪�떆 �떟蹂�媛��졇�삤湲�
 		if(post.getPostStatus().equals("3")) {
 			List<Comment> cList = operationService.getListAnswer(post.getPostNo());

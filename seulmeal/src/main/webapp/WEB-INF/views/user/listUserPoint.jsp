@@ -25,10 +25,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="point" items="${pointlist}">
+				<c:forEach var="point" items="${pointList}">
 				<tr>
-					<th pointNo = ${point.pointNo}>${point.status}</th>
-					<th><a href="#" class="link-dark text-decoration-none">${pont.point}</a></th>
+					<th>${point.pointStatus}</th>
+					<th>${point.point}</th>
 					<th>${point.regDate}</th>
 				</tr>
 				</c:forEach>

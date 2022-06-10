@@ -11,6 +11,9 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
+	<br/>
+	<br/>
+	
 		<div class="row">
 			<h3>회원목록</h3>
 

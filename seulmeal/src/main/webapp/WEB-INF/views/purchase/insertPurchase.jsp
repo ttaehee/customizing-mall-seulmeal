@@ -16,8 +16,7 @@
 <!-- iamport.payment.js -->
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 	
-	<input type="hidden" id="userId" name="userId" value="${user.userId}"/>
-	
+	구매자 : <input type="text" id="userId" name="userId" value="${user.userId}" readonly></input><br/>
 	받으시는분 : <input type="text" id="name" name="name" value="${user.userName}"></input><br/>
 	주소 : <input type="text" id="address" name="address" " value="${user.address}"></input><br/>
 	휴대전화 : <input type="text" id="phone" name="phone" value="${user.phone}"></input><br/>
@@ -50,7 +49,6 @@
 			url:"/purchase/api/insertPurchase",
 			method:"POST",
 			data:JSON.stringify({
-				userId : userId,
 				name : name,
 				address : address,
 				phone : phone,
@@ -104,7 +102,7 @@
 			  		  			dataType : "json",
 			  		  			success : function(data){
 			  		  				console.log(data);
-			  		  				window.location.href='/purchase/getPurchase/' + data.purchaseNo;
+			  		  				window.location.href='/purchase/getPurchase/' + data.purchase.purchaseNo;
 			  		  			}
 			  		      	 })
 						}else{
@@ -112,7 +110,7 @@
 					         msg += '에러내용 : ' + rsp.error_msg;
 	
 						}
-					alert("???");
+					alert(msg);
 				})
 			}
 		})

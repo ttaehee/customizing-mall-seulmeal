@@ -17,10 +17,6 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
-<!-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script> -->
-<script src="/resources/javascript/summernote/summernote-lite.js"></script>
-<script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
-
 <div class="container">
 		<div class="container px-4 py-5" id="custom-cards">
 			<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3">

@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService{
 		List<Point> pointList=userMapper.getListPoint(map);
 		int pointTotalCount=userMapper.getListPointTotalCount(map);
 		
-		map.put("pontList", pointList);
+		map.put("pointList", pointList);
 		map.put("pontTotalCount", pointTotalCount);
 		
 		return map;

@@ -47,8 +47,8 @@ public class PurchaseController {
 	@Qualifier("userServiceImpl")
 	private UserService userService;
 	
-	int pageUnit;
-	int pageSize;
+	int pageUnit=10;
+	int pageSize=10;
 	
 	public PurchaseController() {
 		// TODO Auto-generated constructor stub
@@ -211,11 +211,13 @@ public class PurchaseController {
 	}
 	
 	@GetMapping("getPurchase/{purchaseNo}")
-	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {
+	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) throws Exception {
 		
 		System.out.println("/getListCustomProduct : "+ purchaseNo);
 		
 		purchase=purchaseService.getPurchase(purchaseNo);
+		User user=userService.getUser(purchase.getUser().getUserId());
+		purchase.setUser(user);
 		
 		model.addAttribute(purchase);
 		
@@ -223,11 +225,12 @@ public class PurchaseController {
 		
 	}	
 	
-	@GetMapping("getListPurchase/{userId}")
-	public String getListPurchase(String userId, Search search, Purchase purchase, Model model, HttpSession session)
+	@GetMapping("getListPurchase")
+	public String getListPurchase( Search search, Purchase purchase, Model model, HttpSession session)
 			throws Exception {
-
-		System.out.println("/getListPurchase");
+		
+		String userId=((User)session.getAttribute("user")).getUserId();
+		System.out.println("/getListPurchase : " +userId);
 
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);

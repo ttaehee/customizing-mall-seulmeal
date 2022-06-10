@@ -6,7 +6,7 @@
 <mapper namespace="shop.seulmeal.service.mapper.OperationMapper">
 	<resultMap type="post"	id="postSelectMap">
 		<id property="postNo" column="post_no" jdbcType="NUMERIC" />
-		<result property="title" column="title" jdbcType="NUMERIC" />
+		<result property="title" column="title" jdbcType="VARCHAR" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
 		<result property="shortContent" column="short_content" jdbcType="VARCHAR" />
 		<result property="views" column="views" jdbcType="NUMERIC" />
@@ -23,6 +23,14 @@
 		<result property="status" column="status" jdbcType="VARCHAR" />
 		<association property="user" javaType="user">
 			<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		</association>
+		<association property="bpost" javaType="post">
+			<result property="postNo" column="b_post_no" jdbcType="NUMERIC"/>
+			<result property="title" column="b_title" jdbcType="VARCHAR"/>
+		</association>
+		<association property="npost" javaType="post">
+			<result property="postNo" column="n_post_no" jdbcType="NUMERIC"/>
+			<result property="title" column="n_title" jdbcType="VARCHAR"/>
 		</association>
 		<collection property="comments" ofType="comment">
 			<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
@@ -49,7 +57,26 @@
 	</insert>
 	
 	<select id="getOperation" resultMap="postSelectMap">
-		<if test="postStatus != 3">
+		<if test="postStatus == 1">
+			SELECT *
+				FROM(
+					SELECT
+						title, post_no, content, user_id, reg_date, views, post_status, status,
+						LAG(post_no) OVER (ORDER BY post_no) b_post_no,
+						LAG(title) OVER (ORDER BY post_no) b_title,
+						LEAD(post_no) OVER (ORDER BY post_no) n_post_no,
+						LEAD(title) OVER (ORDER BY post_no) n_title
+					FROM post
+					<where>
+						post_status = '1'
+					</where>
+			ORDER BY post_no
+			)
+			<where>
+				post_no = #{postNo}
+			</where>
+		</if>
+		<if test="postStatus == 2">
 			SELECT * FROM post
 			<where>
 				post_no = #{postNo}
