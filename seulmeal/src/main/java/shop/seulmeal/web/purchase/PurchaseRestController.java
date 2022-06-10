@@ -3,6 +3,8 @@ package shop.seulmeal.web.purchase;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -48,14 +51,14 @@ public class PurchaseRestController {
 	}
 	
 	@PostMapping("insertPurchase")
-	public Purchase insertPurchase(@RequestBody Purchase purchase, String userId) throws Exception {
+	public Purchase insertPurchase(@RequestBody Purchase purchase, HttpSession session) throws Exception {
 	
 		System.out.println("/purchase/api/insertPurchase : "+purchase);
 		
-		User user=userService.getUser(userId);	
-	     purchase.setUser(user);
+		String userId=((User)session.getAttribute("user")).getUserId();
+		User user=userService.getUser(userId);
+		purchase.setUser(user);
 	      
-
 		int result=purchaseService.insertPurchase(purchase);
 		System.out.println("/purchase/api/insertPurchase insert : "+result);
 		
@@ -67,7 +70,7 @@ public class PurchaseRestController {
 	}	
 	
 	@PostMapping("updatePurchaseCode")
-	public Purchase updatePurchaseCode( @RequestBody Purchase purchase) throws Exception {
+	public Purchase updatePurchaseCode(@RequestBody Purchase purchase) throws Exception {
 
 	      System.out.println("/purchase/api/updatePurchase : POST");
 	      
@@ -86,6 +89,7 @@ public class PurchaseRestController {
 		System.out.println("/purchase/api/verifyIamport update : "+success);
 		
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
+		System.out.println("/purchase/api/verifyIamport purchaseNo : "+ purchase.getPurchaseNo());
 		
 		String token=purchaseService.getImportToken();
 		System.out.println("/purchase/api/verifyIamport token : "+ token);

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.user.UserService;
 
@@ -313,7 +314,7 @@ public class UserController {
 		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("pontTotalCount")).intValue(), pageUnit, pageSize);
 		System.out.println(resultPage);
 
-		model.addAttribute("pontList", map.get("pontList"));
+		model.addAttribute("pointList", map.get("pointList"));
 		model.addAttribute("page", resultPage);
 		model.addAttribute("search", search);
 		

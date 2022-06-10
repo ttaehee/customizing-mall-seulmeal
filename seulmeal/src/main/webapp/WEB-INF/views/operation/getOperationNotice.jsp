@@ -40,8 +40,8 @@
 				<div class="row" style="border-bottom: 2px double #BAD7DF; border-top: 2px double #BAD7DF;">
 					<div class="col-md-10"></div>
 					<span style="margin-bottom:10px; margin-top:10px;">
-						<button style="margin-right:10px;">수정</button>
-						<button>목록</button>
+						<a type="botton" style="border: 1px solid black; padding:5px; border-radius: 15%;" href="/operation/getListOperation/1">수정</a>
+						<a type="botton" style="border: 1px solid black; padding:5px; border-radius: 15%;" href="/operation/getListOperation/1">목록</a>
 					</span>						
 				</div>
 				<div class="row" style="border-bottom: 2px double #BAD7DF;">
