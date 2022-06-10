@@ -65,12 +65,12 @@
 		<result property="name" 				column="name" 				jdbcType="VARCHAR"/> 
 		<result property="phone" 				column="phone" 				jdbcType="VARCHAR"/> 
 		<result property="message" 				column="message" 			jdbcType="VARCHAR"/> 
-		<result property="purchaseStatus" 		column="purchase_status" 	jdbcType="CHAR"/> 
+		<result property="purchaseStatus" 		column="purchase_status" 	jdbcType="VARCHAR"/> 
 		<result property="reason" 				column="reason" 			jdbcType="VARCHAR"/> 
 		<result property="image" 				column="image" 				jdbcType="VARCHAR"/> 
-		<result property="status" 				column="status" 			jdbcType="CHAR"/> 
+		<result property="status" 				column="status" 			jdbcType="VARCHAR"/> 
 		<result property="regDate" 				column="reg_date" 			jdbcType="DATE"/> 
-		<result property="paymentCondition" 	column="payment_condition" 	jdbcType="CHAR"/> 
+		<result property="paymentCondition" 	column="payment_condition" 	jdbcType="VARCHAR"/> 
 		<result property="imp_uid" 				column="imp_uid" 			jdbcType="VARCHAR"/> 
 		<result property="amount" 				column="amount" 			jdbcType="NUMERIC"/> 
 		<result property="email" 				column="email" 				jdbcType="VARCHAR"/>
@@ -257,11 +257,11 @@
 	</select>
 	
 	<select id="getListPurchase" resultMap="purchaseSelectMap" parameterType="map">
-		SELECT *
+		SELECT purchase_no, user_id, price, address, name, phone, email, message, purchase_status, reg_date, payment_condition, amount
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
 			FROM (SELECT *
 				FROM purchase
-				WHERE user_id=#{userId} AND status='0' AND purchase_status IS NOT NULL
+				WHERE user_id=#{userId} AND status='0' AND purchase_status!=0
 				<if test="searchCondition != null">
 					<if test="searchCondition == 0">
 						AND p.reg_date=SYSDATE
@@ -319,7 +319,7 @@
 		SELECT COUNT(*)
 	  	FROM( SELECT * FROM purchase
 	  	<where>
-			purchase_status = #{purchaseStatus} AND status = '0') countTable
+			status = '0') countTable
 		</where>
 	</select>
 
