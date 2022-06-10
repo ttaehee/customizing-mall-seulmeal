@@ -66,25 +66,23 @@
         </div>
         <div class="row justify-content-end">
         	<div class="col-1">
-	        	<ul class="navbar-nav">
-			      	<li class="nav-item dropdown">
-			          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-			            첨부파일
-			          </a>
-			          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-			          	<c:forEach var="attachments" items="${post.attachments}">		          	
-			            <li><a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a></li>
+        		<div class="dropdown show">
+					<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
+					</a>					
+					<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+						<c:forEach var="attachments" items="${post.attachments}">		          	
+			            	<a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
 			            </c:forEach>
-			          </ul>
-			        </li>
-		        </ul>
+					</div>
+				</div>
         	</div>		
         </div>
         <div class="row" style="border-bottom: 2px solid; min-height: 400px;">
             <div class="col">${post.content}</div>            
         </div>
-        <div class="row justify-content-end">
-            <div class="col-2"><button id="answerInsert">답변등록</button></div>
+        <div class="row justify-content-end" style="margin-top:10px; margin-right:10px;">
+            <a id="answerInsert" type="botton" style="border: 2px solid black; padding:5px; border-radius: 15%;">답변등록</a>
         </div>
         <c:forEach var="comment" items="${post.comments}">
 			<c:set var="i" value="${i+1}" />

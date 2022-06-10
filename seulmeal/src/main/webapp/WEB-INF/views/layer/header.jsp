@@ -63,30 +63,36 @@
 	      }
 	    </script>
 	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-	    <div class="float-right">
+	    <div class="float-right" style="margin-right: 30px;">
         	
         	<c:if test="${ empty user }">
-        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()">Login</button>
-        	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
+	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()">Login</button>
+	        	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
         	</c:if>
         	
         	<c:if test="${ !empty user }">
-        	 <li class="nav-item dropdown">
-	          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            ${user.userName}
-	          </a>
-	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-	            <li><a class="dropdown-item" href="user/getUpdateUser/{user.userId}">내 정보</a></li>
-	            <li><a class="dropdown-item" href="user/listUserPoint/{currentPage}">내 포인트</a></li>
-	            <li><a class="dropdown-item" href="#">내 구매내역</a></li>
-	            <li><a class="dropdown-item" href="#">내 게시글</a></li>
-	           <c:if test="${user.role == 1}">
-	           <li><a class="dropdown-item" href="#">관리자페이지</a></li>
-	           </c:if>
-	            <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
-	          </ul>
-	        </li>
-        	</c:if>
+        		<div class="dropdown show">
+					<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<c:if test="${user.profileImage == null}">
+							<img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+						</c:if>
+						<c:if test="${user.profileImage != null}">
+							<img src="../../../resources/attachments/profile_image/${user.profileImage}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+						</c:if>
+	               		<span class="d-none d-sm-inline mx-1" style="color:black;">${user.userName}</span>					
+					</a>					
+					<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+						<a class="dropdown-item" href="user/getUpdateUser/{user.userId}">내 정보</a>
+						<a class="dropdown-item" href="user/listUserPoint/{currentPage}">내 포인트</a>
+						<a class="dropdown-item" href="#">내 구매내역</a>
+						<a class="dropdown-item" href="#">내 게시글</a>
+						<c:if test="${user.role == 1}">
+							<a class="dropdown-item" href="#">관리자페이지</a>
+						</c:if>
+						<a class="dropdown-item" href="/user/logout">로그아웃</a>
+					</div>
+				</div>
+        	</c:if>        	
         	
       	</div>
 	</div>
