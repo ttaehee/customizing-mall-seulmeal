@@ -10,7 +10,7 @@
 	<!-- Footer -->
 	<div class="text-center">
 		<hr />
-		<p>2022.02~20.022 seulMeal</p>
+		<p>2022.02~2022.06 seulMeal</p>
 	</div>
 </body>
 </html>

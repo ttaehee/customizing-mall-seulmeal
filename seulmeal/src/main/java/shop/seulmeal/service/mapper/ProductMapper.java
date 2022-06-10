@@ -77,7 +77,7 @@ public interface ProductMapper {
 	// productLike
 	public void insertProductLike(Like like) throws Exception;
 
-	public List<Like> getListProductLike(Search search) throws Exception;
+	public List<Like> getListProductLike(Map<String, Object> map) throws Exception;
 
 	public void deleteProductLike(Like like) throws Exception;
 	
@@ -97,9 +97,6 @@ public interface ProductMapper {
 
 	public int getTotalPartsCount(Map<String, Object> map) throws Exception;
 
-	public int getTotalProductLikeCount(int userId) throws Exception;
+	public int getTotalProductLikeCount(String userId) throws Exception;
 
-	public int getReviewCountInProduct(int productNo) throws Exception;
-
-	public int getAverageRating(int productNo) throws Exception;
 }

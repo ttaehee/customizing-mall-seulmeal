@@ -31,7 +31,18 @@
 	<div class="container">
 		<div class="dropdown">
 			<div class="float-right" style="display:flex;">
-				<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>		
+				<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
+				<div class="dropdown show">
+					<a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						이벤트 목록
+					</a>					
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+						<a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a>
+						<a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a>
+						<a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a>
+					</div>
+				</div>
+			    <!-- 
 				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 					이벤트 목록
 				</button>
@@ -40,6 +51,7 @@
 					<li><a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a></li>
 					<li><a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a></li>
 				</ul>
+				 -->
 				<div class="form-outline">
 					<input type="search" id="form1" class="form-control" />
 				</div>		  
@@ -57,10 +69,10 @@
 				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3">
 					<div class="col">
 						<c:if test="${post.thumnail != null}">
-							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../resources/attachments/${post.thumnail}');">
+							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../../resources/attachments/${post.thumnail}');">
 						</c:if>
 						<c:if test="${post.thumnail == null}">
-							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../resources/attachments/image/tetris.png');">
+							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../../resources/attachments/image/tetris.png');">
 						</c:if>
 						
 							<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
@@ -93,8 +105,9 @@
 	</div>
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	
-	
+<div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
+</div>
 <script type="text/javascript">
 	$(function(){
 		$(".card-cover").on("click",function(){

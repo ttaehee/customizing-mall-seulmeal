@@ -105,9 +105,11 @@
 	<update id="updateAnswerStatus">
 		UPDATE post
 		<set>
-			answer_stats = 1
+			answer_status = 1
 		</set>
+		<where>
 			post_no=#{postNo}
+		</where>
 	</update>
 	
 	<!-- list -->

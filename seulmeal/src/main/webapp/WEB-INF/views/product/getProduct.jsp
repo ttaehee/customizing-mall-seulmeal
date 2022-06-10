@@ -86,6 +86,8 @@
     .box-line{
     	border: 1px solid #ddd;
     	padding : 20px;
+    	max-height: 500px;
+    	min-height: 500px;
     }
     .col-md-6{
     	/*border: 1px solid #ddd;*/
@@ -152,7 +154,7 @@
 							<h5>등록 일자</h5>
 							<h4>${product.regDate}</h4>
 						</div>
-						<div style="border: 1px solid #dce0e3; padding:10px; background-color: #f7f8fa; height:180px;">
+						<div style="border: 1px solid #dce0e3; padding:10px; background-color: #f7f8fa; max-height:250px;">
 							<h4>간단 설명</h4>
 							<h5>${product.subContent}</h5>
 							<h4>들어간 재료</h4>
@@ -164,16 +166,18 @@
 					<br/>
 				</div>
 				<!-- -->
-				<div class="col-md-6" style="width:100%;">						
-							<div style="margin-top:10px;">
+				
+				<div class="col-md-12">
+					<div class="row">
+							<div style="margin-top:10px; width: 100%;">
 								<c:if test="${product.stock !=0}"> 
-									<button class="btn btn-primary col-md-2" style="width:100%;">구매하기</button>	
+									<button class="btn btn-primary" style="width:100%;">구매하기</button>	
 								</c:if>
 								<c:if test="${product.stock ==0}">
-									<button class="btn btn-primary col-md-2" disabled="disabled">구매하기</button>	
+									<button class="btn btn-primary" disabled="disabled">구매하기</button>	
 								</c:if>
 							</div>
-						<div style="margin-top:10px;">
+						<div style="margin-top:10px; width: 100%;">
 							<div style="display:flex; justify-content: space-between; margin-top: 10px">
 								<button class="btn btn-primary" style="width:32%;">문의하기</button>
 								<button class="btn btn-primary" style="width:32%;">장바구니</button>
@@ -181,7 +185,7 @@
 							</div>
 						</div>
 				</div> 
-				
+				</div>
 			</div>
 		</div>
 	</div>

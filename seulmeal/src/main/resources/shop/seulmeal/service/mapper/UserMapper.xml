@@ -134,6 +134,15 @@
 				END
 		</update>
 		
+		<update id="resetPurchaseCount">
+			UPDATE users SET purchase_count = 0
+		</update>
+		
+		<update id="updateBlockCount">
+			UPDATE users SET block_count = block_count +1 WHERE user_id = #{userId}
+		</update>
+		
+		
 		<update id="updateUserTotalPoint">
 			UPDATE users SET total_point = total_point + #{value} WHERE user_id =#{userId}
 		</update>
@@ -145,13 +154,15 @@
 		</insert>
 		
 		<update id="resetBlockCount">
-			UPDATE users SET block_count=0 WHERE block_count = 50
+			UPDATE users SET blacklist_status = 1, block_count = 0, blacklist_count = blacklist_count + 1 WHERE block_count = 50
 		</update>
 		
 		<update id="updateBlackList">
-			update relation SET relation_status = '3' 
-				WHERE relation_status = '2' 
-				AND SYSDATE &gt;= reg_date+90
+			merge into users u
+			using relation r
+			on(u.user_id = r.user_id and r.relation_status = '2' and TO_CHAR(r.reg_date, 'yy/mm/dd')  = TO_CHAR(SYSDATE-90, 'yy/mm/dd') )
+			WHEN matched THEN
+			update set u.blacklist_status = '0'	
 				
 		</update>
 		
@@ -160,20 +171,43 @@
 				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{point}, SYSDATE)
 		</insert>
 		
-		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="shop.seulmeal.common.Search" >
+		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="map" >
 			SELECT *
 			FROM ( SELECT inner_table.* , ROWNUM AS row_seq
-				FROM ( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
-					FROM point where point_status = #{pointStatus}
-					ORDER BY user_id ) inner_table
+				FROM ( SELECT point_no, purchase_no, point_status, point, reg_date
+					FROM point where user_id = #{userId}
+					<if test="searchCondition != null">
+					<if test="searchCondition == 0">
+						AND point_status='0'
+					</if>
+					<if test="searchCondition == 1">
+						AND point_status='1'
+					</if>
+					<if test="searchCondition == 2">
+						AND point_status='2'
+					</if>
+				</if>
+					ORDER BY point_no ) inner_table
 				WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 		</select>
 		
-		<select id="getListPointTotalCount" resultType="int" parameterType="shop.seulmeal.common.Search" >
+		<select id="getListPointTotalCount" resultType="int" parameterType="map" >
 			SELECT COUNT(*)
-			FROM( SELECT point_no, user_id, purchase_no, point_status, point, reg_date
-				FROM point where point_status = #{pointStatus}) countTable
+			FROM( SELECT point_no, purchase_no, point_status, point, reg_date
+				FROM point where  where user_id = #{userId}
+				<if test="searchCondition != null">
+					<if test="searchCondition == 0">
+						AND point_status='0'
+					</if>
+					<if test="searchCondition == 1">
+						AND point_status='1'
+					</if>
+					<if test="searchCondition == 2">
+						AND point_status='2'
+					</if>
+				</if>
+				) countTable
 		</select>
 		
 		

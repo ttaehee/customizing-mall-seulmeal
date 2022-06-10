@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
@@ -16,6 +18,7 @@ import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.UserMapper;
 import shop.seulmeal.service.user.UserService;
 
+@Component
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
 	
@@ -126,19 +129,7 @@ public class UserServiceImpl implements UserService{
 		return 0;
 	}
 
-	@Override
-	public int insertBlackList(BlackList blackList) throws Exception {
-		// TODO Auto-generated method stub
-		return userMapper.insertBlackList(blackList);
-	}
 	
-	@Override
-	public int updateBlackList(BlackList blakList) throws Exception {
-		// TODO Auto-generated method stub
-		return userMapper.updateBlackList(blakList);
-	}
-
-
 	@Override
 	public int insertPoint(Point point) throws Exception {
 		// TODO Auto-generated method stub
@@ -146,20 +137,22 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Map<String, Object>  getListPoint(Search search) throws Exception {
+	public Map<String, Object>  getListPoint(Search search, String userId) throws Exception {
 
 
 		Map<String, Object> map=new HashMap<>();
 		map.put("search", search);
-
+		map.put("userId", userId);
 		
-		List<Point> list=userMapper.getListPoint(search);
-		int totalCount=userMapper.getListPointTotalCount(search);
+		List<Point> pointList=userMapper.getListPoint(map);
+		int pointTotalCount=userMapper.getListPointTotalCount(map);
 		
-		map.put("List", list);
-		map.put("totalCount", totalCount);
+		map.put("pontList", pointList);
+		map.put("pontTotalCount", pointTotalCount);
 		
 		return map;
+		
+		
 	}
 
 	@Override
@@ -174,9 +167,27 @@ public class UserServiceImpl implements UserService{
 		return userMapper.updateProfile(user);
 	}
 	
+	@Override
+	public int updateBlockCount(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.updateBlockCount(userId);
+	}
 	
+	@Scheduled(cron = "0 12 12 * * ? ")
+	public void updateBlackList() throws Exception {
+		userMapper.insertBlackList();
+		userMapper.resetBlockCount();
+		userMapper.updateBlackList();
+	}
+	
+	@Scheduled(cron = "0 34 12 * * ? ")
+	public void updateGrade() throws Exception {
+		userMapper.updateUserGrade();
+		userMapper.resetPurchaseCount();
+	}
 
 	
+
 
 	
 
