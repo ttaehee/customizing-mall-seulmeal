@@ -12,6 +12,9 @@
 <!-- bootStrap/js -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
+<!-- summernote -->
+<script src="/resources/javascript/summernote/summernote-lite.js"></script>
+<script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
 
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">

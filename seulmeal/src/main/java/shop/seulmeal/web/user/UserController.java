@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
@@ -57,14 +58,14 @@ public class UserController {
 	
 	
 	  @GetMapping("insertUserInformation") 
-	  public String insertUserInformation() throws Exception{
+	  public String insertUserInformation(MultipartFile imageFile, HttpSession session) throws Exception{
 	  
 	 return "user/insertUserInformation"; 
 	 }
 	 
 	
 	@PostMapping("inserUserInformation")
-	public String insertUserInformation(@ModelAttribute("user") User user, Parts[] parts, HttpSession session ) throws Exception {
+	public String insertUserInformation(@ModelAttribute("user") User user, Parts[] parts, MultipartFile file, HttpSession session ) throws Exception {
 		userService.insertUserInformation(user);
 		
 		List<Parts> list= new ArrayList<Parts>();

@@ -70,11 +70,18 @@ public class MainController {
 		}
 		
 		
-		return "main";
+		return "main/main";
 	}
 	
 	@GetMapping("/admin")
-	public String adminPage() throws Exception {
-		return "admin/admin";
+	public String adminPage(HttpSession session) throws Exception {
+		User user = (User)session.getAttribute("user");
+		if(user != null) {
+			if(user.getRole().equals("1")) {
+				return "admin/admin";
+			}
+		}
+		
+		return "redirect:/";
 	}
 }

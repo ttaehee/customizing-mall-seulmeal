@@ -9,6 +9,15 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="../../../resources/css/summernote/summernote-lite.css">
 <title>게시글 등록</title>
+
+<style type="text/css">
+h1{
+	position: absolute;
+	left: 160px;
+	color: black;
+}
+</style>
+
 </head>
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
@@ -16,6 +25,10 @@
 	<!-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script> -->
 	<script src="/resources/javascript/summernote/summernote-lite.js"></script>
 	<script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
+
+	<br/>
+	<h1>게시글 작성</h1>
+	<br/><br/><br/>
 
 	<div class="container">
 	<form action="/community/insertPost" method="POST" enctype="multipart/form-data">
@@ -32,7 +45,7 @@
 		</div>
 		<div style="display:flex; justify-content: space-between;">
 			<div >
-				<input type="file" value="첨부파일임" name="uploadfile" multiple="multiple" />
+				<input type="file" name="uploadfile" multiple="multiple" />
 			</div>
 			<div>
 				<button type="submit" class="btn btn-primary">
@@ -43,11 +56,6 @@
 	</form>
 	</div>
 
-	<form action="/community/insertPost" method="POST" enctype="multipart/form-data">
-		아이디 : <input name="userId" /><br /> 
-		첨부파일 : <input type="file" name="uploadfile" multiple="multiple" />
-		<button type="submit">등록</button>
-	</form>
 
 
 <script>

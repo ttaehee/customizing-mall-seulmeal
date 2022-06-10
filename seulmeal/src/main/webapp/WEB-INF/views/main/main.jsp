@@ -4,10 +4,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="../../resources/css/body.css">
 <meta charset="UTF-8">
 <title>SeulMeal Main</title>
 <style type="text/css">	
+	@charset "UTF-8";
+
+	@font-face {
+	    font-family: 'GmarketSansMedium';
+	    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}
+	
+	body {
+		font-family: 'GmarketSansMedium';
+		margin:0;
+		padding:0;
+	}
+	
+	a:link {
+		color: black; 
+		text-decoration: none;
+	}
+	a:visited {
+		color:black;
+		text-decoration: none;
+	}
+
 	.bi {
 	  vertical-align: -.125em;
 	  fill: currentColor;
@@ -42,9 +65,10 @@
 	}
 	
 </style>
+
 </head>
 <body> <!-- #BAD7DF -->
-	<jsp:include page="./layer/header.jsp"></jsp:include>
+	<jsp:include page="../layer/header.jsp"></jsp:include>
 	
 	<!-- carousel iamge-slie -->
 	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -57,15 +81,15 @@
 		</ol>
 		<div class="carousel-inner">
 			<div class="carousel-item active">
-				<img class="d-block w-100" src="../../resources/attachments/image/seulMeal.png" alt="First slide" style="height:600px;">
+				<img class="d-block w-100" src="../../../resources/attachments/image/seulMeal.png" alt="First slide" style="height:600px;">
 			</div>
 			<c:forEach var="post" items="${listE}">
 				<div class="carousel-item" data-value="${post.postNo}" id="eventBanner">
 					<c:if test="${post.thumnail == null}">
-						<img class="d-block w-100" src="../../resources/attachments/image/tetris.png" alt="First slide" style="height:600px;">
+						<img class="d-block w-100" src="../../../resources/attachments/image/tetris.png" alt="First slide" style="height:600px;">
 					</c:if>
 					<c:if test="${post.thumnail != null}">
-						<img class="d-block w-100" src="../../resources/attachments/${post.thumnail}" alt="Second slide" style="height:600px;">
+						<img class="d-block w-100" src="../../../resources/attachments/${post.thumnail}" alt="Second slide" style="height:600px;">
 					</c:if>			
 					<div class="carousel-caption d-none d-md-block">
 						<h2 class="display-6 fw-bold">${post.title}</h2>
@@ -132,7 +156,7 @@
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
 	<c:forEach var="product" items="${list}">		
 			<div class="col">
-				<div data-value="${product.productNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../resources/attachments/image/tetris.png');">
+				<div data-value="${product.productNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../resources/attachments/image/tetris.png');">
 					<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
 						<h2 class="display-6fw-bold">${product.name}</h2>
 						<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${product.subContent}</h2>
@@ -159,10 +183,10 @@
 	</div>
 	    
 	</section>
-	<jsp:include page="./chatBot/chatBot.jsp"></jsp:include>
+	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	</main>		
-	<jsp:include page="confirm.jsp"></jsp:include>
-	<jsp:include page="./layer/footer.jsp"></jsp:include>
+	<jsp:include page="../confirm.jsp"></jsp:include>
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	
 <script type="text/javascript">
 	

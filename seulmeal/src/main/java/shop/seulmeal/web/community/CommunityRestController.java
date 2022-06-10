@@ -254,7 +254,7 @@ public class CommunityRestController {
 
 		String imageFilePath = null;
 //		String absolutePath = new File("").getAbsolutePath()+"\\";
-		String path = "C:/Users/GHM/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/profile_image";
+		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
 		File file = new File(path);
 
 		User user = userService.getUser(userId);
