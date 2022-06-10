@@ -14,9 +14,11 @@
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
 	            <iframe class="frame" style="height:100vh; width:100%;" src="/product/getListProduct"></iframe>
-	            <iframe id="noticeFrame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/1"></iframe>
-	            <iframe id="eventFrame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/1"></iframe>
-	            <iframe id="queryFrame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/3/0/0"></iframe>
+	            
+	            <!-- operation -->
+	            <iframe id="noticeFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/1"></iframe>
+	            <iframe id="eventFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/2"></iframe>
+	            <iframe id="queryFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/3/0/0"></iframe>
 	        </div>
 	    </div>
 	</div>

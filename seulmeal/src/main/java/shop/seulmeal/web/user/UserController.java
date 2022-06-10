@@ -216,15 +216,26 @@ public class UserController {
 	}
 	
 	@GetMapping("deleteUser")
-	public String deleteUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+	public String deleteUser() throws Exception {
 		
-		String sessionId=((User)session.getAttribute("user")).getUserId();
+		return "user/deleteUser";
+	}
+	
+	@PostMapping("deleteUser")
+	public String deleteUser( String password, HttpSession session) throws Exception {
+	
+		if(password.equals(((User)session.getAttribute("user")).getPassword())) {
+			userService.deleteUser(((User)session.getAttribute("user")).getUserId());
+			
+			session.invalidate();
+			
+			return "redirect:/";
+		} else {
+			return "<script>alert('비밀번호가 일치하지 않습니다');</script>";
+		}
 		
-		userService.deleteUser(sessionId);
 		
-		session.invalidate();
 		
-		return "redirect:/";
 	}
 	
 	@GetMapping("listUser/{currentPage}")
@@ -265,22 +276,7 @@ public class UserController {
 		return "user/getUser";
 	}
 	
-	@PostMapping("deleteUser")
-	public String deleteUser( String password, HttpSession session) throws Exception {
 	
-		if(password.equals(((User)session.getAttribute("user")).getPassword())) {
-			userService.deleteUser(((User)session.getAttribute("user")).getUserId());
-			
-			session.invalidate();
-			
-			return "redirect:/";
-		} else {
-			return "<script>alert('비밀번호가 일치하지 않습니다');</script>";
-		}
-		
-		
-		
-	}
 	
 	
 	@GetMapping("chargeuserPoint")
@@ -295,8 +291,31 @@ public class UserController {
 		return "user/getChargeUserPoint";
 	}
 	
-	@GetMapping("listUserPoint")
-	public String listUserPoint() throws Exception {
+	@GetMapping("listUserPoint/{currentPage}")
+	public String listUserPoint(Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition, HttpSession session) throws Exception {
+		
+		Search search = new Search();
+		if(currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		System.out.println(search);
+		
+		User dbUser= (User)session.getAttribute("user");
+		
+		Map<String , Object> map=userService.getListPoint(search, dbUser.getUserId());
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("pontTotalCount")).intValue(), pageUnit, pageSize);
+		System.out.println(resultPage);
+
+		model.addAttribute("pontList", map.get("pontList"));
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
 		
 		return "user/listUserPoint";
 	}

@@ -7,30 +7,28 @@
 <meta charset="UTF-8">
 
 <title>문의 목록</title>
-<!-- 
-<style>
-	.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-	    background-color: #BAD7DF !important;
-	}
-</style>
- -->
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
-		<div class="row">
+		<div class="row" style="border-top: thick double #BAD7DF; border-bottom: thick double #BAD7DF; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">문의 목록</h1><h5 class="align-bottom">문의 목록입니다.</h5>				
 			</div>
 			<div class="dropdown pt-5 mb-4 col-6">		  
-			<div class="float-right" style="display:flex;">				
-				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-					문의 관련
-				</button>
-				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-					<li><a class="dropdown-item" href="/operation/getListOperation/3/0/0">답변중인 문의</a></li>
-		    		<li><a class="dropdown-item" href="/operation/getListOperation/3/0/1">답변완료 문의</a></li>
-				</ul>
+			<div class="float-right" style="display:flex;">
+			
+				<div class="dropdown show">
+					<a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						문의 관련
+					</a>					
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+						<a class="dropdown-item" href="/operation/getListOperation/3/0/0">답변중인 문의</a>
+						<a class="dropdown-item" href="/operation/getListOperation/3/0/1">답변완료 문의</a>
+					</div>
+				</div>
+				
+				
 				<div class="form-outline">
 					<input type="search" id="form1" class="form-control" />
 				</div>		  
@@ -73,7 +71,7 @@
 		</table>
 		
 		<hr/>
-		<a class="btn btn-primary float-right">문의 작성</a>
+		<a class="btn btn-primary float-right" href="/operation/insertOperation/3">문의 작성</a>
 		
 		<div class="row">
 			<div class="col-md-5"></div>

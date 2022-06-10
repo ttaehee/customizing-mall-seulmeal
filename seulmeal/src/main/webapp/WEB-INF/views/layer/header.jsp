@@ -1,28 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- jquery/js-->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+ -->
+
+<!-- bootStrap/js -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
 
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-
-<!-- bootStrap css -->
+<!-- bootStrap -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-
-
 <!-- bootStrap icon -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
-<!-- 우리 css, font -->
-<link href="../../resources/css/body.css">
-
-
+<link rel="stylesheet" href="../../../resources/css/body.css">
 
 <style>
 	.header{
@@ -51,7 +49,7 @@
 			<h4>문의 답변대기</h4>
 		</div>
 	</c:if>
-	<div class="header" style="background:#BAD7DF;">
+	<div class="header" style="background:#fff; padding-top:10px; ">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
 		<div id="google_translate_element" class="hd_lang"></div>
 	    <script>
@@ -66,12 +64,34 @@
 	    </script>
 	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 	    <div class="float-right">
+        	
+        	<c:if test="${ empty user }">
         	<button type="button" class="btn btn-outline-primary me-2" onclick="login()">Login</button>
         	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
+        	</c:if>
+        	
+        	<c:if test="${ !empty user }">
+        	 <li class="nav-item dropdown">
+	          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	            ${user.userName}
+	          </a>
+	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	            <li><a class="dropdown-item" href="user/getUpdateUser/{user.userId}">내 정보</a></li>
+	            <li><a class="dropdown-item" href="user/listUserPoint/{currentPage}">내 포인트</a></li>
+	            <li><a class="dropdown-item" href="#">내 구매내역</a></li>
+	            <li><a class="dropdown-item" href="#">내 게시글</a></li>
+	           <c:if test="${user.role == 1}">
+	           <li><a class="dropdown-item" href="#">관리자페이지</a></li>
+	           </c:if>
+	            <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
+	          </ul>
+	        </li>
+        	</c:if>
+        	
       	</div>
 	</div>
 	</div>
-	<nav class="navbar navbar-expand-lg navbar-light" style="background:#BAD7DF;">		
+	<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow: 5px 5px 5px gray;">		
 	  <div class="container-fluid">
 	    <a class="navbar-brand" href="/">seulMeal</a>
 	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,6 +146,9 @@
 		</form>        
 	  </div>
 	</nav> 
+	
+
+
 	
 <script type="text/javascript">
 	console.log($(".searchP").val())
