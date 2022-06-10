@@ -83,8 +83,8 @@
 	               		<span class="d-none d-sm-inline mx-1" style="color:black;">${user.userName}</span>					
 					</a>					
 					<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
-						<a class="dropdown-item" href="user/getUpdateUser/{user.userId}">내 정보</a>
-						<a class="dropdown-item" href="user/listUserPoint/1">내 포인트</a>
+						<a class="dropdown-item" href="/user/getUpdateUser/${user.userId}">내 정보</a>
+						<a class="dropdown-item" href="/user/listUserPoint/1">내 포인트</a>
 						<a class="dropdown-item" href="#">내 구매내역</a>
 						<a class="dropdown-item" href="#">내 게시글</a>
 						<c:if test="${user.role == 1}">
