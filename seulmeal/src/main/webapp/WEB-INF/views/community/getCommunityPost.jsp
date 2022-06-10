@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +12,119 @@
 
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
+
+	<br/>
+
+
+		<!-- table : 게시글 -->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="margin-top: 10px;">
+
+				<tr>
+					<td class="ct_list_b" >게시글유저_닉네임</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">게시글유저_프로필이미지</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">게시글 제목</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">게시글 내용</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">좋아요 수</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">조회수</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">달린 댓글 수</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">등록날짜</td>
+					<td class="ct_line02"></td>					
+					<td class="ct_list_b">게시글 사진</td>
+					<td class="ct_line02"></td>
+				</tr>
+				<tr>
+					<td colspan="11" bgcolor="808285" height="1"></td>
+				</tr>
+				
+				<tr>
+					<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+				</tr>
+				
+				<!-- c:set var="no" value="0"/-->
+					<tr class="ct_list_pop">
+						<td align="left">${post.user.nickName}</td>
+						<td></td>
+						<td align="left"><img style="width: 80px; height: 80px" src="../../resources/attachments/profile_image/${post.user.profileImage}"/></td>
+						<td></td>
+						<td align="left">${post.title}</td>
+						<td></td>
+						<td align="left">${post.content}</td>
+						<td></td>
+						<td align="left">${post.likeCount}</td>
+						<td></td>
+						<td align="left">${post.views}</td>
+						<td></td>
+						<td align="left">${post.commentCount}</td>
+						<td></td>
+						<td align="left">${post.regDate}</td>
+						<td></td>
+						<!-- 게시글 사진 -->
+						<td align="left"></td>
+						<td></td>
+						
+					</tr>
+					
+			</table>
+
+	<br/><br/>
+
+		<!-- table : 해당 게시글에 달린 댓글 목록 -->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="margin-top: 10px;">
+
+				<tr>
+					<td class="ct_list_b">댓글작성자_닉네임</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b" >댓글작성자_프로필이미지</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b" >댓글내용</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">등록날짜</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">수정날짜</td>
+					<td class="ct_line02"></td>
+				</tr>
+				<tr>
+					<td colspan="11" bgcolor="808285" height="1"></td>
+				</tr>
+				
+				<tr>
+					<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+				</tr>
+				
+				<!-- c:set var="no" value="0"/-->
+				<c:forEach var="comment" items="${commentList}">
+					<tr class="ct_list_pop">
+						<td align="left">${comment.user.nickName}</td>
+						<td></td>
+						<td align="left"><img style="width: 80px; height: 80px" src="../../resources/attachments/profile_image/${comment.user.profileImage}"/></td>
+						<td></td>
+						<td align="left">${comment.content}</td>
+						<td></td>
+						<td align="left">${comment.regDate}</td>
+						<td></td>
+						<td align="left">${comment.updateDate}</td>
+						<td></td>
+						
+						<!-- 게시글 사진 -->
+					</tr>
+				</c:forEach>
+				
+				
+				
+				
+			</table>
+
+	<br/>
+
 
 
 	<!-- 댓글 작성 -->
@@ -39,57 +154,19 @@
 	</div>
 
 
+  <span id ="commentPlus" style = "color : red"></span>
 
-	<!-- table : 댓글 -->
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
-				style="margin-top: 10px;">
-
-				<tr>
-					<td class="ct_list_b" width="100">No</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b" width="150">상품명</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b" width="150">가격</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b">등록일</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b">현재상태</td>
-				</tr>
-				<tr>
-					<td colspan="11" bgcolor="808285" height="1"></td>
-				</tr>
-				
-				<tr>
-					<td colspan="11" bgcolor="D6D7D6" height="1"></td>
-				</tr>
-			</table>
-
-
-
-<table border= "1">
-    <tr>
-        <td></td>
-        <td>${DTORes.content}</td>
-    </tr>
-    <tr>
-        <td>작성자</td>
-        <td>${DTORes.content}</td>
-    </tr>
-    <tr>
-        <td>내용</td>
-        <td>${DTORes.content}</td>
-    </tr>
- 
-</table>
 
 
 <script>
 		// ===================================== 추가 부분 ========================================
 		//태그명.클래스명
 		$("#insertBtn").on("click",function() {
-
+		
+					var postNo = ${post.postNo}
+			
 					var jsonReq = {
-							"postNo":380,
+							"postNo":postNo,
 							"content":$("#comment_content").val(),
 							"layer":$("#layer").val()
 					}
@@ -100,46 +177,96 @@
 					$.ajax({
 						url : "/community/api/insertComment",
 						method : "POST",
-						//data : JSON.stringify(jsonReq),
-						data : jsonReq,
+						data : JSON.stringify(jsonReq),
+						//data : jsonReq,
 						dataType : "json",
-						//contentType : "application/json; charset=utf-8",
+						contentType : "application/json; charset=utf-8",
+						/*
 						headers : {
 									"Accept" : "application/json",
 									"Content-Type" : "application/json"
 								},
-						success : function(DTORes) {
+						*/
+						success : function(DTORes, status) {
 
 							//(status : sucess or err)
 							alert("status: " + status);
 							console.log("status: " + status);
 						
-							//Debug...
+							// 응답받은 dto 객체
 							alert("DTORes : " + DTORes);
 							console.log("DTORes : " + DTORes);
 
-							var result = DTORes["postNo"]+DTORes["commentNo"]+DTORes["userId"];
-							//+DTORes[""]+DTORes[""]
+							// 응답받은 dto 객체의 value 값 꺼내기
+							var result = 
+								DTORes["postNo"]+", "+
+								DTORes["commentNo"]+", "+
+								DTORes["content"]+", "+
+								DTORes["regDate"];
 						
 							alert("result: " + result);
 							console.log("result : " + result);
 
-							
-							
-							//var displayValue = "<h7>" + 
-							//"댓글내용 : " + JSONData.content +
-							//"댓글작성시간 : "	+ JSONData.regDate + "</h7>";
-							// nickname, profile_image??
-							
-							//Debug...									
-							//alert(displayValue);
-							
-							//$("h7").remove();
+					         $("#commentPlus").html(result);
 							//$("#" + postNo + "").html(displayValue);
 						}
 					});
 
 				});
+		
+		
+		$("#updateBtn").on("click",function() {
+			
+			var postNo = ${post.postNo}
+	
+			var jsonReq = {
+					"postNo":postNo,
+					"content":$("#comment_content").val(),
+					"layer":$("#layer").val()
+			}
+			
+			alert("jsonReq: " + jsonReq);
+			console.log("jsonReq: " + jsonReq);
+			
+			$.ajax({
+				url : "/community/api/updateComment/"+#{commentNo},
+				//method : "POST",
+				data : JSON.stringify(jsonReq),
+				data : jsonReq,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				/*
+				headers : {
+							"Accept" : "application/json",
+							"Content-Type" : "application/json"
+						},
+				*/
+				success : function(DTORes, status) {
+
+					//(status : sucess or err)
+					alert("status: " + status);
+					console.log("status: " + status);
+				
+					// 응답받은 dto 객체
+					alert("DTORes : " + DTORes);
+					console.log("DTORes : " + DTORes);
+
+					// 응답받은 dto 객체의 value 값 꺼내기
+					var result = 
+						DTORes["postNo"]+", "+
+						DTORes["commentNo"]+", "+
+						DTORes["content"]+", "+
+						DTORes["regDate"];
+				
+					alert("result: " + result);
+					console.log("result : " + result);
+
+			         $("#commentPlus").html(result);
+					//$("#" + postNo + "").html(displayValue);
+				}
+			});
+
+		});
 
 </script>
 
