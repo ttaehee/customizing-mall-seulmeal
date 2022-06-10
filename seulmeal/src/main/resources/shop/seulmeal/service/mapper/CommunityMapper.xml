@@ -222,6 +222,7 @@
 	<resultMap type="shop.seulmeal.service.domain.Comment" id="commentSelectMap">
 		<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
 		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.profileImage" column="profile_image" jdbcType="VARCHAR" />
 		<result property="user.nickName" column="nickname" jdbcType="VARCHAR" />
 		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
@@ -236,11 +237,10 @@
 	
 	<insert id="insertComment" parameterType="Comment">
 		INSERT INTO 
-			comments(comment_no, user_id, nickname, post_no, content, layer, reg_date, parent_comment_no, status)
+			comments(comment_no, user_id, post_no, content, layer, reg_date, parent_comment_no, status)
 		VALUES 
 			(seq_comment_no.nextval, 
 			#{user.userId},
-			#{user.nickName:VARCHAR}, 
 			#{postNo}, 
 			#{content}, 
 			#{layer}, 
@@ -303,11 +303,13 @@
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 	  					FROM		(	
-	  						SELECT * FROM comments
+	  						SELECT c.*, u.nickname, u.profile_image
+							FROM comments c, users u
 							<where>
-								post_no = #{postNo}
+								c.user_id = u.user_id
+								AND post_no = #{postNo}
 								AND status = '0'
-							</where>					
+							</where>				
 	  					 ) inner_table
 						WHERE ROWNUM &lt;= #{search.endRowNum} )
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -90,27 +92,36 @@ public class CommunityController {
 	}
 	
 	//Post
-	@GetMapping("/insertPost") // o
+	@GetMapping("/insertPost") // oo
 	public String insertPost() {
 		return "community/insertCommunityPost";
 	}
 	
-	@PostMapping("/insertPost") // o
-	public String insertPost(@ModelAttribute Post post, MultipartFile[] uploadfile,Attachments attachments,HttpSession session) throws IllegalStateException, IOException {
+	@PostMapping("/insertPost") // x
+	@Transactional(rollbackFor = Exception.class)
+	public String insertPost(String userId, @ModelAttribute Post post, MultipartFile uploadfile, Attachments attachments,HttpSession session) throws IllegalStateException, IOException {
 
-		post.setUser(((User)session.getAttribute("user")));
+		System.out.println("/////////////"+userId);
+		System.out.println("/////////////"+post);
+		System.out.println("/////////////"+uploadfile);
+		
+		//post.setUser(((User)session.getAttribute("user")));
+		
+		User user = new User();
+		user.setUserId(userId);
+		post.setUser(user);
 		communityService.insertPost(post);
 		
 		attachments.setPostNo(Integer.toString(post.getPostNo()));
 		
-		attachmentsService.insertAttachments(uploadfile, attachments);
+		//attachmentsService.insertAttachments(uploadFile, attachments);
 		
 		return "redirect:getPost/"+ post.getPostNo(); 
 	}
 	
-	@GetMapping("/getPost/{postNo}") // o
-	@ResponseBody
-	public Map getPost(@PathVariable int postNo, Model model) {
+	@GetMapping("/getPost/{postNo}") // oo
+//	@ResponseBody
+	public String getPost(@PathVariable int postNo, Model model) {
 		
 		Post post = communityService.getPost(postNo);
 		
@@ -122,9 +133,8 @@ public class CommunityController {
 		model.addAttribute("post", post);
 		model.addAttribute("commentList", (List<Comment>)map.get("commentList"));
 		
-//		return "community/getCommunityPost";
-		return map;
-
+//		return post;
+		return "community/getCommunityPost";
 	}
 
 	
