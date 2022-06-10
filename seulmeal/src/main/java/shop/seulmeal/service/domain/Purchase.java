@@ -12,7 +12,6 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Purchase {
 	private int purchaseNo;
 	private User user;

@@ -43,17 +43,12 @@ const drawStar = (target) => {
 </script>
 
 <body>
-<form action="/product/insertReview" method="POST">
+<form action="/product/insertReview/${product.productNo }" method="POST">
 	상품명 : ${product.name} <br/>
 	작성자명 : ${user.userName }<br/>
 	리뷰 제목 : <input name = "title"/><br/>
 	리뷰 내용 : <input name = "content"/><br/>
 	별점 : <input name = "rating"/><br/>
-<span class="star">
-  ★★★★★
-  <span>★★★★★</span>
-  <input type="range" oninput="drawStar(this)" value="1" step="1" min="0" max="10">
-</span>
 <br/>
 	<button type="submit">저장</button>
 	
