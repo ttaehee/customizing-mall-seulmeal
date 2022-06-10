@@ -61,7 +61,14 @@ public class MainController {
 			map = productService.getListProduct(search);
 			List<Product> list = (List)map.get("list");
 			model.addAttribute("list",list);
+		} else {
+			if(user.getFoodCategoryName1() == null) {
+				map = productService.getListProduct(search);
+				List<Product> list = (List)map.get("list");
+				model.addAttribute("list",list);
+			}
 		}
+		
 		
 		return "main";
 	}

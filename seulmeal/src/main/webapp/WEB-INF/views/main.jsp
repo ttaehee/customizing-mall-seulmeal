@@ -57,15 +57,15 @@
 		</ol>
 		<div class="carousel-inner">
 			<div class="carousel-item active">
-				<img class="d-block w-100" src="../../resources/attachments/image/tetris.png" alt="First slide" style="height:500px;">
+				<img class="d-block w-100" src="../../resources/attachments/image/seulMeal.png" alt="First slide" style="height:600px;">
 			</div>
 			<c:forEach var="post" items="${listE}">
 				<div class="carousel-item" data-value="${post.postNo}" id="eventBanner">
 					<c:if test="${post.thumnail == null}">
-						<img class="d-block w-100" src="../../resources/attachments/image/tetris.png" alt="First slide" style="height:500px;">
+						<img class="d-block w-100" src="../../resources/attachments/image/tetris.png" alt="First slide" style="height:600px;">
 					</c:if>
 					<c:if test="${post.thumnail != null}">
-						<img class="d-block w-100" src="../../resources/attachments/${post.thumnail}" alt="Second slide" style="height:500px;">
+						<img class="d-block w-100" src="../../resources/attachments/${post.thumnail}" alt="Second slide" style="height:600px;">
 					</c:if>			
 					<div class="carousel-caption d-none d-md-block">
 						<h2 class="display-6 fw-bold">${post.title}</h2>

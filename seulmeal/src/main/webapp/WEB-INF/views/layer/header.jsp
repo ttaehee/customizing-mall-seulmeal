@@ -49,7 +49,7 @@
 			<h4>문의 답변대기</h4>
 		</div>
 	</c:if>
-	<div class="header" style="background:#BAD7DF;">
+	<div class="header" style="background:#fff; padding-top:10px; ">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
 		<div id="google_translate_element" class="hd_lang"></div>
 	    <script>
@@ -91,7 +91,7 @@
       	</div>
 	</div>
 	</div>
-	<nav class="navbar navbar-expand-lg navbar-light" style="background:#BAD7DF;">		
+	<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow: 5px 5px 5px gray;">		
 	  <div class="container-fluid">
 	    <a class="navbar-brand" href="/">seulMeal</a>
 	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
