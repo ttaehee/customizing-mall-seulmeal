@@ -56,7 +56,7 @@
 					<th>${post.postNo}</th>
 					<th>
 						<c:if test="${post.publicStatus ==0}">
-							<a href="/operation/getOperation/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
+							<a href="/operation/getOperation/3/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
 						</c:if>
 						<c:if test="${post.publicStatus ==1}">
 							<div class="psBtn" data-value="${post.postNo}">${post.title }<i class="bi bi-lock-fill"></i></div>						

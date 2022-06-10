@@ -29,10 +29,21 @@
 			</div>
 			<div class="col-md-2"></div>
 			<div class="col-md-8">
+				<div class="row justify-content-end">
+		        	<div class="col-1">
+		        		<div class="dropdown show">
+							<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
+							</a>					
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+								<c:forEach var="attachments" items="${post.attachments}">		          	
+					            	<a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
+					            </c:forEach>
+							</div>
+						</div>
+		        	</div>		
+		        </div>
 				<div class="row" style="min-height:700px;">
-				<c:forEach var="attachments" items="${post.attachments}">
-						<a href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>			
-				</c:forEach>
 					${post.content}
 				</div>
 			</div>
@@ -45,8 +56,18 @@
 					</span>						
 				</div>
 				<div class="row" style="border-bottom: 2px double #BAD7DF;">
-					<div class="col-md-12" style="background-color:#e9e9e9;">다음글</div>
-					<div class="col-md-12" style="background-color:#e9e9e9;">이전글</div>
+					<div class="col-md-12" style="background-color:#e9e9e9;">
+						<div class="row">
+							<div class="col-md-1">다음글</div>
+							<div><a href="/operation/getOperation/1/${post.npost.postNo}">${post.npost.title}</a></div>
+						</div>
+					</div>
+					<div class="col-md-12" style="background-color:#e9e9e9;">
+						<div class="row">
+							<div class="col-md-1">이전글</div>
+							<div><a href="/operation/getOperation/1/${post.bpost.postNo}">${post.bpost.title}</a></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
