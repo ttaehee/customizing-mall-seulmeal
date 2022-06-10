@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,9 +71,9 @@ public class CommunityRestController {
 		return map;
 	}
 
-	@GetMapping("getListComment") // oo
+	@GetMapping("getListComment/{postNo}") // oo
 	public Map<String, Object> getListComment(@RequestParam(required = false, defaultValue = "1") int currentPage,
-			int postNo) {
+			@PathVariable int postNo) {
 
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
@@ -85,43 +86,40 @@ public class CommunityRestController {
 	}
 	
 	//Comment
-	@PostMapping("/insertComment") // o
-	public void insertComment(@RequestBody Comment comment) {
-		
-		System.out.println("/////////"+comment);
-		communityService.insertComment(comment);
-	
-	}
-	
-	
-	//RestController?
-	@GetMapping("/updateComment/{commentNo}") // o
-	public String updateComment(@PathVariable int commentNo, Model model) {
-		
-		Comment comment = communityService.getComment(commentNo);
+	@PostMapping("/insertComment") // oo
+	public Comment insertComment(@RequestBody Comment comment) {
 
-		model.addAttribute("comment", comment);
+		System.out.println("/////////"+comment);
+//		User user = (User)session.getAttribute("user");
+		User user = new User();
+		user.setUserId("ghm8614");
+		comment.setUser(user);
 		
-		return "redirect:/community/getPost/"+ comment.getPostNo(); 
+		communityService.insertComment(comment);
+		
+		return communityService.getComment(comment.getCommentNo()); 
+
 	}
 	
-	//RestController?
-	@PutMapping("/updateComment/{commentNo}") // o
-	public String updateComment(@PathVariable int commentNo, @ModelAttribute Comment comment) {
+	@GetMapping("/updateComment/{commentNo}") // oo
+	public Comment updateComment(@PathVariable int commentNo) {
 		
+		return communityService.getComment(commentNo); 
+	}
+	
+	@PatchMapping("/updateComment/{commentNo}") // o^
+	public Comment updateComment(@PathVariable int commentNo, @RequestBody Comment comment) {
+		
+		comment.setCommentNo(commentNo);
 		communityService.updateComment(comment);
 		
-		return "redirect:/community/getPost/"+ comment.getPostNo(); 
+		return communityService.getComment(commentNo); 
 	}
 	
-	//parameter Comment?
-	@PutMapping("/deleteComment/{commentNo}") // ^
-	public String deleteComment(@PathVariable int commentNo) {
+	@PatchMapping("/deleteComment/{commentNo}") // ^o
+	public void deleteComment(@PathVariable int commentNo) {
 		
 		communityService.deleteComment(commentNo);
-		Comment comment = communityService.getComment(commentNo);
-		
-		return "redirect:/community/getPost/"+ comment.getPostNo(); 
 	}
 	
 
