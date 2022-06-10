@@ -155,13 +155,10 @@ public class ProductController {
 	}
 
 	@PostMapping(value = { "insertReview"} )
-	public String insertReview(Review review, @PathVariable int productNo, HttpSession session) throws Exception {
+	public String insertReview(Review review, HttpSession session) throws Exception {
 		User user = (User)session.getAttribute("user");
 		review.setUser(user);	
-		
-		Product product = productService.getProduct(productNo);
-		review.setProduct(product);
-		
+				
 		System.out.println(review);
 		
 		return "/product/getReview/"+review.getReviewNo();
