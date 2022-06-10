@@ -77,7 +77,7 @@
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	            <li><a class="dropdown-item" href="user/getUpdateUser/{user.userId}">내 정보</a></li>
-	            <li><a class="dropdown-item" href="user/listUserPoint/{currentPage}">내 포인트</a></li>
+	            <li><a class="dropdown-item" href="user/listUserPoint/1">내 포인트</a></li>
 	            <li><a class="dropdown-item" href="#">내 구매내역</a></li>
 	            <li><a class="dropdown-item" href="#">내 게시글</a></li>
 	           <c:if test="${user.role == 1}">
