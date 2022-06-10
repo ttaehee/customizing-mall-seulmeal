@@ -14,7 +14,7 @@
 
  <div class="container">
  
-  <form class="form-horizontal" method="post" action="/user/insertUser" target="_self">
+  <form class="form-horizontal" method="post" action="/user/insertUser" target="_self" enctype="multipart/form-data">
   <h2>추가 정보 입력</h2>
 	
 	<div class="btn-group" data-toggle="buttons">
@@ -57,7 +57,7 @@
   
   </form>
 	
-  
+  </div>
   
     <jsp:include page="../layer/footer.jsp"></jsp:include>
 </body>
