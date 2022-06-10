@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,13 +36,16 @@ import shop.seulmeal.service.user.UserService;
 public class PurchaseController {
 	
 	@Autowired
+	@Qualifier("purchaseServiceImpl")
 	private PurchaseService purchaseService;
 	
 	@Autowired
+	@Qualifier("productServiceImpl")
 	private ProductService productService;
 	
-	//@Autowired
-	//private UserService userService;
+	@Autowired
+	@Qualifier("userServiceImpl")
+	private UserService userService;
 	
 	int pageUnit;
 	int pageSize;
@@ -52,7 +56,7 @@ public class PurchaseController {
 	}
 	
 	//커스터마이징 옵션선택 화면출력 
-	@GetMapping("/insertCustomProduct/{productNo}")
+	@GetMapping("insertCustomProduct/{productNo}")
 	public String insertCustomProduct(@PathVariable int productNo, Model model) throws Exception {
 		
 		System.out.println("/insertCustomProduct productNo : "+ productNo);
@@ -63,12 +67,12 @@ public class PurchaseController {
 		model.addAttribute("product",product);
 		model.addAttribute("partsList",partsList);
 		
-		return "redirect:/purchase/insertPurchaseCustomProduct";
+		return "purchase/insertPurchaseCustomProduct";
 		
 	}
 	
 	//커스터마이징 상품 인서트 
-	@PostMapping("/insertCustomProduct")
+	@PostMapping("insertCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
 	public String insertCustomProduct(List<CustomParts> minus, List<Parts> plusParts, CustomProduct customProduct, Product product, String userId, String cartStatus, Model model) {
 		
@@ -105,15 +109,15 @@ public class PurchaseController {
 		model.addAttribute("customProduct",customProduct);
 		
 		if(cartStatus.equals("0")) {
-			return "/purchase/getListCustomProduct/"+userId;
+			return "redirect:getListCustomProduct/"+userId;
 		}else {
-			return "/purchase/insertPurchase/"+customProduct.getCustomProductNo();
+			return "redirect:insertPurchase/"+userId;
 		}
 		
 	}
 	
 	//장바구니 리스트 
-	@GetMapping("/getListCustomProduct/{userId}")
+	@GetMapping("getListCustomProduct/{userId}")
 	public String getListCustomProduct(@PathVariable String userId, Model model) {
 		System.out.println("/getListCustomProduct : "+ userId);
 		
@@ -135,12 +139,12 @@ public class PurchaseController {
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 		
-		return "redirect:/purchase/listPurchaseCart";
+		return "purchase/listPurchaseCart";
 		
 	}	
 	
 	//커스터마이징 상품 현재옵션정보 + 옵션수정 화면출력 
-	@GetMapping("/updateCustomProduct/{customProductNo}")
+	@GetMapping("updateCustomProduct/{customProductNo}")
 	@Transactional(rollbackFor= {Exception.class})
 	public String updateCustomProduct(@PathVariable int customProductNo, CustomProduct customProduct, Model model) {
 		
@@ -150,11 +154,11 @@ public class PurchaseController {
 		
 		model.addAttribute("customProduct", customProduct);
 		
-		return "redirect:/purchase/getPurchaseCustomProduct";
+		return "purchase/getPurchaseCustomProduct";
 	}	
 	
 	//커스터마이징 상품 옵션수정(커스터마이징재료 삭제 후 추가)
-	@PostMapping("/updateCustomProduct")
+	@PostMapping("updateCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
 	public String updateCustomProduct(int customProductNo, String userId, List<CustomParts> minus, List<CustomParts> plus, Model model) {
 		
@@ -172,11 +176,11 @@ public class PurchaseController {
 		purchaseService.insertMinusParts(map);
 		purchaseService.insertPlusParts(map);
 		
-		return "/purchase/getListCustomProduct/"+userId;
+		return "redirect:getListCustomProduct/"+userId;
 	}		
 		
 	//커스터마이징 상품 장바구니에서 삭제 
-	@PostMapping("/deleteCustomProduct")
+	@PostMapping("deleteCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
 	public String deleteCustomProduct(int customProductNo, String userId, Model model) {
 		
@@ -184,24 +188,29 @@ public class PurchaseController {
 		
 		purchaseService.deleteCustomProduct(customProductNo);
 		
-		return "/purchase/getListCustomProduct/"+userId;
+		return "redirect:getListCustomProduct/"+userId;
 	}	
 	
 	
 	//구매정보입력 화면 출력  바로구매하기와 장바구니에서 구매버튼 누른거 어떻게 구분?? 장바구니에 1,2 두고 3만 바로구매하기할수도 
 	//장바구니화면에서 커스터마이징상품들 정보 그대로 파라미터로 받을수 잇나?
-	@GetMapping("/insertPurchase/{userId}")
-	public String insertPurchase(@PathVariable String userId, List<CustomProduct> customProduct,Model model) {
+	@GetMapping("insertPurchase")
+	public String insertPurchase(Model model) throws Exception {
 		
 		System.out.println("/insertPurchase : GET");
 		
-		model.addAttribute("customProductList", customProduct);
+		User user=new User();
+		user=userService.getUser("ghm4905");
 		
-		return "redirect:/purchase/api/insertPurchase";
+		model.addAttribute("user", user);
+		
+		//model.addAttribute("customProductList", customProduct);
+		
+		return "purchase/insertPurchase";
 		
 	}
 	
-	@GetMapping("/getPurchase/{purchaseNo}")
+	@GetMapping("getPurchase/{purchaseNo}")
 	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {
 		
 		System.out.println("/getListCustomProduct : "+ purchaseNo);
@@ -210,11 +219,11 @@ public class PurchaseController {
 		
 		model.addAttribute(purchase);
 		
-		return "redirect:/purchase/getPurchase";
+		return "purchase/getPurchase";
 		
 	}	
 	
-	@GetMapping("/getListPurchase/{userId}")
+	@GetMapping("getListPurchase/{userId}")
 	public String getListPurchase(String userId, Search search, Purchase purchase, Model model, HttpSession session)
 			throws Exception {
 
@@ -236,7 +245,7 @@ public class PurchaseController {
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 
-		return "redirect:/purchase/listPurchase";
+		return "purchase/listPurchase";
 	}
 	
 	//구매내역 삭제 
@@ -248,7 +257,7 @@ public class PurchaseController {
 		
 		purchaseService.deletePurchase(purchaseNo);
 		
-		return "/purchase/getListPurchase/"+userId;
+		return "redirect:getListPurchase/"+userId;
 	}			
 	
 }

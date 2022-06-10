@@ -1,249 +1,124 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="UTF-8"%>
-    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-
 <html lang="ko">
 
 <head>
-<title>구매등록</title>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
+	<title>구매 등록</title>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
-	
-	<style>
-       body > div.container{
-        	border: 3px solid #D6CDB7;
-            margin-top: 10px;
-        }
-    </style>
-	
-	<script type="text/javascript">
-	
-	$(function() {	
-		$( "a[href='#' ]" ).on("click" , function() {
-			//Debug..
-			//alert(  $( "td.ct_btn01:contains('취소')" ).html() );
-			history.go(-1);
-	    });
-	});
-		
-	</script>
 </head>
 
 <body>
+<jsp:include page="../layer/header.jsp"></jsp:include>
+<!-- iamport.payment.js -->
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+	
+	<input type="hidden" id="userId" name="userId" value="${user.userId}"/>
+	
+	받으시는분 : <input type="text" id="name" name="name" value="${user.userName}"></input><br/>
+	주소 : <input type="text" id="address" name="address" " value="${user.address}"></input><br/>
+	휴대전화 : <input type="text" id="phone" name="phone" value="${user.phone}"></input><br/>
+	이메일 : <input type="text" id="email" name="email" value="${user.email}"></input><br/>
+	배송메시지 : <input type="text" id="message" name="message"></input><br/>
+	가격 : <input type="text" id="price" name="price" value="100" readonly></input><br/>
+	결제방법 : <select id=paymentCondition name="paymentCondition">
+					<option value="1">카드결제</option>		
+					<option value="2">포인트결제</option>		
+			</select><br/>
 
-	<jsp:include page="../layer/header.jsp"></jsp:include>
-	<form name="insertPurchase" action="/purchase/api/insertPurchase" method="POST" enctype="multipart/form-data">
+	<button onclick="iamport()">결제하기</button>
+	
+	<script type="text/javascript">
+	
+	function iamport(){
+		
+		const userId = $('#userId').val();
+		const name = $('#name').val();
+		const address = $('#address').val();
+		const phone = $('#phone').val();
+		const email = $('#email').val();
+		const message = $('#message').val();
+		const price = $('#price').val();
+		const paymentCondition = $('#paymentCondition').val();
+		//const point = $('#point').val();
+		//const customProductNo = $('#customProductNo').val();
+		
+		$.ajax({
+			url:"/purchase/api/insertPurchase",
+			method:"POST",
+			data:JSON.stringify({
+				userId : userId,
+				name : name,
+				address : address,
+				phone : phone,
+				email : email,
+				message : message,
+				price : price,
+				paymentCondition : paymentCondition
+				//point : point,
+				//customProductNo : customProductNo
+			}),
+			headers : {
+				"Accept" : "application/json",
+				"Content-Type" : "application/json"
+			},
+			dataType : "json",
+			success : function(data){
 
-<table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
-	<tr>
-		<td width="15" height="37">
-			<img src="/images/ct_ttl_img01.gif" width="15" height="37">
-		</td>
-		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left: 10px;">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="93%" class="ct_ttl01">상품상세조회</td>
-					<td width="20%" align="right">&nbsp;</td>
-				</tr>
-			</table>
-		</td>
-		<td width="12" height="37">
-			<img src="/images/ct_ttl_img03.gif" width="12" height="37"/>
-		</td>
-	</tr>
-</table>
-
-<input type="hidden" name="prodNo" value="${product.prodNo}" />
-
-<table width="600" border="0" cellspacing="0" cellpadding="0"	align="center" style="margin-top: 13px;">
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="300" class="ct_write">
-			상품번호 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01" width="299">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="105">${product.prodNo}</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품명 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.prodName}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품상세정보 <img	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.prodDetail}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">제조일자</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.manuDate}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">가격</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.price}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">등록일자</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.regDate}</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			구매자아이디 <img 	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${user.userId}</td>
-		<input type="hidden" name="userId" value="${user.userId}" />
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">구매방법</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<select 	name="paymentOption"		class="ct_input_g" 
-							style="width: 100px; height: 19px" maxLength="20">
-				<option value="1" selected="selected">현금구매</option>
-				<option value="2">신용구매</option>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">구매자이름</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input type="text" name="receiverName" 	class="ct_input_g" 
-						style="width: 100px; height: 19px" maxLength="20" value="${user.userName}" />
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">구매자연락처</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input 	type="text" name="receiverPhone" class="ct_input_g" 
-							style="width: 100px; height: 19px" maxLength="20" value="${user.phone}" />
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">구매자주소</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input 	type="text" name="divyAddr" class="ct_input_g" 
-							style="width: 100px; height: 19px" maxLength="20" 	value="${user.addr}" />
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">구매요청사항</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input		type="text" name="divyRequest" 	class="ct_input_g" 
-							style="width: 100px; height: 19px" maxLength="20" />
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">배송희망일자</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td width="200" class="ct_write01">
-			<input 	type="text" readonly="readonly" name="divyDate" class="ct_input_g" 
-							style="width: 100px; height: 19px" maxLength="20"/>
-			<img 	src="../images/ct_icon_date.gif" width="15" height="15"	
-						onclick="show_calendar('document.addPurchase.divyDate', document.addPurchase.divyDate.value)"/>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-</table>
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
-	<tr>
-		<td width="53%"></td>
-		<td align="center">
-			<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-						<a href="javascript:fncAddPurchase();">구매</a>
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
-					</td>
-					<td width="30"></td>
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-						<a href="javascript:history.go(-1)">취소</a>
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-</form>
-
-<jsp:include page="../layer/footer.jsp"></jsp:include>		
+				IMP.init('imp83644059'); 
+				IMP.request_pay(
+				    { 
+		 		  	pay_method: data.paymentCondition,
+		  		  	merchant_uid: data.purchaseNo,
+		  		  	name: "상품",
+		  		  	amount: data.price,
+		   		 	buyer_email: data.email,
+		   			buyer_name: data.name,
+		  			buyer_tel: data.phone,
+		  		  	buyer_addr: data.address,
+		   		 	buyer_postcode: "01181"
+					}, function(rsp) {
+						console.log(rsp);
+						if(rsp.success){
+							var msg = '결제가 완료되었습니다.';
+					        msg += '고유ID : ' + rsp.imp_uid;
+					        msg += '상점 거래ID : ' + rsp.merchant_uid;
+					        msg += '결제 금액 : ' + rsp.paid_amount;
+					        msg += '카드 승인번호 : ' + rsp.apply_num;
+			  		      	
+			  		      	 $.ajax({
+			  		  			url:"api/verifyIamport",
+			  		  			method:"POST",
+			  		  			data:JSON.stringify({
+			  		  				imp_uid : rsp.imp_uid,
+			  		  				purchaseNo : rsp.merchant_uid,
+			  		  				amount : rsp.paid_amount
+			  		  			}),
+			  		  			headers : {
+			  		  				"Accept" : "application/json",
+			  		  				"Content-Type" : "application/json"
+			  		  			},
+			  		  			dataType : "json",
+			  		  			success : function(data){
+			  		  				console.log(data);
+			  		  				window.location.href='/purchase/getPurchase/' + data.purchaseNo;
+			  		  			}
+			  		      	 })
+						}else{
+							var msg = '결제에 실패하였습니다.';
+					         msg += '에러내용 : ' + rsp.error_msg;
+	
+						}
+					alert("???");
+				})
+			}
+		})
+	}
+	</script>
+	
+<jsp:include page="../layer/footer.jsp"></jsp:include>	
 </body>
 </html>
