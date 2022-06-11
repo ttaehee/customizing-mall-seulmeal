@@ -23,7 +23,7 @@ function a(){
         dataType : "json",
         data:JSON.stringify({
         	//email : $("#email").val(),
-        	phone : $("#phone").val()
+        	email : $("#email").val()
         }),
         success : function(data){
         	console.log(data)

@@ -147,10 +147,13 @@ public class ConfirmService {
 	public void sendMail(String content, String to) {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		try {
+			
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 			mimeMessageHelper.setTo(to);
+			
 			mimeMessageHelper.setSubject("seulMeal 인증메일 입니다");
-			mimeMessageHelper.setText(content, false);
+			content += "<a href='http://localhost:7100/'>seulMealFactory</a><br/>";
+			mimeMessageHelper.setText(content, true);
 			javaMailSender.send(mimeMessage);
 			System.out.println("성공");
 		} catch (Exception e) {

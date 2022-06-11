@@ -133,7 +133,7 @@
 					<tr>
 						<td align="left">${sessionScope.user.profileImage}</td>
 						<td></td>
-						<td align="left">${sessionScope.user.nickname}</td>
+						<td align="left">${sessionScope.user.nickName}</td>
 						<td></td>
 						<td align="left">${user.profileMessage}</td>
 						<td></td>
