@@ -32,7 +32,7 @@ body {
 	  top: 50px;
 	  background-image: url('../../resources/attachments/image/free-icon-chatbot-2040946.png');
 	  color: #fffffff;
-	  margin-top:500px;
+	  margin-top:600px;
 	  background-repeat: no-repeat;
 	  background-position: center center;
 	  background-size: cover;

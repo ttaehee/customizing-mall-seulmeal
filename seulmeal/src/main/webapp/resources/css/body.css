@@ -8,16 +8,62 @@
 }
 
 body {
-	font-family: 'GmarketSansMedium';
+	font-family: 'GmarketSansMedium' !important;
 	margin:0;
-	padding:0;
+	padding:0;	
 }
 
+
 a:link {
-	color: black; 
-	text-decoration: none;
+	color: black !important; 
+	text-decoration: none !important;
 }
 a:visited {
-	color:black;
-	text-decoration: none;
+	color:black !important;
+	text-decoration: none !important;
 }
+a:hover{
+	color: #4b6cb7 !important;
+}
+
+.headerNav:after{
+	display:block;
+	content: '';
+	border-bottom: solid 2px #4b6cb7;
+	transform: scaleX(0);
+	transition: transform 250ms ease-in-out;
+}
+
+.headerNav:hover:after{
+	transform: scaleX(1);
+}
+
+/* 버튼 */
+.seulBtn{		
+	width: 100px;
+	padding: 5px;
+	border: 2px solid #4b6cb7;
+	text-align: center;
+	border-radius: 10%;
+	cursor: pointer;
+}
+.seulBtn:hover{
+	background-color: #4b6cb7;
+	color:#fff;
+}
+
+.btn {
+	border: 2px solid #4b6cb7 !important;
+	background-color: #fff !important;
+	color: #4b6cb7 !important;
+}
+
+.btn:hover{
+	background-color: #4b6cb7 !important;
+	color:#fff !important;
+}
+
+th{
+	font-weight: normal;
+}
+

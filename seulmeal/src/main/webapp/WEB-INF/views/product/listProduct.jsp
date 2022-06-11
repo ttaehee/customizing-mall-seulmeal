@@ -21,7 +21,7 @@
 	}	
 </style>
 </head>
-<body>
+<body style="background-color: #fff;">
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
 	<div class="container px-4 py-5" id="custom-cards">

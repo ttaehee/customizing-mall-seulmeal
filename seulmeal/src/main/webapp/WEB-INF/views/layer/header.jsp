@@ -23,7 +23,7 @@
 <!-- bootStrap icon -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
-<link rel="stylesheet" href="../../../resources/css/body.css">
+<link rel="stylesheet" href="/resources/css/body.css">
 
 <style>
 	.header{
@@ -69,7 +69,7 @@
 	    <div class="float-right" style="margin-right: 30px;">
         	
         	<c:if test="${ empty user }">
-	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()">Login</button>
+	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">Login</button>
 	        	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
         	</c:if>
         	
@@ -81,11 +81,11 @@
 							<img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
 						</c:if>
 						<c:if test="${user.profileImage != null}">
-							<img src="../../../resources/attachments/profile_image/${user.profileImage}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+							<img src="/resources/attachments/profile_image/${user.profileImage}" alt="hugenerd" width="30" height="30" class="rounded-circle">
 						</c:if>
 	               		<span class="d-none d-sm-inline mx-1" style="color:black;">${user.userName}</span>					
 					</a>					
-					<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+					<div class="dropdown-menu dropdown-menu-right text-small shadow" aria-labelledby="dropdownMenuLink">
 						<a class="dropdown-item" href="/user/getUpdateUser/${user.userId}">내 정보</a>
 						<a class="dropdown-item" href="/user/listUserPoint/1">내 포인트</a>
 						<a class="dropdown-item" href="/purchase/getListPurchase">내 구매내역</a>
@@ -102,16 +102,16 @@
       	</div>
 	</div>
 	</div>
-	<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff; box-shadow: 5px 5px 5px gray;">		
+	<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff;">		
 	  <div class="container-fluid">
 	    <a class="navbar-brand" href="/">seulMeal</a>
 	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 	      <span class="navbar-toggler-icon"></span>
 	    </button>
-	    <div class="collapse navbar-collapse" id="navbarNav">
+	    <div class="collapse navbar-collapse" id="navbarNav" style="display: flex; justify-content: space-between;">
 	      <ul class="navbar-nav nav">
 	      	<li class="nav-item dropdown">
-	          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	          <a class="nav-link dropdown-toggle headerNav" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 	            전체카테고리
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -121,19 +121,19 @@
 	          </ul>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link active" aria-current="page" href="/product/getListProduct">신상품</a>
+	          <a class="nav-link active headerNav" aria-current="page" href="/product/getListProduct">신상품</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link" href="/community/communityMain">게시판</a>
+	          <a class="nav-link headerNav" href="/community/communityMain">게시판</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link" href="#">베스트</a>
+	          <a class="nav-link headerNav" href="#">베스트</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link" href="/operation/getListOperation/2">특가/이벤트</a>
+	          <a class="nav-link headerNav" href="/operation/getListOperation/2">특가/이벤트</a>
 	        </li>
 	        <li class="nav-item dropdown">
-	          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	          <a class="nav-link dropdown-toggle headerNav" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 	            고객센터
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -143,18 +143,20 @@
 	          </ul>
 	        </li>
 	      </ul>
-	    </div>
-	    <!-- 검색창 -->
-		<form class="searchProduct">
+	      
+	      <!-- 검색창 -->
+		<form class="searchProduct" id="searchProduct">
 			<div style="display:flex;">	
 				<div class="form-outline">
-					<input name="searchKeyword" type="search" class="form-control searchP" />
+					<input name="searchKeyword" type="search" class="form-control searchP" placeholder="원하는 상품 검색" />
 				</div>		  
-				<button onclick="searchProduct()" type="button" class="btn btn-primary">
+				<button onclick="searchProduct()" type="submit" class="btn btn-primary">
 					<i class="bi bi-search"></i>
 				</button>
 			</div>
-		</form>        
+		</form> 
+	    </div>
+	           
 	  </div>
 	</nav> 
 	
@@ -171,13 +173,14 @@
 	})
 	
 	function searchProduct(){
+		
 		let url = "/product/getListProduct";
 		if('${searchCondition}' !== ''){
 			url += "/${searchCondition}";
 		}
 		
 		if($(".searchP").val() !== ''){
-			$(".searchProduct").attr("action",url).submit();
+			$("#searchProduct").attr("action",url).attr("method","GET").submit();
 		}
 		
 	}
