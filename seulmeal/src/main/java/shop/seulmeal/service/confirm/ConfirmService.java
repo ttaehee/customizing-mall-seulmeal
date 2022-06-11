@@ -163,12 +163,12 @@ public class ConfirmService {
 		}
 	}
 	
-	public String confirmNum() {
+	public int confirmNum() {
 		Random generator = new Random();
         generator.setSeed(System.currentTimeMillis());
         
         int num = (generator.nextInt(1000000) % 1000000);
-        String message = "인증번호는 ["+num+"] 입니다";
-        return message;
+        
+        return num;
 	}
 }

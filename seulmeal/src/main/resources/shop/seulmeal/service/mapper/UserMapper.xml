@@ -98,11 +98,11 @@
 		</select>
 		
 		<select id="checkDuplicationPhone" resultType="shop.seulmeal.service.domain.User">
-			SELECT user_id, user_name from users where phone= #{phone}
+			SELECT user_id, user_name, phone from users where phone= #{phone}
 		</select>
 		
 		<select id="checkDuplicationEmail" resultType="shop.seulmeal.service.domain.User">
-			SELECT user_id, user_name from users where email= #{email}
+			SELECT user_id, user_name, email from users where email= #{email}
 		</select>
 		
 		<select id="getListUserTotalCount" resultType="int" parameterType="shop.seulmeal.common.Search">
