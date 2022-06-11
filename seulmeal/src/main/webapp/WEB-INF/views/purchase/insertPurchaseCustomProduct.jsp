@@ -14,36 +14,126 @@
 
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
+
+	<style>
+		
+		h2{
+			text-align: center; 
+		}
+
+		h2:after {
+			content: "";
+			display: block;
+			width: 300px;
+			border-bottom: 1px solid #bcbcbc;
+			margin: 20px auto;
+		}
+		
+		h5:after {
+	        content: "";
+	        display: block;
+	        width: 100px;
+	        border-bottom: 1px solid #bcbcbc;
+	        margin: 20px 0px;
+		}
+		
+		#close {
+		  display:inline-block;
+		  padding:2px 5px;
+		  font-weight: 700;
+		  text-shadow: 0 1px 0 #fff;
+		  font-size: 1rem;
+		}
+		#close:hover {
+		  border: 0;
+		  cursor:pointer;
+		  opacity: .75;
+		}
+		
+	</style>
 	 
-	<br/>
-	<h2>커스터마이징</h2><br/>
-	<h2>${product.name}</h2> <h5>${product.price}원</h5>
-	!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!<br/><br/>
-	==============================================================
 	
-	<h5>제품구성</h5>
-	*제외를 원하는 재료의 수량은 0으로 설정해주세요*<br/>
+	<div class="container">
+	<h2>커스터마이징 : ${product.name}</h2> 
+	<h5 id="productprice">${product.price}원</h5></div>
+	<div class="container">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</div><br/><br/>
+
+	
+	<div class="container">
+	<h5 >제품구성</h5></div>
 	<c:forEach var="parts" items="${partsList}">
-	${parts.name} &emsp;&emsp; <button id="minus" onclick='count("minus")'>-</button>&ensp; 1<br/><br/>
+	<div class="container productparts">${parts.name} &emsp;&emsp; 
+	<button class="btn btn-outline-primary me-2" id="execpt" style="margin-right:10px;">제외하기 </div>
 	</c:forEach>
+	<br/><br/>
+
 	
-	==============================================================<br/>
+	<div class="container">
 	<h5>추가재료</h5>
-	*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*<br/>
-	<div>
-		재료 검색 : <input class="search" /><div class="partSearch">검색</div>
-		<div class="parts"></div>
-	</div><br/>
+	*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</div>
+	<div class="container">
+		재료 검색 : 
+		<form class="searchProduct">
+			<div style="display:flex;">	
+				<div class="form-outline">
+					<input name="searchKeyword" type="search" class="form-control search" />
+				</div>		  
+				<button type="button" class="btn btn-primary partSearch">
+					<i class="bi bi-search"></i>
+				</button>
+			</div>
+		</form> 
+		<div class="customparts"></div>
+	</div><br/><br/>
 	
-	==============================================================<br/>
-	커스터마이징 상품 수량 &emsp;&emsp; <button id="minus" onclick='count("minus")'>-</button>&ensp; 1 &ensp; <button id="plus" onclick='count("plus")'>+</button> <br/><br/>
-	==============================================================<br/>
-	총 상품금액 :<div id="total">${product.price}</div>
+	
+	<div class="container custom">커스터마이징 상품 수량 &emsp;&emsp; 
+	<button type='button' class="btn btn-outline-primary me-2 minus" onclick="fnCalCount('minus',this);">-</button>
+	&ensp; <span name='count'>1</span> &ensp; 
+	 <button type='button' class="btn btn-outline-primary me-2 plus" onclick="fnCalCount('plus',this);">+</button> </div><br/>
+	
+	
+	<div class="container">총 상품금액 :<div id="total">${product.price}원</div></div>
 	<br/><br/>
 	
-	<button id="ok">확인</button><br/><br/>
-	
+	<div class="container">
+	<button class="btn btn-primary" style="margin-right:10px;">바로 구매하기</button> &emsp; 
+	<button class="btn btn-primary" style="margin-right:10px;">장바구니 담기</button>
+	</div>
+
+		
 	<script type="text/javascript">
+	
+	function fnCalCount(type, ths){
+		var stat = $(ths).parents("div").find("span[name='count']").text();
+		var num = parseInt(stat,10);
+		let calprice = 0;
+		
+		if($(ths).parents("div").attr('class') === 'container custom'){
+			calprice = parseInt($("#productprice").text());
+		}else if($(ths).parents("div").attr('class') === 'customparts'){
+			calprice = parseInt($("#partsprice").text());
+		}
+		
+		if(type=='minus'){
+			num--;
+			if(num<1){
+				alert('더이상 줄일수 없습니다.');
+				return;
+			}
+			$(ths).parents("div").find("span[name='count']").text(num);
+			
+            const minus = parseInt($("#total").text())-calprice;
+            $("#total").text(minus);
+		}else{
+			num++;
+			$(ths).parents("div").find("span[name='count']").text(num);
+			
+            const plus = parseInt($("#total").text())+calprice;
+            $("#total").text(plus);
+		}
+	}
+	
 	
 	$(()=>{
 		$(".partSearch").on("click",()=>{
@@ -58,37 +148,26 @@
 		        success : function(data){	        	
 		        	console.log(data);
 		        	const parts = "<div> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-		                +"<div class='part' data-parts='"+data.partsNo+"'>"+ data.name +"</div>"
-		                +"</div>"
-		        	$(".parts").append(parts);
+		                +"<div class='parts' data-parts='"+data.partsNo+"'>"+ data.name +"<span id='close'>x</span></div>"
+		        	$(".customparts").append(parts);
 		                
-		        	const price = "<div> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-	                +"<div class='part' data-parts='"+data.partsNo+"'>"+ data.price +"</div>"
+		        	const price = "<div> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsPrice' value='"+data.price+"' />"
+	                +"<div class='parts' id='partsprice' data-parts='"+data.partsNo+"'>"+ data.price +"원</div>"
 	                +"</div>"
-	        		$(".parts").append(price);
+	        		$(".customparts").append(price);
 	                
-	                $(".parts").append(`<button id="minus" onclick='count("minus")'>-</button> 1 <button id="plus" onclick='count("plus")'>+</button> <br/><br/>`)
+	                $(".customparts").append(`<div class="customparts">
+	                		<button type='button' class="btn btn-outline-primary me-2 minus" onclick="fnCalCount('minus',this);">-</button>
+	                		&ensp; <span name='count'>1</span> &ensp; 
+	                		 <button type='button' class="btn btn-outline-primary me-2 plus" onclick="fnCalCount('plus',this);">+</button> </div>`)
 	                
-	                const product = $("#total").text();
-	                const result = parseInt(product)+parseInt(data.price);
+	                const productprice = $("#total").text();
+	                const result = parseInt(productprice)+parseInt(data.price);
 	                $("#total").text(result);
 		        }
 			})
 		})
 	})
-	
-	function count(type){
-		const resultElement=document.getElementById('result');
-		let number=resultElement.innerText;
-		
-		if(type == 'plus'){
-			number = parseInt(number)+1;
-		}else if(type == 'minus'){
-			number = parseInt(number)-1;
-		}
-		
-		resultElement.innerText=number;
-	}
 	
 </script>
 
