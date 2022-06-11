@@ -19,12 +19,13 @@
 	  background-repeat: no-repeat;
 	  background-position: center center;
 	  background-size: cover;
+	  cursor: pointer;
 	}
 	
 </style>
 
 </head>
-<body>
+<body style="background-color: #fff;">
 
 <jsp:include page="../layer/header.jsp"></jsp:include>	
 	<br/>
@@ -33,9 +34,9 @@
 			<div class="float-right" style="display:flex;">
 				<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
 				<div class="dropdown show">
-					<a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						이벤트 목록
-					</a>					
+					</button>					
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 						<a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a>
 						<a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a>

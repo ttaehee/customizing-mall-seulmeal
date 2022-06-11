@@ -3,6 +3,7 @@ package shop.seulmeal.web.main;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -39,7 +40,7 @@ public class MainController {
 	int pageSize;
 	
 	@GetMapping("/")
-	public String main(HttpSession session, Model model) throws Exception {
+	public String main(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		String ip = req.getHeader("X-FORWARDED-FOR");
 		if (ip == null) {
@@ -48,6 +49,7 @@ public class MainController {
 		System.out.println("ip : : : : : "+ip);
 		model.addAttribute("clientIP", ip);
 		
+		Cookie[] cookies = request.getCookies();
 		
 		Search search = new Search();
 		if(search.getCurrentPage() ==0 ){
