@@ -1,5 +1,6 @@
 package shop.seulmeal.web.user;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	
+	
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
@@ -58,14 +61,46 @@ public class UserController {
 	
 	
 	  @GetMapping("insertUserInformation") 
-	  public String insertUserInformation(MultipartFile imageFile, HttpSession session) throws Exception{
+	  public String insertUserInformation() throws Exception{
 	  
 	 return "user/insertUserInformation"; 
 	 }
 	 
 	
 	@PostMapping("inserUserInformation")
-	public String insertUserInformation(@ModelAttribute("user") User user, Parts[] parts, MultipartFile file, HttpSession session ) throws Exception {
+	public String insertUserInformation( Parts[] parts, MultipartFile imageFile, String profileMessage , HttpSession session ) throws Exception {
+		
+		String imageFilePath = null;
+		String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		File file = new File(path);
+		
+		User user = (User)session.getAttribute("user");
+		
+		if (!imageFile.isEmpty()) {
+			String contentType = imageFile.getContentType();
+			String originalFileExtension = null;
+
+			if (contentType.contains("image/jpeg")) {
+				originalFileExtension = ".jpg";
+			} else if (contentType.contains("image/png")) {
+				originalFileExtension = ".png";
+			}
+
+			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
+			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
+			System.out.println("//////userId: " + user.getUserId());
+			System.out.println("//////imageFilePath: " + imageFilePath);
+			System.out.println("//////originalFileExtension: " + originalFileExtension);
+			System.out.println("//////getOriginalFilename(): " + imageFile.getOriginalFilename());
+
+			// 이미지 파일 로컬에 저장
+			file = new File(imageFilePath);
+			imageFile.transferTo(file);
+
+			user.setProfileImage(imageFileName);
+
+		}
+		
 		userService.insertUserInformation(user);
 		
 		List<Parts> list= new ArrayList<Parts>();
@@ -75,13 +110,13 @@ public class UserController {
 			list.add(parts1);
 		}
 		
-		User user2= (User)session.getAttribute("user");
+		
 		Map<String, Object> map = new HashMap<String ,Object>();
-		map.put("userId", user2.getUserId());
+		map.put("userId", user.getUserId());
 		map.put("list", list);
 		userService.insertHatesParts(map);
 		
-		user = userService.getUser(user2.getUserId());
+		user = userService.getUser(user.getUserId());
 		user.setParts( userService.getUserHatesParts(user.getUserId()));
 		session.setAttribute("user", user);
 		return "redirect:/";

@@ -11,10 +11,12 @@
 <body>
 
 <jsp:include page="../layer/header.jsp"></jsp:include>
+ <br/>
+<br/>
 
  <div class="container">
  
-  <form class="form-horizontal" method="post" action="/user/insertUser" target="_self" enctype="multipart/form-data">
+  <form class="form-horizontal" method="post" action="/user/inserUserInformation" target="_self" enctype="multipart/form-data">
   <h2>추가 정보 입력</h2>
 	
 	<div class="btn-group" data-toggle="buttons">
@@ -43,7 +45,6 @@
    
     <div class="form-group">
     <label for="exampleInputFile">File input</label>
-    <img src="..." alt="..." class="img-rounded">
     <input type="file" id="exampleInputFile" name="profileImage">
     <p class="help-block">Example block-level help text here.</p>
   </div>
@@ -54,6 +55,12 @@
 	    </div>
 	  </div>
   
+  <div class="form-group">
+	    <div class="col-sm-offset-2 col-sm-10">
+	      <button type="submit" class="btn btn-default">저장</button>
+	    </div>
+	  </div>
+	
   
   </form>
 	
