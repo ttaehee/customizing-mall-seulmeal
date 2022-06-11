@@ -38,4 +38,10 @@ public class Post {
 	// post媛� comment瑜� 媛�吏�怨� �엳�떎.
 	private List<Comment> comments;
 	private List<Attachments> attachments;
+	
+	// 다음글
+	private Post bpost;
+	
+	// 이전글
+	private Post npost;
 }

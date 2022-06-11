@@ -310,7 +310,7 @@
 								AND post_no = #{postNo}
 								AND status = '0'
 							</where>				
-	  					 ) inner_table
+	  					 ORDER BY c.reg_date DESC) inner_table
 						WHERE ROWNUM &lt;= #{search.endRowNum} )
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
 	 </select>

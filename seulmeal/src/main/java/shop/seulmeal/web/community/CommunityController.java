@@ -65,15 +65,17 @@ public class CommunityController {
 	// 무한스크롤
 	@GetMapping("/communityMain") // o
 //	@ResponseBody
-	public String communityMain(@RequestParam(required = false) String searchKeyword, @RequestParam(required = false)String searchCondition,String userId, Model model) throws Exception {
+	public String communityMain(@RequestParam(required = false) String searchKeyword, @RequestParam(required = false)String searchCondition,String userId, Model model, HttpSession session ) throws Exception {
 		
 		//1. communityService.getListPost();
 		//2. userService.getUser()? 유저프로필 -> jsp에서 세션 사용
 		//3. productService.getListProduct() 추천밀키트 리스트
 		
+		System.out.println("//////////////"+session.getAttribute("user"));
+		
 		Search search = new Search();
 		search.setCurrentPage(1);
-		search.setPageSize(1);
+		search.setPageSize(5);
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchCondition);
 		Map<String,Object> map = communityService.getListPost(search, userId);
@@ -86,6 +88,13 @@ public class CommunityController {
 		
 		model.addAttribute("postList", (List<Post>)map.get("postList"));
 		model.addAttribute("productList", (List<Product>)productMap.get("list"));
+		
+//		User user = (User)session.getAttribute("user");
+//		if(user != null) {
+//			model.addAttribute("user",user);
+//		}
+//		
+//		System.out.println(model);
 		
 		return "community/communityMain";
 //		return map;
@@ -132,6 +141,8 @@ public class CommunityController {
 		
 		model.addAttribute("post", post);
 		model.addAttribute("commentList", (List<Comment>)map.get("commentList"));
+		
+		System.out.println(model);
 		
 //		return post;
 		return "community/getCommunityPost";

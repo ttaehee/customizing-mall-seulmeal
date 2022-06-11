@@ -8,7 +8,16 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="../../../resources/css/summernote/summernote-lite.css">
-<title>게시글 등록</title>
+<title>게시글 수정</title>
+
+<style type="text/css">
+h1{
+	position: absolute;
+	left: 160px;
+	color: black;
+}
+</style>
+
 </head>
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
@@ -17,37 +26,36 @@
 	<script src="/resources/javascript/summernote/summernote-lite.js"></script>
 	<script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
 
+	<br/>
+	<h1>게시글 수정</h1>
+	<br/><br/><br/>
+
 	<div class="container">
-	<form action="/community/insertPost" method="POST" enctype="multipart/form-data">
+	<form action="/community/updatePost" method="POST" enctype="multipart/form-data">
 		<div class="row">
 			<div class="col-md-12">
-				제목 : <input id="title" name="title" />
+				제목 : <input id="title" name="title"  value = "${post.title}"/>
 			</div>
 			<div class="col-md-12">
-				아이디 : <input id="userId" name="userId" />
+				아이디 : <input id="userId" name="userId" value="${post.userId}"/>
 			</div>
 			<div class="col-md-12">
-				<textarea id="summernote" name="content"></textarea>		
+				<textarea id="summernote" name="content">${post.content}</textarea>		
 			</div>
 		</div>
 		<div style="display:flex; justify-content: space-between;">
 			<div >
-				<input type="file" value="첨부파일임" name="uploadfile" multiple="multiple" />
+				<input type="file" name="uploadfile" multiple="multiple" />
 			</div>
 			<div>
 				<button type="submit" class="btn btn-primary">
-					등록
+					수정
 				</button>
 			</div>
 		</div>	
 	</form>
 	</div>
 
-	<form action="/community/insertPost" method="POST" enctype="multipart/form-data">
-		아이디 : <input name="userId" /><br /> 
-		첨부파일 : <input type="file" name="uploadfile" multiple="multiple" />
-		<button type="submit">등록</button>
-	</form>
 
 
 <script>
@@ -102,4 +110,5 @@ $(document).ready(function () {
 </body>
 
 </html>
+
 

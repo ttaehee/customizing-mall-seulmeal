@@ -106,13 +106,13 @@
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	
 <div>
-<jsp:include page="../layer/footer.jsp"></jsp:include>
 </div>
+<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
 	$(function(){
 		$(".card-cover").on("click",function(){
 			const no =$(this).data("value");
-			window.location.href = '/operation/getOperation/'+no;
+			window.location.href = '/operation/getOperation/2/'+no;
 		})
 	})
 	

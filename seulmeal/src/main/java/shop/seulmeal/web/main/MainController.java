@@ -3,6 +3,7 @@ package shop.seulmeal.web.main;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
@@ -38,7 +40,15 @@ public class MainController {
 	
 	@GetMapping("/")
 	public String main(HttpSession session, Model model) throws Exception {
-				
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+		String ip = req.getHeader("X-FORWARDED-FOR");
+		if (ip == null) {
+			ip = req.getRemoteAddr();
+		}
+		System.out.println("ip : : : : : "+ip);
+		model.addAttribute("clientIP", ip);
+		
+		
 		Search search = new Search();
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
@@ -70,11 +80,18 @@ public class MainController {
 		}
 		
 		
-		return "main";
+		return "main/main";
 	}
 	
 	@GetMapping("/admin")
-	public String adminPage() throws Exception {
-		return "admin/admin";
+	public String adminPage(HttpSession session) throws Exception {
+		User user = (User)session.getAttribute("user");
+		if(user != null) {
+			if(user.getRole().equals("1")) {
+				return "admin/admin";
+			}
+		}
+		
+		return "redirect:/";
 	}
 }
