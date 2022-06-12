@@ -37,18 +37,29 @@ public class UserRestController {
 
 	
 	@GetMapping("api/confirmUserId/{userId}")
-	public int confirmUserId(@PathVariable String userId) throws Exception {
+	public JSONObject confirmUserId(@PathVariable String userId) throws Exception {
+		JSONObject json = new JSONObject();
 		
 		int no = userService.confirmUserId(userId);
-		
-		return no;
+		if(no == 0) {
+			json.put("result", "success");
+		} else {
+			json.put("result", "fail");
+		}
+			
+		return json;
 	}
 	
 	@GetMapping("api/confirmUserNickname/{nickName}")
-	public int confirmUserNickname(@PathVariable String nickName) throws Exception {
+	public JSONObject confirmUserNickname(@PathVariable String nickName) throws Exception {
+		JSONObject json = new JSONObject();
 		int no = userService.confirmUserId(nickName);
-		
-		return no;
+		if(no == 0) {
+			json.put("result", "success");
+		} else {
+			json.put("result", "fail");
+		}
+		return json;
 	}
 	
 	@GetMapping("api/confirmUserPhone/{phone}")

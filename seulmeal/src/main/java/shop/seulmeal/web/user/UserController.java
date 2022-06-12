@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -49,7 +50,7 @@ public class UserController {
 	}
 	
 	@PostMapping("insertUser")
-	public String insertUser(@ModelAttribute("user") User user, @DateTimeFormat(pattern="YYYY-MM-DD") Date birth, HttpSession session) throws Exception {
+	public String insertUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
 		System.out.println("::user : "+user);
 		userService.insertUser(user);
@@ -141,7 +142,12 @@ public class UserController {
 	}
 	
 	@GetMapping("logout")
-	public String logout(HttpSession session) throws Exception {
+	public String logout(HttpSession session,HttpServletResponse response) throws Exception {
+		// 자동로그인 삭제
+		Cookie nCookie = new Cookie("loginCookie",null);
+		nCookie.setPath("/");
+		nCookie.setMaxAge(0);
+		response.addCookie(nCookie);		
 		
 		session.invalidate();
 		return "redirect:/";

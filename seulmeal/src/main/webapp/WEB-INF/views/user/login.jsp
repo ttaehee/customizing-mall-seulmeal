@@ -21,7 +21,7 @@
         <input type="password" id="password" name="password"  class="form-control" placeholder="Password" required>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="1" name="checkLogin"> Remember me
+            <input type="checkbox" value="1" id="checkLogin" name="checkLogin"> Remember me
           </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
@@ -30,6 +30,15 @@
     </div> <!-- /container -->
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>
-    
+<script type="text/javascript">
+	$("#checkLogin").on("change",()=>{
+		const result = document.querySelector("#checkLogin");
+		if(result.checked){
+			result.value = "1";
+		} else {
+			result.value = "0";
+		}
+	})
+</script>
 </body>
 </html>
