@@ -10,7 +10,7 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
-		<div class="row" style="border-top: thick double #BAD7DF; border-bottom: thick double #BAD7DF; margin-bottom: 1rem; margin-top: 2rem;">
+		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">공지사항</h1>
 			</div>
@@ -27,8 +27,8 @@
 		</div>
 		
 		
-		<table class="table table-striped table-hover">
-			<thead>
+		<table class="table table-hover text-center">
+			<thead style="background-color: #4b6cb7; color: #fff;">
 				<tr>
 					<th>번호</th>
 					<th>제목</th>
@@ -44,7 +44,7 @@
 					<th>
 						<a href="/operation/getOperation/1/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
 					</th>
-					<th>${post.user.userId}</th>
+					<th style="font-weight: bolder;">${post.user.userId}</th>
 					<th>${post.regDate}</th>
 					<th>${post.views}</th>
 				</tr>
@@ -53,10 +53,15 @@
 		</table>
 		
 		<hr/>
-		<a class="btn btn-primary float-right" href="/operation/insertOperation/1">공지 작성</a>		
+		<div class="seulBtn" onclick="insertNotice()" style="float: right;">공지 작성</div>	
 		<jsp:include page="../common/pageNavigator_new.jsp"/>
 	</div>
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
+<script type="text/javascript">
+	function insertNotice(){
+		window.location.href = "/operation/insertOperation/1";
+	}
+</script>
 </body>
 </html>

@@ -42,6 +42,9 @@ public interface PurchaseMapper {
 	//커스터마이징상품 수정(구매번호추가), 커스터마이징재료 수정은 delete 후 다시 insert
 	public int updateCustomProduct(CustomProduct customProduct);
 	
+	//장바구니에서 커스터마이징상품 수량변경
+	public int updateCustomProductCount(CustomProduct customProduct);
+	
 	//커스터마이징상품 삭제(장바구니리스트에서 삭제 눌렀을때)
 	public int deleteCustomProduct(int customProductNo);
 	
@@ -65,6 +68,7 @@ public interface PurchaseMapper {
 	public int deletePurchase(int purchaseNo);
 	
 	//개수
-	public int getTotalCount(Map<String, Object> map);
+	public int getCustomProductTotalCount(Map<String, Object> map);
+	public int getPurchaseTotalCount(Map<String, Object> map);
 
 }

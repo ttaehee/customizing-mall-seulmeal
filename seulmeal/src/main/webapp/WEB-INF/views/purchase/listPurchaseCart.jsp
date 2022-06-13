@@ -1,218 +1,186 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-    
-<!--  ///////////////////////// JSTL  ////////////////////////// -->
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
-
 <html lang="ko">
-	
+
 <head>
-	<meta charset="EUC-KR">
-	
-	<!-- ÂüÁ¶ : http://getbootstrap.com/css/   ÂüÁ¶ -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
-	<!--  ///////////////////////// Bootstrap, jQuery CDN ////////////////////////// -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
-	
-	
-	<!-- Bootstrap Dropdown Hover CSS -->
-   <link href="/css/animate.min.css" rel="stylesheet">
-   <link href="/css/bootstrap-dropdownhover.min.css" rel="stylesheet">
-    <!-- Bootstrap Dropdown Hover JS -->
-   <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
-   
-   
-   <!-- jQuery UI toolTip »ç¿ë CSS-->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <!-- jQuery UI toolTip »ç¿ë JS-->
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	
-	<!--  ///////////////////////// CSS ////////////////////////// -->
-	<style>
-	  body {
-            padding-top : 50px;
-        }
-    </style>
-    
-     <!--  ///////////////////////// JavaScript ////////////////////////// -->
-	<script type="text/javascript">
+	<meta charset="UTF-8">
+	<title>ì¥ë°”êµ¬ë‹ˆ ëª©ë¡</title>
 
-	function fncGetUserList(currentPage) {
-		$("#currentPage").val(currentPage)	
-		//alert(  "functionÈ£ÃâµÊ"  );
-		$("form").attr("method" , "POST").attr("action" , "/purchase/listPurchase").submit();
-	 }
-	
-	 $(function() {
-			
-			//==> DOM Object GET 3°¡Áö ¹æ¹ı ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
-			$( "td:nth-child(1)" ).on("click" , function() {
-				 self.location ="/purchase/getPurchase?tranNo="+$( this ).data("value");
-			});
-						
-			//==> userId LINK Event End User ¿¡°Ô º¸ÀÏ¼ö ÀÖµµ·Ï 
-			$( "td:nth-child(1)" ).css("color" , "red");
-			
-		});	
-	
-	$(function() {
-		 
-			 $( ".glyphicon.glyphicon-ok" ).on("click" , function() {
-					//Debug..
-					//alert(  $( this ).text().trim() );
-					 var tranNo = $(this).next().val();
-					
-						$.ajax( {
-									url : "/purchase/json/getPurchase/"+tranNo ,
-									method : "GET" ,
-									dataType : "json" ,
-									headers : {
-										"Accept" : "application/json",
-										"Content-Type" : "application/json"
-									},
-									success : function(JSONData , status) {
-										
-										//Debug...
-										//console.log("JSONData : \n" + JSONData);
-	
-										var displayValue = "<h7>"
-																	+"¹°Ç°¹øÈ£ : "+JSONData.purchaseProd.prodNo+"<br/>"
-																	+"±¸¸ÅÀÚ¾ÆÀÌµğ : "+JSONData.buyer.userId+"<br/>"
-																	+"±¸¸Å¹æ¹ı : "+JSONData.paymentOption+"<br/>"
-																	+"±¸¸ÅÀÚÀÌ¸§ : "+JSONData.receiverName+"<br/>"
-																	+"±¸¸ÅÀÚ¿¬¶ôÃ³ : "+JSONData.receiverPhone+"<br/>"
-																	+"±¸¸ÅÀÚÁÖ¼Ò : "+JSONData.divyAddr+"<br/>"
-																	+"±¸¸ÅÀÚ¿äÃ»»çÇ× : "+JSONData.divyRequest+"<br/>"
-																	+"¹è¼ÛÈñ¸ÁÀÏ : "+JSONData.divyDate+"<br/>"
-																	+"</h7>";
-	
-										$("h7").remove();
-										$( "#"+tranNo+"" ).append(displayValue);
-									}
-						});
-				 });
-		
-		$("h7").css("color" , "red");
-							
-		$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
-		
-	});		
-
-    </script>
 </head>
 
 <body>
+<jsp:include page="../layer/header.jsp"></jsp:include>
 
-	<jsp:include page="../layer/header.jsp"></jsp:include>
-	
-	<div class="container">
+	<style>
+		
+		h2{
+			text-align: center; 
+		}
 
-		<div class="page-header text-info">
-			<h3>±¸¸Å ¸ñ·ÏÁ¶È¸</h3>
-		</div>
+		h2:after {
+			content: "";
+			display: block;
+			width: 180px;
+			border-bottom: 1px solid #bcbcbc;
+			margin: 20px auto;
+		}
 		
-		<!-- table À§ÂÊ °Ë»ö Start /////////////////////////////////////-->
-	    <div class="row">
-	    
-		    <div class="col-md-6 text-left">
-		    	<p class="text-primary">
-		    		ÀüÃ¼  ${resultPage.totalCount } °Ç¼ö, ÇöÀç ${resultPage.currentPage}  ÆäÀÌÁö
-		    	</p>
-		    </div>
-		    
-		    <div class="col-md-6 text-right">
-			    <form class="form-inline" name="detailForm"> 		  
-				  <!-- PageNavigation ¼±ÅÃ ÆäÀÌÁö °ªÀ» º¸³»´Â ºÎºĞ -->
-				  <input type="hidden" id="currentPage" name="currentPage" value=""/>
-				</form>
-	    	</div>
-	    	
-		</div>
-		<!-- table À§ÂÊ °Ë»ö Start /////////////////////////////////////-->
+		h5:after {
+	        content: "";
+	        display: block;
+	        width: 300px;
+	        border-bottom: 1px solid #bcbcbc;
+	        margin: 20px auto;
+		}
+		
+		#order{
+		    bottom: 200px;
+		    right: 11000px;
+		    width: 200px;
+		    border: 3px solid #73AD21;
+		}
 		
 		
-      <!--  table Start /////////////////////////////////////-->
-      <table class="table table-hover table-striped" >
-      
-        <thead>
-          <tr>
-	        <td class="ct_list_b" width="100">No</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b" width="150">È¸¿øID</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b" width="150">È¸¿ø¸í</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">ÀüÈ­¹øÈ£</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">¹è¼ÛÇöÈ²</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">°£·«Á¤º¸</td>
-		  </tr>
-        </thead>
-       
-		<tbody>
+	</style>
 	
-			<c:set var="i" value="0" />
-			<c:forEach var="purchase" items="${list}">
-				<c:set var="i" value="${ i+1 }" />
-				<tr class="ct_list_pop">
-					<td align="center" data-value="${purchase.tranNo}">${ i }</td>
-					<td></td>
-					<td align="left">${user.userId}</td>
-					<td></td>
-					<td align="left">${user.userName}</td>
-					<td></td>
-					<td align="left">${purchase.receiverPhone}</td>		
-					<td></td>
+	 <div class="container">
+
+		<div class="page-header">
+		 	<h2>ì¥ë°”êµ¬ë‹ˆ</h2>
+		 </div>
+		 
+		 <table class="table table-hover table-striped" >
+	 
+	        <thead>
+	          <tr>
+	            <th align="center">NO</th>
+	            <th align="center">ì´ë¯¸ì§€</th>
+	            <th align="center">ìƒí’ˆëª…</th>
+	            <th align="center">ì˜µì…˜</th>
+	             <th align="center">ìˆ˜ëŸ‰</th>
+	            <th align="center">í•©ê³„</th>
+	            <th align="center"></th>
+	          </tr>
+	        </thead>
+	
+			<tbody>
+				<c:set var="total" value="0" />
+				<c:set var="customprice" value="0" />
+				<c:set var="i" value="0" />
+				<c:forEach var="cpd" items="${customProductList}">
+					<c:set var="i" value="${i+1}" />
+					<c:set var="customprice" value="${cpd.price}" />
+					<tr class="ct_list_pop">
+						  <td align="left">${i}</td>
+						  <td align="left" data-value="${cpd.product.productNo}" title="Click : ìƒí’ˆí™•ì¸" >${cpd.product.thumbnail}</td>
+						  <td align="left">${cpd.product.name}</td>
+						  <td align="left">
+						  <c:forEach var="pp" items="${cpd.plusParts}">
+						  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />ì› <br/>
+						  	</c:forEach>
+						  <c:forEach var="mp" items="${cpd.minusParts}">
+						  	- ${mp.minusName} <br/>
+						  	</c:forEach> 
+						  	 </td>
+						  <td align="left">
+						  	<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
+						  	&ensp; <span id ="count" name="count"> ${cpd.count} </span> &ensp;
+						  	<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button> 
+						  </td>
+						  <td align="left">
+						  <span id="customprice" name="customprice">${cpd.price*cpd.count}</span>ì›</td>
+						  <td align="left">
+						  	<button type="button" class="btn btn-outline-primary change" onclick="window.location.href='/purchase/updateCustomProduct/' + ${cpd.customProductNo}">ìˆ˜ì •</button><br/>
+						  	<button type="button" class="btn btn-outline-primary delete" onclick="window.location.href='/purchase/deleteCustomProduct/' + ${cpd.customProductNo}">ì‚­ì œ</button>
+						  </td>
+						  <c:set var="total" value="${total+cpd.price*cpd.count}" />
+						  
+					  </tr>  
+				  </c:forEach>
+	        </tbody>
+	      </table>
+	      
+	      
+	      <div class="row">
+	    	<div class="col-md-6 text-center">
+			<h5>ê²°ì œì˜ˆì • ê¸ˆì•¡ :  <span id="total">${total}</span>ì›</h5>
 			
-					<td align="left" data-value="${purchase.tranNo}">ÇöÀç
-			
-						<c:choose>
-						    <c:when test="${empty purchase.tranCode}">
-						    <a>ÆÇ¸ÅÁß</a>
-						    </c:when>
-						    <c:when test="${purchase.tranCode eq '2'}">
-						    <a>±¸¸Å¿Ï·á</a>
-						    </c:when>
-						    <c:when test="${purchase.tranCode eq '3'}">
-						    <a>¹è¼ÛÁß</a>
-						    </c:when>
-						    <c:when test="${purchase.tranCode eq '4'}">
-						    <a>¹è¼Û¿Ï·á</a>
-						    </c:when>
-						    
-						</c:choose>
+			<h5>ì ë¦½ì˜ˆì • í¬ì¸íŠ¸ : 
+			  <c:choose>
+				<c:when test="${user.grade eq '0'}"><span id="total">${total*0.05}</span>P<br/></c:when>
+				<c:when test="${user.grade eq '1'}"><span id="total">${total*0.1}</span>P<br/></c:when>
+				<c:when test="${user.grade eq '2'}"><span id="total">${total*0.3}</span>P<br/></c:when>
+				<c:when test="${user.grade eq '3'}"><span id="total">${total*0.5}</span>P<br/></c:when>
+			 </c:choose>
+			</h5>
+			</div>
+			<div class="col-md-6 text-right">
+				<button class="btn btn-outline-primary" id="order" style="margin-right:10px;">ì „ì²´ìƒí’ˆì£¼ë¬¸</button>
+			</div>
+		</div>
+	</div>
 
-					»óÅÂ ÀÔ´Ï´Ù.	
-						<c:if test="${purchase.tranCode eq '3'}">
-						    <a href="/purchase/updateTranCode?menu=search&tranCode=4&prodNo=${purchase.purchaseProd.prodNo}">¹°°ÇµµÂø</a>
-						</c:if>
-					</td>
 		
-					<td align="left">
-						
-					</td>
-					<td align="left">
-			  	       <i class="glyphicon glyphicon-ok" id="${purchase.tranNo}"></i>
-			  	       <input type="hidden" value="${purchase.tranNo}">
-			        </td>
-				</tr>
-			</c:forEach>
-        
-        </tbody>
-      
-      </table>
- 	</div>
- 	
- 	<!-- PageNavigation Start... -->
-	<jsp:include page="../common/pageNavigator_new.jsp"/>
-	<!-- PageNavigation End... -->
+	<script type="text/javascript">
 	
+	$(function (){
+	    $("change").on("click",function(){
+	    	$.ajax({
+				url:"/purchase/api/getCustomProduct/"+customProductNo,
+				method:"GET",
+		        headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){	
+		        	
+		        }
+	    	});
+	    });
+	});
+	
+	
+	function fnCalCount(type, ths){
+		var stat = $(ths).parents("td").find("span[name='count']").text();
+		var num = parseInt(stat,10);
+		var price=parseInt($(ths).parents("tr").find("span[name='customprice']").text());
+		var oneprice = parseInt(price,10)/num;
+		console.log("oneprice:"+oneprice);
+		
+		if(type=='minus'){
+			num--;
+			if(num<1){
+				alert('ë”ì´ìƒ ì¤„ì¼ìˆ˜ ì—†ìŠµë‹ˆë‹¤.');
+				return;
+			}
+			$(ths).parents("td").find("span[name='count']").text(num);
+			
+			const minus = price - oneprice;
+			$(ths).parents("tr").find("span[name='customprice']").text(minus);
+			const minustotal = parseInt($("#total").text()) - oneprice;
+			$("#total").text((minustotal));
+
+		}else{
+			num++;
+			$(ths).parents("td").find("span[name='count']").text(num);
+			
+            const plus = price + oneprice;
+            $(ths).parents("tr").find("span[name='customprice']").text(plus);
+            const plustotal = parseInt($("#total").text()) + oneprice;
+			$("#total").text(plustotal);
+		}
+	}
+	
+	
+	
+	</script>
+
+<jsp:include page="../layer/footer.jsp"></jsp:include>	
+
 </body>
 </html>

@@ -3,6 +3,8 @@ package shop.seulmeal.web.main;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +13,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.operation.OperationService;
 import shop.seulmeal.service.product.ProductService;
+import shop.seulmeal.service.user.UserService;
 
 @Controller
 public class MainController {
@@ -30,6 +34,9 @@ public class MainController {
 	@Autowired
 	private OperationService operationService;
 	
+	@Autowired
+	private UserService userService;
+	
 	@Value("${operation.query.pageUnit}")
 	int pageUnit;
 	
@@ -37,8 +44,30 @@ public class MainController {
 	int pageSize;
 	
 	@GetMapping("/")
-	public String main(HttpSession session, Model model) throws Exception {
-				
+	public String main(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+		String ip = req.getHeader("X-FORWARDED-FOR");
+		if (ip == null) {
+			ip = req.getRemoteAddr();
+		}
+		System.out.println("ip : : : : : "+ip);
+		model.addAttribute("clientIP", ip);
+		
+		// 자동로그인
+		Cookie[] cookies = request.getCookies();		
+		if(cookies != null) {
+			String userId = null;
+			for (Cookie cookie : cookies) {
+				if(cookie.getName().equals("loginCookie")) {
+					userId = cookie.getValue();
+				}
+			}			
+			User dbUser = userService.getUser(userId);			
+			if(dbUser != null) {
+				session.setAttribute("user", dbUser);
+			}
+		}
+		
 		Search search = new Search();
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
