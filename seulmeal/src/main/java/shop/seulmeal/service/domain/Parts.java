@@ -1,6 +1,7 @@
 package shop.seulmeal.service.domain;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class Parts {
 	private int calorie;
 	private Date regDate;
 	private String status;
-	private int gram; //custom에서 사
+	private int gram; //custom에서 사용
 	
 	// productNo
 	private int productNo;
@@ -25,4 +26,6 @@ public class Parts {
 	
 	// hateParts
 	private String userId;
+	
+	private List<Parts> p;
 }
