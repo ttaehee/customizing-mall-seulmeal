@@ -8,49 +8,47 @@
 <link rel="stylesheet" href="../../../resources/css/summernote/summernote-lite.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 <title>문의사항 상세정보</title>
-<style type="text/css">
-.filebox input[type="file"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip:rect(0,0,0,0);
-  border: 0;
-}
-
-.filebox label {
-  display: inline-block;
-  padding: .5em .75em;
-  color: #999;
-  font-size: inherit;
-  line-height: normal;
-  vertical-align: middle;
-  background-color: #fdfdfd;
-  cursor: pointer;
-  border: 1px solid #ebebeb;
-  border-bottom-color: #e2e2e2;
-  border-radius: .25em;
-}
-
-/* named upload */
-.filebox .upload-name {
-	width:75%;
-  display: inline-block;
-  padding: .5em .75em;  /* label의 패딩값과 일치 */
-  font-size: inherit;
-  font-family: inherit;
-  line-height: normal;
-  vertical-align: middle;
-  background-color: #f5f5f5;
-  border: 1px solid #ebebeb;
-  border-bottom-color: #e2e2e2;
-  border-radius: .25em;
-  -webkit-appearance: none; /* 네이티브 외형 감추기 */
-  -moz-appearance: none;
-  appearance: none;
-}
+<link rel="stylesheet" href="/resources/css/common/fileTag.css">
+<style>
+	.queryHeader{
+		margin:10px;
+	}
+	
+	.commentArg{
+		margin-top: 20px;
+	}
+	
+	.answerHeaderClass{
+		border-bottom: 1px solid #4b6cb7;
+		margin-bottom: 10px;
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	.answerBox{
+		border: 1px solid #4b6cb7;
+		border-radius: 10px;
+	}
+	.answerBox+.answerBox{
+		margin-top: 20px;
+	}
+	
+	.answerHeader{
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	
+	.answerHeader+.answerHeader{
+		margin-right: 10px;
+	}
+	
+	.uploadAnswerBtn{
+		margin:10px;
+		padding-bottom:5px;
+		width:70px;
+		height: 30px;
+		font-size: 10px !important;
+	}
 </style>
 </head>
 <body>
@@ -65,65 +63,91 @@
             </div>            
         </div>
         <div class="row" style="text-align: center;">
-            <div class="col-2">${post.postNo}</div>
-            <div class="col-2">${post.regDate}</div>
+            <div class="col-2 queryHeader">${post.postNo}</div>
+            <div class="col-2 queryHeader">${post.regDate}</div>
         </div>
         <div class="row" style="border-bottom: 2px solid; text-align: center;">
-            <div class="col-2">${post.user.userId}</div>
+            <div class="col-2 queryHeader">${post.user.userId}</div>
             <div class="col-3" style="display: flex;">
             <div style="margin-right: 10px;">
 	            <c:if test="${post.answerStatus ==0}">
-	            	답변 대기중
+	            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="답변대기중">
 	            </c:if>
 	            <c:if test="${post.answerStatus ==1}">
-	            	답변 완료
+	            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="답변완료">
 	            </c:if>
             </div>
-            <div>삭제</div>
+            
+            <c:if test="${user.userId == post.user.userId}">
+            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="삭제">
+            </c:if>            
         </div>
         </div>
         <div class="row justify-content-end">
         	<div class="col-1">
-        		<div class="dropdown show">
-					<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
-					</a>					
-					<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
-						<c:forEach var="attachments" items="${post.attachments}">		          	
-			            	<a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
-			            </c:forEach>
+        		<c:if test="${post.attachments.size() != 0}">
+	        		<div class="dropdown show">
+						<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
+						</a>					
+						<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+							<c:forEach var="attachments" items="${post.attachments}">		          	
+				            	<a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
+				            </c:forEach>
+						</div>
 					</div>
-				</div>
+				</c:if>
         	</div>		
         </div>
         <div class="row" style="border-bottom: 2px solid; min-height: 400px;">
             <div class="col">${post.content}</div>            
         </div>
-        
-        <div class="row justify-content-end">
-            <button id="answerInsert" style="margin-top:10px; margin-right:10px;" class="btn btn-primary float-right" onclick="insertQuery()">답변등록</button>
-        </div>
+        <c:if test="${user.role==1}">        
+	        <div class="row justify-content-end">
+	            <button id="answerInsert" style="margin-top:10px; margin-right:10px;" class="btn btn-primary float-right" onclick="insertQuery()">답변등록</button>
+	        </div>
+        </c:if>
         <div class="commentArg">
 	        <c:forEach var="comment" items="${post.comments}">
+	        	<c:if test="${comment.commentNo != 0}">
 				<c:set var="i" value="${i+1}" />
-				<div class="row" style="margin-bottom: 10px;">
-		            <div class="col-2">${comment.commentNo}</div>
-		            <div class="col-2">${comment.regDate}</div>
-		            <div class="col-2">${comment.user.userId}</div>
-		        </div>
-		        <div class="row justify-content-end">        	
-		        	<c:forEach var="attachments" items="${comment.attachments}">
-		        		<div class="col-1">
-							<a href="/download/${attachments.attachmentName}">${attachments.attachmentName}</a>
-						</div>			
-					</c:forEach>		
-		        </div>
+				<div class="answerBox">
+					<div class="answerHeaderClass">
+						<div style="display: flex;">
+							<div class="answerHeader">${comment.commentNo}</div>
+				            <div class="answerHeader">${comment.regDate}</div>
+				            <div class="answerHeader">${comment.user.userId}</div>
+			            </div>
+			            
+			            <c:if test="${user.userId==comment.user.userId}">
+			            	<div style="display: flex; justify-content: flex-end;">
+				            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="답변삭제">
+				            </div>
+			            </c:if>
+			            
+			        </div>
+		        
+		        	<div style="display: flex; justify-content: flex-end;">
+		        		<c:if test="${comment.attachments.size() != 0}">
+			        	<div class="dropdown">
+							<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
+							</a>					
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+								<c:forEach var="attachments" items="${comment.attachments}">		          	
+					            	<a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName}</a>
+					            </c:forEach>
+							</div>
+						</div>
+						</c:if>
+					</div>
+		        
 		        <div class="row">
-		            <div class="col" style="background-color: crimson; min-height: 100px;">${comment.content}</div>
+		            <div class="col" style=" min-height: 100px; margin-left:20px; margin-right:20px;">${comment.content}</div>
 		        </div>
-		        <div class="row justify-content-end">
-		            <div class="col-2">답변 수정</div>
+		        
 		        </div>
+		        </c:if>
 			</c:forEach>
 		</div> 
     </div>

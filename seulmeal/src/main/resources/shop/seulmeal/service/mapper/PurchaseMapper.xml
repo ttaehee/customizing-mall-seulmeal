@@ -8,7 +8,7 @@
 	<resultMap id="minusPartsSelectMap" type="customParts">
 		<result property="customPartsNo" 		column="customparts_no"    jdbcType="NUMERIC"/>
 		<result property="customProductNo" 		column="customproduct_no"  jdbcType="NUMERIC"/> 
-		<result property="productPartsNo" 		column="productparts_no"   jdbcType="NUMERIC"/>
+		<result property="minusNo" 		column="productparts_no"   jdbcType="NUMERIC"/>
 		<result property="minusName" 			column="minus_name" 	   jdbcType="VARCHAR"/>
 	</resultMap>
 	

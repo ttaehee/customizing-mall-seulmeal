@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,16 +87,16 @@
 		
 	<div class="container" style="margin-top:20px;">
 		<div id="accordion">			
-			<div class="card">			
+			<div class="card" style="min-height: 500px;">
 				<!-- 1번 -->
-				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+				<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 					<div class="card-body">
 						Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
 					</div>
 				</div>
 		
 				<!-- 2번 -->
-				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+				<div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
 					<div class="card-body">
 						${post.content }
 					</div>
@@ -111,6 +112,27 @@
 			</div>		  
 		</div>
 	</div>
+	
+	<div class="row" style="border-bottom: 2px double #4b6cb7; border-top: 2px double #4b6cb7; margin-top:20px;">
+		<div class="container" style="display:flex; justify-content: flex-end;">	
+			<span style="margin-bottom:10px; margin-top:10px;">
+				<c:if test="${user.role == 1}">
+					<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="수정" onclick="updateEvent()">
+				</c:if>
+				<input class="btn btn-primary" style="width: 60px;" value="목록" onclick="cancelEvent()">
+			</span>
+		</div>						
+	</div>
+				
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
+<script type="text/javascript">
+	function updateEvent(){
+		window.location.href = '/operation/updateOperation/2/${post.postNo}';
+	}
+	
+	function cancelEvent(){
+		window.location.href = '/operation/getListOperation/2';
+	}
+</script>
 </body>
 </html>

@@ -49,7 +49,7 @@ class PurchaseApplicationTests {
 		
 		List<CustomParts> minus=new ArrayList<>();
 		CustomParts cp1=new CustomParts();
-		cp1.setProductPartsNo(8);
+		cp1.setMinusNo(8);
 		cp1.setMinusName("소고기");
 		cp1.setCustomProductNo(5);
 		minus.add(cp1);
@@ -145,7 +145,7 @@ class PurchaseApplicationTests {
 		
 		List<CustomParts> minus=new ArrayList<>();
 		CustomParts cp1=new CustomParts();
-		cp1.setProductPartsNo(7);
+		cp1.setMinusNo(7);
 		cp1.setMinusName("오이");
 		minus.add(cp1);
 		//customProduct.setMinusParts(minus);	

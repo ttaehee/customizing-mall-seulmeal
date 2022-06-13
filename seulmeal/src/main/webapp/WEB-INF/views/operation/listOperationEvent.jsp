@@ -32,7 +32,9 @@
 	<div class="container">
 		<div class="dropdown">
 			<div class="float-right" style="display:flex;">
-				<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
+				<c:if test="${user.role == 1}">
+					<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
+				</c:if>
 				<div class="dropdown show">
 					<button class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						이벤트 목록

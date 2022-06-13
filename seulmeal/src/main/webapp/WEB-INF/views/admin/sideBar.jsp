@@ -31,10 +31,10 @@
 	                    <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">User</span> </a>
 	                <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
 	                    <li class="w-100">
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">모든 유저</span></a>
+	                        <a href="#" class="nav-link px-0" id="userList"> <span class="d-none d-sm-inline">모든 유저</span></a>
 	                    </li>
 	                    <li>
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">블랙리스트 유저</span></a>
+	                        <a href="#" class="nav-link px-0" id="blackUserList"> <span class="d-none d-sm-inline">블랙리스트 유저</span></a>
 	                    </li>
 	                </ul>
 	            </li>
@@ -58,7 +58,7 @@
 	                    <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Community</span></a>
 	                <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
 	                    <li class="w-100">
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">신고 게시글</span> 1</a>
+	                        <a href="#" class="nav-link px-0" id="reportPost"> <span class="d-none d-sm-inline">신고 게시글</span> 1</a>
 	                    </li>	                    
 	                </ul>
 	            </li>
@@ -110,7 +110,7 @@
 	                <li>
 	                    <hr class="dropdown-divider">
 	                </li>
-	                <li><a class="dropdown-item" href="#">Sign out</a></li>
+	                <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
 	            </ul>
 	        </div>
 	    </div>
