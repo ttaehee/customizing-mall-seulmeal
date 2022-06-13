@@ -12,20 +12,7 @@
 
 
 	<div class="container">
-		<div class="your-class">
-	<div>
-		<img src="/resources/attachments/image/tetris.png" alt="">
-	</div>
-	<div>
-		<img src="/resources/attachments/image/tetris.png" alt="">
-	</div>
-	<div>
-		<img src="/resources/attachments/image/tetris.png" alt="">
-	</div>
-	<div>
-		<img src="/resources/attachments/image/tetris.png" alt="">
-	</div>
-</div>
+		
 		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">공지사항</h1>
@@ -77,23 +64,7 @@
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
-$(document).ready(function() {
-	$('.your-class').slick({
-		autoplay : true,
-		dots : true, /* 하단 점 버튼 */
-		speed : 300 /* 이미지가 슬라이딩시 걸리는 시간 */,
-		infinite : true,
-		autoplaySpeed : 30000 /* 이미지가 다른 이미지로 넘어 갈때의 텀 */,
-		arrows : true,
-		slidesToShow : 1,
-		slidesToScroll : 1,
-		touchMove : true, /* 마우스 클릭으로 끌어서 슬라이딩 가능여부 */
-		nextArrows : true, /* 넥스트버튼 */
-		/* prevArrows : true,
-		arrow : true, */
-		fade : false
-	});
-});
+
 
 	function insertNotice(){
 		window.location.href = "/operation/insertOperation/1";
