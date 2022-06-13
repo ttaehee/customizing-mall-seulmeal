@@ -17,7 +17,7 @@ public class CustomParts {
 	private int gram;
 	private Parts parts; //추가재료 
 	
-	private List<CustomParts> cp;
+	private List<CustomParts> customPartsList;
 	
 	
 }

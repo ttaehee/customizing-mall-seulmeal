@@ -27,5 +27,5 @@ public class Parts {
 	// hateParts
 	private String userId;
 	
-	private List<Parts> p;
+	private List<Parts> partsList;
 }

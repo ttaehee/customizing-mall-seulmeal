@@ -49,8 +49,11 @@ public class PurchaseController {
 	@Qualifier("userServiceImpl")
 	private UserService userService;
 	
-	int pageUnit=10;
-	int pageSize=10;
+	@Value("${pageUnit}")
+	int pageUnit;
+	
+	@Value("${pageSize}")
+	int pageSize;
 	
 	public PurchaseController() {
 		// TODO Auto-generated constructor stub
@@ -76,11 +79,11 @@ public class PurchaseController {
 	//커스터마이징 상품 인서트 
 	@PostMapping("insertCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
-	public String insertCustomProduct(@RequestParam("productNo") String productNo, 
-			String cartStatus, CustomParts[] minus, Parts[] plus, 
+	public String insertCustomProduct(@RequestParam(value="cartStatus") String cartStatus,
+			@RequestParam(value="productNo") int productNo,CustomParts minus,Parts plus, 
 			CustomProduct customProduct, String userId, Model model) {
 		
-		System.out.println("/insertPurchase Post :minus "+minus+"plus"+plus);
+		System.out.println("/insertPurchase Post - minus no:"+minus+"plus"+plus);
 		
 		User user=new User();
 		user.setUserId(userId);

@@ -52,7 +52,7 @@
 		
 	</style>
 	
-	<form class="cc">
+	<form class="cc" method="post">
 		<input type="hidden" name="productNo" value="${product.productNo}"/>
 		<div class="container">
 		<h2>커스터마이징 : ${product.name}</h2> 
@@ -115,12 +115,8 @@
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
 	 }
 	
-	$(function() {
-		//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
-		//==> 1 과 3 방법 조합 : $("tagName.className:filter함수") 사용함.	
+	$(function() {	
 		 $( "a[href='#' ]").on("click" , function() {
-				//Debug..
-				//alert(  $( "td.ct_btn01:contains('취소')" ).html() );
 				$("form")[0].reset();
 		});
 	});	
