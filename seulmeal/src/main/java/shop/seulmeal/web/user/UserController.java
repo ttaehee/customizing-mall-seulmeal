@@ -1,5 +1,6 @@
 package shop.seulmeal.web.user;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,13 +21,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.User;
+import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
 @Controller
@@ -36,6 +40,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private ProductService productService;
+	
 	int pageUnit = 5;	
 	int pageSize = 5;
 	
@@ -61,32 +68,22 @@ public class UserController {
 	
 	
 	  @GetMapping("insertUserInformation") 
-	  public String insertUserInformation(MultipartFile imageFile, HttpSession session) throws Exception{
+	  public String insertUserInformation(Model model) throws Exception{
 	  
+		  List<Foodcategory> foodcategoryList = productService.getListFoodCategory();
+		  model.addAttribute("foodcategoryList",foodcategoryList);
 	 return "user/insertUserInformation"; 
 	 }
 	 
 	
 	@PostMapping("inserUserInformation")
-	public String insertUserInformation(@ModelAttribute("user") User user, Parts[] parts, MultipartFile file, HttpSession session ) throws Exception {
-		userService.insertUserInformation(user);
+	public String insertUserInformation(List<String> foodcategory ) throws Exception {
 		
-		List<Parts> list= new ArrayList<Parts>();
-		for(int i=0; i < parts.length; i++ ) {
-			Parts parts1 = new Parts();
-			parts1= parts[i];
-			list.add(parts1);
-		}
 		
-		User user2= (User)session.getAttribute("user");
-		Map<String, Object> map = new HashMap<String ,Object>();
-		map.put("userId", user2.getUserId());
-		map.put("list", list);
-		userService.insertHatesParts(map);
+		System.out.println(foodcategory.get(0));
+		System.out.println(foodcategory.get(1));
 		
-		user = userService.getUser(user2.getUserId());
-		user.setParts( userService.getUserHatesParts(user.getUserId()));
-		session.setAttribute("user", user);
+		
 		return "redirect:/";
 	}
 	

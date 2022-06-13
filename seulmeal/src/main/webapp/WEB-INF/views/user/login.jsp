@@ -11,7 +11,10 @@
 <body>
 
 	<jsp:include page="../layer/header.jsp"></jsp:include>
-	 <div class="container">
+	<br />
+	<br />
+	<div class="container container-table" >
+
 
       <form class="form-signin"  method="post" action="/user/login" target="_self">
         <h2 class="form-signin-heading">Please sign in</h2>
@@ -26,8 +29,12 @@
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
-	
-    </div> <!-- /container -->
+
+	</div>
+	<!-- /container -->
+
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
+    
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
@@ -40,5 +47,6 @@
 		}
 	})
 </script>
+
 </body>
 </html>
