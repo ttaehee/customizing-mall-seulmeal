@@ -34,22 +34,22 @@ import shop.seulmeal.service.purchase.PurchaseService;
 public class PurchaseServiceImpl implements PurchaseService{
 	
 	
-	@Value("#{config['IMPORT_TOKEN_URL']}")
+	@Value("${IMPORT_TOKEN_URL}")
 	private String IMPORT_TOKEN_URL;
 	
-	@Value("#{config['iIMPORT_PAYMENTINFO_URL']}")
+	@Value("${IMPORT_PAYMENTINFO_URL}")
 	private String IMPORT_PAYMENTINFO_URL;
 	
-	@Value("#{config['IMPORT_CANCEL_URL']}")
+	@Value("${IMPORT_CANCEL_URL}")
 	private String IMPORT_CANCEL_URL;
 	
-	@Value("#{config['IMPORT_PREPARE_URL']}")
+	@Value("${IMPORT_PREPARE_URL}")
 	private String IMPORT_PREPARE_URL;
 	
-	@Value("#{config['iamport.Key']}")
+	@Value("${iamport.Key}")
 	private String KEY;
 	
-	@Value("#{config['iamport.Secret']}")
+	@Value("${iamport.Secret}")
 	private String SECRET;
 	
 	@Autowired
