@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>문의 등록</title>
 <link rel="stylesheet" href="/resources/css/summernote/summernote-lite.css">
+<link rel="stylesheet" href="/resources/css/common/fileTag.css">
 <style type="text/css">
 	.pass{
 		display:flex;
@@ -22,14 +23,18 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container" style="margin-top:20px;">
-	<div style="border-bottom: 3px solid #4b6cb7;">
+	<div style="color:#4b6cb7; border-bottom: 2px solid #4b6cb7; margin-bottom: 30px;">
 		<h1>문의 등록</h1>
 	</div>
 
 		<form action="/operation/insertOperation" method="POST" enctype="multipart/form-data">
 			<div class="row">
-				<div class="col-md-12 text-center" style="margin-top:20px;">
-					<input id="title" name="title" style="width:100%;" placeholder="  제목을 입력하세요"/>
+			
+				<div class="col-md-12 form-group">
+					<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
+						<div class="col-md-12">
+						<input type="text" class="form-control" name="title" placeholder="제목을 입력해 주세요">
+					</div>
 				</div>
 				
 				<div class="col-md-12" style="margin-top:20px;">
@@ -59,8 +64,10 @@
 				<input type="hidden" name="postStatus" value="3" />
 			</div>
 				<div class="col-md-12" style="margin-top:20px; padding-top:10px; padding-bottom:10px; border-top: 3px solid #4b6cb7; border-bottom: 3px solid #4b6cb7;">
-					<div>
-						<input type="file" value="첨부파일임" name="uploadfile" multiple="multiple" />
+					<div class="filebox" style="display: flex; justify-content:space-around;">
+							<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
+							<label class="btn btn-primary" for="ex_filename">업로드</label> 
+							<input type="file" name="uploadfile" multiple="multiple" id="ex_filename" class="upload-hidden" />  
 					</div>
 				</div>
 				<div class="text-right" style="margin-top:20px;">
@@ -86,6 +93,25 @@
 		reader.readAsDataURL(event.target.files[0]);
 	}
 	
+	// fileUploadTag
+	$(document).ready(function(){
+		const fileTarget = $('.filebox .upload-hidden');
+		let filename;	
+		fileTarget.on('change', function(){  // 값이 변경되면
+			if(window.FileReader){  // modern browser
+				filename = $(this)[0].files[0].name;
+			} else {  // old IE
+				filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
+			}		   
+			// 추출한 파일명 삽입
+			$(this).siblings('.upload-name').val(filename);
+		});
+	});
+	
+	$(".filebox").on("click",()=>{
+		document.querySelector("#ex_filename").click();
+	})
+	//////
 		
 	$(document).ready(function () {
 		$('#summernote').summernote({

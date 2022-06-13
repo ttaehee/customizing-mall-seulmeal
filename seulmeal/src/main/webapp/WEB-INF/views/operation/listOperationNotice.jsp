@@ -9,7 +9,10 @@
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
+
+
 	<div class="container">
+		
 		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">공지사항</h1>
@@ -53,12 +56,16 @@
 		</table>
 		
 		<hr/>
-		<div class="seulBtn" onclick="insertNotice()" style="float: right;">공지 작성</div>	
+		<c:if test="${user.role == 1}">
+			<div class="seulBtn" onclick="insertNotice()" style="float: right;">공지 작성</div>
+		</c:if>
 		<jsp:include page="../common/pageNavigator_new.jsp"/>
 	</div>
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
+
+
 	function insertNotice(){
 		window.location.href = "/operation/insertOperation/1";
 	}

@@ -43,7 +43,10 @@ public class PurchaseRestController {
 	@Qualifier("userServiceImpl")
 	private UserService userService;
 	
+	@Value("${pageUnit}")
 	int pageUnit;
+	
+	@Value("${pageSize}")
 	int pageSize;
 	
 	public PurchaseRestController(){

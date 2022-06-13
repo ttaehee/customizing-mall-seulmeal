@@ -34,7 +34,6 @@
 		</association>
 		<collection property="comments" ofType="comment">
 			<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
-			<result property="postNo" column="post_no" jdbcType="NUMERIC" />
 			<result property="content" column="content_c" jdbcType="VARCHAR" />
 			<result property="layer" column="layer" jdbcType="CHAR" />
 			<result property="regDate" column="reg_date_c" jdbcType="DATE" />
@@ -46,6 +45,21 @@
 				<result property="userId" column="user_id_c" jdbcType="VARCHAR" />
 			</association>
 		</collection>
+	</resultMap>
+	
+	<resultMap type="comment"	id="commentSelectMap">		
+		<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
+		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
+		<result property="content" column="content" jdbcType="VARCHAR" />
+		<result property="layer" column="layer" jdbcType="CHAR" />
+		<result property="regDate" column="reg_date" jdbcType="DATE" />
+		<result property="updateDate" column="update_date" jdbcType="DATE" />
+		<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
+		<result property="parentCommentNo" column="parent_comment_no" jdbcType="NUMERIC" />
+		<result property="status" column="status" jdbcType="VARCHAR" />
+		<association property="user" javaType="user">
+			<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		</association>
 	</resultMap>
 	
 	<insert id="insertOperation">
@@ -215,7 +229,7 @@
 		</selectKey>
 	</insert>
 	
-	<select id="getListAnswer" resultType="comment">
+	<select id="getListAnswer" resultMap="commentSelectMap">
 		SELECT * FROM comments
 		<where>
 			post_no = #{postNo}

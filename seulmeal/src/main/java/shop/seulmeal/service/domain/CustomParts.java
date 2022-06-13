@@ -12,10 +12,12 @@ import lombok.ToString;
 public class CustomParts {
 	private int customPartsNo;
 	private int customProductNo;
-	private int productPartsNo; //제외재료번호 
+	private int minusNo; //제외재료번호 
 	private String minusName; //제외재료이름 
 	private int gram;
 	private Parts parts; //추가재료 
+	
+	private List<CustomParts> customPartsList;
 	
 	
 }

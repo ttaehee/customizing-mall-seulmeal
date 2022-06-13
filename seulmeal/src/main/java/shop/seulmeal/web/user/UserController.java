@@ -206,13 +206,16 @@ public class UserController {
 				session.setAttribute("user", dbUser);
 			}
 			
-			if(checkLogin.equals("1")) {
-				Cookie loginCookie = new Cookie("loginCookie", dbUser.getUserId());
-				loginCookie.setPath("/");
-				long limitTime = 60*60*24*90;
-				loginCookie.setMaxAge((int)limitTime);
-				response.addCookie(loginCookie);
+			if(checkLogin != null) {
+				if(checkLogin.equals("1")) {
+					Cookie loginCookie = new Cookie("loginCookie", dbUser.getUserId());
+					loginCookie.setPath("/");
+					long limitTime = 60*60*24*90;
+					loginCookie.setMaxAge((int)limitTime);
+					response.addCookie(loginCookie);
+				}
 			}
+			
 		}
 		
 		return "redirect:/";
