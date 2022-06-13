@@ -4,120 +4,102 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<!--  slick lib -->
+<link rel="stylesheet" type="text/css"
+	href="http://kenwheeler.github.io/slick/slick/slick.css" />
+<link rel="stylesheet" type="text/css"
+	href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
+
+
 <meta charset="UTF-8">
 <title>게시글 상세</title>
 
 
 <style type="text/css">
 
-	.card-cover {
-		background-repeat: no-repeat;
-		background-position: center center;
-		background-size: cover;
-	}
-	
-	.carousel-control.left, .carousel-control.right {
-	    background-image: none
-	}
-
-.carousel-indicators{
-	carousel-indicator-width:3px;
-	$carousel-indicator-width:3px;
+.slick-prev:before {
+  content: "<";
+  color: black;
+  font-size: 30px;
 }
 
-.carousel-inner{
-	carousel-caption-width: 50%;
-}
-
-.carousel-inner{
-	carousel-caption-width: 50%;
+.slick-next:before {
+  content: ">";
+  color: black;
+  font-size: 30px;
 }
 
 
-.d-block w-100 {
-	top: 0;
-	left: 0;
-	min-width: 100px;
-	min-height: 100px;
+img{
+	display:block;
+	margin:auto;
 }
+
+/*
+.carousel-item {
+  height: 100%;
+  min-height: 100%;
+  background: no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+*/
+
+
+/*
+.carousel-inner > .carousel-item > img {
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 400px;
+    }
+*/ 
+
+/*
+.your_class{
+	text-align: center;
+  	height: 50%;
+  	width: 50%;
+}
+*/
+
 </style>
+
 
 </head>
 
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
-
+	
+	<!--  slick lib -->
+	<script type="text/javascript"
+	src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
+	
+	
 	<br />
 
-	<!-- Carousel -->
-	<div id="carouselExampleIndicators" class="carousel slide"
-		data-ride="carousel">
-
-		<!-- 1.  -->
-		<ol class="carousel-indicators">
-			<li data-target="#carouselExampleIndicators" data-slide-to="0"
-				class="active"></li>
-			<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-			<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-		</ol>
-
-			<!-- 2.  -->
-			<div class="carousel-inner">
-
-				<div class="carousel-item active" data-bs-interval="10000">
-					<img class="d-block w-100" style="width: 30%"
-						src="../../resources/attachments/profile_image/${post.user.profileImage}"
-						alt="First slide">
-				</div>
-
-				<div class="carousel-item" data-bs-interval="10000">
-					<img class="d-block w-100" src="..." alt="Second slide">
-				</div>
-
-				<div class="carousel-item" data-bs-interval="10000">
-					<img class="d-block w-100" src="..." alt="Third slide">
-				</div>
-
-				<div class="carousel-item" data-bs-interval="10000">
-					<img class="d-block w-100" src="..." alt="Third slide">
-				</div>
-
-				<div class="carousel-item" data-bs-interval="10000">
-					<img class="d-block w-100" src="..." alt="Third slide">
-				</div>
-
+	<div class="container" >
+		<div class="your-class">
+			<div>
+				<img style="height:50vh;" src="/resources/attachments/profile_image/${post.user.profileImage}" alt="">
 			</div>
-
-
-		<!-- 3.  -->
-		<a class="carousel-control-prev" href="#carouselExampleIndicators"
-			role="button" data-slide="prev"> <span
-			class="carousel-control-prev-icon" aria-hidden="true"></span> <span
-			class="sr-only">Previous</span>
-		</a> <a class="carousel-control-next" href="#carouselExampleIndicators"
-			role="button" data-slide="next"> <span
-			class="carousel-control-next-icon" aria-hidden="true"></span> <span
-			class="sr-only">Next</span>
-		</a>
-	</div>
-
-
-
-	<!-- cards -->
-	<div class="card mb-3">
-		<img class="card-img-top" style = "width : 10%" src="../../resources/attachments/profile_image/${post.user.profileImage}" alt="Card image cap">
-		<div class="card-body">
-			<h5 class="card-title">Card title</h5>
-			<p class="card-text">This is a wider card with supporting text
-				below as a natural lead-in to additional content. This content is a
-				little bit longer.</p>
-			<p class="card-text">
-				<small class="text-muted">Last updated 3 mins ago</small>
-			</p>
+			<div>
+				<img style="height:50vh;" src="/resources/attachments/profile_image/${post.user.profileImage}" alt="">
+			</div>
+			<div>
+				<img style="height:50vh;" src="/resources/attachments/profile_image/${post.user.profileImage}" alt="">
+			</div>		
 		</div>
 	</div>
+	
 
 	<!-- table : 게시글 -->
+	
+	<div class="container">
+	
 	<table width="100%" border="0" cellspacing="0" cellpadding="0"
 		style="margin-top: 10px;">
 
@@ -154,7 +136,7 @@
 			<td align="left">${post.user.nickName}</td>
 			<td></td>
 			<td align="left"><img style="width: 80px; height: 80px"
-				src="../../resources/attachments/profile_image/${post.user.profileImage}" /></td>
+				src="/resources/attachments/profile_image/${post.user.profileImage}" /></td>
 			<td></td>
 			<td align="left">${post.title}</td>
 			<td></td>
@@ -175,6 +157,7 @@
 		</tr>
 
 	</table>
+
 
 	<br />
 	<br />
@@ -209,7 +192,7 @@
 				<td align="left">${comment.user.nickName}</td>
 				<td></td>
 				<td align="left"><img style="width: 80px; height: 80px"
-					src="../../resources/attachments/profile_image/${comment.user.profileImage}" /></td>
+					src="/resources/attachments/profile_image/${comment.user.profileImage}" /></td>
 				<td></td>
 				<td align="left">${comment.content}</td>
 				<td></td>
@@ -217,8 +200,13 @@
 				<td></td>
 				<td align="left">${comment.updateDate}</td>
 				<td></td>
-
-				<!-- 게시글 사진 -->
+				<c:if test="${sessionScope.user.userId == comment.user.userId}">
+					<td class="ct_list_b">
+					<button id="updateCommentBtn" type="button" class="btn btn-primary">수정</button>
+					<button id="deleteCommentBtn" type="button" class="btn btn-primary" data-value="${comment.commentNo}">삭제</button>
+					</td>
+					<td class="ct_line02"></td>
+				</c:if>
 			</tr>
 		</c:forEach>
 
@@ -235,45 +223,38 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				댓글 : <input id="comment_content" name="content" />
+				댓글 : <input id="comment_content" name="content" value=""/>
 			</div>
 			<div class="col-md-12">
-				layer : <input id="layer" name="layer" />
-			</div>
-		</div>
-
-		<div style="display: flex; justify-content: space-between;">
-			<div>
-				<button id="insertBtn" type="button" class="btn btn-primary">
-					등록</button>
-				<button id="updateBtn" type="button" class="btn btn-primary">
-					수정</button>
-				<button id="deleteBtn" type="button" class="btn btn-primary">
-					삭제</button>
+				layer : <input id="layer" name="layer" value=""/>
+				<button id="insertCommentBtn" type="button" class="btn btn-primary">등록</button>
 			</div>
 		</div>
 	</div>
 
-
+	
+	</div>
+	
+	
+	
 	<span id="commentPlus" style="color: red"></span>
 
 
 
 	<script>
 	
-		$("#insertBtn").on(
+		$("#insertCommentBtn").on(
 				"click",
 				function() {
 
-					var postNo = $
-					{
-						post.postNo
-					}
+					var postNo = ${post.postNo};
+					var content = $("#comment_content").val();
+					var layer = $("#layer").val();
 
 					var jsonReq = {
 						"postNo" : postNo,
-						"content" : $("#comment_content").val(),
-						"layer" : $("#layer").val()
+						"content" : content,
+						"layer" : layer
 					}
 
 					alert("jsonReq: " + jsonReq);
@@ -303,20 +284,92 @@
 							console.log("DTORes : " + DTORes);
 
 							// 응답받은 dto 객체의 value 값 꺼내기
-							var result = DTORes["postNo"] + ", "
+							var strData = DTORes["postNo"] + ", "
 									+ DTORes["commentNo"] + ", "
 									+ DTORes["content"] + ", "
 									+ DTORes["regDate"];
 
-							alert("result: " + result);
-							console.log("result : " + result);
-
-							$("#commentPlus").html(result);
+							alert("strData: " + strData);
+							console.log("strData : " + strData);
+							
+							$("#commentPlus").html(strData);
+							
+							// 입력값 지우기 ^
+							$('#comment_content').value("");
+							$("#layer").value(" ");
 							//$("#" + postNo + "").html(displayValue);
 						}
 					});
 
 				});
+		
+		$("#deleteCommentBtn").on(
+				"click",
+				function() {
+
+					var commentNo = $("#deleteCommentBtn").val();
+
+					alert("commentNo: " + commentNo);
+					console.log("commentNo: " + commentNo);
+
+					$.ajax({
+						url : "/community/api/deleteComment/"+commentNo,
+						method : "POST",
+						//data : JSON.stringify(jsonReq),
+						//data : commentNo,
+						//dataType : "json",
+						//contentType : "application/json; charset=utf-8",
+						/*
+						headers : {
+									"Accept" : "application/json",
+									"Content-Type" : "application/json"
+								},
+						 */
+						success : function(DTORes, status) {
+
+							//(status : sucess or err)
+							alert("status: " + status);
+							console.log("status: " + status);
+
+							// 응답받은 dto 객체
+							alert("DTORes : " + DTORes);
+							console.log("DTORes : " + DTORes);
+
+							// 응답받은 dto 객체의 value 값 꺼내기
+							var strData = DTORes["postNo"] + ", "
+									+ DTORes["commentNo"] + ", "
+									+ DTORes["content"] + ", "
+									+ DTORes["regDate"];
+
+							alert("strData: " + strData);
+							console.log("strData : " + strData);
+							
+							//$("#commentPlus").html(strData);
+							
+						}
+					});
+
+				});
+		
+		
+		
+		
+		$(document).ready(function() {
+			$('.your-class').slick({
+				  dots: true,
+				  infinite: true,
+				  speed: 500,
+				  fade: true,
+				  cssEase: 'linear',
+				  arrows: true,
+				  prevArrow:"<button type='button' class='slick-prev pull-left'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
+		          nextArrow:"<button type='button' class='slick-next pull-right'><i class='fa fa-angle-right' aria-hidden='true'></i></button>"
+				  
+			});
+		});
+
+
+		
 	</script>
 
 
