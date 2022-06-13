@@ -9,10 +9,10 @@
 <link href="https://fonts.googleapis.com/css?family=Kanit:200" rel="stylesheet">
 
 <!-- Font Awesome Icon -->
-<link type="text/css" rel="stylesheet" href="../../resources/css/error/404/font-awesome.min.css" />
+<link type="text/css" rel="stylesheet" href="/resources/css/error/404/font-awesome.min.css" />
 
 <!-- Custom stlylesheet -->
-<link type="text/css" rel="stylesheet" href="../../resources/css/error/404/style.css" />
+<link type="text/css" rel="stylesheet" href="/resources/css/error/404/style.css" />
 <title>500 PAGE</title>
 </head>
 <body>

@@ -118,7 +118,7 @@ public class OperationController {
 		post.setPostStatus(postStatus);
 		// �옄猷� 媛��졇�삤湲�
 		post = operationService.getOperation(post);
-		
+		System.out.println(post.getComments());
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("postNo", post.getPostNo());
 		
@@ -126,10 +126,12 @@ public class OperationController {
 		List<Attachments> list = attachmentsService.getAttachments(map);
 		post.setAttachments(list);
 		System.out.println(post);
-		// 臾몄쓽�궗�빆�씪�떆 �떟蹂�媛��졇�삤湲�
-		if(post.getPostStatus().equals("3")) {
-			List<Comment> cList = operationService.getListAnswer(post.getPostNo());
-			post.setComments(cList);
+		
+		List<Comment> cl =post.getComments();
+		for (Comment comment : cl) {
+			map = new HashMap<String,Object>();
+			map.put("commentNo", comment.getCommentNo());
+			comment.setAttachments(attachmentsService.getAttachments(map));
 		}
 		
 		model.addAttribute("post",post);
@@ -143,11 +145,12 @@ public class OperationController {
 		}
 	}
 	
-	@GetMapping("updateOperation/{postNo}")
-	public String updateOperation(@PathVariable int postNo, Model model) {
+	@GetMapping("updateOperation/{postStatus}/{postNo}")
+	public String updateOperation(@PathVariable int postNo, @PathVariable String postStatus, Model model) {
 		System.out.println(postNo);
 		Post post = new Post();
 		post.setPostNo(postNo);
+		post.setPostStatus(postStatus);
 		
 		post = operationService.getOperation(post);
 		

@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="../../../resources/css/summernote/summernote-lite.css">
 <!--<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="/resources/css/common/fileTag.css">
 <title>이벤트 등록</title>
 <style type="text/css">
 	.col-md-12{
@@ -53,30 +54,57 @@
 	<div class="container">
 	<form action="/operation/insertOperation" method="POST" enctype="multipart/form-data">
 		<div class="row">
-			<div class="col-md-12">
-				제목 : <input id="title" name="title" />
-				짧은내용 : <input id="shortContent" name="shortContent" />
-				기간 : <input id="endDate" type="date" name="endDate" />
-				썸네일 : <input type="file" name="thumnailFile" id="image" accept="image/*" onchange="readURL(event);"/>
+			<div class="col-md-12 form-group">
+				<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
+					<div class="col-md-12">
+					<input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력해 주세요">
+				</div>
+			</div>
+			
+			<div class="col-md-12 form-group">
+				<label for="Email3" class="col-sm-2 control-label h4" >짧은 내용</label>
+					<div class="col-md-12">
+					<input type="text" class="form-control" id="shortContent" name="shortContent" placeholder="제목을 입력해 주세요">
+				</div>
+			</div>
+			
+			<div class="col-md-12 form-group">
+				<label for="Email3" class="col-sm-2 control-label h4" >기간</label>
+					<div class="col-md-12">
+					<input type="date" class="form-control" id="endDate" name="endDate">
+				</div>
+			</div>
+			
+			<div class="col-md-12" style="margin-top:20px;" >
+				<div class="filebox" style="display: flex; justify-content:space-around;">
+						<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
+						<label class="btn btn-primary" for="ex_filename">썸네일</label> 
+						<input type="file" accept="image/*" name="thumnailFile" id="ex_filename" class="upload-hidden" onchange="readURL(event);" />  
+				</div>
 			</div>
 			
 			<div class="col-md-12">
-				<textarea id="summernote" name="content"></textarea>		
+				<textarea id="summernote" name="content"></textarea>
 			</div>
 		
 			<input type="hidden" name="postStatus" value="2" />
 		
+
+			<div class="col-md-12" style="margin-top:20px;" >
+				<input type="file" name="uploadfile" multiple="multiple" id="ex_uploadfile" />
+			</div>
 		</div>
-		<div style="display:flex; justify-content: space-between;">
-			<div >
-				<input type="file" value="첨부파일임" name="uploadfile" multiple="multiple" />
-			</div>
-			<div>
-				<button type="submit" class="btn btn-primary">
-					등록
-				</button>
-			</div>
-		</div>	
+		
+		<div class="text-right" style="margin-top:20px;">
+			<button type="submit" class="btn btn-primary">
+				등록
+			</button>
+			<button type="button" onclick="cancelBtn()" class="btn btn-primary">
+				취소
+			</button>
+		</div>
+			
+		
 	</form>
 	</div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
@@ -90,6 +118,26 @@
 		
 		reader.readAsDataURL(event.target.files[0]);
 	}
+	
+	// fileUploadTag
+	$(document).ready(function(){
+		const fileTarget = $('.filebox .upload-hidden');
+		let filename;	
+		fileTarget.on('change', function(){  // 값이 변경되면
+			if(window.FileReader){  // modern browser
+				filename = $(this)[0].files[0].name;
+			} else {  // old IE
+				filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
+			}		   
+			// 추출한 파일명 삽입
+			$(this).siblings('.upload-name').val(filename);
+		});
+	});
+	
+	$(".filebox").on("click",()=>{
+		document.querySelector("#ex_filename").click();
+	})
+	//////
 	
 	$("#title").on("keyup",function(){
 		$("#titleView").text($(this).val());

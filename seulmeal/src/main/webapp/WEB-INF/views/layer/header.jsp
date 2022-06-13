@@ -16,6 +16,9 @@
 <script src="/resources/javascript/summernote/summernote-lite.js"></script>
 <script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
 
+<script type="text/javascript"
+	src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
+
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <!-- bootStrap -->
@@ -24,6 +27,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
 <link rel="stylesheet" href="/resources/css/body.css">
+
+<link rel="stylesheet" type="text/css"
+	href="http://kenwheeler.github.io/slick/slick/slick.css" />
+<link rel="stylesheet" type="text/css"
+	href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
+	
+
 
 <style>
 	.header{
