@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,15 +112,17 @@ public class PurchaseController {
 		if(cartStatus.equals("0")) {
 			return "redirect:getListCustomProduct/"+userId;
 		}else {
-			return "redirect:insertPurchase/"+userId;
+			return "redirect:/purchase/insertPurchase/"+userId;
 		}
 		
 	}
 	
 	//장바구니 리스트 
 	@GetMapping("getListCustomProduct/{userId}")
-	public String getListCustomProduct(@PathVariable String userId, Model model) {
+	public String getListCustomProduct(@PathVariable String userId, Model model) throws Exception {
 		System.out.println("/getListCustomProduct : "+ userId);
+		
+		User user=userService.getUser(userId);
 		
 		Search search = new Search();
 		if (search.getCurrentPage() == 0) {
@@ -134,6 +137,8 @@ public class PurchaseController {
 			= new Page(search.getCurrentPage(), 
 					((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
 		System.out.println(resultPage);
+		
+		model.addAttribute("user",user);
 
 		model.addAttribute("customProductList", map.get("cproductList"));
 		model.addAttribute("resultPage", resultPage);
@@ -146,15 +151,19 @@ public class PurchaseController {
 	//커스터마이징 상품 현재옵션정보 + 옵션수정 화면출력 
 	@GetMapping("updateCustomProduct/{customProductNo}")
 	@Transactional(rollbackFor= {Exception.class})
-	public String updateCustomProduct(@PathVariable int customProductNo, CustomProduct customProduct, Model model) {
+	public String updateCustomProduct(@PathVariable int customProductNo, CustomProduct customProduct, Model model) throws Exception {
 		
-		System.out.println("/deletePurchase :Post");
+		System.out.println("/updateCPurchase :Get");
 		
 		customProduct=purchaseService.getCustomProduct(customProductNo);
 		
-		model.addAttribute("customProduct", customProduct);
+		List<Parts> partsList=productService.getProductParts(customProduct.getProduct().getProductNo());
+		System.out.println("partsList : "+customProduct.getProduct().getProductNo());
 		
-		return "purchase/getPurchaseCustomProduct";
+		model.addAttribute("customProduct", customProduct);
+		model.addAttribute("partsList",partsList);
+		
+		return "purchase/updatePurchaseCustomProduct";
 	}	
 	
 	//커스터마이징 상품 옵션수정(커스터마이징재료 삭제 후 추가)
@@ -176,24 +185,26 @@ public class PurchaseController {
 		purchaseService.insertMinusParts(map);
 		purchaseService.insertPlusParts(map);
 		
-		return "redirect:getListCustomProduct/"+userId;
+		return "redirect:/purchase/getListCustomProduct/"+userId;
 	}		
 		
 	//커스터마이징 상품 장바구니에서 삭제 
-	@PostMapping("deleteCustomProduct")
+	@GetMapping("deleteCustomProduct/{customProductNo}")
 	@Transactional(rollbackFor= {Exception.class})
-	public String deleteCustomProduct(int customProductNo, String userId, Model model) {
+	public String deleteCustomProduct(@PathVariable int customProductNo, HttpSession session, Model model) {
 		
-		System.out.println("/deletePurchase :Post");
+		System.out.println("/deletePurchase : " + customProductNo);
 		
-		purchaseService.deleteCustomProduct(customProductNo);
 		
-		return "redirect:getListCustomProduct/"+userId;
+		
+		int i= purchaseService.deleteCustomProduct(customProductNo);
+		System.out.println("delet result : "+i);
+		
+		return "redirect:/purchase/getListCustomProduct/ghm4905";
 	}	
 	
 	
 	//구매정보입력 화면 출력  바로구매하기와 장바구니에서 구매버튼 누른거 어떻게 구분?? 장바구니에 1,2 두고 3만 바로구매하기할수도 
-	//장바구니화면에서 커스터마이징상품들 정보 그대로 파라미터로 받을수 잇나?
 	@GetMapping("insertPurchase")
 	public String insertPurchase(Model model) throws Exception {
 		
@@ -226,18 +237,15 @@ public class PurchaseController {
 	}	
 	
 	@GetMapping("getListPurchase")
-	public String getListPurchase( Search search, Purchase purchase, Model model, HttpSession session)
+	public String getListPurchase(@ModelAttribute Search search, String userId, String purchaseStatus, Model model, HttpSession session)
 			throws Exception {
-		
-		String userId=((User)session.getAttribute("user")).getUserId();
-		System.out.println("/getListPurchase : " +userId);
 
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
 
-		Map<String, Object> map = purchaseService.getListPurchase(search, userId);
+		Map<String, Object> map = purchaseService.getListPurchase(search, userId, purchaseStatus);
 
 		Page resultPage 
 			= new Page(search.getCurrentPage(), 
@@ -260,7 +268,7 @@ public class PurchaseController {
 		
 		purchaseService.deletePurchase(purchaseNo);
 		
-		return "redirect:getListPurchase/"+userId;
+		return "redirect:/getListPurchase/"+userId;
 	}			
 	
 }

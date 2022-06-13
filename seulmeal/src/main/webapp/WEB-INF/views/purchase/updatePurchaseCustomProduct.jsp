@@ -54,21 +54,21 @@
 	 
 	
 	<div class="container">
-	<h2>커스터마이징 : ${product.name}</h2> 
-	<h5 id="productprice">${product.price}원</h5></div>
-	<div class="container">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</div><br/><br/>
+	<h2>커스터마이징 : ${customProduct.product.name}</h2> 
+	<h5 id="productprice">${customProduct.product.price}원</h5>
+	<div>!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</div><br/><br/>
 
-	
-	<div class="container">
+
+	<div>
 	<h5 >제품구성</h5></div>
 	<c:forEach var="parts" items="${partsList}">
 	<div class="container productparts">${parts.name} &emsp;&emsp; 
 	<button class="btn btn-outline-primary" id="execpt" style="margin-right:10px;">제외하기 </div>
 	</c:forEach>
 	<br/><br/>
-
 	
-	<div class="container">
+	
+	<div>
 	<h5>추가재료</h5>
 	*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</div>
 	<div class="container">
@@ -87,18 +87,18 @@
 	</div><br/><br/>
 	
 	
-	<div class="container custom">커스터마이징 상품 수량 &emsp;&emsp; 
+	<div class="custom">커스터마이징 상품 수량 &emsp;&emsp; 
 	<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
-	&ensp; <span name='count'>1</span> &ensp; 
+	&ensp; <span name='count'>${customProduct.count}</span> &ensp; 
 	 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button> </div><br/>
 	
 	
-	<div class="container">총 상품금액 :<div id="total">${product.price}원</div></div>
+	<div>총 상품금액 :<div id="total">${customProduct.price*customProduct.count}원</div></div>
 	<br/><br/>
 	
-	<div class="container">
-	<button class="btn btn-primary" style="margin-right:10px;">바로 구매하기</button> &emsp; 
-	<button class="btn btn-primary" style="margin-right:10px;">장바구니 담기</button>
+	<div>
+	<button class="btn btn-primary" style="margin-right:10px;">적용하기/button> 
+	</div>
 	</div>
 
 		

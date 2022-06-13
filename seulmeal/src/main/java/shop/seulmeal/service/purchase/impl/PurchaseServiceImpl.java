@@ -104,7 +104,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 		map.put("userId", userId);
 	
 		map.put("cproductList", purchaseMapper.getListCustomProduct(map));
-		map.put("totalCount",purchaseMapper.getTotalCount(map));
+		map.put("totalCount",purchaseMapper.getCustomProductTotalCount(map));
 		
 		return map;
 	}
@@ -113,6 +113,12 @@ public class PurchaseServiceImpl implements PurchaseService{
 	public int updateCustomProduct(CustomProduct customProduct) {
 		// TODO Auto-generated method stub
 		return purchaseMapper.updateCustomProduct(customProduct);
+	}
+	
+	@Override
+	public int updateCustomProductCount(CustomProduct customProduct) {
+		// TODO Auto-generated method stub
+		return purchaseMapper.updateCustomProductCount(customProduct);
 	}
 
 	@Override
@@ -135,15 +141,16 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public Map<String, Object> getListPurchase(Search search, String userId) {
+	public Map<String, Object> getListPurchase(Search search, String userId, String purchaseStatus) {
 		// TODO Auto-generated method stub
 		
 		Map<String, Object> map=new HashMap<>();
 		map.put("search", search);
 		map.put("userId", userId);
+		map.put("purchaseStatus", purchaseStatus);
 		
 		List<Purchase> list=purchaseMapper.getListPurchase(map);
-		int totalCount=purchaseMapper.getTotalCount(map);
+		int totalCount=purchaseMapper.getPurchaseTotalCount(map);
 		
 		map.put("purchaseList", list);
 		map.put("totalCount", totalCount);
