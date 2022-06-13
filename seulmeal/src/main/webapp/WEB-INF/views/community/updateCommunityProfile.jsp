@@ -207,10 +207,10 @@ function count_check(obj){
 						console.log("DTORes : " + DTORes);
 
 						// 응답받은 dto 객체의 value 값 꺼내기
-						var profileImage = DTORes["profileImage"];
+						var result = DTORes["profileImage"];
 
-						alert("profileImage: " + result);
-						console.log("profileImage : " + result);
+						alert("result: " + result);
+						console.log("result : " + result);
 
 						//$("#" + postNo + "").html(displayValue);
 					}

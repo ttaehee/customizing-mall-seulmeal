@@ -17,6 +17,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,13 +33,24 @@ import shop.seulmeal.service.purchase.PurchaseService;
 @Service("purchaseServiceImpl")
 public class PurchaseServiceImpl implements PurchaseService{
 	
-	public static final String IMPORT_TOKEN_URL = "https://api.iamport.kr/users/getToken";
-	public static final String IMPORT_PAYMENTINFO_URL = "https://api.iamport.kr/payments/find/";
-	public static final String IMPORT_CANCEL_URL = "https://api.iamport.kr/payments/cancel";
-	public static final String IMPORT_PREPARE_URL = "https://api.iamport.kr/payments/prepare";
 	
-	public static final String KEY = "3479616353644323";
-	public static final String SECRET = "cbe3de64fe45c7f463b3635d100f3b778c1bb755d258dec8c9d4f22f77fb9e7093be3b1c11843648";
+	@Value("${IMPORT_TOKEN_URL}")
+	private String IMPORT_TOKEN_URL;
+	
+	@Value("${IMPORT_PAYMENTINFO_URL}")
+	private String IMPORT_PAYMENTINFO_URL;
+	
+	@Value("${IMPORT_CANCEL_URL}")
+	private String IMPORT_CANCEL_URL;
+	
+	@Value("${IMPORT_PREPARE_URL}")
+	private String IMPORT_PREPARE_URL;
+	
+	@Value("${iamport.Key}")
+	private String KEY;
+	
+	@Value("${iamport.Secret}")
+	private String SECRET;
 	
 	@Autowired
 	private PurchaseMapper purchaseMapper;

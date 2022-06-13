@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
@@ -48,8 +49,11 @@ public class PurchaseController {
 	@Qualifier("userServiceImpl")
 	private UserService userService;
 	
-	int pageUnit=10;
-	int pageSize=10;
+	@Value("${pageUnit}")
+	int pageUnit;
+	
+	@Value("${pageSize}")
+	int pageSize;
 	
 	public PurchaseController() {
 		// TODO Auto-generated constructor stub
@@ -75,18 +79,19 @@ public class PurchaseController {
 	//커스터마이징 상품 인서트 
 	@PostMapping("insertCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
-	public String insertCustomProduct(List<CustomParts> minus, List<Parts> plusParts, CustomProduct customProduct, Product product, String userId, String cartStatus, Model model) {
+	public String insertCustomProduct(@RequestParam(value="cartStatus") String cartStatus,
+			@RequestParam(value="productNo") int productNo,CustomParts minus,Parts plus, 
+			CustomProduct customProduct, String userId, Model model) {
 		
-		System.out.println("/insertPurchase :Post");
+		System.out.println("/insertPurchase Post - minus no:"+minus+"plus"+plus);
 		
 		User user=new User();
 		user.setUserId(userId);
 		
-		int price=product.getPrice();
 		CustomParts cp=new CustomParts();
+		/*
 		List<CustomParts> plus=new ArrayList<>();
 		for(Parts p: plusParts) {
-			price += p.getPrice();
 			cp.setParts(p);
 			plus.add(cp);
 		}
@@ -96,6 +101,7 @@ public class PurchaseController {
 		customProduct.setMinusParts(minus);
 		customProduct.setPlusParts(plus);
 		customProduct.setPrice(price);
+*/
 		
 		purchaseService.insertCustomProduct(customProduct);
 		
@@ -110,7 +116,7 @@ public class PurchaseController {
 		model.addAttribute("customProduct",customProduct);
 		
 		if(cartStatus.equals("0")) {
-			return "redirect:getListCustomProduct/"+userId;
+			return "redirect:/purchase/getListCustomProduct/"+userId;
 		}else {
 			return "redirect:/purchase/insertPurchase/"+userId;
 		}
@@ -206,16 +212,11 @@ public class PurchaseController {
 	
 	//구매정보입력 화면 출력  바로구매하기와 장바구니에서 구매버튼 누른거 어떻게 구분?? 장바구니에 1,2 두고 3만 바로구매하기할수도 
 	@GetMapping("insertPurchase")
-	public String insertPurchase(Model model) throws Exception {
+	public String insertPurchase(@PathVariable String userId, List<CustomProduct> customProduct,Model model) {
 		
 		System.out.println("/insertPurchase : GET");
 		
-		User user=new User();
-		user=userService.getUser("ghm4905");
-		
-		model.addAttribute("user", user);
-		
-		//model.addAttribute("customProductList", customProduct);
+		model.addAttribute("customProductList", customProduct);
 		
 		return "purchase/insertPurchase";
 		
@@ -237,7 +238,7 @@ public class PurchaseController {
 	}	
 	
 	@GetMapping("getListPurchase")
-	public String getListPurchase(@ModelAttribute Search search, String userId, String purchaseStatus, Model model, HttpSession session)
+	public String getListPurchase(Search search, String userId, String purchaseStatus, Model model, HttpSession session)
 			throws Exception {
 
 		if (search.getCurrentPage() == 0) {
