@@ -17,12 +17,10 @@ import shop.seulmeal.service.domain.User;
 public interface UserMapper {
 
 	public int insertUser(User user) throws Exception;
-	
-	public int inserUserInformation(User user) throws Exception;
-	
+
 	public int insertHatesParts(Map<String, Object> map) throws Exception;
 	
-	public int insertHatesParts(Parts parts) throws Exception;
+	public int insertHatesParts(Parts parts, String userId) throws Exception;
 	
 	public User getUser(String userId) throws Exception;
 	

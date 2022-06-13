@@ -43,8 +43,8 @@ public class UserController {
 	@Autowired
 	private ProductService productService;
 	
-	int pageUnit = 5;	
-	int pageSize = 5;
+	int pageUnit = 10;	
+	int pageSize = 10;
 	
 	public UserController() {
 		System.out.println(this.getClass());
@@ -76,12 +76,91 @@ public class UserController {
 	 }
 	 
 	
-	@PostMapping("inserUserInformation")
-	public String insertUserInformation(List<String> foodcategory ) throws Exception {
+	@PostMapping("insertUserInformation")
+	public String insertUserInformation( String[] foodcategory, MultipartFile imageFile, String profilemessage, String[] partsName, HttpSession session ) throws Exception {
+		
+		User user = (User)session.getAttribute("user");
+		
+		System.out.println(user);
+		
+		if(foodcategory != null) {
+			System.out.println(":: foodcategory : "+foodcategory[0]);
+			System.out.println(":: foodcategory : "+foodcategory[1]);
+			System.out.println(":: foodcategory : "+foodcategory[2]);
+			
+			user.setFoodCategoryName1(foodcategory[0]);
+			user.setFoodCategoryName2(foodcategory[1]);
+			user.setFoodCategoryName3(foodcategory[2]);
+			
+		}
+		
+		String imageFilePath = null;
+//		String absolutePath = new File("").getAbsolutePath()+"\\";
+		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		File file = new File(path);
+
+		
+
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+
+		if (!imageFile.isEmpty()) {
+			String contentType = imageFile.getContentType();
+			String originalFileExtension = null;
+
+			if (contentType.contains("image/jpeg")) {
+				originalFileExtension = ".jpg";
+			} else if (contentType.contains("image/png")) {
+				originalFileExtension = ".png";
+			}
+
+			imageFilePath = path + "/" + user.getUserId()+ "_profile" + originalFileExtension;
+			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
+			System.out.println("//////userId: " + user.getUserId());
+			System.out.println("//////imageFilePath: " + imageFilePath);
+			System.out.println("//////originalFileExtension: " + originalFileExtension);
+			System.out.println("//////getOriginalFilename(): " + imageFile.getOriginalFilename());
+
+			// 이미지 파일 로컬에 저장
+			file = new File(imageFilePath);
+			imageFile.transferTo(file);
+
+			// 저장한 이미지 파일을 User session 저장 또는 수정
+//			User user = (User)session.getAttribute("user");
+			user.setProfileImage(imageFileName);
+		}
+		
+		if(profilemessage != null ) {
+			user.setProfileMessage(profilemessage);
+		}
 		
 		
-		System.out.println(foodcategory.get(0));
-		System.out.println(foodcategory.get(1));
+		userService.updateProfile(user);
+		
+		if(partsName!=null) {
+			List<Parts> parts = new ArrayList<>();
+			
+			
+			for(int i=0;i<partsName.length;i++) {
+				//System.out.println("::partsName : "+partsName[i]);
+				
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("name", partsName[i]);
+				Parts hateParts =productService.getParts(map1);
+				System.out.println("::hateParts : "+hateParts);
+				parts.add(hateParts);
+				
+			}
+			
+			
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", parts);
+			map.put("userId", user.getUserId());
+			userService.insertHatesParts(map);
+		}
+		
 		
 		
 		return "redirect:/";
@@ -256,8 +335,8 @@ public class UserController {
 		
 	}
 	
-	@GetMapping("listUser/{currentPage}")
-	public String getUserList( Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) throws Exception {
+	@GetMapping(value={ "listUser/{currentPage}/{searchCondition}","listUser/{currentPage}" , "listUser"})
+	public String getUserList( Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition, String searchKeyword) throws Exception {
 		
 		Search search = new Search();
 		if(currentPage != null) {
@@ -269,6 +348,7 @@ public class UserController {
 		
 		search.setPageSize(pageSize);
 		search.setSearchCondition(searchCondition);
+		search.setSearchKeyword(searchKeyword);
 		System.out.println(search);
 		
 		Map<String , Object> map=userService.getListUser(search);
