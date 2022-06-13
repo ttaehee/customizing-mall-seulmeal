@@ -6,19 +6,26 @@
 <meta charset="UTF-8">
 <title>공지사항 등록</title>
 <link rel="stylesheet" href="../../../resources/css/summernote/summernote-lite.css">
+<link rel="stylesheet" href="/resources/css/common/fileTag.css">
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container" style="margin-top:20px;">
+		<h1 style="color:#4b6cb7; border-bottom: 2px solid #4b6cb7; margin-bottom: 30px;">공지 등록</h1>
 		<form action="/operation/insertOperation" method="POST" enctype="multipart/form-data">
 			<div class="row">
-				<div class="col-md-12 text-center" style="margin-top:20px;">
-					제목 : <input id="title" name="title" style="width:90%;" />
+				<div class="col-md-12 form-group">
+					<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
+						<div class="col-md-12">
+						<input type="text" class="form-control" name="title" placeholder="제목을 입력해 주세요">
+					</div>
 				</div>
 				
-				<div class="col-md-12" style="margin-top:20px;">
-					<div>
-						<input type="file" value="첨부파일임" name="uploadfile" multiple="multiple" />
+				<div class="col-md-12" style="margin-top:20px;" >
+					<div class="filebox" style="display: flex; justify-content:space-around;">
+							<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
+							<label class="btn btn-primary" for="ex_filename">업로드</label> 
+							<input type="file" name="uploadfile" multiple="multiple" id="ex_filename" class="upload-hidden" />  
 					</div>
 				</div>
 				
@@ -26,12 +33,15 @@
 					<textarea id="summernote" name="content"></textarea>		
 				</div>
 			
-				<input type="hidden" name="postStatus" value="2" />
+				<input type="hidden" name="postStatus" value="1" />
 			
 			</div>				
 			<div class="text-right" style="margin-top:20px;">
 				<button type="submit" class="btn btn-primary">
 					등록
+				</button>
+				<button type="button" onclick="cancelBtn()" class="btn btn-primary">
+					취소
 				</button>
 			</div>
 		</form>
@@ -50,11 +60,30 @@
 		reader.readAsDataURL(event.target.files[0]);
 	}
 	
-		
+	// fileUploadTag
+	$(document).ready(function(){
+		const fileTarget = $('.filebox .upload-hidden');
+		let filename;	
+		fileTarget.on('change', function(){  // 값이 변경되면
+			if(window.FileReader){  // modern browser
+				filename = $(this)[0].files[0].name;
+			} else {  // old IE
+				filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
+			}		   
+			// 추출한 파일명 삽입
+			$(this).siblings('.upload-name').val(filename);
+		});
+	});
+	
+	$(".filebox").on("click",()=>{
+		document.querySelector("#ex_filename").click();
+	})
+	//////
+	
 	$(document).ready(function () {
 		$('#summernote').summernote({
-			height: 500,                // 에디터 높이
-			minHeight: 500,            // 최소 높이
+			height: 700,                // 에디터 높이
+			minHeight: 700,            // 최소 높이
 			maxHeight: null,            // 최대 높이
 			focus: true,                // 에디터 로딩후 포커스를 맞출지 여부
 			lang: "ko-KR",				// 한글 설정
@@ -75,6 +104,9 @@
 		});		
     });
 	
+	function cancelBtn(){
+		window.location.href = "/operation/getListOperation/1";
+	}
 </script>
 
 </body>

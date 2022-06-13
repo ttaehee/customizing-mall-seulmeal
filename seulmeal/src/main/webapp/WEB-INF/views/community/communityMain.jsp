@@ -1,25 +1,52 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 	
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<style type="text/css">
+
+#searchBox{
+	position: absolute;
+	right:80px;
+}
+
+#profileImage{
+	width: 80px; 
+	height: 80px";
+}
+
+</style>
+
+
+
 <title>community Main</title>
 </head>
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
-<form action="/community/communityMain" method="get">
+
 
 		<!-- table : 검색 (searchCondition, searchKeyword) -->
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
 				<tr>
 
+
+
 				<!-- condition, keyword -->
 					<td align="right">
+					
+					<button type="button" onclick="location.href='/community/insertPost'" class="btn btn-primary">
+						게시글 작성
+					</button>
+				
+				
+
+					
 					<select name="searchCondition" class="ct_input_g" style="width: 80px">
 							<option value="1" ${search.searchCondition eq '1'? 'selected':''}>조회순</option>
 							<option value="2" ${search.searchCondition eq '2'? 'selected':''}>좋아요순</option>
@@ -28,6 +55,28 @@
 							<!-- option value="1" ${search.searchCondition eq '1'? 'selected':''}>유저 닉네임</option-->
 					</select> 
 					
+			
+				<form class="form-inline" action="/community/communityMain" method="get">
+			
+					<ul class="nav">
+					  <li class="nav-item">
+					    <a class="nav-link active" href="/community/communityMain?searchCondition=1&searchKeyword=">조회순</a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" href="/community/communityMain?searchCondition=2">좋아요순</a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" href="/community/communityMain?searchCondition=3">최신순</a>
+					  </li>
+					</ul>
+					
+				<div id = "searchBox">	
+				    <input class="form-control mr-sm-2" id = "search" name = "searchKeyword" type="search" placeholder="게시글 제목+내용" aria-label="Search">
+				    <button class="btn btn-outline-success my-2 my-sm-0" id="searchBtn" type="submit">검색</button>
+			    </div>
+			    
+			  </form>
+			
 			
 					<input type="text" name="searchKeyword" 
 					class="ct_input_g" style="width: 200px; height: 19px" />
@@ -45,9 +94,11 @@
 							</tr>
 						</table>
 					</td>
+					
+					
 				</tr>
 			</table>
-</form>
+
 
 		<!-- table : 게시글 목록 -->
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
@@ -80,13 +131,13 @@
 				<!-- c:set var="no" value="0"/-->
 				<c:forEach var="post" items="${postList}">
 					<tr class="ct_list_pop">
-						<td align="left">${post.user.profileImage}</td>
+						<td align="left"><a href="/community/getProfile/${post.user.userId}"><img style="width: 80px; height: 80px" src="../../resources/attachments/profile_image/${post.user.profileImage}"/></a></td>
 						<td></td>
-						<td align="left">${post.user.nickName}</td>
+						<td align="left"><a href="/community/getProfile/${post.user.userId}">${post.user.nickName}</a></td>
 						<td></td>
-						<td align="left">${post.title}</td>
+						<td align="left"><a href="/community/getPost/${post.postNo}">${post.title}</a></td>
 						<td></td>
-						<td align="left">${post.content}</td>
+						<td align="left"><a href="/community/getPost/${post.postNo}">${post.content}</a></td>
 						<td></td>
 						<td align="left">${post.likeCount}</td>
 						<td></td>
@@ -117,10 +168,14 @@
 					<td class="ct_line02"></td>
 					<td class="ct_list_b">선호음식 카테고리1</td>
 					<td class="ct_line02"></td>
-					<td class="ct_list_b">선호음식 카테고리2</td>
+					<td class="ct_list_b">카테고리2</td>
 					<td class="ct_line02"></td>
-					<td class="ct_list_b">선호음식 카테고리3</td>
-					<!-- 팔로우, 팔로워 수? -->
+					<td class="ct_list_b">카테고리3</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">팔로우 수</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">팔로워 수</td>
+					<td class="ct_line02"></td>
 				</tr>
 				<tr>
 					<td colspan="11" bgcolor="808285" height="1"></td>
@@ -131,18 +186,40 @@
 				</tr>
 				
 					<tr>
-						<td align="left">${sessionScope.user.profileImage}</td>
+						<td align="left"><a href="/community/getProfile/${sessionScope.user.userId}"><img id="profileImage" src="/resources/attachments/profile_image/${sessionScope.user.profileImage}"/></a></td>
 						<td></td>
-						<td align="left">${sessionScope.user.nickName}</td>
+						<td align="left"><a href="/community/getProfile/${sessionScope.user.userId}">${sessionScope.user.nickName}</a></td>
 						<td></td>
-						<td align="left">${user.profileMessage}</td>
+						<td align="left">${sessionScope.user.profileMessage}</td>
 						<td></td>
-						<td align="left">${user.grade}</td>
+						<td align="left">
+						<c:choose>
+							<c:when test="${user.grade eq '0'}">슬밀프랜즈</c:when>
+							<c:when test="${user.grade eq '1'}">슬밀패밀리</c:when>
+							<c:when test="${user.grade eq '2'}">슬밀히어로</c:when>
+							<c:when test="${user.grade eq '3'}">슬밀마스터</c:when>
+						</c:choose>
+						</td>
 						<td></td>
+						<td align="left">${sessionScope.user.foodCategoryName1}</td>
+						<td></td>
+						<td align="left">${sessionScope.user.foodCategoryName2}</td>
+						<td></td>
+						<td align="left">${sessionScope.user.foodCategoryName3}</td>
+						<td></td>
+						<td align="left"><a href="/community/api/getListFollow" id ="followCnt">${followCnt}</a></td>
+						<td></td>
+						<td align="left"><a href="/community/api/getListFollower">${followerCnt}</a></td>
+						<td></td>
+						
 					</tr>
 			</table>	
 			
-			
+		<div class="listBlockUser">
+			<button type="button" onclick="location.href='/community/api/getListBlock'" class="btn btn-primary">
+				차단유저 목록보기
+			</button>
+		</div>
 			
 		
 		<!-- table : 밀키트 추천 
@@ -170,8 +247,10 @@
 			</table>
 -->
 			
+			<br/>
 
-
+<script type="text/javascript">
+</script>
 
 </body>
 </html>

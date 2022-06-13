@@ -68,6 +68,7 @@
 
 </head>
 <body> <!-- #BAD7DF -->
+	
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 	
 	<!-- carousel iamge-slie -->
@@ -150,6 +151,8 @@
 	</div>
 	 -->
 	<main role="main">
+	
+	
 	<section class="text-center">
 	<div class="container px-4 py-5" id="custom-cards">
     <h2 class="pb-2 border-bottom">이 상품 어떠세?</h2>
@@ -189,6 +192,7 @@
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	
 <script type="text/javascript">
+
 	
 	$(function(){
 		$(".overflow-hidden").on("click",function(){
