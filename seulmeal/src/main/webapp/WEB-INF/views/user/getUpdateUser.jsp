@@ -13,6 +13,10 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
  <div class="container">
+ <br/>
+<br/>
+<br/>
+<br/>
 	<h2> 내 정보</h2>
 	<form class="form-horizontal" method="post" action="/user/getUpdateUser" target="_self">
 	  <div class="form-group">

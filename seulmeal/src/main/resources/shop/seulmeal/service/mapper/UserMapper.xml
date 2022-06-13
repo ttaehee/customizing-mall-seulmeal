@@ -89,20 +89,20 @@
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>
 		
-		<select id="checkDuplicationUserId">
-			SELECT user_id from users where user_id= #{userId}
+		<select id="checkDuplicationUserId" resultType="int">
+			SELECT count(user_id) from users where user_id= #{userId}
 		</select>
 		
-		<select id="checkDuplicationNickName">
-			SELECT nickname from users where nickname= #{nickName}
+		<select id="checkDuplicationNickName" resultType="int">
+			SELECT count(nickname) from users where nickname= #{nickName}
 		</select>
 		
 		<select id="checkDuplicationPhone" resultType="shop.seulmeal.service.domain.User">
-			SELECT user_id, user_name from users where phone= #{phone}
+			SELECT user_id, user_name, phone from users where phone= #{phone}
 		</select>
 		
 		<select id="checkDuplicationEmail" resultType="shop.seulmeal.service.domain.User">
-			SELECT user_id, user_name from users where email= #{email}
+			SELECT user_id, user_name, email from users where email= #{email}
 		</select>
 		
 		<select id="getListUserTotalCount" resultType="int" parameterType="shop.seulmeal.common.Search">
