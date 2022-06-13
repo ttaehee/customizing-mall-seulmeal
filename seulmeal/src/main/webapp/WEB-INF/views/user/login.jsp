@@ -15,37 +15,38 @@
 	<br />
 	<div class="container container-table" >
 
-		<form class="form-signin" method="post" action="/user/login" target="_self">
-			<div class="row vertical-center-row">
-		
-				<h1 class="text-center">로그인</h1>
-				<div class="col-md-4">
-				<label for="inputEmail" class="sr-only">ID</label> 
-				<input type="text" id="userId" name="userId" class="form-control" placeholder="ID" required autofocus> 
-				
-				
-				<label for="inputPassword" class="sr-only">Password</label>
-				<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-				
-				
-	
-					<div class="checkbox">
-						<label> 
-						<input type="checkbox" value="remember-me">아이디 기억하기
-						</label>
-					</div>
-				<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-		</div>
-			</div>
-			
-			
-			
-		</form>
+
+      <form class="form-signin"  method="post" action="/user/login" target="_self">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">ID</label>
+        <input type="text" id="userId" name ="userId" class="form-control" placeholder="ID" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="password" name="password"  class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="1" id="checkLogin" name="checkLogin"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
 
 	</div>
 	<!-- /container -->
 
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
     
+
+<jsp:include page="../layer/footer.jsp"></jsp:include>
+<script type="text/javascript">
+	$("#checkLogin").on("change",()=>{
+		const result = document.querySelector("#checkLogin");
+		if(result.checked){
+			result.value = "1";
+		} else {
+			result.value = "0";
+		}
+	})
+</script>
+
 </body>
 </html>

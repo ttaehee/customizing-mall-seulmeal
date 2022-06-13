@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +57,7 @@ public class UserController {
 	}
 	
 	@PostMapping("insertUser")
-	public String insertUser(@ModelAttribute("user") User user, @DateTimeFormat(pattern="YYYY-MM-DD") Date birth, HttpSession session) throws Exception {
+	public String insertUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
 		System.out.println("::user : "+user);
 		userService.insertUser(user);
@@ -113,20 +116,35 @@ public class UserController {
 	}
 	
 	@PostMapping("login")
-	public String login(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+	public String login(@ModelAttribute("user") User user, String checkLogin, HttpSession session, HttpServletResponse response) throws Exception {
 		System.out.println("::user : "+user);
 		
 		User dbUser = userService.getUser(user.getUserId());
 		
+		
+		
 		if(user.getPassword().equals((dbUser.getPassword()))) {
 			session.setAttribute("user", dbUser);
+		}
+		
+		if(checkLogin.equals("1")) {
+			Cookie loginCookie = new Cookie("loginCookie", dbUser.getUserId());
+			loginCookie.setPath("/");
+			long limitTime = 60*60*24*90;
+			loginCookie.setMaxAge((int)limitTime);
+			response.addCookie(loginCookie);
 		}
 		
 		return "redirect:/";
 	}
 	
 	@GetMapping("logout")
-	public String logout(HttpSession session) throws Exception {
+	public String logout(HttpSession session,HttpServletResponse response) throws Exception {
+		// 자동로그인 삭제
+		Cookie nCookie = new Cookie("loginCookie",null);
+		nCookie.setPath("/");
+		nCookie.setMaxAge(0);
+		response.addCookie(nCookie);		
 		
 		session.invalidate();
 		return "redirect:/";

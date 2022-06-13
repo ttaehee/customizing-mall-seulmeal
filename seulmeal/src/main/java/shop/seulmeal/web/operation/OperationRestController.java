@@ -71,6 +71,7 @@ public class OperationRestController {
 	@PostMapping("confirmQueryPassword")
 	public JSONObject confirmQueryPassword(@RequestBody Post post ) {
 		JSONObject json = new JSONObject(); 
+		
 		Post sPost = operationService.getOperation(post);
 		
 		if(sPost.getPassword() == post.getPassword()) {
@@ -85,13 +86,14 @@ public class OperationRestController {
 	@PostMapping("confirm")
 	public JSONObject confirmUser(@RequestBody User user, HttpSession session) {
 		System.out.println("유저 : "+user);
-		String num = confirmService.confirmNum();
+		int num = confirmService.confirmNum();
+		String message = "인증번호는 ["+num+"] 입니다";
 		if(user.getEmail() != null) {
-			confirmService.sendMail(num, user.getEmail());
-			session.setAttribute(user.getEmail(), num);
+			confirmService.sendMail(message, user.getEmail());
+			session.setAttribute(user.getEmail(), message);
 		} else if(user.getPhone() != null) {
-			confirmService.sendSMS(user.getPhone(), num);
-			session.setAttribute(user.getPhone(), num);
+			confirmService.sendSMS(user.getPhone(), message);
+			session.setAttribute(user.getPhone(), message);
 		}
 		
 		JSONObject json = new JSONObject();
