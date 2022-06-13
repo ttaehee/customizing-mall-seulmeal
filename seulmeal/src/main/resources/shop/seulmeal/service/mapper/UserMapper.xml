@@ -220,7 +220,7 @@
 	    		UPDATE users
 		   	<set>
 				nickname	= #{nickName:VARCHAR},
-				profile_image	= #{profileImage:VARCHAR},
+				<!-- profile_image	= #{profileImage:VARCHAR}, -->
 				profile_message	= #{profileMessage:VARCHAR},
 				foodcategory_name1 = #{foodCategoryName1:VARCHAR},
 				foodcategory_name2 = #{foodCategoryName2:VARCHAR},
