@@ -57,7 +57,7 @@
 			<h3>오늘 할일</h3>
 			<h4>신규 주문</h4>
 			<h4>교환/반품 승인</h4>
-			<h4>게시글 신고</h4>
+			<h4><a href="/community/getListReportPost">게시글 신고</a></h4>
 			<h4>재고 소진</h4>
 			<h4>문의 답변대기</h4>
 		</div>
@@ -99,7 +99,8 @@
 						<a class="dropdown-item" href="/user/getUpdateUser/${user.userId}">내 정보</a>
 						<a class="dropdown-item" href="/user/listUserPoint/1">내 포인트</a>
 						<a class="dropdown-item" href="/purchase/getListPurchase">내 구매내역</a>
-						<a class="dropdown-item" href="#">내 게시글</a>
+						<a class="dropdown-item" href="/community/getProfile/${user.userId}">내 게시글</a>
+
 						<c:if test="${user.role == 1}">
 							<a class="dropdown-item" href="/admin">관리자페이지</a>
 						</c:if>
