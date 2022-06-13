@@ -18,13 +18,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.User;
+import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
 @Controller
@@ -34,7 +37,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	
+	@Autowired
+	private ProductService productService;
 	
 	int pageUnit = 5;	
 	int pageSize = 5;
@@ -61,64 +65,22 @@ public class UserController {
 	
 	
 	  @GetMapping("insertUserInformation") 
-	  public String insertUserInformation() throws Exception{
+	  public String insertUserInformation(Model model) throws Exception{
 	  
+		  List<Foodcategory> foodcategoryList = productService.getListFoodCategory();
+		  model.addAttribute("foodcategoryList",foodcategoryList);
 	 return "user/insertUserInformation"; 
 	 }
 	 
 	
 	@PostMapping("inserUserInformation")
-	public String insertUserInformation( Parts[] parts, MultipartFile imageFile, String profileMessage , HttpSession session ) throws Exception {
-		
-		String imageFilePath = null;
-		String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
-		File file = new File(path);
-		
-		User user = (User)session.getAttribute("user");
-		
-		if (!imageFile.isEmpty()) {
-			String contentType = imageFile.getContentType();
-			String originalFileExtension = null;
-
-			if (contentType.contains("image/jpeg")) {
-				originalFileExtension = ".jpg";
-			} else if (contentType.contains("image/png")) {
-				originalFileExtension = ".png";
-			}
-
-			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
-			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
-			System.out.println("//////userId: " + user.getUserId());
-			System.out.println("//////imageFilePath: " + imageFilePath);
-			System.out.println("//////originalFileExtension: " + originalFileExtension);
-			System.out.println("//////getOriginalFilename(): " + imageFile.getOriginalFilename());
-
-			// 이미지 파일 로컬에 저장
-			file = new File(imageFilePath);
-			imageFile.transferTo(file);
-
-			user.setProfileImage(imageFileName);
-
-		}
-		
-		userService.insertUserInformation(user);
-		
-		List<Parts> list= new ArrayList<Parts>();
-		for(int i=0; i < parts.length; i++ ) {
-			Parts parts1 = new Parts();
-			parts1= parts[i];
-			list.add(parts1);
-		}
+	public String insertUserInformation(List<String> foodcategory ) throws Exception {
 		
 		
-		Map<String, Object> map = new HashMap<String ,Object>();
-		map.put("userId", user.getUserId());
-		map.put("list", list);
-		userService.insertHatesParts(map);
+		System.out.println(foodcategory.get(0));
+		System.out.println(foodcategory.get(1));
 		
-		user = userService.getUser(user.getUserId());
-		user.setParts( userService.getUserHatesParts(user.getUserId()));
-		session.setAttribute("user", user);
+		
 		return "redirect:/";
 	}
 	
