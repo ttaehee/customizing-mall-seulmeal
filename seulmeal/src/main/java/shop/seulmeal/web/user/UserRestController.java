@@ -1,5 +1,6 @@
 package shop.seulmeal.web.user;
 
+import java.security.Principal;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -34,7 +35,12 @@ public class UserRestController {
 	public UserRestController() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	@GetMapping("/username")
+	public Principal cuname(Principal principal) {
+		System.out.println("principal 알려줘 : "+principal);
+		return principal;
+	}
 	
 	@GetMapping("api/confirmUserId/{userId}")
 	public JSONObject confirmUserId(@PathVariable String userId) throws Exception {
