@@ -102,8 +102,9 @@
 		
 		<div class="container">
 		
-		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="fncInsertCustomProduct()">장바구니 담기</button>
-		<a class="btn btn-primary status" href="#" role="button">취&nbsp;소</a>
+		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="0" onClick="send()">바로 구매하기</button>
+		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="sendt()">장바구니 담기</button>
+		<a href="#" role="button" >취&nbsp;소</a>
 		<input class="hiddenStatus" type="hidden" name="cartStatus" value="0"/> 
 		</div>
 	</form>
@@ -112,7 +113,7 @@
 	<script type="text/javascript">
 	const minusNo = [];
 	const minusName = [];
-	
+
 	function fncInsertCustomProduct() {
 		const count = $("#customProductCount").text();
 		
@@ -130,6 +131,7 @@
 
 	$(function() {
 	    $('.execpt').on('click', function() {
+<<<<<<< HEAD
 	        const partsNo = $(this).attr('data-partsNo');	        
 	        minusNo.push(partsNo);
 	        	       	        
@@ -150,6 +152,20 @@
 	    })
 	        
 	     $('.status').on('click', function() {
+=======
+	        var partsNo = $(this).attr('data-partsNo');  
+	        $(this).closest('div').find('.hiddenNo').val(partsNo);
+	        console.log(partsNo);
+
+	        var partsName = $(this).attr('data-partsName'); 
+	        $(this).closest('div').find('.hiddenName').val(partsName);
+	        console.log(partsName);
+	        
+	        this.setAttribute("disabled", "disabled");
+	    });
+	    
+	    $('.status').on('click', function() {
+>>>>>>> refs/remotes/origin/master
 	        var status = $(this).attr('data-cartStatus');    
 	        $(this).closest('div').find('.hiddenStatus').val(status);
 	        console.log(status);
@@ -225,12 +241,21 @@
 		        dataType : "json",
 		        success : function(data){	        	
 		        	console.log(data);
+<<<<<<< HEAD
 		        	const parts = "<div class='searchparts'> <input type='hidden' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
+=======
+		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
+		        	+"<input type='hidden' class='price' name='price' value='"+data.price+"' />"
+>>>>>>> refs/remotes/origin/master
 		            +"<div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
+<<<<<<< HEAD
 		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
 		            +"<input type='hidden' name='plusPrice' value='"+data.price+"'/>"
 		            +"<input type='hidden' name='plusGram' value=''/>"
 		            +"<span name='partsprice'>"+ data.price +"</span>원<br/>"
+=======
+		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
+>>>>>>> refs/remotes/origin/master
 		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
             		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
            		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
@@ -244,6 +269,51 @@
 			})
 		})
 	})
+	
+	
+	    function send() {
+	
+		let dataList=[];
+		const child = document.querySelector('.plusparts').childNodes;
+		
+		child.forEach(function(item){
+			const partsNo = item.querySelector('input.partsNo').value();
+			const name = item.querySelector('input.partsNo').value();
+			const price = item.querySelector('input.price').value();
+			
+			const obj={
+					partsNo : partsNo,
+					name : name,
+					price : price
+				};
+			
+			dataList.push(obj);
+		});
+			
+			console.log(dataList);
+			console.log(JSON.stringify(dataList));
+			
+			if(dataList.length>0){
+				$.ajax({
+					url: '/purchase/insertCustomProduct' ,
+					data:{
+						param: JSON.stringify(dataList)
+					},
+					method: 'POST',
+					success: function(result){
+						console.log(result);
+					}
+				});
+			}
+	    }
+
+	
+	
+	
+	
+	
+	
+	
 	
 </script>
 

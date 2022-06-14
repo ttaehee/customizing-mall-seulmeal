@@ -39,9 +39,6 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		return userMapper.insertUser(user);
 	}
 	
-	public int insertUserInformation(User user) throws Exception{
-		return userMapper.inserUserInformation(user);
-	}
 
 	@Override
 	public int insertHatesParts(Map<String, Object> map) throws Exception {
@@ -188,7 +185,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		userMapper.updateBlackList();
 	}
 	
-	@Scheduled(cron = "0 34 12 * * ? ")
+	@Scheduled(cron = "0 34 12 1 * ? ")
 	public void updateGrade() throws Exception {
 		userMapper.updateUserGrade();
 		userMapper.resetPurchaseCount();

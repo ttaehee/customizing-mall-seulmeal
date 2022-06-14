@@ -13,27 +13,26 @@
 </head>
 <script type="text/javascript">
 	
-	$(()=>{
-		$(".partSearch").on("click",()=>{
-			$.ajax({
-				url:"/product/api/getPartsName/"+$(".search").val(),
-				method:"GET",
-		        headers : {
-		            "Accept" : "application/json",
-		            "Content-Type" : "application/json"
-		        },
-		        dataType : "json",
-		        success : function(data){	        	
-		        	console.log(data);
-		        	const parts = "<div> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-		                +"<div class='part' data-parts='"+data.partsNo+"'>"+ data.name +"</div>"
-		                +"</div>"
-		        	$(".parts").append(parts);
-		        }
-			})
+$(()=>{
+	$(".partSearch").on("click",()=>{
+		$.ajax({
+			url:"/product/api/getPartsName/"+$(".search").val(),
+			method:"GET",
+	        headers : {
+	            "Accept" : "application/json",
+	            "Content-Type" : "application/json"
+	        },
+	        dataType : "json",
+	        success : function(data){	        	
+	        	console.log(data);
+	        	const parts = "<div> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
+	                +"<div class='part' data-parts='"+data.partsNo+"'>"+ data.name +"</div>"
+	                +"</div>"
+	        	$(".parts").append(parts);
+	        }
 		})
 	})
-	
+})
 	
 	
 </script>
@@ -45,7 +44,7 @@
 
 	<div class="container">
 
-		<form class="form-horizontal" method="post" action="/user/inserUserInformation"  enctype="multipart/form-data">
+		<form class="form-horizontal" method="post" action="/user/insertUserInformation"  enctype="multipart/form-data">
 			<h2>추가 정보 입력</h2>
 
 			<div class="btn-group" data-toggle="buttons">
@@ -56,24 +55,20 @@
 				</c:forEach>
 			</div>
 			<div>
-				<label for="" class="col-sm-2 control-label">싫어하는 재료</label>
-				<div>
-					재료 검색 : <input class="search" />
-					<div class="partSearch">검색</div>
-					<div class="parts"></div>
-				</div>
+				재료 검색 : <input class="search" />
+				<div class="partSearch">검색</div>
+				<div class="parts"></div>
 			</div>
-
 
 			<div class="form-group">
 				<label for="exampleInputFile"></label>
-				<input type="file" id="exampleInputFile" name="profileImage">
+				<input type="file" id="imageFile" name="imageFile" multiple="multiple">
 				<p class="help-block">프로필 이미지를 선택해주세요</p>
 			</div>
 			<div class="form-group">
 				<label for="" class="col-sm-2 control-label">상태메세지</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="profileMessage" name="profileMessage" placeholder="내용을 입력해 주세요">
+					<input type="text" class="form-control" id="profilemessage" name="profilemessage" placeholder="내용을 입력해 주세요">
 				</div>
 			</div>
 

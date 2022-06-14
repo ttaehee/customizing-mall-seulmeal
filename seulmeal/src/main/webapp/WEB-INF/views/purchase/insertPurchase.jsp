@@ -15,8 +15,6 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 <!-- iamport.payment.js -->
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-
-	<button type="button" class="btn btn-primary status" style="margin-right:10px;" window.location.href="purchase/getListPurchase?userId=ghm4905&searchCondition=0">오늘</button>
 	
 	구매자 : <input type="text" id="userId" name="userId" value="${user.userId}" readonly></input><br/>
 	받으시는분 : <input type="text" id="name" name="name" value="${user.userName}"></input><br/>
