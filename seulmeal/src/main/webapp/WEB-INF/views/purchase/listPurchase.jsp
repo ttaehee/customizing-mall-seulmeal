@@ -14,10 +14,46 @@
 
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
-	 
+
+	<style>
+	 body { background: #fff; }
+		.blueone {
+		  	width: 100%;
+  			border-top: 1px solid #444444;
+  			border-collapse: collapse;
+		}  
+		th, td {
+		  border-bottom: 1px solid #444444;
+		  padding: 10px;
+		}
+		
+		
+		
+	</style>
+
+
 	 <br/>
+	 <div class="container">
+	 		
 	 <h2>구매내역 조회</h2>
-	 <table class="table table-hover table-striped" >
+	 <div class="col-md-6 text-right">
+	    <form class="form-inline" name="detailForm">
+	     <input type="hidden" name="userId" value="ghm4905"/>
+		 <div class="form-group">
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="0">오늘</button>
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="1">1주일</button>
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="2">1개월</button>
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="3">3개월</button>
+		  </div>
+		  
+		  <!-- PageNavigation 선택 페이지 값을 보내는 부분 -->
+		  <input type="hidden" id="currentPage" name="currentPage" value=""/>
+		  
+		</form>
+   	</div><br/><br/>
+			
+	
+	 <table class="blueone" >
  
         <thead>
           <tr>
@@ -65,6 +101,25 @@
 			  </c:forEach>
         </tbody>
       </table>
+      </div>
+      
+      <script>
+      
+      function fncGetListPurchase(currentPage) {
+  		$("#currentPage").val(currentPage)
+  		$("form").attr("method" , "POST").attr("action" , "/purchase/getListPurchase").submit();
+  	}
+  	
+
+  	 $(function() {
+  		  
+  		 $(".status").on("click" , function() {
+
+  			fncGetListPurchase(1);
+  			});
+  	 });
+      
+      </script>
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>	
 

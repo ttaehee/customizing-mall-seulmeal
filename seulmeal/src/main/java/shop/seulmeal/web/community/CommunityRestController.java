@@ -87,16 +87,14 @@ public class CommunityRestController {
 	
 	//Comment
 	@PostMapping("/insertComment") // oo
-	public Comment insertComment(@RequestBody Comment comment) {
+	public Comment insertComment(@RequestBody Comment comment, HttpSession session) {
 
 		System.out.println("/////////"+comment);
-//		User user = (User)session.getAttribute("user");
-		User user = new User();
-		user.setUserId("ghm8614");
+		User user = (User)session.getAttribute("user");
 		comment.setUser(user);
 		
 		communityService.insertComment(comment);
-		
+		System.out.println("/////////"+comment);
 		return communityService.getComment(comment.getCommentNo()); 
 
 	}
@@ -125,40 +123,41 @@ public class CommunityRestController {
 	
 
 	@PostMapping("insertLike/{postNo}") // oo
-	public Post insertLike(@PathVariable int postNo, String userId) {
+	public ResponseEntity<Post> insertLike(@PathVariable String postNo, HttpSession session) {
 
 		Like like = new Like();
-
-		like.setPostNo(postNo);
-		like.setUserId(userId);
-//		like.setUserId(((User)session.getAttribute("user")).getUserId());
+		like.setPostNo(Integer.parseInt(postNo));
+		like.setUserId(((User)session.getAttribute("user")).getUserId());
 
 		// 좋아요
-		communityService.insertLike(like);
+		if(communityService.insertLike(like) == -1) {
+			return ResponseEntity.badRequest().build();
+		}
 
 		// 좋아요한 게시글의 좋아요 개수를 return 하기 위함 (status = '0'인 게시글만 select)
-		Post post = communityService.getLikePost(postNo);
+		Post post = communityService.getLikePost(Integer.parseInt(postNo));
 
-		System.out.println("/////////" + post);
+		System.out.println("/////////post.getLikeCount():" + post.getLikeCount());
 
-		return post;
+		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 
 	@PostMapping("deleteLike/{postNo}") // oo
-	public Post deleteLike(@PathVariable int postNo, String userId) {
+	public Post deleteLike(@PathVariable String postNo, HttpSession session) {
 
 		Like like = new Like();
 
-		like.setPostNo(postNo);
-		like.setUserId(userId);
-//		like.setUserId(((User)session.getAttribute("user")).getUserId());
+		like.setPostNo(Integer.parseInt(postNo));
+		like.setUserId(((User)session.getAttribute("user")).getUserId());
 
 		// 좋아요 취소
 		communityService.deleteLike(like);
 
 		// 좋아요 취소한 게시글 좋아요 수 return
-		Post post = communityService.getLikePost(postNo);
+		Post post = communityService.getLikePost(Integer.parseInt(postNo));
 
+		System.out.println("/////////" + post);
+		
 		return post;
 	}
 

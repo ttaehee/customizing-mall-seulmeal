@@ -11,7 +11,7 @@ public class Search {
 	private String searchValue;
 	
 	// 상품 기타 검색옵션
-	private String searchSort;
+	private int searchSort;
 	
 	//==> ����Ʈȭ�� currentPage�� �ش��ϴ� ȸ�������� ROWNUM ��� SELECT ���� �߰��� Field 
 	//==> UserMapper.xml �� 
@@ -76,4 +76,13 @@ public class Search {
 	public void setSearchValue(String searchValue) {
 		this.searchValue = searchValue;
 	}
+
+	public int getSearchSort() {
+		return searchSort;
+	}
+
+	public void setSearchSort(int searchSort) {
+		this.searchSort = searchSort;
+	}
+
 }

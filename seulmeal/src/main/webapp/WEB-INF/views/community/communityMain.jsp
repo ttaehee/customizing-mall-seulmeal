@@ -40,10 +40,11 @@
 				<!-- condition, keyword -->
 					<td align="right">
 					
-					<button type="button" onclick="location.href='/community/insertPost'" class="btn btn-primary">
-						게시글 작성
-					</button>
-				
+					<c:if test="${not empty sessionScope.user.userId}">
+						<button type="button" onclick="location.href='/community/insertPost'" class="btn btn-primary">
+							게시글 작성
+						</button>
+					</c:if>
 				
 
 					
@@ -101,13 +102,15 @@
 
 
 		<!-- table : 게시글 목록 -->
-			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			<table width="100%"  cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
 
 				<tr>
 					<td class="ct_list_b">게시글유저_프로필이미지</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b" >게시글유저_닉네임</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b">게시글 사진</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b">게시글 제목</td>
 					<td class="ct_line02"></td>
@@ -116,8 +119,6 @@
 					<td class="ct_list_b">좋아요 수</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b">조회수</td>
-					<td class="ct_line02"></td>
-					<td class="ct_list_b">게시글 사진</td>
 					<td class="ct_line02"></td>
 				</tr>
 				<tr>
@@ -129,11 +130,18 @@
 				</tr>
 				
 				<!-- c:set var="no" value="0"/-->
-				<c:forEach var="post" items="${postList}">
+				<c:forEach var="post" items="${postList}" varStatus="status">
 					<tr class="ct_list_pop">
-						<td align="left"><a href="/community/getProfile/${post.user.userId}"><img style="width: 80px; height: 80px" src="../../resources/attachments/profile_image/${post.user.profileImage}"/></a></td>
+						<td align="left"><a href="/community/getProfile/${post.user.userId}"><img style="width:80px; height:80px;" src="/resources/attachments/profile_image/${post.user.profileImage}"/></a></td>
 						<td></td>
 						<td align="left"><a href="/community/getProfile/${post.user.userId}">${post.user.nickName}</a></td>
+						<td></td>
+						<td align="left">
+						<c:forEach  var="attachments" items="${attachmentList[status.index]}">
+							<a href="/community/getPost/${post.postNo}">
+							<img style="width:80px; height:80px;" src="/resources/attachments/${attachments.attachmentName}"/></a>
+						</c:forEach>
+						</td>
 						<td></td>
 						<td align="left"><a href="/community/getPost/${post.postNo}">${post.title}</a></td>
 						<td></td>
@@ -143,7 +151,6 @@
 						<td></td>
 						<td align="left">${post.views}</td>
 						<td></td>
-						<!-- 게시글 사진 -->
 					</tr>
 				</c:forEach>
 				
@@ -250,6 +257,7 @@
 			<br/>
 
 <script type="text/javascript">
+
 </script>
 
 </body>

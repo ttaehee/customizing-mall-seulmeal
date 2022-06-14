@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -64,9 +64,8 @@
 		<h5 >제품구성</h5></div>
 		<c:forEach var="parts" items="${partsList}">
 		<div class="container productparts">${parts.name} &emsp;&emsp; 
-		<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.partsNo}" data-partsName="${parts.name}">제외하기
-		<input class="hiddenNo" type="hidden" name="minusNo" value=""/>
-		<input class="hiddenName" type="hidden" name="minusName" value=""/>  </div>
+		<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.partsNo}" data-partsName="${parts.name}">제외하기</button>
+		</div>
 		</c:forEach>
 		<br/><br/>
 	
@@ -79,11 +78,12 @@
 			<form class="searchProduct">
 				<div style="display:flex;">	
 					<div class="form-outline">
-						<input name="searchKeyword" type="search" class="form-control search" />
+						<input name="searchKeyword" type="search" class="form-control search" val="" />
 					</div>		  
-					<button type="button" class="btn btn-primary partSearch">
+					<button type="button" class="btn btn-primary partSearch" onclick="search()">
 						<i class="bi bi-search"></i>
 					</button>
+				
 			</form> 
 		</div>
 		<div class="container">
@@ -96,14 +96,15 @@
 		
 		<div class="container">커스터마이징상품 수량 :<span id="count">
 			<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
-	        &ensp; <span class='count' name='count'>1</span> &ensp; 
+	        &ensp; <span id="customProductCount" class='count' name='count'>1</span> &ensp; 
 	        <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button></span>원</div>
 		<br/><br/>
 		
 		<div class="container">
 		
-		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="fncInsertCustomProduct()">장바구니 담기</button>
-		<a class="btn btn-primary status" href="#" role="button">취&nbsp;소</a>
+		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="0" onClick="send()">바로 구매하기</button>
+		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="send()">장바구니 담기</button>
+		<a href="#" role="button" >취&nbsp;소</a>
 		<input class="hiddenStatus" type="hidden" name="cartStatus" value="0"/> 
 		</div>
 	</form>
@@ -111,7 +112,15 @@
 		
 	<script type="text/javascript">
 	
+	const minusNo = [];
+	const minusName = [];
+
 	function fncInsertCustomProduct() {
+		const count = $("#customProductCount").text();
+		
+		$(".cc").append(`<input name ="count" value="\${count}">`);
+		$(".cc").append(`<input name ="minusNoA" value="\${minusNo}">`);
+		$(".cc").append(`<input name ="minusNameA" value="\${minusName}">`);
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
 	 }
 	
@@ -120,14 +129,51 @@
 				$("form")[0].reset();
 		});
 	});	
+	
+	function search(){
+		
+		var word = $(".search").val();
+		console.log(word);
+		
+		if(word == null || word.length<1){
+			alert("추가할 재료이름을 입력하세요.");
+		}
+
+	}
+	
 
 	$(function() {
 	    $('.execpt').on('click', function() {
+	        const partsNo = $(this).attr('data-partsNo');	        
+	        minusNo.push(partsNo);
+	        	       	        
+	        const partsName = $(this).attr('data-partsName'); 
+	        minusName.push(partsName)
+	        
+	        /*
+	        const obj = new Object();
+	        obj.partsNo = partsNo;
+	        obj.partsName = partsName;
+	        console.log(obj)
+	        minusNo.push(obj)	        
+	        */
+	        
+	        console.log("minusNo : "+minusNo)
+	        
+	        $(this).attr("disabled","disabled");
+	    })
+	        
+	     $('.status').on('click', function() {
 	        var partsNo = $(this).attr('data-partsNo');  
 	        $(this).closest('div').find('.hiddenNo').val(partsNo);
+	        console.log(partsNo);
 
 	        var partsName = $(this).attr('data-partsName'); 
 	        $(this).closest('div').find('.hiddenName').val(partsName);
+	        console.log(partsName);
+	        alert(partsName+" 제외되었습니다.")
+	        
+	        this.setAttribute("disabled", "disabled");
 	    });
 	    
 	    $('.status').on('click', function() {
@@ -139,9 +185,9 @@
 	
 	function fnCalGram(type, ths){
 		var stat = $(ths).closest("div").find("span[name='gram']").text();
-		console.log(stat);
-		var num = parseInt(stat,10);
-
+		
+		var num = parseInt(stat,10);		
+		
 		let calprice = parseInt($(ths).closest("div").find("span[name='partsprice']").text());
 
 		if(type=='minus'){
@@ -162,6 +208,14 @@
             const plus = parseInt($("#total").text()) + calprice;
             $("#total").text(plus);
 		}
+		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text());
+		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(pgram);
+		const pprice = $(ths).closest("div").find("input[name='plusPrice']").val();
+		console.log(ppgram.val())
+		
+		console.log($(ths).closest("div").find("span[name='gram']").text());
+		
+		
 	}
 	
 	function fnCalCount(type, ths){
@@ -182,6 +236,7 @@
 			$(ths).parents("div").find("span[name='count']").text(number);
 
 		}
+		
 	}
 	
 	
@@ -197,10 +252,16 @@
 		        dataType : "json",
 		        success : function(data){	        	
 		        	console.log(data);
-		        	const parts = "<div class='searchparts'> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-		        	+"<input type='hidden' name='price' value='"+data.price+"' />"
+
+		        	const parts = "<div class='searchparts'> <input type='hidden' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
+		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
+		        	+"<input type='hidden' class='price' name='price' value='"+data.price+"' />"
 		            +"<div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
-		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
+		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
+		            +"<input type='hidden' name='plusPrice' value='"+data.price+"'/>"
+		            +"<input type='hidden' name='plusGram' value=''/>"
+		            +"<span name='partsprice'>"+ data.price +"</span>원<br/>"
+		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
 		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
             		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
            		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
@@ -214,6 +275,51 @@
 			})
 		})
 	})
+	
+	
+	    function send() {
+	
+		let dataList=[];
+		const child = document.querySelector('.plusparts').childNodes;
+		
+		child.forEach(function(item){
+			const partsNo = item.querySelector('input.partsNo').value();
+			const name = item.querySelector('input.partsNo').value();
+			const price = item.querySelector('input.price').value();
+			
+			const obj={
+					partsNo : partsNo,
+					name : name,
+					price : price
+				};
+			
+			dataList.push(obj);
+		});
+			
+			console.log(dataList);
+			console.log(JSON.stringify(dataList));
+			
+			if(dataList.length>0){
+				$.ajax({
+					url: '/purchase/insertCustomProduct' ,
+					data:{
+						param: JSON.stringify(dataList)
+					},
+					method: 'POST',
+					success: function(result){
+						console.log(result);
+					}
+				});
+			}
+	    }
+
+	
+	
+	
+	
+	
+	
+	
 	
 </script>
 

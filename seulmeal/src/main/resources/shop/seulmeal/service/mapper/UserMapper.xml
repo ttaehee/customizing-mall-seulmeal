@@ -71,14 +71,14 @@
 												<if test="searchCondition != null">
 													<where>
 														<if test="searchCondition == 0 and searchKeyword !='' ">
-											 				user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' ORDER by user_name
+											 				user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' 
 														</if>
 														<if test="searchCondition == 1 and searchKeyword !='' ">
 											 				blacklist_status = '1'
 														</if>
 													</where>
 												</if>
-												ORDER BY user_id ) inner_table
+												ORDER BY  reg_date DESC) inner_table
 							WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>

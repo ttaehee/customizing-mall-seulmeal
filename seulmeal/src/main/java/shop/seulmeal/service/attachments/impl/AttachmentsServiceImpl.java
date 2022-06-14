@@ -3,12 +3,14 @@ package shop.seulmeal.service.attachments.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.service.attachments.AttachmentsService;
@@ -18,7 +20,7 @@ import shop.seulmeal.service.mapper.AttachmentsMapper;
 @Service("attachmentsServiceImpl")
 public class AttachmentsServiceImpl implements AttachmentsService {
 	
-	private String path =System.getProperty("user.dir")+"/src/main/wepapp/resources/attachments/";
+	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
 	//private String path ="./src/main/webapp/resources/attachments/";
 //	private String path ="C:/Users/GHM/Desktop/mainPJT/";
 	
@@ -64,5 +66,17 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 		// TODO Auto-generated method stub
 		
 		return attachmentsMapper.getListAttachments(map);
+	}
+
+	@Override
+	public Map<String, Object> summerCopy(@RequestParam(value="file[]") List<String> fileList) {
+		// TODO Auto-generated method stub
+		Map<String,Object> result = new HashMap<String,Object>();
+		
+		for(int i=0; i<fileList.size(); i++) {
+			
+		}
+		
+		return null;
 	}
 }

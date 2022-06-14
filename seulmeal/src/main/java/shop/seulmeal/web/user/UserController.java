@@ -177,7 +177,7 @@ public class UserController {
 	}
 	
 	@PostMapping("getUpdateUser")
-	public String getUpdateUser(@ModelAttribute("user") User user, Model model, HttpSession session) throws Exception {
+	public String getUpdateUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
 		userService.updateUser(user);
 		
@@ -189,12 +189,14 @@ public class UserController {
 	}
 	
 	@GetMapping("login")
-	public String login() throws Exception {
-		
+	public String login(HttpServletRequest request) throws Exception {
+		String referer = request.getHeader("Referer");
+		request.getSession().setAttribute("prevPage", referer);
+		System.out.println(referer);
 		return "user/login";
 	}
 	
-	@PostMapping("login")
+	//@PostMapping("login")
 	public String login(@ModelAttribute("user") User user, String checkLogin, HttpSession session, HttpServletResponse response) throws Exception {
 		System.out.println("::user : "+user);
 		

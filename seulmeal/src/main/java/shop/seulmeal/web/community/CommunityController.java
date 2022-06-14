@@ -1,6 +1,7 @@
 package shop.seulmeal.web.community;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -35,6 +37,7 @@ import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.CommunityMapper;
@@ -77,7 +80,6 @@ public class CommunityController {
 	// M
 	// 무한스크롤
 	@GetMapping("/communityMain") // o
-//	@ResponseBody
 	public String communityMain(@RequestParam(required = false) String searchKeyword,
 			@RequestParam(required = false) String searchCondition, Model model, HttpSession session) throws Exception {
 
@@ -94,13 +96,28 @@ public class CommunityController {
 		search.setSearchCondition(searchCondition);
 		Map<String, Object> map = communityService.getListPost(search, null); // 모든 게시글
 
+		
+		
+		Map<String, Object> map03 = new HashMap<>();
+
+		List<Post> postList = (List<Post>) map.get("postList");
+		
+		List<List<Attachments>> attachmentList = new ArrayList<>();
+
+		for(Post post : postList) {
+			map03.put("postNo", post.getPostNo());
+			attachmentList.add(attachmentsService.getAttachments(map03)); 
+		}
+		model.addAttribute("attachmentList", attachmentList);
+		System.out.println("/////////////"+attachmentList);
+		
 		// product
 		Search productSearch = new Search();
 		productSearch.setCurrentPage(1);
 		productSearch.setPageSize(3);
 		Map<String, Object> productMap = productService.getListProduct(productSearch);
 
-		model.addAttribute("postList", (List<Post>) map.get("postList"));
+		model.addAttribute("postList", postList);
 		model.addAttribute("productList", (List<Product>) productMap.get("list"));
 
 		// 팔로우, 팔로워 수
@@ -118,7 +135,6 @@ public class CommunityController {
 		model.addAttribute("followerCnt", followerCnt);
 
 		return "community/communityMain";
-//		return map;
 	}
 
 	// Post
@@ -147,9 +163,9 @@ public class CommunityController {
 	}
 
 	@GetMapping("/getPost/{postNo}") // oo
-//	@ResponseBody
 	public String getPost(@PathVariable int postNo, Model model) {
 
+		// 해당 post 가져오기
 		Post post = communityService.getPost(postNo);
 
 		Search search = new Search();
@@ -157,12 +173,18 @@ public class CommunityController {
 		search.setPageSize(pageSize);
 		Map<String, Object> map = communityService.getListcomment(search, postNo);
 
+		// 해당 post의 첨부파일 가져오기
+		Map<String,Object> map02 = new HashMap<>();
+		map02.put("postNo", postNo);
+		
+		List<Attachments> attachmentList =  attachmentsService.getAttachments(map02);
+
 		model.addAttribute("post", post);
 		model.addAttribute("commentList", (List<Comment>) map.get("commentList"));
+		model.addAttribute("attachmentList", attachmentList);
 
-		System.out.println(model);
+		System.out.println("////////"+attachmentList);
 
-//		return post;
 		return "community/getCommunityPost";
 	}
 
@@ -232,7 +254,6 @@ public class CommunityController {
 	}
 
 	@GetMapping("getProfile/{userId}")
-	// @ResponseBody
 	public String getProfile(@PathVariable String userId, Model model) throws Exception {
 
 		User user = userService.getProfile(userId);
@@ -240,6 +261,7 @@ public class CommunityController {
 		search.setCurrentPage(1);
 		search.setPageSize(3);//
 
+		// 본인 게시글 목록
 		Map map = communityService.getListPost(search, userId);
 		model.addAttribute("postList", (List<Post>) map.get("postList"));
 
@@ -254,6 +276,10 @@ public class CommunityController {
 
 		model.addAttribute("followCnt", followCnt);
 		model.addAttribute("followerCnt", followerCnt);
+		
+		// 차단유저 목록
+		List<Relation> blockList = (List<Relation>)communityService.getListBlock(null, userId, "1").get("blockList");
+		model.addAttribute("blockList", blockList);
 
 		return "/community/getCommunityProfile";
 	}
@@ -289,4 +315,6 @@ public class CommunityController {
 		return "redirect:/community/getProfile/" + user.getUserId();
 	}
 
+	
+	
 }
