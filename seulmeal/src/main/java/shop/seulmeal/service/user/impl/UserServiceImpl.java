@@ -6,19 +6,15 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
-import shop.seulmeal.service.domain.BlackList;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
-import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.UserMapper;
 import shop.seulmeal.service.user.UserService;
 
-@Component
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
 	
