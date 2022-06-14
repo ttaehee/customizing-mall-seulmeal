@@ -219,7 +219,7 @@
 	<select id="getListReview" resultMap="reviewSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
 		( SELECT
-		review_no , title , rating, reg_date, user_id FROM review
+		review_no , title, content, rating, reg_date, user_id FROM review
 		ORDER BY review_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE
 		row_seq BETWEEN #{startRowNum} AND #{endRowNum}

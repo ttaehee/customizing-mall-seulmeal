@@ -26,6 +26,7 @@ import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
+import shop.seulmeal.service.user.UserService;
 
 @Controller
 @RequestMapping("/product/*")
@@ -34,6 +35,10 @@ public class ProductController {
 	@Autowired
 	@Qualifier("productServiceImpl")
 	private ProductService productService;
+	
+	@Autowired
+	@Qualifier("userServiceImpl")
+	private UserService userService;
 
 	int pageUnit = 5;
 	int pageSize = 5;
@@ -56,10 +61,7 @@ public class ProductController {
 	public String insertProduct(Product product, Foodcategory f, Model model, String partsNo, String partsName)
 			throws Exception {
 		product.setFoodCategory(f);
-		System.out.println(product);
 		productService.insertProduct(product);
-		System.out.println(partsNo);
-		System.out.println(partsName);
 
 		List<Parts> list = new ArrayList<Parts>();
 		String[] no = partsNo.split(",");
@@ -85,11 +87,35 @@ public class ProductController {
 	}
 
 	@GetMapping("getProduct/{prodNo}")
-	public String getProduct(@PathVariable int prodNo, Model model) throws Exception {
+	public String getProduct(@PathVariable(required = false) String currentPage, @PathVariable int prodNo, Search search, Model model) throws Exception {
 		Product product = productService.getProduct(prodNo);
 		List<Parts> list = productService.getProductParts(product.getProductNo());
 		product.setParts(list);
+		
 
+		if (currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		System.out.println(search);
+
+		Map<String, Object> map = productService.getListReview(search);
+		List<Review> list0 = (List) map.get("list");
+		List<Review> listr = new ArrayList();
+
+		for (Review review : list0) {
+			listr.add(review);
+		}
+
+		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+				pageSize);
+
+		model.addAttribute("review", listr);
+		model.addAttribute("resultPage", resultPage);
+		model.addAttribute("search", search);
 		model.addAttribute("product", product);
 		return "/product/getProduct";
 	}
@@ -145,22 +171,6 @@ public class ProductController {
 		productService.updateProduct(product);
 		System.out.println("POST : updateProduct");
 		return "redirect:/product/getProduct/" + product.getProductNo();
-	}
-
-	@GetMapping(value = { "insertReview/{productNo}" })
-	public String insertReview(@PathVariable int productNo, HttpSession session, Model model) throws Exception {
-		model.addAttribute("user", session.getAttribute("user"));
-		model.addAttribute("product", (Product)productService.getProduct(productNo));
-		return "/product/insertReview";
-	}
-
-	@PostMapping(value = { "insertReview/{productNo}"} )
-	public String insertReview(@PathVariable int productNo, HttpSession session, Review review) throws Exception {
-		review.setUser((User)session.getAttribute("user"));
-		review.setProduct((Product)productService.getProduct(productNo));
-		
-		productService.insertReview(review);
-		return "redirect:/product/getReview/"+review.getReviewNo();
 	}
 	
 	@GetMapping(value = {"insertParts"} )
@@ -235,6 +245,47 @@ public class ProductController {
 
 			return "/product/listFoodCategory";
 	}
+	
+	
+
+	@GetMapping(value = { "insertReview/{productNo}" })
+	public String insertReview(@PathVariable int productNo, HttpSession session, Model model) throws Exception {
+		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("product", (Product) productService.getProduct(productNo));
+		return "/product/insertReview";
+	}
+
+	@PostMapping(value = { "insertReview/{productNo}" })
+	public String insertReview(@PathVariable int productNo, HttpSession session, Review review) throws Exception {
+		review.setUser((User) session.getAttribute("user"));
+		review.setProduct((Product)productService.getProduct(productNo));
+		
+		return "redirect:/product/getProduct/"+productNo;
+	}
+
+	@GetMapping(value = { "updateReview/{reviewNo}" })
+	public String updateReview(@PathVariable int reviewNo, Model model) throws Exception {
+		Review review = productService.getReview(reviewNo);
+		model.addAttribute("review", review);
+		return "/product/updateReview";
+	}
+
+	@PostMapping(value = { "updateReview/{reviewNo}" })
+	public String updateReview(@PathVariable int reviewNo, Review review) throws Exception {
+		productService.updateReview(review);
+		return "redirect:/product/getReview/" + reviewNo;
+	}
+
+	@GetMapping(value = { "getReview/{reviewNo}" })
+	public String getReview(@PathVariable int reviewNo, Model model) throws Exception {
+		Review review = productService.getReview(reviewNo);
+		model.addAttribute("product", productService.getProduct(review.getProduct().getProductNo()));
+		model.addAttribute("user", userService.getUser(review.getUser().getUserId()));
+
+		model.addAttribute("review", review);
+		return "/product/getReview";
+	}
+
 	
 	
 }
