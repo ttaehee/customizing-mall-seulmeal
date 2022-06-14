@@ -36,6 +36,7 @@ import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.CommunityMapper;
@@ -252,7 +253,6 @@ public class CommunityController {
 	}
 
 	@GetMapping("getProfile/{userId}")
-	// @ResponseBody
 	public String getProfile(@PathVariable String userId, Model model) throws Exception {
 
 		User user = userService.getProfile(userId);
@@ -260,6 +260,7 @@ public class CommunityController {
 		search.setCurrentPage(1);
 		search.setPageSize(3);//
 
+		// 본인 게시글 목록
 		Map map = communityService.getListPost(search, userId);
 		model.addAttribute("postList", (List<Post>) map.get("postList"));
 
@@ -274,6 +275,10 @@ public class CommunityController {
 
 		model.addAttribute("followCnt", followCnt);
 		model.addAttribute("followerCnt", followerCnt);
+		
+		// 차단유저 목록
+		List<Relation> blockList = (List<Relation>)communityService.getListBlock(null, userId, "1").get("blockList");
+		model.addAttribute("blockList", blockList);
 
 		return "/community/getCommunityProfile";
 	}
@@ -309,4 +314,6 @@ public class CommunityController {
 		return "redirect:/community/getProfile/" + user.getUserId();
 	}
 
+	
+	
 }

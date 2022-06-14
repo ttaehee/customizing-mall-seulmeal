@@ -650,14 +650,19 @@
 								r.relation_user_id = u.user_id
 								AND r.user_id = #{userId}
 								AND r.relation_status = #{relationStatus}
-								<if test="search.searchKeyword != null">
+								<if test="search != null and search.searchKeyword != null">
 									AND r.relation_user_id LIKE ('%'||#{search.searchKeyword}||'%')								
 								</if>
 							</where>							
 							ORDER BY r.reg_date )inner_table
+							<if test="search == null">)</if>
+				<if test="search != null">
 				WHERE ROWNUM &lt;= #{search.endRowNum})
-		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}	
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}</if>	
 	</select>
+	
+
+	
 	
 	
 	<!-- relation 총 개수 -->
