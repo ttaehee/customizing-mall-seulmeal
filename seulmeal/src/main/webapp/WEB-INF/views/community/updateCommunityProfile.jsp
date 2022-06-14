@@ -44,10 +44,19 @@ function count_check(obj){
 		프로필 이미지 : <img name="profileImage" style="width: 80px; height: 80px"
 			src="/resources/attachments/profile_image/${sessionScope.user.profileImage}" />
 			
-		<!-- 프로필 이미지 변경 버튼 -->
+		
+		<!-- 모달창 실행 버튼 -->
 		<button id="updateProfileImageModal_Btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateProfileImageModal">
 	  		프로필 이미지 변경
 		</button>
+		<!-- Modal -->
+		<div id="updateProfileImageModal" class="modal fade"  aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static" tabindex="-1" role="dialog">
+			<div class="modal-dialog" >
+				<div class="modal-content">
+					<!-- 외부 모달 창 load 되는 곳 -->
+				</div>
+			</div>
+		</div>
 	
 		
 		<!-- 닉네임 -->	
@@ -113,69 +122,12 @@ function count_check(obj){
 		<div>
 			<button id="updateProfileBtn" type="submit" class="btn btn-primary">
 				수정</button>
-			<button id="cancelBtn" type="button" class="btn btn-primary">
+			<button id="cancelBtn" type="button" class="btn btn-primary" onclick="history.back()">
 				취소</button>
 		</div>
 		
 		</form>	
 	</div>
-
-
-
-
-	<!-- Modal -->
-	<div class="modal fade" id="updateProfileImageModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-		
-		
-			<div class="modal-content">
-			
-			<!-- 헤더 -->
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">프로필 이미지 바꾸기</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-
-			<!-- 바디 -->
-				<div class="modal-body">
-					<!--h5>사진 업로드</h5-->
-					
-					<p>					
-						<form action="/community/api/updateProfileImage" method="POST" enctype="multipart/form-data">
-								<div>
-									<input type="file" name="imageFile" />
-									<button type="submit" class="btn btn-primary">
-										사진 업로드
-									</button>
-								</div>
-						</form>
-					</p>
-					
-					
-
-					
-					
-					<hr>
-					<p>
-						<a href="#" role="button" id="deleteProfileImageBtn"
-							class="btn btn-secondary popover-test" title="Popover title" >현재 사진 삭제</a>
-					</p>
-				</div>
-
-			<!-- 푸터 -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-				</div>
-				
-			</div>
-			
-		</div>
-	</div>
-
-
 
 
 	<!-- 버튼 클릭 : 모달창 실행 -->
@@ -217,6 +169,11 @@ function count_check(obj){
 				});
 
 			});
+	
+	$(".modal-content").load("/community/updateCommunityProfileImageModal");
+	//$(".modal-content").load($(this).data("remote"));  모달창 실행 버튼에 data-remote = "load 할 url" ... 실패.. 
+	
+	
 </script>
 
 

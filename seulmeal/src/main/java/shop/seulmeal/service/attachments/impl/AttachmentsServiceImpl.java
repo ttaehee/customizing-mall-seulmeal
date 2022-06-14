@@ -18,7 +18,7 @@ import shop.seulmeal.service.mapper.AttachmentsMapper;
 @Service("attachmentsServiceImpl")
 public class AttachmentsServiceImpl implements AttachmentsService {
 	
-	private String path =System.getProperty("user.dir")+"/src/main/wepapp/resources/attachments/";
+	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
 	//private String path ="./src/main/webapp/resources/attachments/";
 //	private String path ="C:/Users/GHM/Desktop/mainPJT/";
 	

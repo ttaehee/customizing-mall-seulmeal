@@ -17,7 +17,7 @@
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
-
+	<div class="container">
 		<!-- table : 유저 프로필 -->
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
@@ -83,11 +83,27 @@
 			</table>	
 			
 	<!-- 내 프로필 -->
-	<div class="listBlockUser">
+	<!-- div class="listBlockUser">
 			<button type="button" onclick="location.href='/community/api/getListBlock'" class="btn btn-primary">
 				차단유저 목록보기
 			</button>
+	</div-->
+	
+	<!-- 모달창 실행 버튼 -->
+	<div class="listBlockUser">
+			<button id = "blockUser_Btn" data-toggle="modal" data-target="#blockUserModal" type="button" class="btn btn-primary">
+				차단유저 목록보기
+			</button>
 	</div>
+	<!-- Modal -->
+	<div id="blockUserModal" class="modal fade"  aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static" tabindex="-1" role="dialog">
+		<div class="modal-dialog" >
+			<div class="modal-content">
+				<!-- 외부 모달 창 load 되는 곳 -->
+			</div>
+		</div>
+	</div>
+	
 	
 	<div class="updateProfile">
 			<button type="button" onclick="location.href='/community/updateProfile'" class="btn btn-primary">
@@ -194,8 +210,7 @@
 	</div>
 </div>
 
-
-	<!-- 팔로우 -->
+</div>
 	
 		<script>
 		// ===================================== 추가 부분 ========================================
@@ -294,6 +309,9 @@
 					});
 
 				});
+		
+		$(".modal-content").load("/community/listCommunityBlockUserModal");
+		
 		
 	</script>
 

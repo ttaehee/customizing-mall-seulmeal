@@ -253,10 +253,11 @@
 	</insert>
 
 	<select id="getComment" parameterType="int" resultMap="commentSelectMap">
-		SELECT *
-		FROM comments
+		SELECT c.*, u.nickname, u.profile_image 
+		FROM comments c, users u
 		<where>
-			comment_no = #{commentNo}
+			c.user_id = u.user_id
+			AND comment_no = #{commentNo}
 			AND status = '0'
 		</where>
 	</select>
