@@ -50,8 +50,8 @@
 	
 	
 	<div>
-		재료 검색 : <input class="search" /><div class="partSearch">검색</div>
-		<div class="parts"></div>
+		재료 검색 : <input class="search" />
+		<div class="partSearch">검색</div><div class="parts"></div>
 	</div>
 	</form>
 </body>

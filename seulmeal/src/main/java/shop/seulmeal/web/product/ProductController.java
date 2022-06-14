@@ -105,7 +105,7 @@ public class ProductController {
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
 		}
-		search.setPageSize(pageSize);
+		search.setPageSize(20);
 		System.out.println(search);
 		
 		search.setSearchSort(prodNo);
@@ -141,22 +141,15 @@ public class ProductController {
 		search.setPageSize(pageSize);
 		search.setSearchCondition(searchCondition);
 		System.out.println(search);
-
+  
 		Map<String, Object> map = productService.getListProduct(search);
 		List<Product> list = (List) map.get("list");
-		List<Product> listr = new ArrayList();
 
-		for (Product product : list) {
-			List<Parts> listp = productService.getProductParts(product.getProductNo());
-			product.setParts(listp);
-			listr.add(product);
-			System.out.println("product : " + product);
-		}
 
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);
 
-		model.addAttribute("list", listr);
+		model.addAttribute("list", list);
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 
@@ -289,8 +282,6 @@ public class ProductController {
 	@GetMapping(value = { "getReview/{reviewNo}" })
 	public String getReview(@PathVariable int reviewNo, Model model) throws Exception {
 		Review review = productService.getReview(reviewNo);
-		model.addAttribute("product", productService.getProduct(review.getProduct().getProductNo()));
-		model.addAttribute("user", userService.getUser(review.getUser().getUserId()));
 
 		model.addAttribute("review", review);
 		return "/product/getReview";
