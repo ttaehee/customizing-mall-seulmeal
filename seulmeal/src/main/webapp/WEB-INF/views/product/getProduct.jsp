@@ -110,6 +110,8 @@ textarea {
 </style>
 
 </head>
+
+
 <body>
 	<!-- ToolBar Start /////////////////////////////////////-->
 	<jsp:include page="../layer/header.jsp"></jsp:include>
@@ -142,7 +144,7 @@ textarea {
 
 				<div class="box-line">
 					<div style="display: flex; justify-content: space-between;">
-						<h4>${user.userId} 님을 위한 혜택</h4>
+						<h4>${user.userId}님을위한혜택</h4>
 						<input id="coupon" type="hidden" name="coupon" value="" />
 						<button class="btn btn-primary couponBtn">쿠폰 받기</button>
 					</div>
@@ -179,16 +181,16 @@ textarea {
 					<div class="row">
 						<div style="margin-top: 10px; width: 100%;">
 							<c:if test="${product.stock !=0}">
-								<button class="btn btn-primary" style="width: 100%;">구매하기</button>
+								<button class="btn btn-primary" style="width: 100%;">장바구니 담기</button>
 							</c:if>
 							<c:if test="${product.stock ==0}">
-								<button class="btn btn-primary" disabled="disabled">구매하기</button>
+								<button class="btn btn-primary" disabled="disabled">장바구니 담기</button>
 							</c:if>
 						</div>
 						<div style="margin-top: 10px; width: 100%;">
 							<div style="display: flex; justify-content: space-between; margin-top: 10px">
 								<button class="btn btn-primary" style="width: 32%;">문의하기</button>
-								<button class="btn btn-primary" style="width: 32%;">장바구니</button>
+								<button class="btn btn-primary" style="width: 32%;">리뷰하기</button>
 								<button class="btn btn-primary" style="width: 32%;">관련상품</button>
 							</div>
 						</div>
@@ -231,16 +233,8 @@ textarea {
 
 								<dl class="info_txt">
 									<p>
-										<strong>배송안내</strong><br />
-										 출고지 : 서울특별시 ##구 물류센터 (일부 상품 제외) <br />
-										  결제확인된 다음날 상품이 발송됩니다. (※금요일 및 주말 결제건은 월요일에 출고됩니다.) <br />
-										   출고일에는 '배송준비중' 상태이며, 출고당일 오후에 택배사에서 송장번호 받은 후 입력해드리면 '배송중' 상태로 변경됩니다. <br /> 
-										   배송조회는 출고일 다음날 택배사에서 확인가능합니다. <br /> 
-										   택배사의 배송일정은 영업소별로 차이가 있을 수 있기 때문에 저희가 배송받으실 날짜를 확답드리기 어려우니 이점 양해부탁드립니다. <br /> <br />
-										 <strong>주문시 유의사항</strong> <br /> 
-										 무통장(가상계좌) 입금시 예금주는 #### 입니다. <br /> 
-										 은행 영업시간내 창구입금이 어려운 고객님께서는 다른은행으로 선택 후 주문해주시기 바랍니다. 
-										 <br /> 모니터 사양(해상도/촬영조건)과 개인적인 견해에 따라 상품이 다르게 보일 수 있습니다. <br /> <br />
+										<strong>배송안내</strong><br /> 출고지 : 서울특별시 ##구 물류센터 (일부 상품 제외) <br /> 결제확인된 다음날 상품이 발송됩니다. (※금요일 및 주말 결제건은 월요일에 출고됩니다.) <br /> 출고일에는 '배송준비중' 상태이며, 출고당일 오후에 택배사에서 송장번호 받은 후 입력해드리면 '배송중' 상태로 변경됩니다. <br /> 배송조회는 출고일 다음날 택배사에서 확인가능합니다. <br /> 택배사의 배송일정은 영업소별로 차이가 있을 수 있기 때문에 저희가 배송받으실 날짜를
+										확답드리기 어려우니 이점 양해부탁드립니다. <br /> <br /> <strong>주문시 유의사항</strong> <br /> 무통장(가상계좌) 입금시 예금주는 #### 입니다. <br /> 은행 영업시간내 창구입금이 어려운 고객님께서는 다른은행으로 선택 후 주문해주시기 바랍니다. <br /> 모니터 사양(해상도/촬영조건)과 개인적인 견해에 따라 상품이 다르게 보일 수 있습니다. <br /> <br />
 									</p>
 
 									<dt class="dtcolor">반품/교환</dt>
@@ -250,37 +244,20 @@ textarea {
 									<br />
 									<dt>반품규정</dt>
 									<dd>
-										1. 반드시 받으셨던 박스를 사용하여 ##택배(고객센터 1588-####)을 이용하여 반품해 주십시오.<br />
-										2. 워런티 라벨, 상표 중 하나라도 없을 경우, 반품처리가 되지 않습니다. 이 점 양해 부탁 드립니다.
+										1. 반드시 받으셨던 박스를 사용하여 ##택배(고객센터 1588-####)을 이용하여 반품해 주십시오.<br /> 2. 워런티 라벨, 상표 중 하나라도 없을 경우, 반품처리가 되지 않습니다. 이 점 양해 부탁 드립니다.
 									</dd>
 									<br />
 									<dt>제품의 교환, 환불</dt>
 									<dd>받으신 상품이 주문내용과 상이하는 경우, 배송 후 3일 이내에 언제든지 교환 또는 환불이 가능합니다.</dd>
 									<dd>
-										1. 교환 시, 교환하고자 하는 사유를 적어 제품과 함께 보내주세요. <br />
-										<br class="d_hidden t_hidden" /> 2. 환불 시, 환불 사유 및 환불 받으실 계좌번호, 예금주를 적어 제품과 함께 보내주세요.
-										 제품은 되도록 처음 상태를 유지시켜 주시고, 기존의 제품박스를 사용해야 합니다.<br />
-										  *환불은 반품 확인 후, 보내주신 계좌번호로 입금해드립니다. <br />
-										   <br class="d_hidden t_hidden" /> 3. 다음과 같은 경우 교환, 환불이 되지 않습니다.<br />
-										- 고의적 상품 훼손 (벌레 사체 등을 집어넣는 행위 등))<br />
-										 - 기존 포장재가 제거된 경우<br />
-										  - 워런티 라벨, 상표 중 하나라도 없을 경우<br /> 
-										<br class="d_hidden t_hidden" /> 
-										<span>*고객의 변심으로 인한 반품은 상품의 신선식품 특성상 불가합니다.</span><br />
+										1. 교환 시, 교환하고자 하는 사유를 적어 제품과 함께 보내주세요. <br /> <br class="d_hidden t_hidden" /> 2. 환불 시, 환불 사유 및 환불 받으실 계좌번호, 예금주를 적어 제품과 함께 보내주세요. 제품은 되도록 처음 상태를 유지시켜 주시고, 기존의 제품박스를 사용해야 합니다.<br /> *환불은 반품 확인 후, 보내주신 계좌번호로 입금해드립니다. <br /> <br class="d_hidden t_hidden" /> 3. 다음과 같은 경우 교환, 환불이 되지 않습니다.<br />
+										- 고의적 상품 훼손 (벌레 사체 등을 집어넣는 행위 등))<br /> - 기존 포장재가 제거된 경우<br /> - 워런티 라벨, 상표 중 하나라도 없을 경우<br /> <br class="d_hidden t_hidden" /> <span>*고객의 변심으로 인한 반품은 상품의 신선식품 특성상 불가합니다.</span><br />
 									</dd>
 									<br />
 									<dt>교환/반품 절차</dt>
 									<dd>
-										① 교환 및 반품 신청서를 작성해주세요. (교환 시, 교환을 원하시는 상품을 적어주세요.)<br /> 
-										<br class="d_hidden t_hidden" />
-										 ② 교환 및 반품하실 상품을 워런티카드, 파우치, 지퍼백을 받은 상태 그대로 포장해주세요.<br />
-										  <br class="d_hidden t_hidden" />
-										   ③ 반품처로 ## 택배를 이용하여 보내주세요. (반품처 : 서울특별시 ##구 ##동 ##-##)<br />
-										    <br class="d_hidden t_hidden" />
-										     ④ 고객 변심에 의한 교환 및 반품일 경우 택배비는 고객님 부담으로 미리 선지불하여 보내주세요. 
-										     택배사는 자유롭게 이용해주세요.<br /> 
-										     <br class="d_hidden t_hidden" /> 
-										     ⑤ 단, 상품에 하자가 있어 교환 및 반품할 경우, 온라인 고객센터(02-####-####)로 통화하신 후, ##택배를 이용하여 보내주세요. (##택배 대표번호 : 1588-####)<br /> <br class="d_hidden t_hidden" /> ⑥ 반품 상품은 상품 확인 후, 무통장 입금 또는 카드결제 취소 처리 해드립니다.
+										① 교환 및 반품 신청서를 작성해주세요. (교환 시, 교환을 원하시는 상품을 적어주세요.)<br /> <br class="d_hidden t_hidden" /> ② 교환 및 반품하실 상품을 워런티카드, 파우치, 지퍼백을 받은 상태 그대로 포장해주세요.<br /> <br class="d_hidden t_hidden" /> ③ 반품처로 ## 택배를 이용하여 보내주세요. (반품처 : 서울특별시 ##구 ##동 ##-##)<br /> <br class="d_hidden t_hidden" /> ④ 고객 변심에 의한
+										교환 및 반품일 경우 택배비는 고객님 부담으로 미리 선지불하여 보내주세요. 택배사는 자유롭게 이용해주세요.<br /> <br class="d_hidden t_hidden" /> ⑤ 단, 상품에 하자가 있어 교환 및 반품할 경우, 온라인 고객센터(02-####-####)로 통화하신 후, ##택배를 이용하여 보내주세요. (##택배 대표번호 : 1588-####)<br /> <br class="d_hidden t_hidden" /> ⑥ 반품 상품은 상품 확인 후, 무통장 입금 또는 카드결제 취소 처리 해드립니다.
 									</dd>
 								</dl>
 
@@ -292,30 +269,40 @@ textarea {
 					<!-- 3번 -->
 					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 						<div class="card-body">
-						
-						<table>
-						<tr>
-					    	<th>작성자</th>
-					        <th>제목</th>
-					        <th>내용</th>
-					        <th>별점</th>
-					        <th>등록일</th>
-					        <th></th>
-					    </tr>
-						<c:forEach var="review" items="${review}">    
-						    <tr>
-						   		<td>${review.user.userId }</td>
-						        <td>${review.title}</td>
-						        <td>${review.content}</td>
-						        <td>${review.rating}</td>
-						        <td>${review.regDate}</td>
-						        <td><c:if test="${user.userId} eq ${review.user.userId}"> 예 </c:if>
-						        <c:if test="${user.userId} eq ${review.user.userId}"><a href='/product/updateReview/${review.reviewNo}'>수정</a>
-						        </c:if>
-						        </td>
-						   </tr>
-					</c:forEach>
-					</table>
+
+							<table class="table table-hover text-center">
+								<thead style="background-color: #4b6cb7; color: #fff;">
+									<tr>
+										<th>작성자</th>
+										<th>제목</th>
+										<th>내용</th>
+										<th>별점</th>
+										<th>등록일</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="review" items="${review}">
+										<tr>
+											<th>${review.user.userId}</th>
+											<th style="font-weight: bolder;"><a href="/product/getReview/${review.reviewNo }" class="link-dark text-decoration-none">${review.title }</a></th>
+											<th>${review.content }</th>
+											<th>${review.rating }</th>
+											<th>${review.regDate }</th>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+
+							<hr />
+							<c:if test="${user != null}">
+								<div class="seulBtn" onclick="insertReview()" style="float: right;">리뷰 작성</div>
+							</c:if>
+							<script type="text/javascript">
+	function insertReview(){
+		window.location.href = "/product/insertReview/${product.productNo}";
+	}
+</script>
+
 						</div>
 					</div>
 
@@ -390,7 +377,7 @@ textarea {
 	$(function() {
 		 // 구매 버튼
 		 $(".btn-primary:contains('구매')").on("click", function(){
-			 self.location = "/purchase/addPurchase?productNo=${product.productNo}";
+			 self.location = "/purchase/insertCustomProduct/${product.productNo}";
 		 })
 		 
 		 // 쿠폰버튼
@@ -398,13 +385,23 @@ textarea {
 			 fncCoupon();
 		 })
 		 
-		 // 쿠폰버튼
+		 // 장바구니
 		 $(".btn-primary:contains('장바구니')").on("click", function(){
-			 fncCart();
+			 self.location = "/purchase/insertCustomProduct/${product.productNo}";
+		 })
+		 
+		 //리뷰
+		 $(".btn-primary:contains('리뷰하기')").on("click", function(){
+			 self.location = "/product/insertReview/${product.productNo}";
+		 })
+		 
+		  //관련상품
+		 $(".btn-primary:contains('관련상품')").on("click", function(){
+			 self.location = "/product/getListProduct/${product.foodCategory.foodCategoryNo}";
 		 })
 	});
 </script>
-<br/>
-<br/>
+	<br />
+	<br />
 </body>
 </html>

@@ -1,10 +1,13 @@
 package shop.seulmeal.web.product;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
@@ -47,6 +52,7 @@ public class ProductController {
 		// TODO Auto-generated constructor stub
 		System.out.println(this.getClass());
 	}
+
 
 	@GetMapping("insertProduct")
 	public String insertProduct(Model model) throws Exception {
@@ -101,6 +107,8 @@ public class ProductController {
 		}
 		search.setPageSize(pageSize);
 		System.out.println(search);
+		
+		search.setSearchSort(prodNo);
 
 		Map<String, Object> map = productService.getListReview(search);
 		List<Review> list0 = (List) map.get("list");
@@ -259,6 +267,8 @@ public class ProductController {
 	public String insertReview(@PathVariable int productNo, HttpSession session, Review review) throws Exception {
 		review.setUser((User) session.getAttribute("user"));
 		review.setProduct((Product)productService.getProduct(productNo));
+		
+		productService.insertReview(review);
 		
 		return "redirect:/product/getProduct/"+productNo;
 	}

@@ -180,7 +180,7 @@
 		UPDATE product
 		<set>
 		review_count = (SELECT count(*) FROM review WHERE review.product_no = #{product.productNo} AND review.status = '0' ),
-		average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product.product_no = #{product.productNo} AND review.status = '0') COUNT)
+		average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product_no = #{product.productNo} AND review.status = '0') COUNT)
 		</set>
 		<where>
 		product_no = #{product.productNo}
@@ -219,7 +219,7 @@
 	<select id="getListReview" resultMap="reviewSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
 		( SELECT
-		review_no , title, content, rating, reg_date, user_id FROM review
+		review_no , title, content, rating, reg_date, user_id FROM review WHERE product_no = #{searchSort}
 		ORDER BY review_no ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE
 		row_seq BETWEEN #{startRowNum} AND #{endRowNum}
