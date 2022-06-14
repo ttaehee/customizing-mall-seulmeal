@@ -42,25 +42,28 @@ a:hover{
 .seulBtn{		
 	width: 100px;
 	padding: 5px;
-	border: 2px solid #4b6cb7;
+	/*border: 2px solid #4b6cb7;*/
+	border:none !important;
 	text-align: center;
 	border-radius: 10%;
 	cursor: pointer;
 }
 .seulBtn:hover{
-	background-color: #4b6cb7;
+	/*background-color: #4b6cb7;*/
 	color:#fff;
 }
 
 .btn {
-	border: 2px solid #4b6cb7 !important;
+	/*border: 2px solid #4b6cb7 !important;*/
+	border: none !important;
 	background-color: #fff !important;
-	color: #4b6cb7 !important;
+	color: black !important;
 }
 
 .btn:hover{
-	background-color: #4b6cb7 !important;
-	color:#fff !important;
+	/*background-color: #4b6cb7 !important;*/
+	color:#4b6cb7 !important;
+	opacity: 0.7;
 }
 
 th{

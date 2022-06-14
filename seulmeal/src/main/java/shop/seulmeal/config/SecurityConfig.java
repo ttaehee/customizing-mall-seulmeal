@@ -56,12 +56,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.logout()
 			.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
 			.deleteCookies("JSESSIONID","loginCookie")
-			.logoutSuccessUrl("/")		
+			.logoutSuccessUrl("/")
 		.and()
 			.sessionManagement()
 			.maximumSessions(1)
 			.maxSessionsPreventsLogin(true);
 			
+		http
+		.rememberMe()
+			.key("loginCookie")
+			.rememberMeParameter("checkLogin")
+			.tokenValiditySeconds(60*60);
 		
 		http
 		.csrf().disable();
