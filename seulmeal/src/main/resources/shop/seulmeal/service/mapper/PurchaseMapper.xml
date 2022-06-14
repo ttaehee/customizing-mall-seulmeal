@@ -271,7 +271,7 @@
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
 			FROM (SELECT *
 				FROM purchase
-				WHERE user_id=#{userId} AND status='0' AND purchase_status!='0' AND purchase_status=#{purchaseStatus:VARCHAR}
+				WHERE user_id=#{userId} AND status='0' AND purchase_status!='0'
 				<if test="search.searchCondition != null">
 					<if test="search.searchCondition == 0">
 						AND to_date(reg_date, 'yy/mm/dd') =to_date(SYSDATE, 'yy/mm/dd')
@@ -338,7 +338,7 @@
 	  	FROM( SELECT *
 			FROM purchase
 			<where>
-				user_id=#{userId} AND status='0' AND purchase_status!='0' AND purchase_status=#{purchaseStatus:VARCHAR}
+				user_id=#{userId} AND status='0' AND purchase_status!='0'
 				<if test="search.searchCondition != null">
 					<if test="search.searchCondition == 0">
 						AND to_date(reg_date, 'yyyy/mm/dd') =to_date(SYSDATE, 'yyyy/mm/dd')

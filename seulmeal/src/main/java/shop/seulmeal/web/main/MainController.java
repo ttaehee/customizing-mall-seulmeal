@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,7 @@ public class MainController {
 	int pageSize;
 	
 	@GetMapping("/")
-	public String main(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+	public String main(HttpSession session, Model model, HttpServletRequest request,@AuthenticationPrincipal User userC) throws Exception {
 		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		String ip = req.getHeader("X-FORWARDED-FOR");
 		if (ip == null) {
@@ -84,9 +85,11 @@ public class MainController {
 		session.setAttribute("fList",productService.getListFoodCategory());
 		
 		// 추천음식
-		User user = (User)session.getAttribute("user");
-		
+		User user = userC;
+		session.setAttribute("user", user);
+		System.out.println("principal : "+userC);
 		if(user == null) {
+			
 			map = productService.getListProduct(search);
 			List<Product> list = (List)map.get("list");
 			model.addAttribute("list",list);
@@ -102,7 +105,7 @@ public class MainController {
 			}
 		}
 		
-		
+		System.out.println("user C 임 "+userC);
 		return "main/main";
 	}
 	
