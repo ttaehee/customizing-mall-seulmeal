@@ -1,64 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>프로필 정보 수정/삭제 모달창</title>
 </head>
 <body>
-	<jsp:include page="../layer/header.jsp"></jsp:include>
 
-
-
-
-	<!-- Button trigger modal -->
-	<button type="button" class="btn btn-primary" data-toggle="modal"
-		data-target="#exampleModal">Launch demo modal</button>
-
-	<!-- Modal -->
-	<div class="modal fade" id="testsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-		
-			<div class="modal-content">
-			
+			<!-- 헤더 -->
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<h5 class="modal-title" id="staticBackdropLabel">프로필 이미지 바꾸기</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				
-				<div class="modal-body">...</div>
-				
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
+
+			<!-- 바디 -->
+				<div class="modal-body">
+					<p>					
+						<form action="/community/api/updateProfileImage" method="POST" enctype="multipart/form-data">
+								<div>
+									<input type="file" name="imageFile" />
+									<button type="submit" class="btn btn-primary">
+										사진 업로드
+									</button>
+								</div>
+						</form>
+					</p>
+					
+					<hr>
+					
+					<p>
+						<a href="#" role="button" id="deleteProfileImageBtn"
+							class="btn btn-secondary popover-test" title="Popover title" >현재 사진 삭제</a>
+					</p>
 				</div>
-				
-			</div>
+
+			<!-- 푸터 -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+				</div>
 			
-		</div>
-	</div>
-
-	<!-- 버튼 클릭 : 모달창 실행 -->
-	<script>
-	 	const btnModal = document.getElementById("modal_btn")
-	 	btnModal.addEventListener("click", e => {
-	 	    modal.style.display = "flex"
-	 	})
-	 </script>
-
-
-	<!-- x 버튼 클릭 : 모달창 취소  -->
-	<script>
-    	const closeBtn = modal.querySelector(".close-area")
-    	closeBtn.addEventListener("click", e => {
-        	modal.style.display = "none"
-    	})
-    </script>
-
-
 
 </body>
 </html>

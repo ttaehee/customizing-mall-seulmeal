@@ -17,7 +17,7 @@
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
-
+	<div class="container">
 		<!-- table : 유저 프로필 -->
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
@@ -82,12 +82,89 @@
 					</tr>
 			</table>	
 			
-	<!-- 내 프로필 -->
-	<div class="listBlockUser">
+	<!-- 내 프로필 
+	<div class="listBlockUser1">
 			<button type="button" onclick="location.href='/community/api/getListBlock'" class="btn btn-primary">
 				차단유저 목록보기
 			</button>
 	</div>
+	-->
+
+			<!-- 모달창 실행 버튼--> 
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#blockUserModal">
+			  차단 유저 목록 모달창
+			</button>
+	
+			<!-- 스크롤 Modal -->
+			<div id="blockUserModal" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-scrollable modal-md " role="document">
+			    <div class="modal-content">
+			    
+			    
+			    	<!-- 외부 모달 창 load 되는 곳 -->
+						<!-- 헤더 -->
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalScrollableTitle">차단 유저 목록</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					
+					
+					<div class="modal-body">
+						
+							<!-- 차단 유저 리스트 -->
+								<c:forEach var="relation" items="${blockList}">
+									<div class ="block-li">
+										<div class="blockUser_section">
+										
+											<!-- 차단 유저 프로필이미지 -->
+											<div class="blockUserProfileImage">
+											
+												<c:choose>
+													<c:when test="${empty relation.relationUser.profileImage}">
+														<img src="/resources/attachments/profile_image/person02.jpeg" width="40" height="40" class="rounded-circle">
+													</c:when>
+													<c:otherwise>
+														<img src="/resources/attachments/profile_image/${relation.relationUser.profileImage}" width="40" height="40" class="rounded-circle">
+													</c:otherwise>
+												</c:choose>
+												
+											</div>
+											
+											<!--  유저 닉네임 + 상태메시지 -->
+											<div class="id_message">
+												<!-- 유저 닉네임 -->
+												<div class="blockUserId">${relation.relationUser.nickName}</div>
+												<!-- 상태메시지 -->
+												<div class="blockUserProfileMessage">${relation.relationUser.profileMessage}</div>
+											</div>
+											
+											<!-- 차단 해제 버튼 -->
+											
+												<button type="button" class="btn btn-light" id="follow_btn"
+													onclick="follow(this, '{{ following_list.following_id }}')">차단해제</button>
+											
+										</div>
+										
+									</div>
+								</c:forEach>
+				
+					</div>
+					
+					
+						<!-- 푸터 -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+						</div>			    	
+								    	
+								     </div>
+								  </div>
+								</div>
+	
+	
+	
 	
 	<div class="updateProfile">
 			<button type="button" onclick="location.href='/community/updateProfile'" class="btn btn-primary">
@@ -194,8 +271,7 @@
 	</div>
 </div>
 
-
-	<!-- 팔로우 -->
+</div>
 	
 		<script>
 		// ===================================== 추가 부분 ========================================
@@ -294,6 +370,13 @@
 					});
 
 				});
+		
+		
+		
+		
+		
+		//$.(".modal-content").load("/community/listCommunityBlockUserModal");
+		
 		
 	</script>
 

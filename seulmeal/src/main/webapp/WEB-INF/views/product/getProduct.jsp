@@ -107,6 +107,8 @@ textarea {
 	bottom: 0;
 	width: 100%;
 }
+
+
 </style>
 
 </head>
@@ -358,21 +360,6 @@ textarea {
 		    )		    
 	})    
 	
-	function fncCart(){
-		const userId = "${user.userId}"
-		const productNo = "${product.productNo}"
-		$.getJSON("/cart/json/addCart",{
-					userId : userId,
-					productNo : productNo
-				},
-				(data,status)=>{
-					if(status =='success'){
-						$(".btn-primary:contains('장바구니')").attr("disabled","disabled");
-						alert("추가완료")						
-					}
-				}
-		)
-	}
 	
 	$(function() {
 		 // 구매 버튼
@@ -383,6 +370,11 @@ textarea {
 		 // 쿠폰버튼
 		 $(".btn-primary:contains('쿠폰')").on("click", function(){
 			 fncCoupon();
+		 })
+		 
+		 // 나문희
+		 $(".btn-primary:contains('문의하기')").on("click", function(){
+			 self.location = "/operation/insertOperation/3";
 		 })
 		 
 		 // 장바구니
