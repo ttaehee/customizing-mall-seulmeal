@@ -237,9 +237,10 @@ public class PurchaseController {
 		
 	}	
 	
-	@GetMapping("getListPurchase")
-	public String getListPurchase(Search search, String userId, String purchaseStatus, Model model, HttpSession session)
+	@GetMapping("getListPurchase/{userId}")
+	public String getListPurchase(@PathVariable String userId, Search search, String purchaseStatus, Model model, HttpSession session)
 			throws Exception {
+
 
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);

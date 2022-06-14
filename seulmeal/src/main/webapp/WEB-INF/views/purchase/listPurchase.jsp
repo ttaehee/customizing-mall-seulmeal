@@ -17,6 +17,8 @@
 	 
 	 <br/>
 	 <h2>구매내역 조회</h2>
+	 <button class="btn btn-primary status" style="margin-right:10px;" window.location.href="purchase/getListPurchase/ghm4905?searchCondition=0">오늘</button>
+	
 	 <table class="table table-hover table-striped" >
  
         <thead>
