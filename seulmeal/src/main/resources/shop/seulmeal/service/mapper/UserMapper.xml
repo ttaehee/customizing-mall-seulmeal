@@ -18,20 +18,14 @@
 								#{phone:VARCHAR} , #{email:VARCHAR} , SYSDATE, #{nickName:VARCHAR}, #{confirmStatus:CHAR} )
 		</insert>
 		
-		<insert id="inserUserInformation">
-			insert into users(foodCategoryName1, foodCategoryName2, foodCategoryName3, profileImage, profileMessage)
-			values(#{foodCategoryName1:VARCHAR}, #{foodCategoryName2:VARCHAR}, #{foodCategoryName3:VARCHAR}, #{profileImage:VARCHAR}, #{profileMessage:VARCHAR})
-		
-		</insert>
-		
 		<insert id="insertHatesParts" parameterType="map">
 			INSERT INTO hates_parts(hates_parts_no, user_id, parts_no, parts_name)
 				SELECT seq_hates_parts_no.NEXTVAL, A.* FROM(
 					<foreach collection="list" item="parts" separator="UNION ALL">
 						SELECT 
-							#{userId:VARCHAR} as user_id
-							#{parts.partNo:INTEGER} as parts_no,
-							#{parts.partsName:VARCHAR} as parts_name,
+							#{userId:VARCHAR} as user_id,
+							#{parts.partsNo:INTEGER} as parts_no,
+							#{parts.name:VARCHAR} as parts_name
 							from dual
 					</foreach>
 				) A	
@@ -77,14 +71,14 @@
 												<if test="searchCondition != null">
 													<where>
 														<if test="searchCondition == 0 and searchKeyword !='' ">
-											 				user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' ORDER by user_name
+											 				user_id LIKE '%'||#{searchKeyword}||'%' OR user_name LIKE '%'||#{searchKeyword}||'%' 
 														</if>
 														<if test="searchCondition == 1 and searchKeyword !='' ">
 											 				blacklist_status = '1'
 														</if>
 													</where>
 												</if>
-												ORDER BY user_id ) inner_table
+												ORDER BY  reg_date DESC) inner_table
 							WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>

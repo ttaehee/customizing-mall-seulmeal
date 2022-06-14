@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+
 <!-- jquery/js-->
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
@@ -16,8 +18,8 @@
 <script src="/resources/javascript/summernote/summernote-lite.js"></script>
 <script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
 
-<script type="text/javascript"
-	src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
+<!-- slick -->
+<script type="text/javascript" src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
 
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
@@ -28,10 +30,9 @@
 
 <link rel="stylesheet" href="/resources/css/body.css">
 
-<link rel="stylesheet" type="text/css"
-	href="http://kenwheeler.github.io/slick/slick/slick.css" />
-<link rel="stylesheet" type="text/css"
-	href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
+<!-- slick -->
+<link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
 	
 
 

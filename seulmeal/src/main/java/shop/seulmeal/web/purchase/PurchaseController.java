@@ -80,15 +80,76 @@ public class PurchaseController {
 	@PostMapping("insertCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
 	public String insertCustomProduct(@RequestParam(value="cartStatus") String cartStatus,
-			@RequestParam(value="productNo") int productNo,CustomParts minus,Parts plus, 
-			CustomProduct customProduct, String userId, Model model) {
+			@RequestParam(value="productNo") int productNo,Parts plus, 
+			CustomProduct customProduct, Model model,
+			// 제외 상품
+			String minusNoA, String minusNameA,
+			// 추가 상품
+			String plusPartsNo, String plusPrice, String plusGram,
+			// 세션
+			HttpSession session) {
 		
-		System.out.println("/insertPurchase Post - minus no:"+minus+"plus"+plus);
+		System.out.println(cartStatus);
+		// Product 넣기
+		System.out.println("customProduct : "+productNo);
+		Product product = new Product();
+		product.setProductNo(productNo);
+		customProduct.setProduct(product);
 		
-		User user=new User();
-		user.setUserId(userId);
+		///////////plus///////////////////////
+		System.out.println("/==========/ minusNo : "+minusNoA);
+		System.out.println("/==========/ minusName : "+minusNameA);
+		//////////////////
+		
+		///////////plus///////////////////////
+		System.out.println("/==========/ plusPartsNo : "+plusPartsNo);
+		System.out.println("/==========/ plusPrice : "+plusPrice);
+		System.out.println("/==========/ plusGram : "+plusGram);
+		//////////////////
+		
+		// minus parts
+		String[] minusNoAA = minusNoA.split(",");
+		String[] minusNameAA = minusNameA.split(",");
+		List<CustomParts> minusParts = new ArrayList();
+		for(int i=0; i<minusNoAA.length; i++) {
+			CustomParts minus = new CustomParts();
+			minus.setMinusNo(new Integer(minusNoAA[i]));
+			minus.setMinusName(minusNameAA[i]);
+			minusParts.add(minus);
+		}
+		System.out.println("//// ========== =======minusParts : "+minusParts);
+		customProduct.setMinusParts(minusParts);
+		
+		
+		// plus parts
+		String[] plusPartsNoA = plusPartsNo.split(",");
+		String[] plusPriceA = plusPrice.split(",");
+		String[] plusGramA = plusGram.split(",");
+		List<CustomParts> plusParts = new ArrayList();
+		for(int i=0; i<plusPartsNoA.length; i++) {			
+			CustomParts plusp = new CustomParts();
+			Parts partp = new Parts();
+			partp.setPartsNo(new Integer(plusPartsNoA[i]));
+			partp.setPrice(new Integer(plusPriceA[i]));
+			plusp.setParts(partp);
+			plusp.setGram(new Integer(plusGramA[i]));			
+			plusParts.add(plusp);
+		}
+		System.out.println("//// ========== =======plusParts : "+plusParts);
+		customProduct.setPlusParts(plusParts);
+		
+		///// 구매자 아이디 세팅
+		User user= (User)session.getAttribute("user");
+		customProduct.setUser(user);
+		////////////////////
+		
+		//// 결과 값
+		System.out.println(customProduct);
+		//////////////////////
+		
 		
 		CustomParts cp=new CustomParts();
+		
 		/*
 		List<CustomParts> plus=new ArrayList<>();
 		for(Parts p: plusParts) {
@@ -107,7 +168,7 @@ public class PurchaseController {
 		
 		Map<String, Object> map=new HashMap<>();
 		map.put("customProductNo",customProduct.getCustomProductNo());
-		map.put("minusParts",minus);
+		//map.put("minusParts",minus);
 		map.put("plusParts",plus);
 			
 		purchaseService.insertMinusParts(map);
@@ -116,9 +177,9 @@ public class PurchaseController {
 		model.addAttribute("customProduct",customProduct);
 		
 		if(cartStatus.equals("0")) {
-			return "redirect:/purchase/getListCustomProduct/"+userId;
+			return "redirect:/purchase/getListCustomProduct/"+user.getUserId();
 		}else {
-			return "redirect:/purchase/insertPurchase/"+userId;
+			return "redirect:/purchase/insertPurchase/"+user.getUserId();
 		}
 		
 	}
@@ -237,9 +298,10 @@ public class PurchaseController {
 		
 	}	
 	
-	@GetMapping("getListPurchase")
-	public String getListPurchase(Search search, String userId, String purchaseStatus, Model model, HttpSession session)
+	@GetMapping("getListPurchase/{userId}")
+	public String getListPurchase(@PathVariable String userId, Search search, String purchaseStatus, Model model, HttpSession session)
 			throws Exception {
+
 
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);

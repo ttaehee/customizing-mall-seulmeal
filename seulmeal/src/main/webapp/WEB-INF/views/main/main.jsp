@@ -1,10 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+
+<script type="text/javascript">
+      
+</script>
+
+<link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick.css" />
+<link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
 <title>SeulMeal Main</title>
 <style type="text/css">	
 	@charset "UTF-8";
@@ -70,8 +79,27 @@
 <body> <!-- #BAD7DF -->
 	
 	<jsp:include page="../layer/header.jsp"></jsp:include>
+	<div id="carouselExampleIndicators" class="carousel slide">
+	<div class="your-class">
+		<c:forEach var="post" items="${listE}">
+			<div class="carousel-inner"  id="eventBanner"  data-value="${post.postNo}">
+				<c:if test="${post.thumnail == null}">
+					<img style="width: 100%; height:600px;" src="/resources/attachments/image/tetris.png" alt="">
+				</c:if>
+				<c:if test="${post.thumnail != null}">
+					<img style="width: 100%; height:600px;" src="/resources/attachments/${post.thumnail}" alt="">
+				</c:if>
+				<div class="carousel-caption d-none d-md-block">
+					<h2 class="display-6 fw-bold">${post.title}</h2>
+					<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}shortContent</h2>
+					<h2 class="endDateView">~${post.endDate}</h2>
+				</div>
+			</div>
+		</c:forEach>
+		</div>
+	</div>
 	
-	<!-- carousel iamge-slie -->
+	<!-- carousel iamge-slie 
 	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
 		<ol class="carousel-indicators">
 			<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -109,7 +137,7 @@
 			<span class="sr-only">Next</span>
 		</a>
 	</div>
-	
+	 -->
 	<!-- 
 	<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
 	  <div class="carousel-indicators">
@@ -190,9 +218,27 @@
 	</main>		
 	<jsp:include page="../confirm.jsp"></jsp:include>
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
-	
+	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
 <script type="text/javascript">
-
+const $jq = jQuery.noConflict();
+$jq(document).ready(function() {
+	$jq('.your-class').slick({
+		autoplay : true,
+		dots : true, /* 하단 점 버튼 */
+		speed : 300 /* 이미지가 슬라이딩시 걸리는 시간 */,
+		infinite : true,
+		autoplaySpeed : 3000 /* 이미지가 다른 이미지로 넘어 갈때의 텀 */,
+		arrows : true,
+		slidesToShow : 1,
+		slidesToScroll : 1,
+		touchMove : true, /* 마우스 클릭으로 끌어서 슬라이딩 가능여부 */
+		nextArrows : true, /* 넥스트버튼 */
+		/* prevArrows : true,
+		arrow : true, */
+		fade : false
+	});
+});
 	
 	$(function(){
 		$(".overflow-hidden").on("click",function(){
@@ -200,16 +246,15 @@
 			window.location.href = '/product/getProduct/'+no;
 		})
 		
-		$('.carousel').carousel({
-		  interval: 1000
-		})
-		
+				
 		$("#eventBanner").on("click",function(){
 			const no = $(this).data("value");
 			console.log(no)
-			window.location.href="/operation/getOperation/"+no;
+			window.location.href="/operation/getOperation/2/"+no;
 		});
 	})
+		
+	
 </script>
 </body>
 </html>

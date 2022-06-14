@@ -6,21 +6,23 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
-import shop.seulmeal.service.domain.BlackList;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
-import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.UserMapper;
 import shop.seulmeal.service.user.UserService;
 
-@Component
 @Service("userServiceImpl")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService{
 	
 	@Autowired
 	private UserMapper userMapper;
@@ -28,12 +30,12 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int insertUser(User user) throws Exception {
 		// TODO Auto-generated method stub
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
 		return userMapper.insertUser(user);
 	}
 	
-	public int insertUserInformation(User user) throws Exception{
-		return userMapper.inserUserInformation(user);
-	}
 
 	@Override
 	public int insertHatesParts(Map<String, Object> map) throws Exception {
@@ -180,10 +182,29 @@ public class UserServiceImpl implements UserService{
 		userMapper.updateBlackList();
 	}
 	
-	@Scheduled(cron = "0 34 12 * * ? ")
+	@Scheduled(cron = "0 34 12 1 * ? ")
 	public void updateGrade() throws Exception {
 		userMapper.updateUserGrade();
 		userMapper.resetPurchaseCount();
+	}
+
+	
+	// 유저 패스워드 인증
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		User user= null;
+		System.out.println(username);
+		try {
+			user = userMapper.getUser(username);
+			if(user == null) {
+				throw new UsernameNotFoundException("없는 아이디임");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
 	}
 
 	

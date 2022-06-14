@@ -53,6 +53,7 @@ public class UserTest {
 		assertThat(userMapper.insertUser(user)).isEqualTo(1);
 	}
 	
+	
 	//@Test
 	void insertHatesParts() throws Exception{
 		
@@ -110,7 +111,7 @@ public class UserTest {
 		
 	}
 	
-	@Test
+	//@Test
 	void getListUser() throws Exception {
 		
 		Search search = new Search();
