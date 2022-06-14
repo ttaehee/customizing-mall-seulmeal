@@ -116,8 +116,9 @@ public class CommunityRestController {
 		return communityService.getComment(commentNo); 
 	}
 	
-	@PatchMapping("/deleteComment/{commentNo}") // ^o
+	@PostMapping("/deleteComment/{commentNo}") // ^o
 	public void deleteComment(@PathVariable int commentNo) {
+		System.out.println("///////////"+commentNo);
 		
 		communityService.deleteComment(commentNo);
 	}
