@@ -79,9 +79,9 @@
 			<form class="searchProduct">
 				<div style="display:flex;">	
 					<div class="form-outline">
-						<input name="searchKeyword" type="search" class="form-control search" />
+						<input name="searchKeyword" type="search" class="form-control search" val="" />
 					</div>		  
-					<button type="button" class="btn btn-primary partSearch">
+					<button type="button" class="btn btn-primary partSearch" onclick="search()">
 						<i class="bi bi-search"></i>
 					</button>
 			</form> 
@@ -103,7 +103,7 @@
 		<div class="container">
 		
 		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="0" onClick="send()">바로 구매하기</button>
-		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="sendt()">장바구니 담기</button>
+		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="send()">장바구니 담기</button>
 		<a href="#" role="button" >취&nbsp;소</a>
 		<input class="hiddenStatus" type="hidden" name="cartStatus" value="0"/> 
 		</div>
@@ -121,6 +121,7 @@
 				$("form")[0].reset();
 		});
 	});	
+	
 
 	$(function() {
 	    $('.execpt').on('click', function() {
@@ -131,6 +132,7 @@
 	        var partsName = $(this).attr('data-partsName'); 
 	        $(this).closest('div').find('.hiddenName').val(partsName);
 	        console.log(partsName);
+	        alert(partsName+" 제외되었습니다.")
 	        
 	        this.setAttribute("disabled", "disabled");
 	    });
