@@ -1,12 +1,15 @@
 package shop.seulmeal.service.domain;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -21,7 +24,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @JsonInclude(Include.NON_DEFAULT)
-public class User {
+public class User implements UserDetails {
 	
 	private String userId;
 	private String userName;
@@ -52,6 +55,44 @@ public class User {
 	//private List<> follow;
 	private List<Relation> relation;
 	private List<Like> wish;
+	
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		System.out.println(this.role);
+		return Collections.singletonList(new SimpleGrantedAuthority(this.role));
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.userId;
+	}
+	
+	public String getUserName() {
+		return this.userName;
+	}
+	
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 	
 	
 }

@@ -16,7 +16,6 @@ public class CustomSerrorController implements ErrorController {
 	public String erorr(HttpServletRequest request) {
 		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 		System.out.println(status);
-		System.out.println(HttpStatus.NOT_FOUND.toString());
 		if(status != null) {
 			int statusCode = Integer.valueOf(status.toString());
 			
