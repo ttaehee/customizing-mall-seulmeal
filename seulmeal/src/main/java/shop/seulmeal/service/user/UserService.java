@@ -13,8 +13,6 @@ public interface UserService {
 
 	public int insertUser(User user) throws Exception;
 	
-	public int insertUserInformation(User user) throws Exception;
-	
 	public int insertHatesParts(Map<String, Object> map) throws Exception;
 	
 	public User getUser(String userId) throws Exception;

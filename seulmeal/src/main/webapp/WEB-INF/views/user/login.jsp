@@ -33,7 +33,6 @@
 	</div>
 	<!-- /container -->
 
-	<jsp:include page="../layer/footer.jsp"></jsp:include>
     
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>

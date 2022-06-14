@@ -116,8 +116,9 @@ public class CommunityRestController {
 		return communityService.getComment(commentNo); 
 	}
 	
-	@PatchMapping("/deleteComment/{commentNo}") // ^o
+	@PostMapping("/deleteComment/{commentNo}") // ^o
 	public void deleteComment(@PathVariable int commentNo) {
+		System.out.println("///////////"+commentNo);
 		
 		communityService.deleteComment(commentNo);
 	}
@@ -162,23 +163,41 @@ public class CommunityRestController {
 	}
 
 	@PostMapping("insertFollow/{relationUserId}") // o
-	public void insertFollow(@PathVariable String relationUserId, HttpSession session) {
+	public int insertFollow(@PathVariable String relationUserId, HttpSession session) {
 
 		Relation relation = new Relation();
 		relation.setRelationStatus("0");
-		relation.setUserId(((User) session.getAttribute("user")).getUserId());
+		User user = (User) session.getAttribute("user");
+		relation.setUserId(user.getUserId());
 
+		User relationUser = new User();
+		relationUser.setUserId(relationUserId);
+		relation.setRelationUser(relationUser);
+		
+		int followCnt = communityService.insertFollow(relation);
+		
+		return followCnt;
+	}
+	
+	@DeleteMapping("deleteFollow/{relationUserId}") // o
+	public int deleteFollow(@PathVariable String relationUserId, HttpSession session) {
+
+		Relation relation = new Relation();
+		relation.setRelationStatus("0");
+		relation.setUserId(((User)session.getAttribute("user")).getUserId());
+		
 		User user = new User();
 		user.setUserId(relationUserId);
 		relation.setRelationUser(user);
 
-		communityService.insertFollow(relation);
-
+		int followCnt = communityService.deleteFollow(relation);
+		
+		return followCnt;
 	}
 
 	@GetMapping("getListFollow") // oo
 	public List<Relation> getListFollow(@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false) String searchKeyword, @RequestParam String userId) {
+			@RequestParam(required = false) String searchKeyword, HttpSession session) {
 
 		Search search = new Search();
 
@@ -186,7 +205,7 @@ public class CommunityRestController {
 		search.setPageSize(pageSize);
 		search.setSearchKeyword(searchKeyword);
 
-//		String userId = ((User)session.getAttribute("user")).getUserId();
+		String userId = ((User)session.getAttribute("user")).getUserId();
 		Map<String, Object> map = communityService.getListFollow(search, userId, "0");
 
 		return (List<Relation>) map.get("followList");
@@ -194,7 +213,7 @@ public class CommunityRestController {
 
 	@GetMapping("getListFollower") // oo
 	public List<Relation> getListFollower(@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false) String searchKeyword, @RequestParam String relationUserId) {
+			@RequestParam(required = false) String searchKeyword,HttpSession session) {
 
 		Search search = new Search();
 
@@ -202,23 +221,13 @@ public class CommunityRestController {
 		search.setPageSize(pageSize);
 		search.setSearchKeyword(searchKeyword);
 
-//		String relationUserId = ((User)session.getAttribute("user")).getUserId();
+		String relationUserId = ((User)session.getAttribute("user")).getUserId();
 		Map<String, Object> map = communityService.getListFollower(search, relationUserId);
 
 		return (List<Relation>) map.get("followerList");
 	}
 
-	@DeleteMapping("deleteFollow/{relationNo}") // o
-	public void deleteFollow(@PathVariable int relationNo) {
-
-		Relation relation = new Relation();
-		relation.setRelationStatus("0");
-		relation.setRelationNo(relationNo);
-
-		communityService.deleteFollow(relation);
-	}
-
-	@PostMapping("insertBlock/{relationUserId}")
+	@PostMapping("insertBlock/{relationUserId}") // oo
 	public void insertBlock(@PathVariable String relationUserId, HttpSession session) {
 
 		Relation relation = new Relation();
@@ -235,29 +244,50 @@ public class CommunityRestController {
 		}
 	}
 
-	@DeleteMapping("deleteBlock/{relationNo}")
-	public void deleteBlock(@PathVariable int relationNo, HttpSession session) {
+	@DeleteMapping("deleteBlock/{relationUserId}")
+	public void deleteBlock(@PathVariable String relationUserId, HttpSession session) {
 
 		Relation relation = new Relation();
 		relation.setRelationStatus("1");
-		relation.setRelationNo(relationNo);
+		relation.setUserId(((User) session.getAttribute("user")).getUserId());
+		
+		User user = new User();
+		user.setUserId(relationUserId);
+		relation.setRelationUser(user);
 
 		if (communityService.deleteBlock(relation) == 1) {
 			List<Relation> list = ((User) session.getAttribute("user")).getRelation();
 			list.remove(relation);
 		}
 	}
+	
+	
+	@GetMapping("getListBlock") // oo
+	public List<Relation> getListBlock(@RequestParam(required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false) String searchKeyword, HttpSession session) {
+
+		Search search = new Search();
+
+		search.setCurrentPage(currentPage);
+		search.setPageSize(pageSize);
+		search.setSearchKeyword(searchKeyword);
+
+		String userId = ((User)session.getAttribute("user")).getUserId();
+		Map<String, Object> map = communityService.getListBlock(search, userId, "1");
+
+		return (List<Relation>) map.get("blockList");
+	}
 
 	// 프로필 이미지 저장 및 변경	// oo
 	@PostMapping("updateProfileImage")
-	public User updateProfileImage(String userId, MultipartFile imageFile, HttpSession session) throws Exception {
+	public User updateProfileImage(MultipartFile imageFile, HttpSession session) throws Exception {
 
 		String imageFilePath = null;
 //		String absolutePath = new File("").getAbsolutePath()+"\\";
 		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
 		File file = new File(path);
 
-		User user = userService.getUser(userId);
+		User user = (User)session.getAttribute("user");
 
 		if (!file.exists()) {
 			file.mkdirs();
@@ -273,9 +303,9 @@ public class CommunityRestController {
 				originalFileExtension = ".png";
 			}
 
-			imageFilePath = path + "/" + userId + "_profile" + originalFileExtension;
-			String imageFileName = userId + "_profile" + originalFileExtension;
-			System.out.println("//////userId: " + userId);
+			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
+			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
+			System.out.println("//////userId: " + user.getUserId());
 			System.out.println("//////imageFilePath: " + imageFilePath);
 			System.out.println("//////originalFileExtension: " + originalFileExtension);
 			System.out.println("//////getOriginalFilename(): " + imageFile.getOriginalFilename());
@@ -285,11 +315,10 @@ public class CommunityRestController {
 			imageFile.transferTo(file);
 
 			// 저장한 이미지 파일을 User session 저장 또는 수정
-//			User user = (User)session.getAttribute("user");
 			user.setProfileImage(imageFileName);
 
 			// 변경된 session의 유저정보를 db에 반영
-			userService.updateUser(user);
+			userService.updateProfile(user);
 
 		}
 		return user;
@@ -298,11 +327,9 @@ public class CommunityRestController {
 	
 	// 프로필 이미지 삭제		// oo
 	@PostMapping("deleteProfileImage")
-	public ResponseEntity<User> deleteProfileImage(String userId, HttpSession session) throws Exception {
+	public ResponseEntity<User> deleteProfileImage(HttpSession session) throws Exception {
 
-//		User user = (User)session.getAttribute("user");
-		User user = userService.getUser(userId);
-		System.out.println("///////////" + user);
+		User user = (User)session.getAttribute("user");
 
 		// 프로필 이미지 없을 경우, 404에러 리턴
 		if(user.getProfileImage()==null) {
@@ -310,7 +337,7 @@ public class CommunityRestController {
 		}
 		
 		// 프로필 이미지 있을 경우, 해당경로에 있는 jpg 파일 삭제
-		String path = "C:/Users/GHM/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/profile_image";
+		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
 		String imageFileName = user.getProfileImage();
 		String imageFilePath = path + "/" + imageFileName; 
 		
@@ -324,12 +351,11 @@ public class CommunityRestController {
 		}
 
 		// 유저가 session에 가지고 있는 profileImage 삭제
-//		User user = (User)session.getAttribute("user");
-		user = userService.getUser(userId);
 		user.setProfileImage(null);
+		session.setAttribute("user", user);
 
 		// profileImage 삭제한 session의 유저정보를 db에 반영
-		userService.updateUser(user);
+		userService.updateProfile(user);
 
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}

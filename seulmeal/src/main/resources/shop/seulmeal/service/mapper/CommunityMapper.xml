@@ -668,7 +668,7 @@
 								r.relation_user_id = u.user_id
 								AND r.user_id = #{userId}
 								AND r.relation_status = #{relationStatus}
-								<if test="search.searchKeyword != null">
+								<if test="search != null and search.searchKeyword != null">
 									AND r.relation_user_id LIKE ('%'||#{search.searchKeyword}||'%')								
 								</if>
 							</where> ) countTable
@@ -750,7 +750,7 @@
 							r.relation_user_id = u.user_id 
 							AND r.relation_user_id = #{relationUserId}
 							AND r.relation_status = '0'
-							<if test = "search.searchKeyword != null">
+							<if test = "search != null and search.searchKeyword != null">
 								AND r.user_id LIKE ('%'||#{search.searchKeyword}||'%')
 							</if>
 						</where>) countTable

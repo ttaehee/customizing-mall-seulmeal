@@ -37,9 +37,6 @@ h1{
 				제목 : <input id="title" name="title"  value = "${post.title}"/>
 			</div>
 			<div class="col-md-12">
-				아이디 : <input id="userId" name="userId" value="${post.userId}"/>
-			</div>
-			<div class="col-md-12">
 				<textarea id="summernote" name="content">${post.content}</textarea>		
 			</div>
 		</div>

@@ -1,6 +1,9 @@
 package shop.seulmeal.web.community;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +37,7 @@ import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
+import shop.seulmeal.service.mapper.CommunityMapper;
 import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
@@ -42,213 +47,246 @@ public class CommunityController {
 
 	@Autowired
 	private CommunityService communityService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private ProductService productService;
-	
+
 	@Autowired
 	private AttachmentsService attachmentsService;
-	
-	int pageUnit = 5;	
+
+	@Autowired
+	private CommunityMapper communityMapper;
+
+	int pageUnit = 5;
 	int pageSize = 5;
-	
-	//C
+
+	// C
 	public CommunityController() {
 		System.out.println(this.getClass());
 	}
 
+	@GetMapping("updateCommunityProfileImageModal")
+	public String modalTest() {
+		return "community/updateCommunityProfileImageModal";
+	}
 	
-	//M
+	
+	// M
 	// 무한스크롤
 	@GetMapping("/communityMain") // o
 //	@ResponseBody
-	public String communityMain(@RequestParam(required = false) String searchKeyword, @RequestParam(required = false)String searchCondition,String userId, Model model, HttpSession session ) throws Exception {
-		
-		//1. communityService.getListPost();
-		//2. userService.getUser()? 유저프로필 -> jsp에서 세션 사용
-		//3. productService.getListProduct() 추천밀키트 리스트
-		
-		System.out.println("//////////////"+session.getAttribute("user"));
-		
+	public String communityMain(@RequestParam(required = false) String searchKeyword,
+			@RequestParam(required = false) String searchCondition, Model model, HttpSession session) throws Exception {
+
+		// 1. communityService.getListPost();
+		// 2. productService.getListProduct() 추천밀키트 리스트
+
+		System.out.println("//////////////" + session.getAttribute("user"));
+
+		// 게시글
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(5);
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchCondition);
-		Map<String,Object> map = communityService.getListPost(search, userId);
-		
-		
+		Map<String, Object> map = communityService.getListPost(search, null); // 모든 게시글
+
+		// product
 		Search productSearch = new Search();
 		productSearch.setCurrentPage(1);
 		productSearch.setPageSize(3);
-		Map<String,Object> productMap = productService.getListProduct(productSearch);
-		
-		model.addAttribute("postList", (List<Post>)map.get("postList"));
-		model.addAttribute("productList", (List<Product>)productMap.get("list"));
-		
-//		User user = (User)session.getAttribute("user");
-//		if(user != null) {
-//			model.addAttribute("user",user);
-//		}
-//		
-//		System.out.println(model);
-		
+		Map<String, Object> productMap = productService.getListProduct(productSearch);
+
+		model.addAttribute("postList", (List<Post>) map.get("postList"));
+		model.addAttribute("productList", (List<Product>) productMap.get("list"));
+
+		// 팔로우, 팔로워 수
+		String userId = ((User) session.getAttribute("user")).getUserId();
+
+		Map<String, Object> map02 = new HashMap<>();
+		map02.put("userId", userId);
+		map02.put("relationUserId", userId);
+		map02.put("relationStatus", "0");
+
+		int followCnt = communityMapper.getRelationTotalCount(map02);
+		int followerCnt = communityMapper.getFollowerTotalCount(map02);
+
+		model.addAttribute("followCnt", followCnt);
+		model.addAttribute("followerCnt", followerCnt);
+
 		return "community/communityMain";
 //		return map;
 	}
-	
-	//Post
+
+	// Post
 	@GetMapping("/insertPost") // oo
 	public String insertPost() {
 		return "community/insertCommunityPost";
 	}
-	
+
 	@PostMapping("/insertPost") // x
 	@Transactional(rollbackFor = Exception.class)
-	public String insertPost(String userId, @ModelAttribute Post post, MultipartFile uploadfile, Attachments attachments,HttpSession session) throws IllegalStateException, IOException {
+	public String insertPost(@ModelAttribute Post post, MultipartFile[] uploadfile, Attachments attachments,
+			HttpSession session) throws IllegalStateException, IOException {
 
-		System.out.println("/////////////"+userId);
-		System.out.println("/////////////"+post);
-		System.out.println("/////////////"+uploadfile);
-		
-		//post.setUser(((User)session.getAttribute("user")));
-		
-		User user = new User();
-		user.setUserId(userId);
-		post.setUser(user);
+		System.out.println("/////////////" + post);
+		System.out.println("/////////////" + uploadfile);
+
+		post.setUser(((User) session.getAttribute("user")));
+		System.out.println("///////////session 검증 : " + ((User) session.getAttribute("user")));
 		communityService.insertPost(post);
-		
+
 		attachments.setPostNo(Integer.toString(post.getPostNo()));
-		
-		//attachmentsService.insertAttachments(uploadFile, attachments);
-		
-		return "redirect:getPost/"+ post.getPostNo(); 
+
+		attachmentsService.insertAttachments(uploadfile, attachments);
+
+		return "redirect:getPost/" + post.getPostNo();
 	}
-	
+
 	@GetMapping("/getPost/{postNo}") // oo
 //	@ResponseBody
 	public String getPost(@PathVariable int postNo, Model model) {
-		
+
 		Post post = communityService.getPost(postNo);
-		
+
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(pageSize);
-		Map<String,Object> map = communityService.getListcomment(search, postNo);
-		
+		Map<String, Object> map = communityService.getListcomment(search, postNo);
+
 		model.addAttribute("post", post);
-		model.addAttribute("commentList", (List<Comment>)map.get("commentList"));
-		
+		model.addAttribute("commentList", (List<Comment>) map.get("commentList"));
+
 		System.out.println(model);
-		
+
 //		return post;
 		return "community/getCommunityPost";
 	}
 
-	
-	
 	@GetMapping("/updatePost/{postNo}") // o
 	public String updatePost(@PathVariable int postNo, Model model) {
-		
+
 		Post post = communityService.getPost(postNo);
-		
+
 		model.addAttribute("post", post);
-		
+
 		return "community/updateCommunityPost";
 	}
-	
+
 	@PutMapping("/updatePost/{postNo}") // o
 	public String updatePost(@ModelAttribute Post post, @PathVariable int postNo) {
-		
+
 		communityService.updatePost(post);
-		
-		return "redirect:/community/getPost/"+ postNo; 
+
+		return "redirect:/community/getPost/" + postNo;
 	}
-	
+
 	@PutMapping("/deletePost/{postNo}") // o
 	public String deletePost(@PathVariable int postNo) {
-		
-		communityService.deletePost(postNo);
-		
-		return "community/communityMain"; 
-	}
-	
-	
 
-	
-	//Post
+		communityService.deletePost(postNo);
+
+		return "community/communityMain";
+	}
+
+	// Post
 	@PostMapping("/insertReportPost") // o
 	public String insertReportPost(@ModelAttribute Report report) {
-		
+
 		communityService.insertReportPost(report);
-		return "redirect:/community/getPost/"+ report.getPostNo(); 
+		return "redirect:/community/getPost/" + report.getPostNo();
 	}
-	
+
 	@GetMapping("/getListReportPost") // o
-	public String getListReportPost(@RequestParam(value = "currentPage", required = false, defaultValue = "1")Integer currentPage, Model model  ) {
-		
-		System.out.println("type : "+currentPage.getClass().getTypeName());
-		System.out.println("값 : "+currentPage);
-		
+	public String getListReportPost(
+			@RequestParam(value = "currentPage", required = false, defaultValue = "1") Integer currentPage,
+			Model model) {
+
+		System.out.println("type : " + currentPage.getClass().getTypeName());
+		System.out.println("값 : " + currentPage);
+
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
 		search.setPageSize(pageSize);
-		System.out.println("////////"+search);
-		
-		Map<String,Object> map = communityService.getListReportPost(search);		
-		Page resultPage = new Page(search.getCurrentPage(),(int)map.get("reportTotalCount"),pageUnit, pageSize);
-		System.out.println("////////"+resultPage);
+		System.out.println("////////" + search);
 
-		model.addAttribute("reportList", (List<Report>)map.get("reportList"));
+		Map<String, Object> map = communityService.getListReportPost(search);
+		Page resultPage = new Page(search.getCurrentPage(), (int) map.get("reportTotalCount"), pageUnit, pageSize);
+		System.out.println("////////" + resultPage);
+
+		model.addAttribute("reportList", (List<Report>) map.get("reportList"));
 		model.addAttribute("resultPage", resultPage);
-		//search 필요x	
-		
+		// search 필요x
+
 		return "/community/listCommunityReportPost";
 	}
-	
+
 	@PutMapping("/deleteReportPost/{postNo}") // o
 	public String deleteReportPost(@PathVariable int postNo) {
-		
+
 		communityService.deleteReportPost(postNo);
-		return "redirect:/community/getListReportPost"; 
-	}
-	
-	@GetMapping("getProfile/{userId}")
-	@ResponseBody
-	public User getProfile(@PathVariable String userId) throws Exception {
-		
-		User user = userService.getProfile(userId);
-		communityService.getListPost(null, userId);
-		
-		return null;
-	}
-	
-	@GetMapping("updateProfile")	//oo
-	//@ResponseBody
-	public String updateProfile(String userId, HttpSession session, Model model) throws Exception {
-		
-		User user = userService.getProfile(userId);
-		
-		model.addAttribute("user", user);
-		
-		return "/community/updateCommunityProfile";
-//		return user;
+		return "redirect:/community/getListReportPost";
 	}
 
-	
-	@PostMapping("updateProfile")	// oo
-//	@ResponseBody
-	public String updateProfile(String userId, @ModelAttribute User user, HttpSession session, Model model) throws Exception {
+	@GetMapping("getProfile/{userId}")
+	// @ResponseBody
+	public String getProfile(@PathVariable String userId, Model model) throws Exception {
+
+		User user = userService.getProfile(userId);
+		Search search = new Search();
+		search.setCurrentPage(1);
+		search.setPageSize(3);//
+
+		Map map = communityService.getListPost(search, userId);
+		model.addAttribute("postList", (List<Post>) map.get("postList"));
+
+		// 팔로우, 팔로워 수
+		Map<String, Object> map02 = new HashMap<>();
+		map02.put("userId", userId);
+		map02.put("relationUserId", userId);
+		map02.put("relationStatus", "0");
+
+		int followCnt = communityMapper.getRelationTotalCount(map02);
+		int followerCnt = communityMapper.getFollowerTotalCount(map02);
+
+		model.addAttribute("followCnt", followCnt);
+		model.addAttribute("followerCnt", followerCnt);
+
+		return "/community/getCommunityProfile";
+	}
+
+	@GetMapping("updateProfile") // oo
+	public String updateProfile(HttpSession session, Model model) throws Exception {
+
+		return "/community/updateCommunityProfile";
+	}
+
+	@PostMapping("updateProfile") // oo
+	public String updateProfile(@ModelAttribute User user, String[] foodCategoryName, HttpSession session, Model model)
+			throws Exception {
+
+		System.out.println("////////" + foodCategoryName.length);
 		
+		if(foodCategoryName.length == 1) {
+			user.setFoodCategoryName1(foodCategoryName[0]);
+		}else if(foodCategoryName.length == 2) {
+			user.setFoodCategoryName1(foodCategoryName[0]);
+			user.setFoodCategoryName2(foodCategoryName[1]);
+		}else {
+			user.setFoodCategoryName1(foodCategoryName[0]);
+			user.setFoodCategoryName2(foodCategoryName[1]);
+			user.setFoodCategoryName3(foodCategoryName[2]);
+		}
+
+
+		user.setUserId(((User) session.getAttribute("user")).getUserId());
 		userService.updateProfile(user);
 		session.setAttribute("user", user);
-		
-		return "redirect:/community/getProfile/"+user.getUserId();
-//		return user;
+
+		return "redirect:/community/getProfile/" + user.getUserId();
 	}
-	
-	
+
 }

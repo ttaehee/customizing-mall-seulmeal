@@ -164,19 +164,39 @@ public class CommunityServiceImpl implements CommunityService {
 		
 		Relation dbRelation = communityMapper.getRelation(relation);
 		
-		if (dbRelation != null) {
-			if(dbRelation.getRelationStatus().equals("0")) {// userId가 relationUserId를 친추한 경우
-				System.out.println("//////db에 이미 follow 존재, 데이터 삽입 x");
-				return -1;
-			}else if(dbRelation.getRelationStatus().equals("1")) {// userId가 relationUserId를 이미 블락한 경우
-				System.out.println("//////db에 이미 block 존재, 데이터 삽입 x");
-				return -1;
-			}
+		if (dbRelation == null) {
+			System.out.println("db 존재 x, insert follow!");
+			communityMapper.insertRelation(relation);
 		}
 		
-		System.out.println("/////db 존재 x, insert follow!");
+		Map<String,Object> map = new HashMap<>();
+		map.put("userId", relation.getUserId());
+		map.put("relationStatus",relation.getRelationStatus());
 		
-		return communityMapper.insertRelation(relation);
+		// 팔로워 수 구하기
+		int followCnt = communityMapper.getRelationTotalCount(map);
+		
+		return followCnt;
+	}
+	
+	@Override
+	public int deleteFollow(Relation relation) {	//o
+		
+		Relation dbRelation = communityMapper.getRelation(relation);
+		
+		if(dbRelation != null & dbRelation.getRelationStatus().equals("0")){
+			System.out.println("db 존재 o, delete follow!");
+			communityMapper.deleteRelation(dbRelation);
+		}
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("userId", relation.getUserId());
+		map.put("relationStatus", relation.getRelationStatus());
+		
+		// 팔로워 수 구하기
+		int followCnt = communityMapper.getRelationTotalCount(map);
+		
+		return followCnt;
 	}
 
 	@Override
@@ -194,7 +214,7 @@ public class CommunityServiceImpl implements CommunityService {
 
 	@Override
 	public Map<String, Object> getListFollower(Search search, String relationUserId) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, 	Object>();
 		map.put("search", search);
 		map.put("relationUserId", relationUserId);
 
@@ -204,15 +224,9 @@ public class CommunityServiceImpl implements CommunityService {
 		return map;
 	}
 
-	@Override
-	public int deleteFollow(Relation relation) {
-		
-		Relation dbRelation = communityMapper.getRelation(relation);
-		
-		return (dbRelation != null & dbRelation.getRelationStatus().equals("0")) ? communityMapper.deleteRelation(relation):-1;
-	}
 
-	@Override//불필요?
+
+	@Override
 	public int updateRelation(Relation relation) {
 		return communityMapper.updateRelation(relation);
 	}
@@ -251,11 +265,11 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public int deleteBlock(Relation relation) {
+	public int deleteBlock(Relation relation) {	//o
 		
 		Relation dbRelation = communityMapper.getRelation(relation);
 		
-		return (dbRelation != null & dbRelation.getRelationStatus().equals("1")) ? communityMapper.deleteRelation(relation):-1;
+		return (dbRelation != null & dbRelation.getRelationStatus().equals("1")) ? communityMapper.deleteRelation(dbRelation):-1;
 	}
 
 
