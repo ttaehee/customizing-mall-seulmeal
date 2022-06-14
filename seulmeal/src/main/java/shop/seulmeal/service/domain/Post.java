@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 public class Post {
 	private int postNo;
 	private User user;

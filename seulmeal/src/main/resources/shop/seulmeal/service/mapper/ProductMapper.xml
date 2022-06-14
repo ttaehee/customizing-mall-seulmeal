@@ -43,7 +43,7 @@
 
 	<select id="getListProduct" resultMap="productSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
-		( SELECT thumbnail, product_no , p.name as pName , price, sub_content, f.* FROM product p, foodcategory f
+		( SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.like_count, p.review_count, f.foodcategory_no, f.name AS foodName FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
 			<if test="searchKeyword != '' ">
@@ -65,7 +65,7 @@
 				<when test="searchSort = '6'"> p.like_count DESC</when>
 				<when test="searchSort = '7'"> p.review_count ASC</when>
 				<when test="searchSort = '8'"> p.review_count DESC</when>
-			<otherwise>p.name ASC</otherwise>
+			<otherwise>p.name DESC</otherwise>
 			</choose>
 			 ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
@@ -365,6 +365,7 @@
 		<result property="productNo" column="product_no" jdbcType="NUMERIC"/>
 	</resultMap>
 	
+	
 	<insert id="insertProductLike" parameterType="Like">
 	{	call	declare	begin
 	
@@ -397,6 +398,10 @@
 	
 	<select id="getTotalProductLikeCount" resultType="int">
 		SELECT COUNT(*) FROM likes WHERE user_id = #{userId}
+	</select>
+	
+	<select id="checkProductLike">
+	SELECT COUNT(*) FROM likes WHERE user_id = #{userId} AND product_no = #{productNo}
 	</select>
 
 	<delete id="deleteProductLike" parameterType="Like">
