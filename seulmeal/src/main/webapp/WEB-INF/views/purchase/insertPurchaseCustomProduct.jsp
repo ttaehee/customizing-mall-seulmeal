@@ -111,6 +111,7 @@
 
 		
 	<script type="text/javascript">
+	
 	const minusNo = [];
 	const minusName = [];
 
@@ -129,10 +130,20 @@
 		});
 	});	
 	
+	function search(){
+		
+		var word = $(".search").val();
+		console.log(word);
+		
+		if(word == null || word.length<1){
+			alert("추가할 재료이름을 입력하세요.");
+		}
+
+	}
+	
 
 	$(function() {
 	    $('.execpt').on('click', function() {
-<<<<<<< HEAD
 	        const partsNo = $(this).attr('data-partsNo');	        
 	        minusNo.push(partsNo);
 	        	       	        
@@ -153,7 +164,6 @@
 	    })
 	        
 	     $('.status').on('click', function() {
-=======
 	        var partsNo = $(this).attr('data-partsNo');  
 	        $(this).closest('div').find('.hiddenNo').val(partsNo);
 	        console.log(partsNo);
@@ -167,7 +177,6 @@
 	    });
 	    
 	    $('.status').on('click', function() {
->>>>>>> refs/remotes/origin/master
 	        var status = $(this).attr('data-cartStatus');    
 	        $(this).closest('div').find('.hiddenStatus').val(status);
 	        console.log(status);
@@ -243,21 +252,16 @@
 		        dataType : "json",
 		        success : function(data){	        	
 		        	console.log(data);
-<<<<<<< HEAD
+
 		        	const parts = "<div class='searchparts'> <input type='hidden' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-=======
 		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
 		        	+"<input type='hidden' class='price' name='price' value='"+data.price+"' />"
->>>>>>> refs/remotes/origin/master
 		            +"<div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
-<<<<<<< HEAD
 		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
 		            +"<input type='hidden' name='plusPrice' value='"+data.price+"'/>"
 		            +"<input type='hidden' name='plusGram' value=''/>"
 		            +"<span name='partsprice'>"+ data.price +"</span>원<br/>"
-=======
 		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
->>>>>>> refs/remotes/origin/master
 		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
             		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
            		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`

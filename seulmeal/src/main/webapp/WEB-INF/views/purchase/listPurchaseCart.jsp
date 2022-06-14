@@ -18,7 +18,7 @@
 	<style>
 		
 		h2{
-			text-align: center; 
+			text-align: left; 
 		}
 
 		h2:after {
@@ -26,7 +26,7 @@
 			display: block;
 			width: 180px;
 			border-bottom: 1px solid #bcbcbc;
-			margin: 20px auto;
+			margin: 20px 0px;
 		}
 		
 		h5:after {
@@ -44,16 +44,40 @@
 		    border: 3px solid #73AD21;
 		}
 		
-		
 	</style>
 	
+	
+	
 	 <div class="container">
-
-		<div class="page-header">
+	  <div class="row">
+		 <div class="col-xs-4" style="padding: 100px 0px 0px 0px;">
 		 	<h2>장바구니</h2>
 		 </div>
-		 
-		 <table class="table table-hover table-striped" >
+		 <div class="col-xs-4">
+		 	<div style="border:1px solid; padding:1px 0px 0px 0px; margin:20px; width:600px; margin-bottom:0px; border-radius: 3px; border-color: #969696;">
+		 			<div class="row">
+						 <div class="col-xs-4" style="padding: 10px 0px 0px 0px;">
+						 	<div style="border:1px solid; padding:10px; margin:20px; width:90px; border-radius: 4px; border-color: #969696;">
+		 						<div text-align="center">혜택정보</div>
+		 					</div>
+		 				</div>
+		 				<div class="col-xs-8" style="padding: 10px 0px 0px 0px;">
+		 					<div align="center">김태희님의 회원등급은 [슬밀프랜드]입니다.</div>
+		 					<hr style="border:1px solid; width:400px; bottom:10px"/>
+		 					<div align="center">가용포인트 : 0 P</div>
+		 				</div>				
+		 			</div>
+		 	</div>
+		 </div>
+		 <div class="col-xs-4">
+			 <br/><br/>
+		 	<svg xmlns="http://www.w3.org/2000/svg" width="100px" height="100px" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16" style="padding: 50px 0px 0px 0px;">
+  			<path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+</svg>
+		 </div>
+		</div><br/>
+		
+		 <table class="table table-hover" >
 	 
 	        <thead>
 	          <tr>
@@ -102,11 +126,11 @@
 					  </tr>  
 				  </c:forEach>
 	        </tbody>
-	      </table>
+	      </table><br/>
 	      
 	      
 	      <div class="row">
-	    	<div class="col-md-6 text-center">
+	    	<div class="col-xs-9">
 			<h5>결제예정 금액 :  <span id="total">${total}</span>원</h5>
 			
 			<h5>적립예정 포인트 : 
@@ -118,7 +142,7 @@
 			 </c:choose>
 			</h5>
 			</div>
-			<div class="col-md-6 text-right">
+			<div class="col-xs-3" style="padding: 60px 0px 0px 0px;">
 				<button class="btn btn-outline-primary" id="order" style="margin-right:10px;">전체상품주문</button>
 			</div>
 		</div>

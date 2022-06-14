@@ -15,18 +15,26 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
-<style>
+	<style>
+	 body { background: #fff; }
+		.blueone {
+		  	width: 100%;
+  			border-top: 1px solid #444444;
+  			border-collapse: collapse;
+		}  
+		th, td {
+		  border-bottom: 1px solid #444444;
+		  padding: 10px;
+		}
+		
+		
+		
+	</style>
 
-	.status{
-		padding: 0;
-		border: none;
-		background: none;
-	}
 
-</style>
-	 
 	 <br/>
 	 <div class="container">
+	 		
 	 <h2>구매내역 조회</h2>
 	 <div class="col-md-6 text-right">
 	    <form class="form-inline" name="detailForm">
@@ -42,9 +50,10 @@
 		  <input type="hidden" id="currentPage" name="currentPage" value=""/>
 		  
 		</form>
-   	</div>
+   	</div><br/><br/>
+			
 	
-	 <table class="table table-hover table-striped" >
+	 <table class="blueone" >
  
         <thead>
           <tr>
