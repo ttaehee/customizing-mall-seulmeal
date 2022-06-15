@@ -249,41 +249,25 @@ public class UserController {
 		return "main";
 	}
 	
-	@GetMapping("findUserId")
+	@GetMapping("findUserIdView")
 	public String findUserId() throws Exception {
-		 
+		
+		
 		return "user/findUserIdView";
 	}
 	
 	@PostMapping("findUserId")
-	public String findUserId(String name,String phone, String email, Model model) throws Exception {
+	public String findUserId(String email, Model model) throws Exception {
+		System.out.println(":: email : "+email);
+		email = email.replace(",", "");
+		System.out.println(":: email2 : "+email);
 		
-		if(phone !=null) {
-			User user = userService.confirmUserPhone(phone);
-
-			if (name.equals(user.getUserName())) {
-				model.addAttribute("userId", user.getUserId());
-
-				return "user/findUserId";
-
-			} else {
-				return "<script>alert('등록된 아이디가 없습니다.');</script>";
-			}
-			
-		} else {
-			
-			User user = userService.confirmUserEmail(email);
-			
-			if (name.equals(user.getUserName())) {
-				model.addAttribute("userId", user.getUserId());
-
-				return "user/findUserId";
-
-			} else {
-				return "<script>alert('등록된 아이디가 없습니다.');</script>";
-			}
-		}
+		User user = userService.confirmUserEmail(email);
 		
+		model.addAttribute("user" , user);
+		
+			return "user/findUserId";
+
 	}
 	
 		
@@ -477,7 +461,6 @@ public class UserController {
 //		return "redirect:/";
 //		
 //	}
-	
 	
 
 }

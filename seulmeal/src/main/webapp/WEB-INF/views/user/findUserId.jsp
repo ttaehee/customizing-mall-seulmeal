@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+<jsp:include page="../layer/header.jsp"></jsp:include>
+${user.userId}
+<jsp:include page="../layer/footer.jsp"></jsp:include>
 </body>
 </html>
