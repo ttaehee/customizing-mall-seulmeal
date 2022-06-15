@@ -48,6 +48,8 @@ public class ProductController {
 	int pageUnit = 5;
 	int pageSize = 5;
 
+	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
+	
 	public ProductController() {
 		// TODO Auto-generated constructor stub
 		System.out.println(this.getClass());
@@ -64,29 +66,41 @@ public class ProductController {
 
 	@PostMapping("insertProduct")
 	@Transactional
-	public String insertProduct(Product product, Foodcategory f, Model model, String partsNo, String partsName)
+	public String insertProduct(Product product, Foodcategory f, Model model, String partsNo, String partsName,MultipartFile thumbnailFile)
 			throws Exception {
 		product.setFoodCategory(f);
+		
+		System.out.println(thumbnailFile);
+		if(thumbnailFile != null) {
+			String thumbnailName = UUID.randomUUID().toString()+"_"+thumbnailFile.getOriginalFilename();
+			
+			File newFileName = new File(path,thumbnailName);
+			thumbnailFile.transferTo(newFileName);
+			product.setThumbnail(thumbnailName);
+		}
+		
 		productService.insertProduct(product);
 
 		List<Parts> list = new ArrayList<Parts>();
-		String[] no = partsNo.split(",");
-		String[] name = partsName.split(",");
+		if(partsNo != null) {
+			String[] no = partsNo.split(",");
+			String[] name = partsName.split(",");
 
-		for (int i = 0; i < no.length; i++) {
-			Parts parts = new Parts();
-			parts.setPartsNo(new Integer(no[i]));
-			parts.setName(name[i]);
-			parts.setProductNo(product.getProductNo());
-			System.out.println(parts);
-			list.add(parts);
-		}
+			for (int i = 0; i < no.length; i++) {
+				Parts parts = new Parts();
+				parts.setPartsNo(new Integer(no[i]));
+				parts.setName(name[i]);
+				parts.setProductNo(product.getProductNo());
+				System.out.println(parts);
+				list.add(parts);
+			}		
 
-		int r = productService.insertProudctParts(list);
-
-		if (r == no.length) {
-			System.out.println("성공");
-		}
+			int r = productService.insertProudctParts(list);
+			
+			if (r == no.length) {
+				System.out.println("성공");
+			}
+		}		
 
 		System.out.println("상품 : " + product);
 		return "redirect:/product/getProduct/"+product.getProductNo();

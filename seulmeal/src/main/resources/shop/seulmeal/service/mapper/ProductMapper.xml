@@ -46,6 +46,7 @@
 		( SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.like_count, p.review_count, f.foodcategory_no, f.name AS foodName FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
+			AND p.status = '0'
 			<if test="searchKeyword != '' ">
 				AND (
 				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'
@@ -77,6 +78,7 @@
 		SELECT product_no FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
+			AND p.status = '0'
 			<if test="searchKeyword != '' ">
 				AND (
 				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'

@@ -69,14 +69,17 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	}
 
 	@Override
-	public Map<String, Object> summerCopy(@RequestParam(value="file[]") List<String> fileList) {
+	public void summerCopy(List<String> fileList) {
 		// TODO Auto-generated method stub
 		Map<String,Object> result = new HashMap<String,Object>();
+		System.out.println(fileList);
 		
-		for(int i=0; i<fileList.size(); i++) {
-			
-		}
+		if(fileList.size() != 0) {
+			for (String fileName : fileList) {
+				File file = new File(path+fileName);
+				file.delete();
+			}
+		}		
 		
-		return null;
 	}
 }

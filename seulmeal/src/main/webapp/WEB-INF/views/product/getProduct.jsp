@@ -138,7 +138,7 @@ textarea {
 		<div class="row">
 			<div class="col-md-6" style="height: 700px">
 				<c:if test="${!empty product.name}">
-					<img src="../images/uploadFiles/${product.name}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
+					<img src="/resources/attachments/${product.thumbnail}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
 				</c:if>
 				<c:if test="${empty product.name}">
 					<img src="http://folo.co.kr/img/gm_noimage.png" alt="..." class="img-thumbnail">
