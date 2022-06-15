@@ -4,6 +4,7 @@
 <html lnag="ko">
 
 <head>
+<title>login</title>
 	<meta charset="UTF-8">
 	<title>슬밀 로그인</title>
 	<link rel="stylesheet" href="style.css">
@@ -252,9 +253,9 @@ input{
 					<label for="stay-checkbox" id="stay-text" >로그인 상태 유지</label>
 				</span>
 			</div>
-
 		</section>
-</form>
+		</form>
+		</div>
 		<!--간편한 로그인 부분-->
 		<section id="easy-login-wrap">
 			<div id="easy-login-wrap-ko">
@@ -292,9 +293,9 @@ input{
 				</span>
 			</div>
 		</section>
-
-	</div>
-
+<button onclick="showLoginPopup()">test</button>
+	
+<div id="naver_id_login"></div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
 	$("#checkLogin").on("change",()=>{
@@ -305,7 +306,18 @@ input{
 			result.value = "0";
 		}
 	})
-</script>
+	
+	function showLoginPopup(){
+        let uri = 'https://nid.naver.com/oauth2.0/authorize?' +
+            'response_type=code' +                  // 인증과정에 대한 내부 구분값 code 로 전공 (고정값)
+            '&client_id=9v2VufeHsXfFnp8KaD49' +     // 발급받은 client_id 를 입력
+            '&state=NAVER_LOGIN_TEST' +             // CORS 를 방지하기 위한 특정 토큰값(임의값 사용)
+            '&redirect_uri=http://localhost:7100/user/naver';   // 어플케이션에서 등록했던 CallBack URL를 입력
 
+        // 사용자가 사용하기 편하게끔 팝업창으로 띄어준다.
+        window.open(uri, "Naver Login Test PopupScreen");
+    }
+	
+</script>
 </body>
 </html>

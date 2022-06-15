@@ -32,6 +32,7 @@ import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.naver.impl.KakaoAPI;
+import shop.seulmeal.service.naver.impl.LoginService;
 import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
@@ -44,7 +45,10 @@ public class UserController {
 
 	@Autowired
 	private ProductService productService;
-
+	
+	@Autowired
+	private LoginService loginService;
+	
 	@Autowired
 	KakaoAPI kakaoApi;
 	
@@ -462,5 +466,22 @@ public class UserController {
 //		
 //	}
 	
+	@GetMapping("naver")
+	public String naver(@RequestParam Map<String, String> resValue, HttpSession session) throws Exception {
+		System.out.println(resValue);
+		String token = loginService.getNaverAccessToken(resValue.get("state"), resValue.get("code"));
+		User user = loginService.getUserInfo(token);
+		System.out.println(user);
+		
+		int result = userService.confirmUserId(user.getUserId());		
+		
+		if(result == 0) {
+			userService.insertUser(user);
+		}
+		user = userService.getUser(user.getUserId());
+		session.setAttribute("user", user);
+		
+		return "redirect:/";
+	}
 
 }

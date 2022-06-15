@@ -20,6 +20,7 @@ import shop.seulmeal.service.confirm.ConfirmService;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.naver.impl.KakaoAPI;
+import shop.seulmeal.service.naver.impl.LoginService;
 import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
@@ -35,6 +36,9 @@ public class UserRestController {
 	
 	@Autowired
 	private ConfirmService confirmService;
+	
+	@Autowired
+	private LoginService loginService;
 	
 
 	public UserRestController() {
@@ -134,6 +138,13 @@ public class UserRestController {
 		return null;
 	}
 	
-
+	@GetMapping("api/naver")
+	public String authNaver(@RequestParam Map<String, String> resValue) {
+		System.out.println(resValue);
+		String token = loginService.getNaverAccessToken(resValue.get("state"), resValue.get("code"));
+		User user = loginService.getUserInfo(token);
+		System.out.println(user);
+		return "code : ";
+	}
 
 }
