@@ -47,4 +47,6 @@ public interface CommunityService {
 	public int deleteBlock(Relation relation);
 	
 	
+	public int postViewsUp(int postNo);
+	
 }

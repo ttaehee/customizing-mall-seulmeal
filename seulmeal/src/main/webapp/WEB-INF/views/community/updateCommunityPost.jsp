@@ -31,31 +31,58 @@ h1{
 	<br/><br/><br/>
 
 	<div class="container">
-	<form action="/community/updatePost" method="POST" enctype="multipart/form-data">
-		<div class="row">
-			<div class="col-md-12">
-				제목 : <input id="title" name="title"  value = "${post.title}"/>
+	<!-- enctype="multipart/form-data" -->
+		<form action="/community/updatePost/${post.postNo}" method="POST" >
+			<div class="row">
+				<div class="col-md-12">
+					제목 : <input id="title" name="title"  value = "${post.title}"/>
+				</div>
+				<div class="col-md-12">
+					<textarea id="summernote" name="content">${post.content}</textarea>		
+				</div>
 			</div>
-			<div class="col-md-12">
-				<textarea id="summernote" name="content">${post.content}</textarea>		
-			</div>
-		</div>
-		<div style="display:flex; justify-content: space-between;">
-			<div >
-				<input type="file" name="uploadfile" multiple="multiple" />
-			</div>
-			<div>
-				<button type="submit" class="btn btn-primary">
-					수정
-				</button>
-			</div>
-		</div>	
-	</form>
+			<div style="display:flex; justify-content: space-between;">
+				<div >
+					<input type="file" name="uploadfile" multiple="multiple" />
+					
+					<!-- 업로드했던 첨부파일 불러오기 -->
+					<c:forEach var="attachments" items="${post.attachments}">
+                     <div data-value="${attachments.attachmentNo}">${attachments.attachmentName}
+                     	<button type="button" onclick="deleteAttachment(this)" class="btn btn-primary">x</button>
+                     </div>
+             	    </c:forEach>
+					
+				</div>
+				<div>
+					<button onclick="updateBtn()" type="button" class="btn btn-primary">
+               		수정
+            		</button>
+				</div>
+			</div>	
+		</form>
 	</div>
 
 
 
 <script>
+
+const deleteAttachmentNo = [];
+const deleteAttachmentName = [];
+
+function deleteAttachment(e){
+   const no = $(e).closest("div").data("value");
+   const name = $(e).closest("div").text();	// ${attachments.attachmentName}
+   deleteAttachmentNo.push(no);
+   deleteAttachmentName.push(name);
+   $(e).closest("div").css("display","none");
+}
+
+function updateBtn(){
+   $("#updateForm").append(`<input name="deleteAttachmentNo" value="\${deleteAttachmentNo}" />`);
+   $("#updateForm").append(`<input name="deleteAttachmentName" value="\${deleteAttachmentName}" />`);
+   $("#updateForm").submit();
+}
+
 
 $(document).ready(function () {
 	$('#summernote').summernote({
@@ -82,27 +109,6 @@ $(document).ready(function () {
 });
 </script>
 
-
-
-
-	<!-- div style="width: 60%; margin: auto;">
-		<form method="POST" action="/insertPost">
-			<input type="text" name="title" style="width: 40%;" placeholder="제목" /> <br>
-			<br>
-			<textarea id="summernote" name="content"></textarea>
-			<input id="subBtn" type="button" value="등록하기" style="float: right;"
-			onclick="goWrite(this.form)" />
-		</form>
-	</div-->
-
-
-	<!-- script>
-		$('#summernote').summernote({
-			placeholder : 'Hello Bootstrap TEST',
-			height : 400,
-			dialogsInBody : true
-		});
-	</script-->
 
 </body>
 
