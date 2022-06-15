@@ -12,5 +12,5 @@ public interface AttachmentsService {
 	public int insertAttachments(MultipartFile[] uploadFile, Attachments attachments) throws IllegalStateException, IOException;
 	public int deleteAttachments(int no);
 	public List<Attachments> getAttachments(Map<String,Object> map);
-	public Map<String, Object> summerCopy(List<String> fileList);
+	public void summerCopy(List<String> fileList);
 }

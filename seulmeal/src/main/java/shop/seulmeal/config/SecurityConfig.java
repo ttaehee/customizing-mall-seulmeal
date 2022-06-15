@@ -11,9 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import shop.seulmeal.common.CustomAuthenticationSuccessHandler;
 
@@ -70,6 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.tokenValiditySeconds(60*60);
 		
 		http
+		.cors().configurationSource(corsConfigurationSource())
+		.and()
 		.csrf().disable();
 		
 	}
@@ -80,4 +84,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new CustomAuthenticationSuccessHandler("/");
 	}
 	
+	@Bean 
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
+	
+
