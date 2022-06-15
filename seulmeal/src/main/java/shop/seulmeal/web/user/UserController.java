@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
@@ -30,6 +31,7 @@ import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.User;
+import shop.seulmeal.service.naver.impl.KakaoAPI;
 import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
@@ -42,6 +44,9 @@ public class UserController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	KakaoAPI kakaoApi;
 	
 	int pageUnit = 10;	
 	int pageSize = 10;
@@ -424,7 +429,54 @@ public class UserController {
 	}
 	
 	
+	@RequestMapping(value="kakaoLogin")
+	public String kakaoLogin(@RequestParam("code") String code, HttpSession session) throws Exception {
+		
+		ModelAndView mav = new ModelAndView();
+		System.out.println("::code : "+code);
+		
+		//1번 인증코드 전달
+		String accessToken = kakaoApi.getAccessToken(code);
+		//2번 인증코드로 토큰 전달
+		HashMap<String, Object> userInfo = kakaoApi.getUserInfo(accessToken);
+		
+		System.out.println("login info : "+userInfo.toString());
+		
+		
+		if(userInfo.get("email") !=null && userService.getUser((String)userInfo.get("email")) ==null) {
+			
+			User user = new User();
+			user.setUserId((String)userInfo.get("email"));
+			user.setUserName((String)userInfo.get("nickname"));
+			user.setPassword((String)userInfo.get("email"));
+			user.setEmail((String)userInfo.get("email"));
+			user.setNickName((String)userInfo.get("nickname"));
+			user.setPhone("010-000-0000");
+			userService.insertUser(user);
+			
+			user =userService.getUser((String)userInfo.get("email"));
+			session.setAttribute("user", user);
+		} else {
+			User user = userService.getUser((String)userInfo.get("email"));
+			System.out.println("::user : "+user);
+			session.setAttribute("user", user);
+		}
+			
+		return "redirect:/";
+	}
 	
+//	@RequestMapping(value = "api/logout")
+//	public String kakaoLogout(HttpSession session) {
+//		ModelAndView mav = new ModelAndView();
+//		
+//		kakaoApi.kakaoLogout((String)session.getAttribute("access_token"));
+//		session.removeAttribute("access_token");
+//		session.removeAttribute("userId");
+//		mav.setViewName("index");
+//		
+//		return "redirect:/";
+//		
+//	}
 	
 	
 

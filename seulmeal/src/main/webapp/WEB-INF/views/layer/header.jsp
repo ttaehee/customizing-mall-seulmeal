@@ -80,8 +80,8 @@
 	    <div class="float-right" style="margin-right: 30px; padding-top:10px;">
         	
         	<c:if test="${ empty user }">
-	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">Login</button>
-	        	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
+	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">로그인</button>
+	        	<button type="button" class="btn btn-primary" onclick="join()">회원가입</button>
         	</c:if>
         	
         	<c:if test="${ !empty user }">
