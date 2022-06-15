@@ -80,8 +80,8 @@
 	    <div class="float-right" style="margin-right: 30px; padding-top:10px;">
         	
         	<c:if test="${ empty user }">
-	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">Login</button>
-	        	<button type="button" class="btn btn-primary" onclick="join()">Sign-up</button>
+	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">로그인</button>
+	        	<button type="button" class="btn btn-primary" onclick="join()">회원가입</button>
         	</c:if>
         	
         	<c:if test="${ !empty user }">
@@ -124,7 +124,7 @@
 	      <ul class="navbar-nav nav">
 	      	<li class="nav-item dropdown">
 	          <a class="nav-link dropdown-toggle headerNav" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            전체카테고리
+	           전체카테고리
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	          	<c:forEach var="foodcategory" items="${fList}">
