@@ -66,7 +66,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 			.maximumSessions(1)
 			.maxSessionsPreventsLogin(true);
-			
+		
+		http
+		.oauth2Login()
+			.loginPage("/");
+		
 		http
 		.rememberMe()
 			.key("loginCookie")

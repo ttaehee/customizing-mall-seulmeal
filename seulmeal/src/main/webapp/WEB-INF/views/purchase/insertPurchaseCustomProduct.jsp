@@ -80,7 +80,7 @@
 					<div class="form-outline">
 						<input name="searchKeyword" type="search" class="form-control search" val="" />
 					</div>		  
-					<button type="button" class="btn btn-primary partSearch" onclick="search()">
+					<button type="button" class="btn btn-primary partSearch">
 						<i class="bi bi-search"></i>
 					</button>
 				
@@ -209,9 +209,10 @@
             $("#total").text(plus);
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text());
-		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(pgram);
+		console.log(pgram)
+		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(10);
 		const pprice = $(ths).closest("div").find("input[name='plusPrice']").val();
-		console.log(ppgram.val())
+		console.log($(ths).closest("div").find("input[name='plusGram']"))
 		
 		console.log($(ths).closest("div").find("span[name='gram']").text());
 		
@@ -253,7 +254,6 @@
 		        success : function(data){	        	
 		        	console.log(data);
 
-		        	const parts = "<div class='searchparts'> <input type='hidden' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
 		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
 		        	+"<input type='hidden' class='price' name='price' value='"+data.price+"' />"
 		            +"<div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
@@ -266,7 +266,7 @@
             		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
            		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
 	               + "</div></div>"
-		        	$(".plusparts").append(parts);    
+		        	$(".plusparts").append(parts);
 	                
 	                const productprice = $("#total").text();
 	                const result = parseInt(productprice)+parseInt(data.price);
@@ -275,50 +275,8 @@
 			})
 		})
 	})
-	
-	
-	    function send() {
-	
-		let dataList=[];
-		const child = document.querySelector('.plusparts').childNodes;
 		
-		child.forEach(function(item){
-			const partsNo = item.querySelector('input.partsNo').value();
-			const name = item.querySelector('input.partsNo').value();
-			const price = item.querySelector('input.price').value();
-			
-			const obj={
-					partsNo : partsNo,
-					name : name,
-					price : price
-				};
-			
-			dataList.push(obj);
-		});
-			
-			console.log(dataList);
-			console.log(JSON.stringify(dataList));
-			
-			if(dataList.length>0){
-				$.ajax({
-					url: '/purchase/insertCustomProduct' ,
-					data:{
-						param: JSON.stringify(dataList)
-					},
-					method: 'POST',
-					success: function(result){
-						console.log(result);
-					}
-				});
-			}
-	    }
-
-	
-	
-	
-	
-	
-	
+	  
 	
 	
 </script>
