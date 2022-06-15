@@ -62,14 +62,14 @@
 	    <label for="Email3" class="col-sm-2 control-label">이메일</label>
 	    <div class="col-sm-10">	    	
 		    <div class="inputBar">
-				<input style="width: 100%;" type="text" class="form-control" id="email" name="email" placeholder="Email">
+				<input style="width: 100%;" type="text" class="form-control" id="email" name="emaile" placeholder="Email">
 				<input id="emailBtn" onclick="emailCheck()" value="인증하기" type="button" class="btn btn-default" disabled="disabled">
 		    </div>
 	    </div>
 	   
 	    <div class="col-sm-10" id="emailCheckForm" style="display: none;">
 			<div class="inputBar">
-				<input style="width: 100%;" type="text" class="form-control" id="emailCode" placeholder="인증번호를 입력하세요">
+				<input name="email" style="width: 100%;" type="text" class="form-control" id="emailCode" placeholder="인증번호를 입력하세요">
 				<input type="button" onclick="confirmEmail()" class="btn btn-default" value="인증확인">
 			</div>
 	    </div>

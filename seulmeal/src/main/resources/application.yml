@@ -23,7 +23,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
       #location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/
-      location: C:/Users/GHM/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/
+      #location: C:/Users/GHM/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/
+      location: ./src/main/webapp/resources/attachments/
 
   datasource:
     url: jdbc:log4jdbc:oracle:thin:@db202204092247_medium?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247

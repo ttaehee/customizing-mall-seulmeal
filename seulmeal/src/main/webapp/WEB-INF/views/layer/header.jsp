@@ -85,7 +85,6 @@
         	</c:if>
         	
         	<c:if test="${ !empty user }">
-
         		<div class="dropdown show">
 					<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<c:if test="${user.profileImage == null}">
@@ -99,6 +98,7 @@
 					<div class="dropdown-menu dropdown-menu-right text-small shadow" aria-labelledby="dropdownMenuLink">
 						<a class="dropdown-item" href="/user/getUpdateUser/${user.userId}">내 정보</a>
 						<a class="dropdown-item" href="/user/listUserPoint/1">내 포인트</a>
+						<a class="dropdown-item" href="/purchase/getListCustomProduct">내 장바구니</a>
 						<a class="dropdown-item" href="/purchase/getListPurchase">내 구매내역</a>
 						<a class="dropdown-item" href="/community/getProfile/${user.userId}">내 게시글</a>
 
@@ -107,7 +107,7 @@
 						</c:if>
 							<a class="dropdown-item" href="/user/logout">로그아웃</a>
 					</div>
-				</div>
+				</div>		
         	</c:if>        	
 
         	

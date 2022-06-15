@@ -55,6 +55,7 @@ public class User implements UserDetails {
 	//private List<> follow;
 	private List<Relation> relation;
 	private List<Like> wish;
+	private int totalPoint;
 	
 	
 	@Override
