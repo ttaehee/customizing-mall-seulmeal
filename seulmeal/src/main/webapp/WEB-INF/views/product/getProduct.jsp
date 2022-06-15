@@ -13,7 +13,23 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>-->
 
 
+<style>	/* 리뷰등록 모달창 CSS */
+.modal{ 
+  position:absolute; width:100%; height:100%; background: rgba(0,0,0,0.8); top:0; left:0; display:none;
+}
+
+.modal_content{
+  width:400px; height:300px;
+  background:#fff; border-radius:10px;
+  position:relative; top:50%; left:50%;
+  margin-top:-100px; margin-left:-200px;
+  text-align:center;
+  box-sizing:border-box; padding:74px 0;
+  line-height:23px;
+}
+</style>
 <style>
+
 @font-face {
 	font-family: 'GmarketSansMedium';
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
@@ -107,6 +123,8 @@ textarea {
 	bottom: 0;
 	width: 100%;
 }
+
+
 </style>
 
 </head>
@@ -120,7 +138,7 @@ textarea {
 		<div class="row">
 			<div class="col-md-6" style="height: 700px">
 				<c:if test="${!empty product.name}">
-					<img src="../images/uploadFiles/${product.name}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
+					<img src="/resources/attachments/${product.thumbnail}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
 				</c:if>
 				<c:if test="${empty product.name}">
 					<img src="http://folo.co.kr/img/gm_noimage.png" alt="..." class="img-thumbnail">
@@ -143,11 +161,15 @@ textarea {
 				</div>
 
 				<div class="box-line">
-					<div style="display: flex; justify-content: space-between;">
-						<h4>${user.userId}님을위한혜택</h4>
-						<input id="coupon" type="hidden" name="coupon" value="" />
-						<button class="btn btn-primary couponBtn">쿠폰 받기</button>
-					</div>
+
+					<c:if test="${user.userId != null}">
+						<div style="display: flex; justify-content: space-between;">
+							<h4>${user.userId}님을 위한 혜택</h4>
+							<input id="coupon" type="hidden" name="coupon" value="" />
+							<button class="btn btn-primary couponBtn">쿠폰 받기</button>
+						</div>
+					</c:if>
+
 					<hr />
 					<div>
 						<div style="display: flex; justify-content: space-between;">
@@ -180,18 +202,28 @@ textarea {
 				<div class="col-md-12">
 					<div class="row">
 						<div style="margin-top: 10px; width: 100%;">
-							<c:if test="${product.stock !=0}">
-								<button class="btn btn-primary" style="width: 100%;">장바구니 담기</button>
+							<c:if test="${user == null }">
+								<button class="btn btn-primary" disabled="disabled" style="width: 55%;">로그인 후 구매할 수 있습니다.</button>
 							</c:if>
-							<c:if test="${product.stock ==0}">
-								<button class="btn btn-primary" disabled="disabled">장바구니 담기</button>
+							<c:if test="${user != null }">
+								<c:choose>
+								<c:when test="${product.stock !=0}">
+									<button class="btn btn-primary" style="width: 55%;">장바구니 담기</button>
+								</c:when>
+								<c:otherwise>
+									<button class="btn btn-primary" disabled="disabled">품절되었습니다.</button>
+								</c:otherwise>
+								</c:choose>
 							</c:if>
+							
+								<button class="btn btn-primary" style="width: 43%;">관련상품</button>
 						</div>
 						<div style="margin-top: 10px; width: 100%;">
 							<div style="display: flex; justify-content: space-between; margin-top: 10px">
-								<button class="btn btn-primary" style="width: 32%;">문의하기</button>
-								<button class="btn btn-primary" style="width: 32%;">리뷰하기</button>
-								<button class="btn btn-primary" style="width: 32%;">관련상품</button>
+								<c:if test="${user != null }">
+								<button class="btn btn-primary" style="width: 55%;">문의하기</button>
+								<button class="btn btn-primary" style="width: 43%;">리뷰등록</button>
+								</c:if>
 							</div>
 						</div>
 					</div>
@@ -199,32 +231,34 @@ textarea {
 			</div>
 		</div>
 
+		<!-- 아코디언 헤더 -->
 		<div class="card-header" id="headingOne" style="display: flex; justify-content: center; margin-top: 40px;">
-			<!-- 1번 -->
+			<!-- 아코디언 1번 -->
 			<h2 class="mb-0">
 				<a class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 상세내용 </a>
 			</h2>
 
-			<!-- 2번 -->
+			<!-- 아코디언 2번 -->
 			<h2 class="mb-0">
 				<a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> 배송/교환/반품 안내 </a>
 			</h2>
 
-			<!-- 3번 -->
+			<!-- 아코디언 3번 -->
 			<h2 class="mb-0">
 				<a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> 상품평 </a>
 			</h2>
 		</div>
 
+		<!-- 아코디언 바디 -->
 		<div class="container" style="margin-top: 20px;">
 			<div id="accordion">
 				<div class="card">
-					<!-- 1번 -->
+					<!-- 상품 아코디언 -->
 					<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
 						<div class="card-body">${product.content }</div>
 					</div>
 
-					<!-- 2번 -->
+					<!-- 안내 아코디언 -->
 					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 						<div class="card-body">
 							<section class="customer_wrap2">
@@ -266,7 +300,7 @@ textarea {
 						</div>
 					</div>
 
-					<!-- 3번 -->
+					<!-- 리뷰 아코디언 -->
 					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 						<div class="card-body">
 
@@ -292,25 +326,31 @@ textarea {
 									</c:forEach>
 								</tbody>
 							</table>
-
-							<hr />
-							<c:if test="${user != null}">
-								<div class="seulBtn" onclick="insertReview()" style="float: right;">리뷰 작성</div>
-							</c:if>
-							<script type="text/javascript">
-	function insertReview(){
-		window.location.href = "/product/insertReview/${product.productNo}";
-	}
-</script>
-
+							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
-
 	</div>
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
+	
+<div class="modal">	<!-- 리뷰 등록 모달창 -->
+	<div class="modal_content">
+		<form action="/product/insertReview/${product.productNo }" method="POST">
+			상품명 : ${product.name} <br />
+			작성자명 : ${user.userName }<br />
+			리뷰 제목 : <input name="title" /><br />
+			리뷰 내용 : <input name="content" /><br />
+			별점 : <input name="rating" /><br />
+			<br/>
+			<button type="submit" id="insertReviewDone">저장</button>
+			<button type="button" id="insertReviewCancel">취소</button>
+		</form>
+	</div>
+</div>
+
+
 	<script type="text/javascript">
 	const fncCoupon = (()=>{
 	    const num = [];
@@ -380,17 +420,28 @@ textarea {
 			 self.location = "/purchase/insertCustomProduct/${product.productNo}";
 		 })
 		 
-		 //리뷰
-		 $(".btn-primary:contains('리뷰하기')").on("click", function(){
-			 self.location = "/product/insertReview/${product.productNo}";
-		 })
-		 
 		  //관련상품
 		 $(".btn-primary:contains('관련상품')").on("click", function(){
 			 self.location = "/product/getListProduct/${product.foodCategory.foodCategoryNo}";
 		 })
 	});
 </script>
+
+<!-- 리뷰 등록 모달창  JS -->
+<script>
+$(function(){ 
+
+  $(".btn-primary:contains('리뷰등록')").click(function(){
+    $(".modal").fadeIn();
+  });
+  
+  $("#insertReviewCancel").click(function(){
+    $(".modal").fadeOut();
+  });
+  
+});
+</script>
+
 	<br />
 	<br />
 </body>

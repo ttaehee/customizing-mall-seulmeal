@@ -78,9 +78,9 @@
 			<form class="searchProduct">
 				<div style="display:flex;">	
 					<div class="form-outline">
-						<input name="searchKeyword" type="search" class="form-control search" />
+						<input name="searchKeyword" type="search" class="form-control search" val="" />
 					</div>		  
-					<button type="button" class="btn btn-primary partSearch">
+					<button type="button" class="btn btn-primary partSearch" onclick="search()">
 						<i class="bi bi-search"></i>
 					</button>
 				
@@ -103,7 +103,7 @@
 		<div class="container">
 		
 		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="0" onClick="send()">바로 구매하기</button>
-		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="sendt()">장바구니 담기</button>
+		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="send()">장바구니 담기</button>
 		<a href="#" role="button" >취&nbsp;소</a>
 		<input class="hiddenStatus" type="hidden" name="cartStatus" value="0"/> 
 		</div>
@@ -111,6 +111,7 @@
 
 		
 	<script type="text/javascript">
+	
 	const minusNo = [];
 	const minusName = [];
 
@@ -128,10 +129,21 @@
 				$("form")[0].reset();
 		});
 	});	
+	
+	function search(){
+		
+		var word = $(".search").val();
+		console.log(word);
+		
+		if(word == null || word.length<1){
+			alert("추가할 재료이름을 입력하세요.");
+		}
+
+	}
+	
 
 	$(function() {
 	    $('.execpt').on('click', function() {
-<<<<<<< HEAD
 	        const partsNo = $(this).attr('data-partsNo');	        
 	        minusNo.push(partsNo);
 	        	       	        
@@ -152,7 +164,6 @@
 	    })
 	        
 	     $('.status').on('click', function() {
-=======
 	        var partsNo = $(this).attr('data-partsNo');  
 	        $(this).closest('div').find('.hiddenNo').val(partsNo);
 	        console.log(partsNo);
@@ -160,12 +171,12 @@
 	        var partsName = $(this).attr('data-partsName'); 
 	        $(this).closest('div').find('.hiddenName').val(partsName);
 	        console.log(partsName);
+	        alert(partsName+" 제외되었습니다.")
 	        
 	        this.setAttribute("disabled", "disabled");
 	    });
 	    
 	    $('.status').on('click', function() {
->>>>>>> refs/remotes/origin/master
 	        var status = $(this).attr('data-cartStatus');    
 	        $(this).closest('div').find('.hiddenStatus').val(status);
 	        console.log(status);
@@ -241,21 +252,16 @@
 		        dataType : "json",
 		        success : function(data){	        	
 		        	console.log(data);
-<<<<<<< HEAD
+
 		        	const parts = "<div class='searchparts'> <input type='hidden' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-=======
 		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
 		        	+"<input type='hidden' class='price' name='price' value='"+data.price+"' />"
->>>>>>> refs/remotes/origin/master
 		            +"<div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
-<<<<<<< HEAD
 		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
 		            +"<input type='hidden' name='plusPrice' value='"+data.price+"'/>"
 		            +"<input type='hidden' name='plusGram' value=''/>"
 		            +"<span name='partsprice'>"+ data.price +"</span>원<br/>"
-=======
 		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
->>>>>>> refs/remotes/origin/master
 		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
             		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
            		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`

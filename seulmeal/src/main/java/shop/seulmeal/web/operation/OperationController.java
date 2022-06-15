@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpSession;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
@@ -82,13 +85,27 @@ public class OperationController {
 	
 	@PostMapping("insertOperation")
 	@Transactional
-	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile, MultipartFile thumnailFile, Attachments attachments) throws IllegalStateException, IOException {
-		User user = new User();
-		user.setUserId("jeong");
+	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile,
+					MultipartFile thumnailFile, Attachments attachments, String summerImg, HttpSession session) throws IllegalStateException, IOException {
+		User user = (User)session.getAttribute("user");
 		post.setUser(user);
 		
-		// �뜽�궡�씪 ���옣
-		if(!thumnailFile.isEmpty()) {
+		System.out.println("TST  :   "+summerImg);		
+		List<String> imgList = new ArrayList<String>();
+		
+		if(summerImg != null) {
+			String[] sImg = summerImg.split(",");		
+			for(int i=0; i<sImg.length; i++) {
+				if(!post.getContent().contains(sImg[i])) {
+					imgList.add(sImg[i]);
+				}
+			}
+			attachmentsService.summerCopy(imgList);
+		}
+		
+		System.out.println("POST 1번  :"+post);
+		// 이벤트 썸내일
+		if(thumnailFile != null) {
 			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
 			post.setThumnail(name);
 			
@@ -96,7 +113,7 @@ public class OperationController {
 			thumnailFile.transferTo(newFileName);
 		}
 		
-		System.out.println("POST 媛��졇�삩嫄� :"+post);
+		System.out.println("POST  :"+post);
 		operationService.insertOperation(post);
 		
 		System.out.println(uploadfile.length);
@@ -107,7 +124,7 @@ public class OperationController {
 		}
 		model.addAttribute("post",post);
 		
-		return "redirect:getOperation/"+post.getPostNo();		
+		return "redirect:getOperation/"+post.getPostStatus()+"/"+post.getPostNo();		
 	}
 	
 	@GetMapping("getOperation/{postStatus}/{postNo}")
@@ -154,6 +171,13 @@ public class OperationController {
 		
 		post = operationService.getOperation(post);
 		
+		// 첨부파일
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("postNo", post.getPostNo());
+		
+		List<Attachments> list = attachmentsService.getAttachments(map);
+		post.setAttachments(list);
+		
 		model.addAttribute("post",post);
 		
 		if(post.getPostStatus().equals("1")){
@@ -166,13 +190,25 @@ public class OperationController {
 	}
 	
 	@PostMapping("updateOperation")
-	public String updateOperation(Post post, Model model) {
-		System.out.println("�뾽�뜲�씠�듃 �닔�젙�븷 �궡�슜 : "+post);
+	public String updateOperation(Post post, Model model, Attachments attachments,
+							MultipartFile[] uploadfile, String deleteAttachmentNo, String deleteAttachmentName) throws IllegalStateException, IOException {
+		System.out.println("수정사항 : "+post);
+		
+		// 삭제
+		attachmentsService.deleteAttachments(deleteAttachmentNo,deleteAttachmentName);
+		// 등록
+		System.out.println(uploadfile.length);
+		if(uploadfile.length > 1) {
+			attachments.setPostNo(Integer.toString(post.getPostNo()));
+			
+			attachmentsService.insertAttachments(uploadfile, attachments);
+		}
+		
 		operationService.updateOperation(post);
 		
 		model.addAttribute("post",post);
 		
-		return "redirect:getOperation/"+post.getPostNo();
+		return "redirect:getOperation/"+post.getPostStatus()+"/"+post.getPostNo();
 	}
 	
 	@GetMapping(value={"getListOperation/{postStatus}/{currentPage}/{searchCondition}",
