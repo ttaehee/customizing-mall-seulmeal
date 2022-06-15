@@ -236,6 +236,7 @@ input{
 	<div class="main">
 		<!--로그인 부분-->
 		<section class="login-wrap">
+			<form action="/user/login" method="post">
 			<h1>슬밀</h1>
 			<div class="login-id-wrap">
 				<input id="input-id" name="userId" placeholder="아이디" type="text"></input>
@@ -244,7 +245,7 @@ input{
 				<input id="input-pw" name="password" placeholder="비밀번호" type="password"></input>
 			</div>
 			<div class="login-btn-wrap">
-				<button id="login-btn">로그인</button>
+				<button type="submit" id="login-btn">로그인</button>
 			</div>
 			<div class="under-login">
 				<span class="stay-check">
@@ -252,7 +253,7 @@ input{
 					<label for="stay-checkbox" id="stay-text">로그인 상태 유지</label>
 				</span>
 			</div>
-
+		</form>
 		</section>
 
 		<!--간편한 로그인 부분-->
@@ -333,13 +334,9 @@ input{
 
 
 		</section>
-
-
-	<div id="button_area"> 
-        <div id="naverIdLogin"></div>
-      </div>
-	</div>
-
+<button onclick="showLoginPopup()">test</button>
+	
+<div id="naver_id_login"></div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
 	$("#checkLogin").on("change",()=>{
@@ -351,16 +348,17 @@ input{
 		}
 	})
 	
-	const naverLogin = new naver.LoginWithNaverId(
-			{
-				clientId: "9v2VufeHsXfFnp8KaD49",
-				callbackUrl: "localhost:7100/user/login",
-				loginButton: {color: "green", type: 2, height: 40}
-			}
-		);
+	function showLoginPopup(){
+        let uri = 'https://nid.naver.com/oauth2.0/authorize?' +
+            'response_type=code' +                  // 인증과정에 대한 내부 구분값 code 로 전공 (고정값)
+            '&client_id=9v2VufeHsXfFnp8KaD49' +     // 발급받은 client_id 를 입력
+            '&state=NAVER_LOGIN_TEST' +             // CORS 를 방지하기 위한 특정 토큰값(임의값 사용)
+            '&redirect_uri=http://localhost:7100/user/naver';   // 어플케이션에서 등록했던 CallBack URL를 입력
+
+        // 사용자가 사용하기 편하게끔 팝업창으로 띄어준다.
+        window.open(uri, "Naver Login Test PopupScreen");
+    }
 	
-	naverLogin.init();
 </script>
-<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
 </body>
 </html>

@@ -46,9 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// TODO Auto-generated method stub
 		http
 		.authorizeRequests()
+			/*
 			.antMatchers("/","/product/**","/operation/**").permitAll()
 			.antMatchers("/admin/**").hasAuthority("0")
 			.antMatchers("/community/**").hasAnyAuthority("0","1")
+			.antMatchers("/operation/api/insertAnswer").permitAll()
+			*/
+			.antMatchers("/**").permitAll()
 		.and()
 			.formLogin()
 			.usernameParameter("userId")
@@ -67,10 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.maximumSessions(1)
 			.maxSessionsPreventsLogin(true);
 		
-		http
-		.oauth2Login()
-			.loginPage("/");
-		
+				
 		http
 		.rememberMe()
 			.key("loginCookie")

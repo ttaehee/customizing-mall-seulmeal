@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,10 +40,9 @@ public class OperationRestController {
 	
 	@PostMapping(value ="insertAnswer", consumes = {"multipart/form-data"})
 	public Comment insertAnswer(@RequestParam(value="uploadfile", required = false) MultipartFile[] uploadfile,
-								@RequestParam(value="content") String content,
+								@RequestParam(value="content") String content, HttpSession session,
 								@RequestParam(value="postNo") int postNo, Comment comment, Attachments attachments) throws IllegalStateException, IOException {
-		User user = new User();
-		user.setUserId("jeong");
+		User user = (User)session.getAttribute("user");
 		comment.setUser(user);
 		comment.setPostNo(postNo);
 		comment.setContent(content);
@@ -53,6 +54,13 @@ public class OperationRestController {
 			
 			attachmentsService.insertAttachments(uploadfile, attachments);
 		}
+		user = null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		user = (User) authentication.getPrincipal();
+		
+		comment.setUser(user);
+		System.out.println("TESTSAETSAETFD");
+
 		return comment;
 	}
 	

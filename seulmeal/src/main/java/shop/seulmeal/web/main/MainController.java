@@ -84,9 +84,13 @@ public class MainController {
 		model.addAttribute("list",(List<Post>)map.get("list"));		
 		session.setAttribute("fList",productService.getListFoodCategory());
 		
+		// 유저 관리
+		User user = (User)session.getAttribute("user");
+		if(user == null) {
+			session.setAttribute("user", userC);
+		}	
+		
 		// 추천음식
-		User user = userC;
-		session.setAttribute("user", user);
 		System.out.println("principal : "+userC);
 		if(user == null) {
 			

@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -26,8 +27,13 @@ import lombok.ToString;
 @JsonInclude(Include.NON_DEFAULT)
 public class User implements UserDetails {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String userId;
 	private String userName;
+	@JsonIgnore
 	private String password;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;
@@ -61,7 +67,7 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		System.out.println(this.role);
-		return Collections.singletonList(new SimpleGrantedAuthority(this.role));
+		return Collections.emptyList();
 	}
 	@Override
 	public String getUsername() {
