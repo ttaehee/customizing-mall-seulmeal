@@ -56,8 +56,23 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	}
 
 	@Override
-	public int deleteAttachments(int no) {
+	public int deleteAttachments(String noA, String nameA) {
 		// TODO Auto-generated method stub
+		System.out.println(noA);
+		if(!noA.isEmpty()) {
+			String[] noAa = noA.split(",");
+			String[] nameAa = nameA.split(",");
+			
+			for(int i=0; i<noAa.length; i++) {
+				attachmentsMapper.deleteAttachments(new Integer(noAa[i]));
+				File file = new File(path+nameAa[i]);
+				file.delete();
+			}
+		}
+		
+		
+		
+		
 		return 0;
 	}
 	
@@ -69,14 +84,17 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	}
 
 	@Override
-	public Map<String, Object> summerCopy(@RequestParam(value="file[]") List<String> fileList) {
+	public void summerCopy(List<String> fileList) {
 		// TODO Auto-generated method stub
 		Map<String,Object> result = new HashMap<String,Object>();
+		System.out.println(fileList);
 		
-		for(int i=0; i<fileList.size(); i++) {
-			
-		}
+		if(fileList.size() != 0) {
+			for (String fileName : fileList) {
+				File file = new File(path+fileName);
+				file.delete();
+			}
+		}		
 		
-		return null;
 	}
 }

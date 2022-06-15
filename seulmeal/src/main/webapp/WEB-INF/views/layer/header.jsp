@@ -124,7 +124,7 @@
 	      <ul class="navbar-nav nav">
 	      	<li class="nav-item dropdown">
 	          <a class="nav-link dropdown-toggle headerNav" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	            전체카테고리
+	           전체카테고리
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	          	<c:forEach var="foodcategory" items="${fList}">

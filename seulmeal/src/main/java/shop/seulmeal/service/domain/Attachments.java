@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Attachments {
-	private int attachmentNo;
+	private int attachmentsNo;
 	private String attachmentName;
 	private Date regDate;
 	private String status;
