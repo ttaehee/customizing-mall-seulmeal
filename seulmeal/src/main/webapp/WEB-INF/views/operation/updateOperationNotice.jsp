@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,15 +13,24 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container" style="margin-top:20px;">
 		<h1 style="color:#4b6cb7; border-bottom: 2px solid #4b6cb7; margin-bottom: 30px;">공지 수정</h1>
-		<form action="/operation/updateOperation" method="POST" enctype="multipart/form-data">
+		<form id="updateForm" action="/operation/updateOperation" method="POST" enctype="multipart/form-data">
 			<div class="row">
+				<input type="hidden" name="postNo" value="${post.postNo}" />
 				<div class="col-md-12 form-group">
 					<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
 						<div class="col-md-12">
 						<input type="text" class="form-control" value="${post.title}" name="title" placeholder="제목을 입력해 주세요">
 					</div>
 				</div>
-				
+				<div class="col-md-12" style="margin-top:20px;" >
+					<div>
+						<c:forEach var="attachments" items="${post.attachments}">
+							<div data-value="${attachments.attachmentsNo}">${attachments.attachmentName}<button type="button" onclick="deleteAttachment(this)" class="btn btn-primary">x</button></div>
+						</c:forEach>
+							
+							<input type="file" name="uploadfile" multiple="multiple" id="ex_filename" class="upload-hidden" />  
+					</div>
+				</div>
 				<div class="col-md-12" style="margin-top:20px;" >
 					<div class="filebox" style="display: flex; justify-content:space-around;">
 							<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
@@ -37,7 +47,7 @@
 			
 			</div>				
 			<div class="text-right" style="margin-top:20px;">
-				<button type="submit" class="btn btn-primary">
+				<button onclick="updateBtn()" type="button" class="btn btn-primary">
 					수정
 				</button>
 				<button type="button" onclick="cancelBtn()" class="btn btn-primary">
@@ -103,6 +113,23 @@
 			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
 		});		
     });
+	
+	const deleteAttachmentNo = [];
+	const deleteAttachmentName = [];
+	
+	function deleteAttachment(e){
+		const no = $(e).closest("div").data("value");
+		const name = $(e).closest("div").text();
+		deleteAttachmentNo.push(no);
+		deleteAttachmentName.push(name);
+		$(e).closest("div").css("display","none");
+	}
+	
+	function updateBtn(){
+		$("#updateForm").append(`<input name="deleteAttachmentNo" value="\${deleteAttachmentNo}" />`);
+		$("#updateForm").append(`<input name="deleteAttachmentName" value="\${deleteAttachmentName}" />`);
+		$("#updateForm").submit();
+	}
 	
 	function cancelBtn(){
 		window.location.href = "/operation/getListOperation/1";

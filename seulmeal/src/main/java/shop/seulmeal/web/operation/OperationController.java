@@ -171,6 +171,13 @@ public class OperationController {
 		
 		post = operationService.getOperation(post);
 		
+		// 첨부파일
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("postNo", post.getPostNo());
+		
+		List<Attachments> list = attachmentsService.getAttachments(map);
+		post.setAttachments(list);
+		
 		model.addAttribute("post",post);
 		
 		if(post.getPostStatus().equals("1")){
@@ -183,13 +190,25 @@ public class OperationController {
 	}
 	
 	@PostMapping("updateOperation")
-	public String updateOperation(Post post, Model model) {
-		System.out.println("�뾽�뜲�씠�듃 �닔�젙�븷 �궡�슜 : "+post);
+	public String updateOperation(Post post, Model model, Attachments attachments,
+							MultipartFile[] uploadfile, String deleteAttachmentNo, String deleteAttachmentName) throws IllegalStateException, IOException {
+		System.out.println("수정사항 : "+post);
+		
+		// 삭제
+		attachmentsService.deleteAttachments(deleteAttachmentNo,deleteAttachmentName);
+		// 등록
+		System.out.println(uploadfile.length);
+		if(uploadfile.length > 1) {
+			attachments.setPostNo(Integer.toString(post.getPostNo()));
+			
+			attachmentsService.insertAttachments(uploadfile, attachments);
+		}
+		
 		operationService.updateOperation(post);
 		
 		model.addAttribute("post",post);
 		
-		return "redirect:getOperation/"+post.getPostNo();
+		return "redirect:getOperation/"+post.getPostStatus()+"/"+post.getPostNo();
 	}
 	
 	@GetMapping(value={"getListOperation/{postStatus}/{currentPage}/{searchCondition}",
