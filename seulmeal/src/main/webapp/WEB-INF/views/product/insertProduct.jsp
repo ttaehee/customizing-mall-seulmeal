@@ -89,6 +89,7 @@
 		</div>
 			
 		
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	</form>
 </div>
 
@@ -135,9 +136,10 @@
 	//////
 	
 	$(document).ready(function () {
+		
 		$('#summernote').summernote({
-			height: 500,                // 에디터 높이
-			minHeight: 500,            // 최소 높이
+			height: 700,                // 에디터 높이
+			minHeight: 700,            // 최소 높이
 			maxHeight: null,            // 최대 높이
 			focus: true,                // 에디터 로딩후 포커스를 맞출지 여부
 			lang: "ko-KR",				// 한글 설정
@@ -154,8 +156,46 @@
 			    ['view', ['fullscreen', 'help']]
 			  ],
 			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
-		});		
+			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+			callbacks : {
+				onImageUpload : function(files, editor, welEditable) {
+		            // 파일 업로드(다중업로드를 위해 반복문 사용)
+		            for (var i = files.length - 1; i >= 0; i--) {
+		            uploadSummernoteImageFile(files[i],
+		            this);
+		            		}
+		            	}
+			}
+		});
+		
+		$('#summernote').summernote(setting);
+		
+		function uploadSummernoteImageFile(file, el){	    	
+			const data = new FormData;
+			data.append("file",file);
+			$.ajax({
+				data : data,
+				type : "POST",
+				url : "/uploadSummernoteImgFile",
+				contentType : false,
+				enctype : 'multipart/form-data',
+				processData : false,
+				success : function(data) {
+					$(el).summernote('editor.insertImage', data.url);					
+					jsonArray.push(data.url);
+					jsonFn(jsonArray);
+				},
+				error : function(e){
+					console.log(e);
+				}
+			})
+		}
+		
+		
+		function jsonFn(jsonArray){
+			console.log(jsonArray)
+		}
+				
     });
 </script>
 </body>

@@ -188,11 +188,11 @@
 	<c:forEach var="product" items="${list}">		
 			<div class="col">
 				<div data-value="${product.productNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
-					<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
 						<h2 class="display-6fw-bold">${product.name}</h2>
-						<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${product.subContent}</h2>
-						<h2>${product.price}원</h2>
-						<h2>${product.calorie}Cal</h2>
+						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"/>
+						<h5>${product.price}원</h5>
+						<h5>${product.calorie}Cal</h5>
 						<ul class="d-flex list-unstyled mt-auto">
 							<li class="me-auto">
 								<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
