@@ -5,13 +5,6 @@
 <html>
 <head>
 
-<!--  slick lib -->
-<link rel="stylesheet" type="text/css"
-	href="http://kenwheeler.github.io/slick/slick/slick.css" />
-<link rel="stylesheet" type="text/css"
-	href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
-
-
 <meta charset="UTF-8">
 <title>게시글 상세</title>
 
@@ -74,30 +67,33 @@ img{
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 	
-	<!--  slick lib -->
-	<script type="text/javascript"
-	src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
-	
-	
 	<br />
 
+	<!-- 게시글 이미지 또는 제목/간략내용 -->
 	<div class="container" >
+	
+				<!--img width="40" height="40" class="rounded-circle"
+				src="/resources/attachments/profile_image/${post.user.profileImage}" /-->
+	
 		<div class="your-class">
-			<div>
-				<img style="height:50vh;" src="/resources/attachments/profile_image/${post.user.profileImage}" alt="">
-			</div>
-			<div>
-				<img style="height:50vh;" src="/resources/attachments/profile_image/${post.user.profileImage}" alt="">
-			</div>
-			<div>
-				<img style="height:50vh;" src="/resources/attachments/profile_image/${post.user.profileImage}" alt="">
-			</div>		
+			<c:forEach var="attachment" items="${attachmentList}">
+				<div>
+					<img style="height:50vh;" src="/resources/attachments/${attachment.attachmentName}" alt="">
+				</div>
+			</c:forEach>
 		</div>
+		
+		<i class="bi bi-heart"></i>
+		<i class="bi bi-heart-fill"></i>
+		<button id="insertLikeBtn" data-value="${post.postNo}" type="button" class="btn btn-primary">좋아요 </button>
+		<button id="deleteLikeBtn" data-value="${post.postNo}" type="button" class="btn btn-primary">좋아요 취소</button>
+		<span id = "like_cnt">${post.likeCount}</span>
 	</div>
 	
 
-	<!-- table : 게시글 -->
 	
+
+	<!-- table : 게시글 정보 -->
 	<div class="container">
 	
 	<table width="100%" border="0" cellspacing="0" cellpadding="0"
@@ -120,8 +116,7 @@ img{
 			<td class="ct_line02"></td>
 			<td class="ct_list_b">등록날짜</td>
 			<td class="ct_line02"></td>
-			<td class="ct_list_b">게시글 사진</td>
-			<td class="ct_line02"></td>
+
 		</tr>
 		<tr>
 			<td colspan="11" bgcolor="808285" height="1"></td>
@@ -135,7 +130,7 @@ img{
 		<tr class="ct_list_pop">
 			<td align="left">${post.user.nickName}</td>
 			<td></td>
-			<td align="left"><img style="width: 80px; height: 80px"
+			<td align="left"><img width="40" height="40" class="rounded-circle" 
 				src="/resources/attachments/profile_image/${post.user.profileImage}" /></td>
 			<td></td>
 			<td align="left">${post.title}</td>
@@ -150,9 +145,6 @@ img{
 			<td></td>
 			<td align="left">${post.regDate}</td>
 			<td></td>
-			<!-- 게시글 사진 -->
-			<td align="left"></td>
-			<td></td>
 
 		</tr>
 
@@ -162,9 +154,50 @@ img{
 	<br />
 	<br />
 
+
+	              <!-- Comments section-->
+	              <div class="container">
+                    <section class="mb-5">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                            
+                                <!-- Comment form-->
+                                <form class="mb-4"><textarea class="form-control" rows="3" placeholder="댓글을 입력하세요"></textarea></form>
+                             
+                                <!-- Comments-->
+	                            <c:forEach var="comment" items="${commentList}">
+	                                <div class="d-flex mb-4">
+		                                    <!-- Parent comment-->
+		                                    <div class="flex-shrink-0"><img width="40" height="40" class="rounded-circle"  src="/resources/attachments/profile_image/${comment.user.profileImage}" alt="..." /></div>
+		                                    <div class="ms-3">
+		                                        <div class="fw-bold">${comment.user.nickName}</div>
+		                                        ${comment.content}
+		                                        ${comment.regDate}
+		                                        ${comment.updateDate}
+		                                        <c:if test="${sessionScope.user.userId == comment.user.userId}">
+													<button id="updateCommentBtn" type="button" class="btn btn-primary">수정</button>
+													<button id="deleteCommentBtn" type="button" class="btn btn-primary" data-value="${comment.commentNo}">삭제</button>
+												</c:if>
+		                    				</div>
+	                     			</div>
+		                       	</c:forEach>
+                     			
+                      			
+                    		</div>
+                       	</div>
+                    </section>
+                </div>
+                
+                
+			</div>
+
+
+
+
+
 	<!-- table : 해당 게시글에 달린 댓글 목록 -->
 	<table width="100%" border="0" cellspacing="0" cellpadding="0"
-		style="margin-top: 10px;">
+		style="margin-top: 10px;" id="comment_table">
 
 		<tr>
 			<td class="ct_list_b">댓글작성자_닉네임</td>
@@ -188,7 +221,7 @@ img{
 
 		<!-- c:set var="no" value="0"/-->
 		<c:forEach var="comment" items="${commentList}">
-			<tr class="ct_list_pop">
+			<tr class="ct_list_pop" id="tr_comment">
 				<td align="left">${comment.user.nickName}</td>
 				<td></td>
 				<td align="left"><img style="width: 80px; height: 80px"
@@ -223,10 +256,10 @@ img{
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				댓글 : <input id="comment_content" name="content" value=""/>
+				댓글 : <input id="comment_content" name="content" class="comment_content"/>
 			</div>
 			<div class="col-md-12">
-				layer : <input id="layer" name="layer" value=""/>
+				layer : <input id="layer" name="layer" />
 				<button id="insertCommentBtn" type="button" class="btn btn-primary">등록</button>
 			</div>
 		</div>
@@ -263,41 +296,40 @@ img{
 					$.ajax({
 						url : "/community/api/insertComment",
 						method : "POST",
-						data : JSON.stringify(jsonReq),
+						data : JSON.stringify(jsonReq),	//@RequestBody
 						//data : jsonReq,
-						dataType : "json",
-						contentType : "application/json; charset=utf-8",
-						/*
-						headers : {
-									"Accept" : "application/json",
-									"Content-Type" : "application/json"
-								},
-						 */
-						success : function(DTORes, status) {
-
+						dataType : "json",	// 받는 타입
+						contentType : "application/json; charset=utf-8",  // 보내는 타입
+						success : function(jsonRes, status) {
+							
 							//(status : sucess or err)
 							alert("status: " + status);
 							console.log("status: " + status);
 
-							// 응답받은 dto 객체
-							alert("DTORes : " + DTORes);
-							console.log("DTORes : " + DTORes);
+							// 응답받은 dto 객체 json 형태
+							alert("jsonRes : " + jsonRes);
+							console.log("jsonRes : " + jsonRes);
 
-							// 응답받은 dto 객체의 value 값 꺼내기
-							var strData = DTORes["postNo"] + ", "
-									+ DTORes["commentNo"] + ", "
-									+ DTORes["content"] + ", "
-									+ DTORes["regDate"];
-
-							alert("strData: " + strData);
-							console.log("strData : " + strData);
+							// 응답받은 dto 객체 json 형태를 str으로 
+							var strData = jsonRes["user"]["nickName"] + ", "
+									+ jsonRes["user"]["profileImage"] + ", "
+									+ jsonRes["content"] + ", "
+									+ jsonRes["regDate"] + ", "
+									+ jsonRes["updateDate"];
+							alert(strData);
+							
+							// 입력한 댓글 덧붙이기..
+							$("#tr_comment").prepend('<td align="left">'+jsonRes.updateDate+'</td><td></td>');
+							$("#tr_comment").prepend('<td align="left">'+jsonRes.regDate+'</td><td></td>');
+							$("#tr_comment").prepend('<td align="left">'+jsonRes.content+'</td><td></td>');
+							$("#tr_comment").prepend('<td align="left">'+jsonRes.user.profileImage+' </td><td></td>');
+							$("#tr_comment").prepend('<td align="left">'+jsonRes.user.nickName+'</td><td></td>');
+							$("#tr_comment").prepend('<tr class="ct_list_pop" id="tr_comment">');
 							
 							$("#commentPlus").html(strData);
 							
 							// 입력값 지우기 ^
-							$('#comment_content').value("");
-							$("#layer").value(" ");
-							//$("#" + postNo + "").html(displayValue);
+							$("#comment_content").value("");
 						}
 					});
 
@@ -307,7 +339,7 @@ img{
 				"click",
 				function() {
 
-					var commentNo = $("#deleteCommentBtn").val();
+					const commentNo = $(this).data("value");
 
 					alert("commentNo: " + commentNo);
 					console.log("commentNo: " + commentNo);
@@ -315,43 +347,81 @@ img{
 					$.ajax({
 						url : "/community/api/deleteComment/"+commentNo,
 						method : "POST",
-						//data : JSON.stringify(jsonReq),
-						//data : commentNo,
-						//dataType : "json",
-						//contentType : "application/json; charset=utf-8",
-						/*
-						headers : {
-									"Accept" : "application/json",
-									"Content-Type" : "application/json"
-								},
-						 */
-						success : function(DTORes, status) {
 
+						success : function(status) {
 							//(status : sucess or err)
 							alert("status: " + status);
 							console.log("status: " + status);
-
-							// 응답받은 dto 객체
-							alert("DTORes : " + DTORes);
-							console.log("DTORes : " + DTORes);
-
-							// 응답받은 dto 객체의 value 값 꺼내기
-							var strData = DTORes["postNo"] + ", "
-									+ DTORes["commentNo"] + ", "
-									+ DTORes["content"] + ", "
-									+ DTORes["regDate"];
-
-							alert("strData: " + strData);
-							console.log("strData : " + strData);
 							
-							//$("#commentPlus").html(strData);
-							
+							console.log('삭제 테스트..');
+							//var tagName = $(this).closest('tr.ct_list_pop');
+							//console.log($(this));
+							console.log(this);
+							//$(this).closest('tr.ct_list_pop');
+							//$(this).closest('tr.ct_list_pop').remove();
+							//$("#tr_comment").remove();
 						}
 					});
 
 				});
 		
 		
+		$("#insertLikeBtn").on(
+				"click",
+				function() {
+
+					const postNo = $(this).data("value");
+
+					alert("postNo: " + postNo);
+					console.log("postNo: " + postNo);
+
+					$.ajax({
+						url : "/community/api/insertLike/"+postNo,
+						method : "POST",
+						success : function(jsonRes, status) {
+							//(status : sucess or err)
+							alert("status: " + status);
+							alert("jsonRes.likeCount: " + jsonRes.likeCount);
+							
+							//console.log("status: " + status);
+							//console.log("jsonRes: " + jsonRes);
+							//console.log("jsonRes.likeCount: " + jsonRes.likeCount);
+							
+							$("#like_cnt").html(jsonRes.likeCount);
+						}
+					});
+
+				});
+		
+		
+		$("#deleteLikeBtn").on(
+				"click",
+				function() {
+
+					const postNo = $(this).data("value");
+
+					alert("postNo: " + postNo);
+					console.log("postNo: " + postNo);
+
+					$.ajax({
+						url : "/community/api/deleteLike/"+postNo,
+						method : "POST",
+						success : function(jsonRes, status) {
+							//(status : sucess or err)
+							alert("status: " + status);
+							alert("jsonRes.likeCount: " + jsonRes.likeCount);
+							
+							//console.log("status: " + status);
+							//console.log("jsonRes: " + jsonRes);
+							console.log("jsonRes.likeCount: " + jsonRes.likeCount);
+							
+							//$("#like_cnt").remove();
+							$("#like_cnt").html(jsonRes.likeCount);
+						}
+					
+					});
+
+				});
 		
 		
 		$(document).ready(function() {

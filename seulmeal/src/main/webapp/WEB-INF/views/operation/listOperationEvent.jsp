@@ -19,7 +19,16 @@
 	  background-repeat: no-repeat;
 	  background-position: center center;
 	  background-size: cover;
+	  color:none !important;
 	  cursor: pointer;
+	}	
+	
+	.cardComponet{
+		opacity:1;
+	}
+	
+	.cardComponet:hover{
+		opacity:0.7;
 	}
 	
 </style>
@@ -69,13 +78,13 @@
 	<div class="container">
 		<div class="container px-4 py-5" id="custom-cards">
 			<c:forEach var="post" items="${list}">	
-				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3">
+				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3 cardComponet">
 					<div class="col">
 						<c:if test="${post.thumnail != null}">
-							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../../resources/attachments/${post.thumnail}');">
+							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${post.thumnail}');">
 						</c:if>
 						<c:if test="${post.thumnail == null}">
-							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('../../../../resources/attachments/image/tetris.png');">
+							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/image/tetris.png');">
 						</c:if>
 						
 							<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">

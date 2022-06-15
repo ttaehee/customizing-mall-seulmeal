@@ -177,7 +177,7 @@ public class UserController {
 	}
 	
 	@PostMapping("getUpdateUser")
-	public String getUpdateUser(@ModelAttribute("user") User user, Model model, HttpSession session) throws Exception {
+	public String getUpdateUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		
 		userService.updateUser(user);
 		

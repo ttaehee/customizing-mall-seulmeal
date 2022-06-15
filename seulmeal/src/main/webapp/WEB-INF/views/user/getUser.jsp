@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,12 +44,21 @@
 		</div>
 		
 		<hr/>
-		
+
 		<div class="row">
-	  		<div class="col-xs-4 col-md-2 "><strong>회원등급</strong></div>
-			<div class="col-xs-8 col-md-4">${user.grade}</div>
+			<div class="col-xs-4 col-md-2 ">
+				<strong>회원등급</strong>
+			</div>
+			<div class="col-xs-8 col-md-4">
+				<c:choose>
+					<c:when test="${user.grade eq '0'}">슬밀프랜즈</c:when>
+					<c:when test="${user.grade eq '1'}">슬밀패밀리</c:when>
+					<c:when test="${user.grade eq '2'}">슬밀히어로</c:when>
+					<c:when test="${user.grade eq '3'}">슬밀마스터</c:when>
+				</c:choose>
+			</div>
 		</div>
-		
+
 		<hr/>
 		
 		<div class="row">
@@ -72,7 +83,7 @@
 		<hr/>
 		
 		<div class="row">
-	  		<div class="col-xs-4 col-md-2 "><strong>가입일자</strong></div>
+	  		<div class="col-xs-4 col-md-2 "><strong>가입일</strong></div>
 			<div class="col-xs-8 col-md-4">${user.regDate}</div>
 		</div>
 		

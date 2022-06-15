@@ -18,7 +18,7 @@
 	  background-repeat: no-repeat;
 	  background-position: center center;
 	  background-size: cover;
-	}	
+	}
 </style>
 </head>
 <body style="background-color: #fff;">

@@ -69,7 +69,7 @@
 	   
 	    <div class="col-sm-10" id="emailCheckForm" style="display: none;">
 			<div class="inputBar">
-				<input style="width: 100%;" type="text" class="form-control" id="emailCode" name="email" placeholder="인증번호를 입력하세요">
+				<input style="width: 100%;" type="text" class="form-control" id="emailCode" placeholder="인증번호를 입력하세요">
 				<input type="button" onclick="confirmEmail()" class="btn btn-default" value="인증확인">
 			</div>
 	    </div>

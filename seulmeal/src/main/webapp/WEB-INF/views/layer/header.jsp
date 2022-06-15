@@ -65,7 +65,7 @@
 	</c:if>
 	<div class="header" style="background:#fff; padding-top:10px; ">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
-		<div id="google_translate_element" class="hd_lang"></div>
+		<div id="google_translate_element" class="hd_lang" style="padding-top:10px;"></div>
 	    <script>
 	      function googleTranslateElementInit() {
 	        new google.translate.TranslateElement({
@@ -77,7 +77,7 @@
 	      }
 	    </script>
 	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-	    <div class="float-right" style="margin-right: 30px;">
+	    <div class="float-right" style="margin-right: 30px; padding-top:10px;">
         	
         	<c:if test="${ empty user }">
 	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">Login</button>
@@ -105,7 +105,7 @@
 						<c:if test="${user.role == 1}">
 							<a class="dropdown-item" href="/admin">관리자페이지</a>
 						</c:if>
-						<a class="dropdown-item" href="/user/logout">로그아웃</a>
+							<a class="dropdown-item" href="/user/logout">로그아웃</a>
 					</div>
 				</div>
         	</c:if>        	
@@ -116,11 +116,11 @@
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-light" style="background:#fff;">		
 	  <div class="container-fluid">
-	    <a class="navbar-brand" href="/">seulMeal</a>
+	    <a class="navbar-brand" href="/"><img style="margin-top:10px; width: 80px;" src="/resources/attachments/image/logo.jpeg"></a>
 	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 	      <span class="navbar-toggler-icon"></span>
 	    </button>
-	    <div class="collapse navbar-collapse" id="navbarNav" style="display: flex; justify-content: space-between;">
+	    <div class="collapse navbar-collapse" id="navbarNav" style=" display: flex; justify-content: space-between;">
 	      <ul class="navbar-nav nav">
 	      	<li class="nav-item dropdown">
 	          <a class="nav-link dropdown-toggle headerNav" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

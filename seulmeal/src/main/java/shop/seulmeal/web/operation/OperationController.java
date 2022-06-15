@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
@@ -82,10 +83,13 @@ public class OperationController {
 	
 	@PostMapping("insertOperation")
 	@Transactional
-	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile, MultipartFile thumnailFile, Attachments attachments) throws IllegalStateException, IOException {
+	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile,
+					MultipartFile thumnailFile, Attachments attachments, String summerImg) throws IllegalStateException, IOException {
 		User user = new User();
 		user.setUserId("jeong");
 		post.setUser(user);
+		
+		System.out.println("TST  :   "+summerImg);
 		
 		// �뜽�궡�씪 ���옣
 		if(!thumnailFile.isEmpty()) {
