@@ -202,18 +202,28 @@ textarea {
 				<div class="col-md-12">
 					<div class="row">
 						<div style="margin-top: 10px; width: 100%;">
-							<c:if test="${product.stock !=0}">
-								<button class="btn btn-primary" style="width: 100%;">장바구니 담기</button>
+							<c:if test="${user == null }">
+								<button class="btn btn-primary" disabled="disabled" style="width: 55%;">로그인 후 구매할 수 있습니다.</button>
 							</c:if>
-							<c:if test="${product.stock ==0}">
-								<button class="btn btn-primary" disabled="disabled">품절된!</button>
+							<c:if test="${user != null }">
+								<c:choose>
+								<c:when test="${product.stock !=0}">
+									<button class="btn btn-primary" style="width: 55%;">장바구니 담기</button>
+								</c:when>
+								<c:otherwise>
+									<button class="btn btn-primary" disabled="disabled">품절되었습니다.</button>
+								</c:otherwise>
+								</c:choose>
 							</c:if>
+							
+								<button class="btn btn-primary" style="width: 43%;">관련상품</button>
 						</div>
 						<div style="margin-top: 10px; width: 100%;">
 							<div style="display: flex; justify-content: space-between; margin-top: 10px">
-								<button class="btn btn-primary" style="width: 32%;">문의하기</button>
-								<button class="btn btn-primary" style="width: 32%;">리뷰등록</button>
-								<button class="btn btn-primary" style="width: 32%;">관련상품</button>
+								<c:if test="${user != null }">
+								<button class="btn btn-primary" style="width: 55%;">문의하기</button>
+								<button class="btn btn-primary" style="width: 43%;">리뷰등록</button>
+								</c:if>
 							</div>
 						</div>
 					</div>
@@ -316,13 +326,6 @@ textarea {
 									</c:forEach>
 								</tbody>
 							</table>
-
-							<hr />
-							<div name="리뷰 등록">
-								<c:if test="${user != null}">
-									<div class="seulBtn" id="insertReviewBtn" onclick="insertReview()" style="float: right;">리뷰 작성</div>
-								</c:if>
-								
 							</div>
 						</div>
 					</div>
@@ -330,6 +333,7 @@ textarea {
 			</div>
 		</div>
 	</div>
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	
 <div class="modal">	<!-- 리뷰 등록 모달창 -->
 	<div class="modal_content">
@@ -427,11 +431,11 @@ textarea {
 <script>
 $(function(){ 
 
-  $("#insertReviewBtn, .btn-primary:contains('리뷰등록')").click(function(){
+  $(".btn-primary:contains('리뷰등록')").click(function(){
     $(".modal").fadeIn();
   });
   
-  $("#insertReviewDone, #insertReviewCancel").click(function(){
+  $("#insertReviewCancel").click(function(){
     $(".modal").fadeOut();
   });
   

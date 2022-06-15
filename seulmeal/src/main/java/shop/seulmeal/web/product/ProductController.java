@@ -180,11 +180,18 @@ public class ProductController {
 	}
 
 	@PostMapping(value = { "updateProduct/{productNo}" })
-	public String updateProduct(@ModelAttribute Foodcategory f, @PathVariable int productNo, Product product) throws Exception {
+	public String updateProduct(@PathVariable int productNo, Product product, Foodcategory f, Model model, String partsNo, String partsName,MultipartFile thumbnailFile) throws Exception {
 		product.setProductNo(productNo);
 		product.setFoodCategory(f);
+		if(thumbnailFile != null) {
+			String thumbnailName = UUID.randomUUID().toString()+"_"+thumbnailFile.getOriginalFilename();
+			
+			File newFileName = new File(path,thumbnailName);
+			thumbnailFile.transferTo(newFileName);
+			product.setThumbnail(thumbnailName);
+		}
 		productService.updateProduct(product);
-		System.out.println("POST : updateProduct");
+		
 		return "redirect:/product/getProduct/" + product.getProductNo();
 	}
 	
