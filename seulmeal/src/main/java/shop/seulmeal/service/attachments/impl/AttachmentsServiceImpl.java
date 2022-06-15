@@ -56,8 +56,23 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	}
 
 	@Override
-	public int deleteAttachments(int no) {
+	public int deleteAttachments(String noA, String nameA) {
 		// TODO Auto-generated method stub
+		System.out.println(noA);
+		if(!noA.isEmpty()) {
+			String[] noAa = noA.split(",");
+			String[] nameAa = nameA.split(",");
+			
+			for(int i=0; i<noAa.length; i++) {
+				attachmentsMapper.deleteAttachments(new Integer(noAa[i]));
+				File file = new File(path+nameAa[i]);
+				file.delete();
+			}
+		}
+		
+		
+		
+		
 		return 0;
 	}
 	
