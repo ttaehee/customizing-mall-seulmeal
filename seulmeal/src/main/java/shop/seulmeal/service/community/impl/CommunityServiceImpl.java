@@ -37,7 +37,6 @@ public class CommunityServiceImpl implements CommunityService {
 
 	@Override
 	public Post getPost(int postNo) {
-		communityMapper.postViewsUp(postNo);
 		return communityMapper.getPost(postNo);
 	}
 
@@ -270,6 +269,11 @@ public class CommunityServiceImpl implements CommunityService {
 		Relation dbRelation = communityMapper.getRelation(relation);
 		
 		return (dbRelation != null & dbRelation.getRelationStatus().equals("1")) ? communityMapper.deleteRelation(dbRelation):-1;
+	}
+
+	@Override
+	public int postViewsUp(int postNo) {
+		return communityMapper.postViewsUp(postNo);
 	}
 
 

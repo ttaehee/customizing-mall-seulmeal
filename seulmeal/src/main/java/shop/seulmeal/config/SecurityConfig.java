@@ -1,5 +1,7 @@
 package shop.seulmeal.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import shop.seulmeal.common.CustomAuthenticationSuccessHandler;
 
@@ -41,9 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// TODO Auto-generated method stub
 		http
 		.authorizeRequests()
+			/*
 			.antMatchers("/","/product/**","/operation/**").permitAll()
 			.antMatchers("/admin/**").hasAuthority("0")
 			.antMatchers("/community/**").hasAnyAuthority("0","1")
+			.antMatchers("/operation/api/insertAnswer").permitAll()
+			*/
+			.antMatchers("/**").permitAll()
 		.and()
 			.formLogin()
 			.usernameParameter("userId")
@@ -61,7 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement()
 			.maximumSessions(1)
 			.maxSessionsPreventsLogin(true);
-			
+		
+				
 		http
 		.rememberMe()
 			.key("loginCookie")
@@ -69,6 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.tokenValiditySeconds(60*60);
 		
 		http
+		.cors().configurationSource(corsConfigurationSource())
+		.and()
 		.csrf().disable();
 		
 	}
@@ -78,4 +90,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		return new CustomAuthenticationSuccessHandler("/");
 	}
+	
+	@Bean 
+    public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		
+        return source;
+    }
 }
+
+

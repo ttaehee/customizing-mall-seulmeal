@@ -3,12 +3,14 @@ package shop.seulmeal.service.attachments.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.service.attachments.AttachmentsService;
@@ -54,8 +56,23 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	}
 
 	@Override
-	public int deleteAttachments(int no) {
+	public int deleteAttachments(String noA, String nameA) {
 		// TODO Auto-generated method stub
+		System.out.println(noA);
+		if(!noA.isEmpty()) {
+			String[] noAa = noA.split(",");
+			String[] nameAa = nameA.split(",");
+			
+			for(int i=0; i<noAa.length; i++) {
+				attachmentsMapper.deleteAttachments(new Integer(noAa[i]));
+				File file = new File(path+nameAa[i]);
+				file.delete();
+			}
+		}
+		
+		
+		
+		
 		return 0;
 	}
 	
@@ -64,5 +81,20 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 		// TODO Auto-generated method stub
 		
 		return attachmentsMapper.getListAttachments(map);
+	}
+
+	@Override
+	public void summerCopy(List<String> fileList) {
+		// TODO Auto-generated method stub
+		Map<String,Object> result = new HashMap<String,Object>();
+		System.out.println(fileList);
+		
+		if(fileList.size() != 0) {
+			for (String fileName : fileList) {
+				File file = new File(path+fileName);
+				file.delete();
+			}
+		}		
+		
 	}
 }

@@ -88,7 +88,7 @@ public class CommunityController {
 
 		System.out.println("//////////////" + session.getAttribute("user"));
 
-		// 게시글
+		// 전체 post
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(5);
@@ -96,29 +96,25 @@ public class CommunityController {
 		search.setSearchCondition(searchCondition);
 		Map<String, Object> map = communityService.getListPost(search, null); // 모든 게시글
 
-		
-		
 		Map<String, Object> map03 = new HashMap<>();
 
 		List<Post> postList = (List<Post>) map.get("postList");
 		
-		List<List<Attachments>> attachmentList = new ArrayList<>();
+		List<Attachments> attachmentList = new ArrayList<>();
 
 		for(Post post : postList) {
 			map03.put("postNo", post.getPostNo());
-			attachmentList.add(attachmentsService.getAttachments(map03)); 
+			post.setAttachments(attachmentsService.getAttachments(map03));  
 		}
-		model.addAttribute("attachmentList", attachmentList);
-		System.out.println("/////////////"+attachmentList);
+		
+		System.out.println("//////////////////"+postList);
+		
 		
 		// product
 		Search productSearch = new Search();
 		productSearch.setCurrentPage(1);
 		productSearch.setPageSize(3);
 		Map<String, Object> productMap = productService.getListProduct(productSearch);
-
-		model.addAttribute("postList", postList);
-		model.addAttribute("productList", (List<Product>) productMap.get("list"));
 
 		// 팔로우, 팔로워 수
 		String userId = ((User) session.getAttribute("user")).getUserId();
@@ -131,6 +127,9 @@ public class CommunityController {
 		int followCnt = communityMapper.getRelationTotalCount(map02);
 		int followerCnt = communityMapper.getFollowerTotalCount(map02);
 
+		//model
+		model.addAttribute("postList", postList);
+		model.addAttribute("productList", (List<Product>) productMap.get("list"));
 		model.addAttribute("followCnt", followCnt);
 		model.addAttribute("followerCnt", followerCnt);
 
@@ -163,55 +162,73 @@ public class CommunityController {
 	}
 
 	@GetMapping("/getPost/{postNo}") // oo
-	public String getPost(@PathVariable int postNo, Model model) {
-
-		// 해당 post 가져오기
+	public String getPost(@PathVariable int postNo, Model model, HttpSession session) {
+		
+		// 해당 post
 		Post post = communityService.getPost(postNo);
+		
+		// 타인 게시글 조회시에만, 조회수 증가 
+		if(!((User)session.getAttribute("user")).getUserId().equals(post.getUser().getUserId()) ) {
+			communityService.postViewsUp(postNo);
+		}
 
+		// 해당 post의 첨부파일 
+		Map<String,Object> map02 = new HashMap<>();
+		map02.put("postNo", postNo);
+		List<Attachments> attachmentList =  attachmentsService.getAttachments(map02);
+
+		// 댓글 목록 
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(pageSize);
 		Map<String, Object> map = communityService.getListcomment(search, postNo);
 
-		// 해당 post의 첨부파일 가져오기
-		Map<String,Object> map02 = new HashMap<>();
-		map02.put("postNo", postNo);
-		
-		List<Attachments> attachmentList =  attachmentsService.getAttachments(map02);
-
+		// model
 		model.addAttribute("post", post);
-		model.addAttribute("commentList", (List<Comment>) map.get("commentList"));
 		model.addAttribute("attachmentList", attachmentList);
+		model.addAttribute("commentList", (List<Comment>) map.get("commentList"));
 
 		System.out.println("////////"+attachmentList);
-
 		return "community/getCommunityPost";
 	}
 
 	@GetMapping("/updatePost/{postNo}") // o
 	public String updatePost(@PathVariable int postNo, Model model) {
 
+		// post 가져오기
 		Post post = communityService.getPost(postNo);
-
+		
+		// 첨부파일 가져오기
+		Map<String,Object> map = new HashMap<>();
+		map.put("postNo", postNo);
+		
+		// post 도메인에 첨부파일 넣기
+		post.setAttachments(attachmentsService.getAttachments(map));
+		
+		//model
 		model.addAttribute("post", post);
 
 		return "community/updateCommunityPost";
 	}
 
-	@PutMapping("/updatePost/{postNo}") // o
-	public String updatePost(@ModelAttribute Post post, @PathVariable int postNo) {
+	@PostMapping("/updatePost/{postNo}") // o
+	public String updatePost(@ModelAttribute Post post, @PathVariable int postNo, MultipartFile[] uploadfile, Attachments attachments) throws IllegalStateException, IOException {
 
 		communityService.updatePost(post);
 
+		//update로 수정하기
+		//attachments.setPostNo(Integer.toString(postNo));
+		//attachmentsService.insertAttachments(uploadfile, attachments);
+		
 		return "redirect:/community/getPost/" + postNo;
 	}
 
-	@PutMapping("/deletePost/{postNo}") // o
+	@GetMapping("/deletePost/{postNo}") // o
 	public String deletePost(@PathVariable int postNo) {
 
 		communityService.deletePost(postNo);
 
-		return "community/communityMain";
+		return "redirect:/community/communityMain";
 	}
 
 	// Post

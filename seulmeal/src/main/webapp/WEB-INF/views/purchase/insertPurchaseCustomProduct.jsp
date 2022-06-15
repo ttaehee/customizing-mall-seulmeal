@@ -128,6 +128,20 @@
 	
 					</div>
 				</div><br/>
+
+		<div class="container">
+		<h5>추가재료</h5>
+		*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</div>
+		<div class="container">
+			재료 검색 : 
+			<form class="searchProduct">
+				<div style="display:flex;">	
+					<div class="form-outline">
+						<input name="searchKeyword" type="search" class="form-control search" val="" />
+					</div>		  
+					<button type="button" class="btn btn-primary partSearch">
+						<i class="bi bi-search"></i>
+					</button>
 				
 				<div class="container" style="display: flex; justify-content: center;">
 					<button class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="0" onClick="fncInsertCustomProduct()">바로 구매하기</button>
@@ -215,9 +229,10 @@
             $("#total").text(plus);
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text());
-		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(pgram);
+		console.log(pgram)
+		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(10);
 		const pprice = $(ths).closest("div").find("input[name='plusPrice']").val();
-		console.log(ppgram.val())
+		console.log($(ths).closest("div").find("input[name='plusGram']"))
 		
 		console.log($(ths).closest("div").find("span[name='gram']").text());
 	}
@@ -265,9 +280,9 @@
 		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
             		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
            		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
-	               + "</div></div>"
-   
-		        	$(".plusparts").append(parts);    
+	               + "</div></div>" 
+
+		        	$(".plusparts").append(parts);
 	                
 	                const productprice = $("#total").text();
 	                const result = parseInt(productprice)+parseInt(data.price);
@@ -276,7 +291,6 @@
 			})
 		})
 	})
-	
 	
 </script>
 
