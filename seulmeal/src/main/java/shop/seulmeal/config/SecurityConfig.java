@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -42,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.authorizeRequests()
 			.antMatchers("/","/product/**","/operation/**").permitAll()
-			.antMatchers("/admin/**").hasAuthority("1")
+			.antMatchers("/admin/**").hasAuthority("0")
 			.antMatchers("/community/**").hasAnyAuthority("0","1")
 		.and()
 			.formLogin()
@@ -56,12 +57,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.logout()
 			.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
 			.deleteCookies("JSESSIONID","loginCookie")
-			.logoutSuccessUrl("/")		
+			.logoutSuccessUrl("/")
 		.and()
 			.sessionManagement()
 			.maximumSessions(1)
 			.maxSessionsPreventsLogin(true);
 			
+		http
+		.rememberMe()
+			.key("loginCookie")
+			.rememberMeParameter("checkLogin")
+			.tokenValiditySeconds(60*60);
 		
 		http
 		.csrf().disable();
@@ -73,4 +79,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		return new CustomAuthenticationSuccessHandler("/");
 	}
+	
 }
+
