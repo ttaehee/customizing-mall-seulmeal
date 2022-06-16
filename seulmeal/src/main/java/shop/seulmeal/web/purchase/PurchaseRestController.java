@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,21 +55,40 @@ public class PurchaseRestController {
 	public PurchaseRestController(){
 		System.out.println(this.getClass());
 	}
+
+	//장바구니에서 수량변경
+	@GetMapping("updateCustomProduct/{customProductNo}/{count}")
+	public CustomProduct updateCusotmProduct(@PathVariable int customProductNo, @PathVariable int count, CustomProduct customProduct) throws Exception {
+	
+		System.out.println("/purchase/api/updateCusotmProduct : "+customProductNo+count);
+		
+		customProduct=purchaseService.getCustomProduct(customProductNo);
+		customProduct.setCount(count);
+		
+		int result = purchaseService.updateCustomProductCount(customProduct);
+		System.out.println("update: "+result);
+
+		return customProduct;	
+		
+	}	
 	
 	@PostMapping("insertPurchase")
-	public Purchase insertPurchase(@RequestBody Purchase purchase, HttpSession session) throws Exception {
+	public Purchase insertPurchase(@RequestBody Purchase purchase, @AuthenticationPrincipal User user) throws Exception {
 	
 		System.out.println("/purchase/api/insertPurchase : "+purchase);
 		
-		String userId=((User)session.getAttribute("user")).getUserId();
-		User user=userService.getUser(userId);
+
 		purchase.setUser(user);
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+user);
+
 	      
 		int result=purchaseService.insertPurchase(purchase);
 		System.out.println("/purchase/api/insertPurchase insert : "+result);
 		
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
 		System.out.println("/purchase/api/insertPurchase get : "+purchase);
+		//purchase.setUser(user);
+		System.out.println("1111111111111111+++++++++++++++++++++++"+purchase);
 
 		return purchase;	
 		

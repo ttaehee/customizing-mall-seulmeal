@@ -16,7 +16,6 @@
 
 <style>
 
-
 	input{
 	   width:300px;
 	   height:50px;
@@ -26,33 +25,19 @@
 	   border-bottom:2px solid black;
 	}
 	
-	*{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-    box-sizing: border-box;
-	}
-	
-	/* common */
-	body{
-	    padding: 30px;
-	}
-	.hide{
-	    display: none;
-	}
-	.show{
-	    display: block;
-	}
-	
-	/* 셀렉트 영역 스타일 */
-	.select{
+	select {
+	  -webkit-appearance: none;  /* 네이티브 외형 감추기 */
+	  -moz-appearance: none;
+	   appearance: none;
+
 	    position: relative;
 	    padding: 5px 10px;
 	    width: 300px;
 	    height: 30px;
 
-
+		border-top: none;
+		border-left: none;
+		border-right: none;
 	    border-bottom: 2px solid black;
 	    background-color: white;
 	    background-image: url("https://img.icons8.com/material-rounded/24/000000/expand-arrow.png");
@@ -61,35 +46,10 @@
 	    cursor: pointer;
 	}
 	
-	/* 옵션 영역 스타일 */
-	.select ul{
-	    position: absolute;
-	    top: 30px;
-	    left: 0;
-	    width: 100%;
-	    border:none;
-	    border-radius: 5px;
-	    background-color: white;
-	    cursor: pointer;
+	/* IE 10, 11의 네이티브 화살표 숨기기 */
+	select::-ms-expand { 
+	  display: none;
 	}
-	.select ul li{
-	    padding: 10px;
-	    background: white;
-	    border-radius: 5px;
-	}
-	.select ul li:hover{
-		color: white;
-	    background-color: black;
-	}
-	/* 아이콘 스타일 */
-	i{
-	    vertical-align: bottom;
-	    margin-right: 5px;
-	}
-	i img{
-	    width: 20px;
-	}
-
 
 </style>
 <!-- iamport.payment.js -->
@@ -203,25 +163,15 @@
 					<label class="placeholder-text" for="fname" id="placeholder-fname">
 					   <div class="text">결제방법</div>
 					</label>
-					<div>
-					
-						
-						<div class="select" data-role="selectBox">
-						  <span date-value="optValue" class="selected-option"><!-- 선택된 옵션 값이 출력되는 부분 --></span>
-
-						  <ul class="hide">
-						    <li>
-						    	<i><img src="https://img.icons8.com/material-outlined/24/000000/apple.png" alt="카드결제"/></i>카드결제
-						    </li>
-						    <li>
-						    	<i><img src="https://img.icons8.com/windows/32/000000/banana.png" alt="포인트결제"/></i>포인트결제
-						    </li>
-						  </ul>
-						</div>
-					</div>
+				    <div>
+						<select id= "paymentOption" name="paymentOption">
+							<option value="1" selected="selected">카드결제</option>
+							<option value="2">포인트결제</option>
+						</select>
+				    </div>
 			</p>
 			<br/>
-			<button class="btn btn-primary" id="order" style="margin-left:200px; font-size:18px; border:1px black; background-color:white;" onClick="iamport()">결제하기</button>
+			<button type="button" class="btn btn-primary" id="order" style="margin-left:200px; font-size:18px; border:1px black; background-color:white;" onClick="iamport()">결제하기</button>
 		</div>
 	</div>
 	</div>
@@ -231,58 +181,7 @@
 	
 	
 	<script type="text/javascript">
-	
-	const body = document.querySelector('body');
-	const select = document.querySelector(`[data-role="selectBox"]`);
-	const values = select.querySelector(`[date-value="optValue"]`);
-	const option = select.querySelector('ul');
-	const opts = option.querySelectorAll('li');
-
-	/* 셀렉트영역 클릭 시 옵션 숨기기, 보이기 */
-	function selects(e){
-	    e.stopPropagation();
-	    option.setAttribute('style',`top:${select.offsetHeight}px`)
-	    if(option.classList.contains('hide')){
-	        option.classList.remove('hide');
-	        option.classList.add('show');
-	    }else{
-	        option.classList.add('hide');
-	        option.classList.remove('show');
-	    }
-	    selectOpt();
-	}
-
-	/* 옵션선택 */
-	function selectOpt(){
-	    opts.forEach(opt=>{
-	        const innerValue = opt.innerHTML;
-	        function changeValue(){
-	            values.innerHTML = innerValue;
-	        }
-	        opt.addEventListener('click',changeValue)
-	    });
-	}
-
-	/* 렌더링 시 옵션의 첫번째 항목 기본 선택 */
-	function selectFirst(){
-	    const firstValue = opts[0].innerHTML;
-	    values.innerHTML = `${firstValue}`
-	}
-
-	/* 옵션밖의 영역(=바디) 클릭 시 옵션 숨김 */
-	function hideSelect(){
-	    if(option.classList.contains('show')){
-	        option.classList.add('hide');
-	        option.classList.remove('show');
-	    }
-	}
-
-	selectFirst();
-	select.addEventListener('click',selects);
-	body.addEventListener('click',hideSelect);
-	
-	
-	
+		
 	function iamport(){
 		
 		const userId = $('#userId').val();
@@ -292,7 +191,7 @@
 		const email = $('#email').val();
 		const message = $('#message').val();
 		const price = $('#price').val();
-		const paymentCondition = $('#paymentCondition').val();
+		const paymentCondition = $('select[name=paymentOption]').val();
 		//const point = $('#point').val();
 		//const customProductNo = $('#customProductNo').val();
 		
