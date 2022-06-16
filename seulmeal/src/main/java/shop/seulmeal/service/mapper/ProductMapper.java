@@ -25,6 +25,8 @@ public interface ProductMapper {
 
 	public List<Product> getListProduct(Search search) throws Exception;
 
+	public List<Product> getListProductAsAdmin(Search search) throws Exception;
+
 	public void deleteProduct(int productNo) throws Exception;
 
 	public void restoreProduct(int productNo) throws Exception;
@@ -34,6 +36,8 @@ public interface ProductMapper {
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
 
 	public List<Foodcategory> getListFoodCategory() throws Exception;
+	
+	public List<Foodcategory> getAdminFoodCategory() throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 
@@ -63,6 +67,8 @@ public interface ProductMapper {
 
 	public int deleteParts(int no) throws Exception;
 
+	public int restoreParts(int no) throws Exception;
+	
 	public List<Parts> getListParts(Map<String, Object> map) throws Exception;
 	
 

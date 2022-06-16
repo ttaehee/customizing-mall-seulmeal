@@ -43,10 +43,40 @@
 
 	<select id="getListProduct" resultMap="productSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
-		( SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.like_count, p.review_count, f.foodcategory_no, f.name AS foodName FROM product p, foodcategory f
+		( SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.like_count, p.review_count, p.stock, p.status, f.foodcategory_no, f.name AS foodName FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
 			AND p.status = '0'
+			<if test="searchKeyword != '' ">
+				AND (
+				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'
+				OR sub_content like '%'||#{searchKeyword}||'%' OR sub_content like '%'||#{searchKeyword}||'%')
+			</if>
+			<if test="searchCondition != null">
+				AND p.foodcategory_no = #{searchCondition}
+			</if>
+		</where>
+		ORDER BY 
+			<choose>
+				<when test="searchSort = '1'"> p.reg_date ASC</when>
+				<when test="searchSort = '2'"> p.reg_date DESC</when>
+				<when test="searchSort = '3'"> p.price ASC</when>
+				<when test="searchSort = '4'"> p.price DESC</when>
+				<when test="searchSort = '5'"> p.like_count ASC</when>
+				<when test="searchSort = '6'"> p.like_count DESC</when>
+				<when test="searchSort = '7'"> p.review_count ASC</when>
+				<when test="searchSort = '8'"> p.review_count DESC</when>
+			<otherwise>p.name DESC</otherwise>
+			</choose>
+			 ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select id="getListProductAsAdmin" resultMap="productSelectMap">
+		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
+		( SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.status, p.like_count, p.review_count, p.stock, f.foodcategory_no, f.name AS foodName FROM product p, foodcategory f
+		<where>
+			p.foodcategory_no = f.foodcategory_no
 			<if test="searchKeyword != '' ">
 				AND (
 				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'
@@ -78,7 +108,6 @@
 		SELECT product_no FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
-			AND p.status = '0'
 			<if test="searchKeyword != '' ">
 				AND (
 				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'
@@ -143,6 +172,10 @@
 			status = '0'
 		</where>
 		ORDER BY foodcategory_no
+	</select>
+	
+	<select id="getAdminFoodCategory" resultMap="foodCategorySelectMap">
+		SELECT * FROM foodcategory		ORDER BY foodcategory_no
 	</select>
 
 	<update id="deleteFoodCategory">
@@ -264,6 +297,7 @@
 	<select id="getParts" resultMap="partsSelectMap" parameterType="map">
 		SELECT * FROM parts
 		<where>
+			status = 0 AND
 			<choose>
 				<when test="name != null">
 					name =#{name}
@@ -297,8 +331,12 @@
 			status = 1
 		</set>
 		<where>
-			partsNo = #{No}
+			parts_no = #{no}
 		</where>
+	</update>
+	
+	<update id="restoreParts">
+	UPDATE parts <set> status = 0 </set> <where> parts_no = #{no}</where>
 	</update>
 
 
@@ -308,7 +346,7 @@
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
 		FROM (SELECT * FROM parts
 		<where>
-			AND status = '0'
+			AND status = #{search.searchCondition}
 		</where>
 		ORDER BY parts_no )inner_table
 		WHERE ROWNUM &lt;= #{search.endRowNum})
