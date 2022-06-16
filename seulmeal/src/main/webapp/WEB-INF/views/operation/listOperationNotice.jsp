@@ -13,7 +13,7 @@
 
 	<div class="container">
 		
-		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+		<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">공지사항</h1>
 			</div>
@@ -31,7 +31,7 @@
 		
 		
 		<table class="table table-hover text-center">
-			<thead style="background-color: #4b6cb7; color: #fff;">
+			<thead style="background-color: #ff4500; color: #fff;">
 				<tr>
 					<th>번호</th>
 					<th>제목</th>

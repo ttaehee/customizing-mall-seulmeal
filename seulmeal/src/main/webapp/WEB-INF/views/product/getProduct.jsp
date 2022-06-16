@@ -305,7 +305,7 @@ textarea {
 						<div class="card-body">
 
 							<table class="table table-hover text-center">
-								<thead style="background-color: #4b6cb7; color: #fff;">
+								<thead style="background-color: #ff4500; color: #fff;">
 									<tr>
 										<th>작성자</th>
 										<th>제목</th>

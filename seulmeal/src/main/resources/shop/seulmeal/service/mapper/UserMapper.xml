@@ -222,5 +222,13 @@
 		   	</set>
 		   	WHERE user_id = #{userId}
 		</update>
+		
+		<update id="updatePassword">
+			UPDATE users
+			<set>
+				password = #{password:VARCHAR}
+			</set>
+			WHERE user_id = #{userId}
+		</update>
 	
 	</mapper>     

@@ -17,18 +17,18 @@
 	<div class="container">
 		<div class="row" style="margin-top:20px;">			
 			<div class="col-md-12">
-				<div class="row" style="min-height:40px; border-bottom: 2px double #4b6cb7;">
-					<div class="col-md-3 text-center" style="background-color:#4b6cb7; color:#fff; padding-top:10px;">제목</div>
+				<div class="row" style="min-height:40px; border-bottom: 2px double #ff4500;">
+					<div class="col-md-3 text-center" style="background-color:#ff4500; color:#fff; padding-top:10px;">제목</div>
 					<div class="col-md-9" style="padding-top:10px;">${post.title}</div>
 				</div>
-				<div class="row" style="min-height:40px; border-bottom: 2px double #4b6cb7;">
-					<div class="col-md-3 text-center" style="background-color:#4b6cb7; color:#fff; padding-top:10px;">작성자</div>
+				<div class="row" style="min-height:40px; border-bottom: 2px double #ff4500;">
+					<div class="col-md-3 text-center" style="background-color:#ff4500; color:#fff; padding-top:10px;">작성자</div>
 					<div class="col-md-9" style="padding-top:10px;">${post.user.userId}</div>
 				</div>
-				<div class="row" style="min-height:40px; border-bottom: 2px double #4b6cb7;">
-					<div class="col-md-3 text-center" style="background-color:#4b6cb7; color:#fff; padding-top:10px;">작성일</div>
+				<div class="row" style="min-height:40px; border-bottom: 2px double #ff4500;">
+					<div class="col-md-3 text-center" style="background-color:#ff4500; color:#fff; padding-top:10px;">작성일</div>
 					<div class="col-md-3" style="padding-top:10px;">${post.regDate}</div>
-					<div class="col-md-3 text-center" style="background-color:#4b6cb7; color:#fff; padding-top:10px;">조회수</div>
+					<div class="col-md-3 text-center" style="background-color:#ff4500; color:#fff; padding-top:10px;">조회수</div>
 					<div class="col-md-3" style="padding-top:10px;">${post.views}</div>
 				</div>
 			</div>
@@ -55,7 +55,7 @@
 				</div>
 			</div>
 			<div class="col-md-12">
-				<div class="row" style="border-bottom: 2px double #4b6cb7; border-top: 2px double #4b6cb7; justify-content: flex-end;">					
+				<div class="row" style="border-bottom: 2px double #ff4500; border-top: 2px double #ff4500; justify-content: flex-end;">					
 					<span style="margin-bottom:10px; margin-top:10px;">
 						<c:if test="${user.role == 0}">							
 							<c:if test="${user.userId == post.user.userId}">
@@ -67,7 +67,7 @@
 					</span>						
 				</div>
 				<div class="row" style="border-bottom: 2px double #BAD7DF;">
-					<div class="col-md-12" style="background-color:#4b6cb7; color:#fff;">
+					<div class="col-md-12" style="background-color:#ff4500; color:#fff;">
 						<div class="row">
 							<div class="col-md-1">다음글</div>
 							<div>
@@ -80,7 +80,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-12" style="background-color:#4b6cb7; color:#fff;">
+					<div class="col-md-12" style="background-color:#ff4500; color:#fff;">
 						<div class="row">
 							<div class="col-md-1">이전글</div>
 							<div><a class="closetPost" href="/operation/getOperation/1/${post.bpost.postNo}">${post.bpost.title}</a></div>

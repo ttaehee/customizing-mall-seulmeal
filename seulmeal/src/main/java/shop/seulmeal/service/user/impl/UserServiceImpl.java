@@ -74,7 +74,8 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
 	@Override
 	public int updateUser(User user) throws Exception {
-		// TODO Auto-generated method stub
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userMapper.updateUser(user);
 	}
 
@@ -205,6 +206,14 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 			e.printStackTrace();
 		}
 		return user;
+	}
+
+
+	@Override
+	public int updatePassword(User user) throws Exception {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		return userMapper.updatePassword(user);
 	}
 
 	
