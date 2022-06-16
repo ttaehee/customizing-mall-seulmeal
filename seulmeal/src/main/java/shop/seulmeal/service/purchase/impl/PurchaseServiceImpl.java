@@ -275,5 +275,23 @@ public class PurchaseServiceImpl implements PurchaseService{
 
 		return amount;
 	}
+	
+	//판매내역리스트 
+	@Override
+	public Map<String, Object> getListSale(Search search, String purchaseStatus) {
+		// TODO Auto-generated method stub
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("search", search);
+		map.put("purchaseStatus", purchaseStatus);
+		
+		List<Purchase> list=purchaseMapper.getListSale(map);
+		int totalCount=purchaseMapper.getPurchaseTotalCount(map);
+		
+		map.put("saleList", list);
+		map.put("totalCount", totalCount);
+		
+		return map;
+	}
 
 }

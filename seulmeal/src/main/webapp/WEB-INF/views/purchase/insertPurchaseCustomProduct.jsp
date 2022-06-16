@@ -8,14 +8,11 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>구매 상세</title>
-
+	<title>커스터마이징 옵션</title>
+	<script src="./data.js"></script>
 </head>
 
-<body>
-<jsp:include page="../layer/header.jsp"></jsp:include>
-
-	<style>
+<style>
 		
 		h2{
 			text-align: center; 
@@ -58,6 +55,12 @@
 		}		
 		
 	</style>
+
+<body>
+<jsp:include page="../layer/header.jsp"></jsp:include>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	
 	<form class="cc" name="insertCustom" method="post">
 		<input type="hidden" name="productNo" value="${product.productNo}"/>
@@ -68,7 +71,7 @@
 		
 			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
 			  <div class="card-body">
-			    <h6 class="card-title" id="price">${product.price}원</h5>
+			    <h6 class="card-title" id="price">${product.price}원</h6>
 			    <h8 class="card-subtitle mb-2 text-muted">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</h8>
 			  </div>
 			</div>
@@ -116,7 +119,6 @@
 					    <p class="card-text">
 							<div>커스터마이징상품 금액 :&ensp;<span id="total">${product.price}</span>원</div><br/>
 	
-					
 							<div>커스터마이징상품 수량 :<span id="count">
 								<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
 						        &ensp; <span id="customProductCount" class="count" name="count">1</span> &ensp; 
@@ -238,6 +240,16 @@
 	
 	
 	 $(function(){
+		 $(".search").autocomplete({ 
+				source: List,	// source는 data.js파일 내부의 List 배열
+				focus : function(event, ui) { // 방향키로 자동완성단어 선택 가능하게 만들어줌	
+					return false;
+				},
+				minLength: 1,// 최소 글자수
+				delay: 100,	//autocomplete 딜레이 시간(ms)
+				//disabled: true, //자동완성 기능 끄기
+			});
+		 
 		$(".partSearch").on("click",()=>{
 			fncEnter();
 		})

@@ -340,6 +340,29 @@ public class PurchaseController {
 		purchaseService.deletePurchase(purchaseNo);
 		
 		return "redirect:getListPurchase/"+userId;
-	}			
+	}	
+	
+	@RequestMapping(value="getListSale")
+	public String getListSale(Search search, String purchaseStatus, Model model, HttpSession session)
+			throws Exception {
+		
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+
+		Map<String, Object> map = purchaseService.getListSale(search, purchaseStatus);
+
+		Page resultPage 
+			= new Page(search.getCurrentPage(), 
+					((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
+		System.out.println(resultPage);
+
+		model.addAttribute("saleList", map.get("saleList"));
+		model.addAttribute("resultPage", resultPage);
+		model.addAttribute("search", search);
+
+		return "purchase/listPurchaseSale";
+	}
 	
 }

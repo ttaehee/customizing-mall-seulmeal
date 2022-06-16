@@ -332,6 +332,20 @@
 					</if>
 				</if> </where>) countTable	
 	</select>
+	
+	<select id="getLisSale" resultMap="purchaseSelectMap" parameterType="map">
+		SELECT purchase_no, user_id, price, address, name, message, purchase_status, reg_date, payment_condition, amount
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT *
+				FROM purchase
+				status='0' AND purchase_status!='0'
+				<if test="purchaseStatus != null">
+					AND purchase_status={purchaseStatus:VARCHAR}
+				</if>
+				ORDER BY purchase_no) inner_table
+			WHERE ROWNUM &lt; = #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	</select>
 
 
 </mapper>
