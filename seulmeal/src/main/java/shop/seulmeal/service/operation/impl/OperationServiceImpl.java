@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import shop.seulmeal.common.Search;
@@ -93,6 +94,10 @@ public class OperationServiceImpl implements OperationService {
 		return operationMapper.deleteAnswer(comment);
 	}
 
-	
+	@Scheduled(cron = "0 49 17 * * ? ")
+	public void endEvent() throws Exception {
+		System.out.println("test");
+		operationMapper.endEvent();
+	}
 
 }

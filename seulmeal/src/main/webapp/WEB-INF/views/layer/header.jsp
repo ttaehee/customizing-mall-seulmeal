@@ -175,9 +175,7 @@
 
 
 	
-<script type="text/javascript">
-	console.log($(".searchP").val())
-	
+<script type="text/javascript">	
 	$(".searchP").on("keypress",(e)=>{
 		if(e.keyCode === 13){
 			$(".searchProduct").attr("action","/product/getListProduct").submit();

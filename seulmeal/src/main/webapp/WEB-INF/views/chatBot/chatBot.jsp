@@ -30,7 +30,7 @@ body {
 	  width: 100px;
 	  height: 100px;
 	  top: 50px;
-	  background-image: url('../../resources/attachments/image/free-icon-chatbot-2040946.png');
+	  background-image: url('/resources/attachments/image/free-icon-chatbot-2040946.png');
 	  color: #fffffff;
 	  margin-top:600px;
 	  background-repeat: no-repeat;
