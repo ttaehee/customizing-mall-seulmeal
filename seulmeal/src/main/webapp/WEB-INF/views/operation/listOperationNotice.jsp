@@ -13,25 +13,27 @@
 
 	<div class="container">
 		
-		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+		<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">공지사항</h1>
 			</div>
-			<div class="dropdown pt-5 mb-4 col-6">		  
-			<div class="float-right" style="display:flex;">
-				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" />
-				</div>		  
-					<button type="button" class="btn btn-primary">
-					<i class="bi bi-search"></i>
-				</button>
-			</div>
+			<div class="dropdown pt-5 mb-4 col-6">
+			<form id="searchNotice" action="/operation/getListOperation/1" method="get">
+				<div class="float-right" style="display:flex;">
+					<div class="form-outline">
+						<input type="search" placeholder="검색내용을 입력하세요" name="searchKeyword" id="searchKeyword" class="form-control" />
+					</div>		  
+						<button type="button" class="btn btn-primary">
+						<i class="bi bi-search"></i>
+					</button>
+				</div>
+			</form>
 		</div>
 		</div>
 		
 		
 		<table class="table table-hover text-center">
-			<thead style="background-color: #4b6cb7; color: #fff;">
+			<thead style="background-color: #ff4500; color: #fff;">
 				<tr>
 					<th>번호</th>
 					<th>제목</th>
@@ -64,7 +66,14 @@
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
-
+	function searchNotice(){
+		const searchKeyword = $("#searchKeyword").val();
+		if(searchKeyword == ""){
+			alret("검색내용을 입력하세요")
+			return;
+		}
+		$("#searchNotice").submit();
+	}
 
 	function insertNotice(){
 		window.location.href = "/operation/insertOperation/1";

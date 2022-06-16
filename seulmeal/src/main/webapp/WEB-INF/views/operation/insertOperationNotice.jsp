@@ -11,13 +11,13 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container" style="margin-top:20px;">
-		<h1 style="color:#4b6cb7; border-bottom: 2px solid #4b6cb7; margin-bottom: 30px;">공지 등록</h1>
+		<h1 style="color:#ff4500; border-bottom: 2px solid #ff4500; margin-bottom: 30px;">공지 등록</h1>
 		<form id="insertForm" action="/operation/insertOperation" method="POST" enctype="multipart/form-data">
 			<div class="row">
 				<div class="col-md-12 form-group">
 					<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
 						<div class="col-md-12">
-						<input type="text" class="form-control" name="title" placeholder="제목을 입력해 주세요">
+						<input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력해 주세요">
 					</div>
 				</div>
 				
@@ -117,7 +117,7 @@
 		
 		$('#summernote').summernote(setting);
 		
-		function uploadSummernoteImageFile(file, el){	    	
+		function uploadSummernoteImageFile(file, el){
 			const data = new FormData;
 			data.append("file",file);
 			$.ajax({
@@ -145,6 +145,9 @@
 				
     });
 	function insertNotice(){
+		const title = $("#title").val()
+		const content = $("#summernote").val()
+		
 		if(jsonArray.length != 0){
 			for(let i=0; i<jsonArray.length; i++){
 				let str = jsonArray[i];
@@ -154,6 +157,14 @@
 				console.log(result[3]);			
 			}
 		}
+		if(title == ""){
+			alert("제목입력하세요");
+			return;
+		}
+		if(content == ""){
+			alert("내용입력하세요");
+			return;
+		}
 		
 		$("#insertForm").submit();
 	}
@@ -162,6 +173,7 @@
 	function cancelBtn(){
 		window.location.href = "/operation/getListOperation/1";
 	}
+
 </script>
 
 </body>

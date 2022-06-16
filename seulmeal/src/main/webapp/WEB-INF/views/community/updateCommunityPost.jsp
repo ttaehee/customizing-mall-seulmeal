@@ -32,7 +32,7 @@ h1{
 
 	<div class="container">
 	<!-- enctype="multipart/form-data" -->
-		<form action="/community/updatePost/${post.postNo}" method="POST" >
+		<form id="updateForm" action="/community/updatePost/${post.postNo}" method="POST" >
 			<div class="row">
 				<div class="col-md-12">
 					제목 : <input id="title" name="title"  value = "${post.title}"/>
@@ -47,7 +47,7 @@ h1{
 					
 					<!-- 업로드했던 첨부파일 불러오기 -->
 					<c:forEach var="attachments" items="${post.attachments}">
-                     <div data-value="${attachments.attachmentNo}">${attachments.attachmentName}
+                     <div data-value="${attachments.attachmentsNo}">${attachments.attachmentName}
                      	<button type="button" onclick="deleteAttachment(this)" class="btn btn-primary">x</button>
                      </div>
              	    </c:forEach>

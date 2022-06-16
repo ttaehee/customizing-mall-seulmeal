@@ -57,18 +57,20 @@ public class CommunityRestController {
 	}
 
 	@GetMapping("getListPost") // oo
-	public Map<String, Object> getListPost(@RequestParam(required = false, defaultValue = "1") int currentPage,
+	public List<Post> getListPost(@RequestParam(required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String userId) {
 
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
-		search.setPageSize(1);
+		search.setPageSize(3);
 		search.setSearchKeyword(searchKeyword);
 
 		Map<String, Object> map = communityService.getListPost(search, userId);
 		map.put("search", search);
-
-		return map;
+		
+		List<Post> postList = (List<Post>)map.get("postList");
+		
+		return postList;
 	}
 
 	@GetMapping("getListComment/{postNo}") // oo

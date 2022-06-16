@@ -70,6 +70,8 @@ public interface UserMapper {
 	
 	public int updateBlockCount(String userId) throws Exception;
 	
+	public int updatePassword(User user) throws Exception;
+	
 	
 	
 	

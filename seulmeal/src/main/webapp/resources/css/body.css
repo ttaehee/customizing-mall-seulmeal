@@ -23,13 +23,13 @@ a:visited {
 	text-decoration: none !important;
 }
 a:hover{
-	color: #4b6cb7 !important;
+	color: #ff4500 !important;
 }
 
 .headerNav:after{
 	display:block;
 	content: '';
-	border-bottom: solid 2px #4b6cb7;
+	border-bottom: solid 2px #ff4500;
 	transform: scaleX(0);
 	transition: transform 250ms ease-in-out;
 }
@@ -42,27 +42,27 @@ a:hover{
 .seulBtn{		
 	width: 100px;
 	padding: 5px;
-	/*border: 2px solid #4b6cb7;*/
+	/*border: 2px solid #ff4500;*/
 	border:none !important;
 	text-align: center;
 	border-radius: 10%;
 	cursor: pointer;
 }
 .seulBtn:hover{
-	/*background-color: #4b6cb7;*/
+	/*background-color: #ff4500;*/
 	color:#fff;
 }
 
 .btn {
-	/*border: 2px solid #4b6cb7 !important;*/
+	/*border: 2px solid #ff4500 !important;*/
 	border: none !important;
 	background-color: #fff !important;
 	color: black !important;
 }
 
 .btn:hover{
-	/*background-color: #4b6cb7 !important;*/
-	color:#4b6cb7 !important;
+	/*background-color: #ff4500 !important;*/
+	color:#ff4500 !important;
 	opacity: 0.7;
 }
 

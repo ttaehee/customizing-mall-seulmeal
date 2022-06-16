@@ -59,13 +59,20 @@ input{
     outline:none;
     width:100%;
 }
+/*input 패스워드 form*/
+#emailCode{
+    border: none;
+    outline:none;
+    width:100%;
+}
+
 /*로그인버튼박스*/
  .login-btn-wrap{
     height: 52px;
     line-height: 55px;
     margin: 0px 10px 8px 10px;
     border: solid 1px rgba(0,0,0,.1);
-	background-color: #4b6cb7;
+	background-color: #ff4500;
     color: #fff;
     cursor: pointer; 
 }
@@ -73,7 +80,7 @@ input{
 #login-btn{
     width:200px;
     height: 50px;
-    background-color: #4b6cb7;
+    background-color: #ff4500;
     border: none;
     color:#fff;
     font-size: 18px;
@@ -125,8 +132,8 @@ input{
     content: '\2713';
     color: white;
     text-shadow: 1px 1px white;
-    background: #4b6cb7;
-    border-color: #4b6cb7;
+    background: #ff4500;
+    border-color: #ff4500;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
 }
 
@@ -237,9 +244,9 @@ input{
 		<form class="form-signin" method="post" action="/user/findUserId" target="_self">
 			<section class="login-wrap">
 				<h2>아이디 찾기</h2>
-				<div>이메일 핸드폰</div>
+				
 				<div class="login-id-wrap">
-					<input id="input-id" name="userId" placeholder="이름" type="text"></input>
+					<input id="input-id" name="name" placeholder="이름" type="text"></input>
 				</div>
 				<div class="login-pw-wrap">
 					<input id="email" name="email" placeholder="이메일" type="text"></input>
@@ -247,11 +254,11 @@ input{
 				<div class="login-pw-wrap" id="emailCheckForm" style="display: none;">
 					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
 				</div>
-				<div class="login-btn-wrap">
-					<button id="login-btn" type="submit" onclick="confirmEmail()">인증 하기</button>
+				<div class="login-btn-wrap" id="confirm">
+					<button id="login-btn" type="button" onclick="idSearch()">인증 번호 받기</button>
 				</div>
-				<div class="login-btn-wrap" style="display: none;">
-					<button id="login-btn" type="submit" >아이디 찾기</button>
+				<div class="login-btn-wrap" id="findId" style="display: none;">
+					<button id="login-btn" type="button" onclick="confirmEmail()">아이디 찾기</button>
 				</div>
 
 			</section>
@@ -260,6 +267,44 @@ input{
 
 		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
+
+//이메일 중복체크
+function idSearch(){
+	const idSearch = {
+			name: $("#input-id").val(),
+			email: $("#email").val(),
+			idSearch: "1"
+	}
+	
+	console.log(idSearch)
+	
+	 $.ajax({
+		url: "/user/api/confirmUserEmail",
+		method: "GET", 
+		data: idSearch,
+		headers : {
+            "Accept" : "application/json",
+            "Content-Type" : "application/json"
+        },
+        dataType : "json",
+        success : function(data){
+        	if(data.result === "success"){
+        		alert("인증번호를 입력하세요");
+        		$("#emailCheckForm").css("display","block");
+        		$("#findId").css("display","block");
+        		$("#confirm").css("display","none");
+        		return;
+        	}
+        	if(data.result === "fail"){
+        		alert("가입시 등록한 정보가 맞는지 다시 확인해주세요");
+        		return;
+        	}
+        }
+	})		 
+}
+
+
+
 //이메일인증 확인
 function confirmEmail(){
 	const confrimNum = $("#emailCode").val();
@@ -275,10 +320,11 @@ function confirmEmail(){
         },
         dataType : "json",
         success : function(data){
-        	alert(data.result);
-        	$("#email").attr("disabled","disabled");
-        	$("#emailBtn").attr("disabled","disabled");
-        	$("#emailCheckForm").css("display","none");
+        	alert(data.userId);
+        	/* $("#email").attr("disabled","disabled");
+        	$("#emailBtn").attr("disabled","disabled"); */
+        	/* $("#login-btn").css("display","none");
+        	$("#findId").css("display","block"); */
         }
 	})
 }

@@ -53,7 +53,18 @@
 			</c:forEach>
    		</div>
 	</div>
-	    
+	<div class="container">
+	<div class="row" style="justify-content : center;">
+			<nav aria-label="...">
+			  <ul class="pagination">
+			  	<c:forEach var="i" begin="${page.beginUnitPage}" end="${page.endUnitPage}">
+			  		<li class="page-item"><a class="page-link" href="/product/listProduct/${i}/${searchCondition}">${i}</a></li>
+			  	</c:forEach>
+			  </ul>
+			</nav>
+		</div>
+	</div>	
+	
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
