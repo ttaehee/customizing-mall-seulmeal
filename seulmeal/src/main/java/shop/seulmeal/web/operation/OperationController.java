@@ -88,6 +88,7 @@ public class OperationController {
 	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile,
 					MultipartFile thumnailFile, Attachments attachments, String summerImg, HttpSession session) throws IllegalStateException, IOException {
 		User user = (User)session.getAttribute("user");
+		System.out.println(user);
 		post.setUser(user);
 		
 		System.out.println("TST  :   "+summerImg);		
@@ -214,10 +215,9 @@ public class OperationController {
 	@GetMapping(value={"getListOperation/{postStatus}/{currentPage}/{searchCondition}",
 				"getListOperation/{postStatus}/{currentPage}",
 				"getListOperation/{postStatus}"})
-	public String getListOperation(@PathVariable int postStatus, Model model,@PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) {
-		System.out.println(postStatus);
-		
-		Search search = new Search();
+	public String getListOperation(@PathVariable int postStatus, Model model, Search search,
+							@PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition) {
+				
 		if(currentPage != null) {
 			search.setCurrentPage(new Integer(currentPage));
 		}
@@ -227,7 +227,6 @@ public class OperationController {
 		
 		search.setPageSize(pageSize);
 		search.setSearchCondition(searchCondition);
-		System.out.println(search);
 				
 		Map<String,Object> map = operationService.getListOperation(search, postStatus);
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);		
@@ -244,6 +243,8 @@ public class OperationController {
 			return "operation/listOperationQuery";
 		}
 	}
+	
+	
 	
 	@GetMapping("getChatBot")
 	public String getChatBot() {

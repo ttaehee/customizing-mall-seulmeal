@@ -16,7 +16,5 @@ public class CustomParts {
 	private String minusName; //제외재료이름 
 	private int gram;
 	private Parts parts; //추가재료
-	
-	private List<CustomParts> customPartsList;	
 
 }

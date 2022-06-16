@@ -45,8 +45,8 @@ public class ProductController {
 	@Qualifier("userServiceImpl")
 	private UserService userService;
 
-	int pageUnit = 5;
-	int pageSize = 5;
+	int pageUnit = 10;
+	int pageSize = 10;
 
 	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
 	
@@ -141,9 +141,8 @@ public class ProductController {
 		model.addAttribute("product", product);
 		return "/product/getProduct";
 	}
-
-	@GetMapping(value = { "getListProduct/{searchCondition}", "getListProduct" })
-	public String getListProduct(Model model, Search search, @PathVariable(required = false) String currentPage,
+	@GetMapping(value = { "/listProduct/{currentPage}/{searchCondition}", "/listProduct/{currentPage}","/listProduct" })
+	public String getListProductAsUser(Model model, Search search, @PathVariable(required = false) String currentPage,
 			@PathVariable(required = false) String searchCondition) throws Exception {
 
 		if (currentPage != null) {
@@ -164,11 +163,47 @@ public class ProductController {
 				pageSize);
 
 		model.addAttribute("list", list);
-		model.addAttribute("resultPage", resultPage);
+		model.addAttribute("page", resultPage);
 		model.addAttribute("search", search);
 
-		return "/product/listProduct";
+		return "/product/listProductAsUser";
 	}
+	
+	
+	
+	@GetMapping(value = { "/admin/listProduct/{currentPage}/{searchCondition}", "/admin/listProduct/{currentPage}", "/admin/listProduct" })
+	public String getListProductAsAdmin(Model model, Search search, @PathVariable(required = false) String currentPage,
+			@PathVariable(required = false) String searchCondition) throws Exception {
+
+		if (currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		System.out.println(search);
+  
+		Map<String, Object> map = productService.getListProductAsAdmin(search);
+		List<Foodcategory> food = productService.getAdminFoodCategory();
+		List<Product> list = (List) map.get("list");
+
+
+		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+				pageSize);
+
+		model.addAttribute("list", list);
+		model.addAttribute("food", food);
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
+
+		return "/product/listProductAsAdmin";
+	}
+	
+	
+	
+	
 
 	@GetMapping(value = { "updateProduct/{productNo}" })
 	public String updateProduct(@PathVariable int productNo, Model model) throws Exception {
@@ -195,6 +230,18 @@ public class ProductController {
 		return "redirect:/product/getProduct/" + product.getProductNo();
 	}
 	
+	@GetMapping(value = {"deleteProduct/{productNo}"})
+	public String deleteProduct(@PathVariable int productNo) throws Exception {
+		productService.deleteProduct(productNo);
+		return "redirect:/product/admin/listProduct";
+	}
+	
+	@GetMapping(value = {"restoreProduct/{productNo}"})
+	public String restoreProduct(@PathVariable int productNo) throws Exception {
+		productService.restoreProduct(productNo);
+		return "redirect:/product/admin/listProduct";
+	}
+	
 	@GetMapping(value = {"insertParts"} )
 	public String insertParts(Parts parts, Model model) throws Exception {
 		model.addAttribute(parts);
@@ -204,10 +251,10 @@ public class ProductController {
 	@PostMapping(value = {"insertParts"})
 	public String insertParts(Parts parts) throws Exception {
 		productService.insertParts(parts);
-		return "redirect:/product/listParts";
+		return "redirect:/product/listParts/0";
 	}
 	
-	@GetMapping(value = {"listParts"})
+	@GetMapping(value = {"listParts/{currentPage}/{searchCondition}", "listParts"})
 	public String getListParts(Model model, Search search, @PathVariable(required = false) String currentPage,
 				@PathVariable(required = false) String searchCondition) throws Exception {
 
@@ -218,6 +265,7 @@ public class ProductController {
 				search.setCurrentPage(1);
 			}
 			search.setPageSize(pageSize);
+			
 			search.setSearchCondition(searchCondition);
 			System.out.println(search);
 
@@ -229,11 +277,11 @@ public class ProductController {
 				listr.add(parts);
 			}
 
-			Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
-					pageSize);
+			Page resultPage = new Page
+					(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
 
 			model.addAttribute("list", listr);
-			model.addAttribute("resultPage", resultPage);
+			model.addAttribute("page", resultPage);
 			model.addAttribute("search", search);
 
 			return "/product/listParts";
@@ -256,18 +304,6 @@ public class ProductController {
 		productService.updateParts(parts);
 		return "redirect:/product/listParts";
 	}
-	
-	
-	@GetMapping(value = {"listFoodCategory"})
-	public String getListFoodCategory(Model model) throws Exception {
-
-			List<Foodcategory> list = productService.getListFoodCategory();
-
-			model.addAttribute("list", list);
-
-			return "/product/listFoodCategory";
-	}
-	
 	
 
 	@GetMapping(value = { "insertReview/{productNo}" })
@@ -308,6 +344,45 @@ public class ProductController {
 		return "/product/getReview";
 	}
 
+	@GetMapping(value = {"deleteParts/{partsNo}"})
+	public String deleteParts(@PathVariable int partsNo) throws Exception { 
+		productService.deleteParts(partsNo);
+		
+		return "redirect:/product/listParts/1/0";
+	}
+	@GetMapping(value = {"restoreParts/{partsNo}"})
+	public String restoreParts(@PathVariable int partsNo) throws Exception { 
+		productService.restoreParts(partsNo);
+		
+		return "redirect:/product/listParts/1/1";
+	}
 	
+	@GetMapping(value = {"insertFoodCategory"})
+	public String insertFoodCategory(String name) throws Exception {
+		productService.insertFoodCategory(name);
+		
+		return "/product/listFoodCategory";
+	}
+	
+	@GetMapping(value = {"listFoodCategory"})
+	public String getListFoodCategory(Model model) throws Exception {
+
+			List<Foodcategory> list = productService.getAdminFoodCategory();
+
+			model.addAttribute("list", list);
+
+			return "/product/listFoodCategory";
+	}
+	
+	@GetMapping(value= {"deleteFoodCategory/{foodCategoryNo}"})
+	public String deleteFoodCategory(@PathVariable int foodCategoryNo) throws Exception {
+		productService.deleteFoodCategory(foodCategoryNo);
+		return "/product/listFoodCategory";
+	}
+	@GetMapping(value= {"restoreFoodCategory/{foodCategoryNo}"})
+	public String restoreFoodCategory(@PathVariable int foodCategoryNo) throws Exception {
+		productService.restoreFoodCategory(foodCategoryNo);
+		return "/product/listFoodCategory";
+	}
 	
 }

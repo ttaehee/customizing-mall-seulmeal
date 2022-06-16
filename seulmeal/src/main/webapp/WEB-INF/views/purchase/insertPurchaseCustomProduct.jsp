@@ -37,18 +37,25 @@
 	        margin: 20px 0px;
 		}
 		
-		#close {
+		.close {
 		  display:inline-block;
 		  padding:2px 5px;
 		  font-weight: 700;
 		  text-shadow: 0 1px 0 #fff;
 		  font-size: 1rem;
 		}
-		#close:hover {
+		
+		.close:hover {
 		  border: 0;
 		  cursor:pointer;
 		  opacity: .75;
 		}
+		
+		.card {
+	        margin: 0 auto; /* Added */
+	        float: none; /* Added */
+	        margin-bottom: 10px; /* Added */
+		}		
 		
 	</style>
 	
@@ -56,20 +63,72 @@
 		<input type="hidden" name="productNo" value="${product.productNo}"/>
 		<div class="container">
 		<h2>커스터마이징 : ${product.name}</h2> 
-		<h5 id="price">${product.price}원</h5></div>
-		<div class="container">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</div><br/><br/>
-	
 		
-		<div class="container">
-		<h5 >제품구성</h5></div>
-		<c:forEach var="parts" items="${partsList}">
-		<div class="container productparts">${parts.name} &emsp;&emsp; 
-		<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.partsNo}" data-partsName="${parts.name}">제외하기</button>
-		</div>
-		</c:forEach>
-		<br/><br/>
-	
+		<!-- <div class="row" style="justify-content: center; display: flex;"> -->
 		
+			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			  <div class="card-body">
+			    <h6 class="card-title" id="price">${product.price}원</h5>
+			    <h8 class="card-subtitle mb-2 text-muted">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</h8>
+			  </div>
+			</div>
+		    
+			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			  <div class="card-body">
+			    <h6 class="card-title">제품구성</h6>
+			    <h6 class="card-subtitle mb-2 text-muted"></h6>
+			    <p class="card-text"><c:forEach var="parts" items="${partsList}">
+					<div class="container productparts">${parts.name} &emsp;&emsp; 
+					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.partsNo}" data-partsName="${parts.name}">제외하기</button>
+					</div>
+					</c:forEach>
+				</p>
+			  </div>
+			</div>
+			
+			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+				<div class="card-body">
+				    <h6 class="card-title">추가재료</h6>
+				    <h8 class="card-subtitle mb-2 text-muted">*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</h8>
+				    <p class="card-text">
+						<div class="container">
+							재료 검색 : 
+							<form class="searchProduct">
+								<div style="display:flex;">	
+									<div class="form-outline">
+										<input name="searchKeyword" type="search" class="form-control search" value="" />
+									</div>		  
+									<button type="button" class="btn btn-primary partSearch" onclick="search()">
+										<i class="bi bi-search"></i>
+									</button>
+								</div>
+							</form> 
+						</div>
+						<div class="container">
+							<div class="plusparts"></div>
+						</div>
+					</p>
+				  </div>
+			</div>	  
+
+		  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+					<div class="card-body">
+					    <h6 class="card-title"></h6>
+					    <h8 class="card-subtitle mb-2 text-muted"></h8>
+					    <p class="card-text">
+							<div>커스터마이징상품 금액 :&ensp;<span id="total">${product.price}</span>원</div><br/>
+	
+					
+							<div>커스터마이징상품 수량 :<span id="count">
+								<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
+						        &ensp; <span id="customProductCount" class="count" name="count">1</span> &ensp; 
+						        <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button></span>
+						    </div>
+						</p>
+	
+					</div>
+				</div><br/>
+
 		<div class="container">
 		<h5>추가재료</h5>
 		*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</div>
@@ -80,33 +139,17 @@
 					<div class="form-outline">
 						<input name="searchKeyword" type="search" class="form-control search" val="" />
 					</div>		  
-					<button type="button" class="btn btn-primary partSearch" onclick="search()">
+					<button type="button" class="btn btn-primary partSearch">
 						<i class="bi bi-search"></i>
 					</button>
 				
-			</form> 
+				<div class="container" style="display: flex; justify-content: center;">
+					<button class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="0" onClick="fncInsertCustomProduct()">바로 구매하기</button>
+					<button class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="1" onClick="fncInsertCustomProduct()">장바구니 담기</button>
+					 <button class="btn btn-primary" onclick="history.back(-1)">취&nbsp;소</button>
+				</div><br/><br/>	
 		</div>
-		<div class="container">
-			<div class="plusparts"></div> <!-- 여기에 플러스파츠정보 들어옴 -->
-		</div><br/><br/>
-		
-		
-		<div class="container">커스터마이징상품 금액 :<span id="total">${product.price}</span>원</div>
-		<br/><br/>
-		
-		<div class="container">커스터마이징상품 수량 :<span id="count">
-			<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
-	        &ensp; <span id="customProductCount" class='count' name='count'>1</span> &ensp; 
-	        <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button></span>원</div>
-		<br/><br/>
-		
-		<div class="container">
-		
-		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="0" onClick="send()">바로 구매하기</button>
-		<button type="button" class="btn btn-primary status" style="margin-right:10px;" data-cartStatus="1" onClick="send()">장바구니 담기</button>
-		<a href="#" role="button" >취&nbsp;소</a>
-		<input class="hiddenStatus" type="hidden" name="cartStatus" value="0"/> 
-		</div>
+
 	</form>
 
 		
@@ -116,32 +159,19 @@
 	const minusName = [];
 
 	function fncInsertCustomProduct() {
+		
+		alert("제외한 재료 : "+minusName)
 		const count = $("#customProductCount").text();
+		const customprice= $("#total").text();
 		
 		$(".cc").append(`<input name ="count" value="\${count}">`);
 		$(".cc").append(`<input name ="minusNoA" value="\${minusNo}">`);
 		$(".cc").append(`<input name ="minusNameA" value="\${minusName}">`);
+		$(".cc").append(`<input name ="price" value="\${customprice}">`);
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
 	 }
-	
-	$(function() {	
-		 $( "a[href='#' ]").on("click" , function() {
-				$("form")[0].reset();
-		});
-	});	
-	
-	function search(){
-		
-		var word = $(".search").val();
-		console.log(word);
-		
-		if(word == null || word.length<1){
-			alert("추가할 재료이름을 입력하세요.");
-		}
 
-	}
 	
-
 	$(function() {
 	    $('.execpt').on('click', function() {
 	        const partsNo = $(this).attr('data-partsNo');	        
@@ -150,44 +180,34 @@
 	        const partsName = $(this).attr('data-partsName'); 
 	        minusName.push(partsName)
 	        
-	        /*
-	        const obj = new Object();
-	        obj.partsNo = partsNo;
-	        obj.partsName = partsName;
-	        console.log(obj)
-	        minusNo.push(obj)	        
-	        */
-	        
+	        alert(partsName+" 제외되었습니다.");
 	        console.log("minusNo : "+minusNo)
 	        
 	        $(this).attr("disabled","disabled");
 	    })
-	        
-	     $('.status').on('click', function() {
-	        var partsNo = $(this).attr('data-partsNo');  
-	        $(this).closest('div').find('.hiddenNo').val(partsNo);
-	        console.log(partsNo);
-
-	        var partsName = $(this).attr('data-partsName'); 
-	        $(this).closest('div').find('.hiddenName').val(partsName);
-	        console.log(partsName);
-	        alert(partsName+" 제외되었습니다.")
-	        
-	        this.setAttribute("disabled", "disabled");
-	    });
-	    
-	    $('.status').on('click', function() {
-	        var status = $(this).attr('data-cartStatus');    
-	        $(this).closest('div').find('.hiddenStatus').val(status);
-	        console.log(status);
-	    });
 	});
+	
+	
+	$(function() {	
+		 $( "a[href='#' ]").on("click" , function() {
+				$("form")[0].reset();
+		});
+	});	
+	
+	
+	function search(){
+		var word = $(".search").val();
+		console.log(word);
+		
+		if(word == null || word.length<1){
+			alert("추가할 재료이름을 입력하세요.");
+		}
+	}
+	
 	
 	function fnCalGram(type, ths){
 		var stat = $(ths).closest("div").find("span[name='gram']").text();
-		
 		var num = parseInt(stat,10);		
-		
 		let calprice = parseInt($(ths).closest("div").find("span[name='partsprice']").text());
 
 		if(type=='minus'){
@@ -209,14 +229,14 @@
             $("#total").text(plus);
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text());
-		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(pgram);
+		console.log(pgram)
+		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(10);
 		const pprice = $(ths).closest("div").find("input[name='plusPrice']").val();
-		console.log(ppgram.val())
+		console.log($(ths).closest("div").find("input[name='plusGram']"))
 		
 		console.log($(ths).closest("div").find("span[name='gram']").text());
-		
-		
 	}
+	
 	
 	function fnCalCount(type, ths){
 		var statcount = $(ths).parents("div").find("span[name='count']").text();
@@ -234,9 +254,7 @@
 		}else{
 			number++;
 			$(ths).parents("div").find("span[name='count']").text(number);
-
 		}
-		
 	}
 	
 	
@@ -253,20 +271,18 @@
 		        success : function(data){	        	
 		        	console.log(data);
 
-		        	const parts = "<div class='searchparts'> <input type='hidden' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
 		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
-		        	+"<input type='hidden' class='price' name='price' value='"+data.price+"' />"
-		            +"<div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
+		        	+"<input type='hidden' class='price' name='plusprice' value='"+data.price+"' />"
+		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
 		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
-		            +"<input type='hidden' name='plusPrice' value='"+data.price+"'/>"
-		            +"<input type='hidden' name='plusGram' value=''/>"
-		            +"<span name='partsprice'>"+ data.price +"</span>원<br/>"
 		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
+		            +"<input type='hidden' name='plusGram' value='10'/>"
 		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
             		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
            		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
-	               + "</div></div>"
-		        	$(".plusparts").append(parts);    
+	               + "</div></div>" 
+
+		        	$(".plusparts").append(parts);
 	                
 	                const productprice = $("#total").text();
 	                const result = parseInt(productprice)+parseInt(data.price);
@@ -275,51 +291,6 @@
 			})
 		})
 	})
-	
-	
-	    function send() {
-	
-		let dataList=[];
-		const child = document.querySelector('.plusparts').childNodes;
-		
-		child.forEach(function(item){
-			const partsNo = item.querySelector('input.partsNo').value();
-			const name = item.querySelector('input.partsNo').value();
-			const price = item.querySelector('input.price').value();
-			
-			const obj={
-					partsNo : partsNo,
-					name : name,
-					price : price
-				};
-			
-			dataList.push(obj);
-		});
-			
-			console.log(dataList);
-			console.log(JSON.stringify(dataList));
-			
-			if(dataList.length>0){
-				$.ajax({
-					url: '/purchase/insertCustomProduct' ,
-					data:{
-						param: JSON.stringify(dataList)
-					},
-					method: 'POST',
-					success: function(result){
-						console.log(result);
-					}
-				});
-			}
-	    }
-
-	
-	
-	
-	
-	
-	
-	
 	
 </script>
 

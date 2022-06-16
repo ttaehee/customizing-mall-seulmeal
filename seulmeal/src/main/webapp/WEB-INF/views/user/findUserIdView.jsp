@@ -4,9 +4,8 @@
 <html lnag="ko">
 
 <head>
-<title>login</title>
 	<meta charset="UTF-8">
-	<title>슬밀 로그인</title>
+	<title>슬밀 아이디 찾기</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="login.js"></script>
 <style type="text/css">
@@ -55,24 +54,24 @@ input{
     background: #fff;
 }
 /*input 패스워드 form*/
-#input-pw{
+#email{
     border: none;
     outline:none;
     width:100%;
 }
 /*로그인버튼박스*/
-.login-btn-wrap{
+ .login-btn-wrap{
     height: 52px;
     line-height: 55px;
     margin: 0px 10px 8px 10px;
     border: solid 1px rgba(0,0,0,.1);
 	background-color: #4b6cb7;
     color: #fff;
-    cursor: pointer;
+    cursor: pointer; 
 }
 /*로그인버튼*/
 #login-btn{
-    width:100px;
+    width:200px;
     height: 50px;
     background-color: #4b6cb7;
     border: none;
@@ -235,89 +234,56 @@ input{
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="main">
 		<!--로그인 부분-->
-		<form class="form-signin"  method="post" action="/user/login" target="_self">
-		<section class="login-wrap">
-			<h1>슬밀</h1>
-			<div class="login-id-wrap">
-				<input id="input-id" name="userId" placeholder="아이디" type="text"></input>
-			</div>
-			<div class="login-pw-wrap">
-				<input id="input-pw" name="password" placeholder="비밀번호" type="password"></input>
-			</div>
-			<div class="login-btn-wrap">
-				<button id="login-btn" type="submit">로그인</button>
-			</div>
-			<div class="under-login">
-				<span class="stay-check">
-					<input id="stay-checkbox" type="checkbox" name="checkLogin" value="1"></input>
-					<label for="stay-checkbox" id="stay-text" >로그인 상태 유지</label>
-				</span>
-			</div>
-		</section>
-		</form>
-		</div>
-		<!--간편한 로그인 부분-->
-		<section id="easy-login-wrap">
-			<div id="easy-login-wrap-ko">
-				<div class="easy-login-box">
-					<div class="qr-login">
-						<a href="https://nid.naver.com/nidlogin.login?mode=qrcode" target="_blank" title="QR코드 로그인">QR
-							코드 로그인</a>
-					</div>
-
-					<div class="onetime-login">
-						<a href="https://kauth.kakao.com/oauth/authorize?client_id=972aafa79be1ef957c5ab9ed1149b0e7&redirect_uri=http://localhost:7100/user/kakaoLogin&response_type=code">
-						<img src = "/resources/attachments/image/kakao_login_large_narrow.png" width="210px" height="60px">
-						</a>
-					</div>
+		<form class="form-signin" method="post" action="/user/findUserId" target="_self">
+			<section class="login-wrap">
+				<h2>아이디 찾기</h2>
+				<div>이메일 핸드폰</div>
+				<div class="login-id-wrap">
+					<input id="input-id" name="userId" placeholder="이름" type="text"></input>
 				</div>
-			</div>
-		</section>
+				<div class="login-pw-wrap">
+					<input id="email" name="email" placeholder="이메일" type="text"></input>
+				</div>
+				<div class="login-pw-wrap" id="emailCheckForm" style="display: none;">
+					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
+				</div>
+				<div class="login-btn-wrap">
+					<button id="login-btn" type="submit" onclick="confirmEmail()">인증 하기</button>
+				</div>
+				<div class="login-btn-wrap" style="display: none;">
+					<button id="login-btn" type="submit" >아이디 찾기</button>
+				</div>
 
-		<!--class,PW 찾기 및 회원가입 부분-->
-		<section class="find-signup-wrap">
+			</section>
+		</form>
 
-			<div id="find-signup-wrap-ko">
-				<span class="find-id">
-					<a href="/user/findUserIdView">아이디 찾기</a>
-				</span>
 
-				<span class="find-pw">
-					<a href="https://nid.naver.com/user2/help/pwInquiry?lang=ko_KR" target="_blank"
-						title="일회용번호 로그인">비밀번호 찾기</a>
-				</span>
-
-				<span class="sign-up">
-					<a href="./signup.html" target="_blank"
-						title="일회용번호 로그인">회원가입</a>
-				</span>
-			</div>
-		</section>
-<button onclick="showLoginPopup()">test</button>
-	
-<div id="naver_id_login"></div>
-<jsp:include page="../layer/footer.jsp"></jsp:include>
+		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
-	$("#checkLogin").on("change",()=>{
-		const result = document.querySelector("#checkLogin");
-		if(result.checked){
-			result.value = "1";
-		} else {
-			result.value = "0";
-		}
+//이메일인증 확인
+function confirmEmail(){
+	const confrimNum = $("#emailCode").val();
+	const emailNum = $("#email").val();
+	
+	let url = "/user/api/confirmCode/"+emailNum+"/"+confrimNum;
+	$.ajax({
+		url: url,
+		method: "GET",
+		headers : {
+            "Accept" : "application/json",
+            "Content-Type" : "application/json"
+        },
+        dataType : "json",
+        success : function(data){
+        	alert(data.result);
+        	$("#email").attr("disabled","disabled");
+        	$("#emailBtn").attr("disabled","disabled");
+        	$("#emailCheckForm").css("display","none");
+        }
 	})
-	
-	function showLoginPopup(){
-        let uri = 'https://nid.naver.com/oauth2.0/authorize?' +
-            'response_type=code' +                  // 인증과정에 대한 내부 구분값 code 로 전공 (고정값)
-            '&client_id=9v2VufeHsXfFnp8KaD49' +     // 발급받은 client_id 를 입력
-            '&state=NAVER_LOGIN_TEST' +             // CORS 를 방지하기 위한 특정 토큰값(임의값 사용)
-            '&redirect_uri=http://localhost:7100/user/naver';   // 어플케이션에서 등록했던 CallBack URL를 입력
+}
 
-        // 사용자가 사용하기 편하게끔 팝업창으로 띄어준다.
-        window.open(uri, "Naver Login Test PopupScreen");
-    }
-	
 </script>
+
 </body>
 </html>

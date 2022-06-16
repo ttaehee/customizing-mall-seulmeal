@@ -49,15 +49,20 @@
 							</div>
 						</c:if>
 		        	</div>		
-		        </div>
-				<div class="row" style="min-height:700px;">
-					${post.content}
+		        </div>				
+			</div>
+			<div class="row" style="min-height:700px;">
+				<div class="col-md-10" style="margin-left:2.5%;">
+						${post.content}
 				</div>
 			</div>
 			<div class="col-md-12">
 				<div class="row" style="border-bottom: 2px double #4b6cb7; border-top: 2px double #4b6cb7; justify-content: flex-end;">					
 					<span style="margin-bottom:10px; margin-top:10px;">
-						<c:if test="${user.role == 1}">
+						<c:if test="${user.role == 0}">							
+							<c:if test="${user.userId == post.user.userId}">
+								<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="삭제" onclick="deleteNotice()">
+							</c:if>
 							<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="수정" onclick="updateNotice()">
 						</c:if>
 						<input class="btn btn-primary" style="width: 60px;" value="목록" onclick="cancelNotice()">
@@ -67,7 +72,14 @@
 					<div class="col-md-12" style="background-color:#4b6cb7; color:#fff;">
 						<div class="row">
 							<div class="col-md-1">다음글</div>
-							<div><a class="closetPost" href="/operation/getOperation/1/${post.npost.postNo}">${post.npost.title}</a></div>
+							<div>
+								<c:if test="${post.npost !=null}">
+									<a class="closetPost" href="/operation/getOperation/1/${post.npost.postNo}">${post.npost.title}</a>
+								</c:if>
+								<c:if test="${post.npost ==null}">
+									<div class="closetPost" >마지막 글 입니다.</div>
+								</c:if>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-12" style="background-color:#4b6cb7; color:#fff;">
@@ -88,6 +100,24 @@
 	
 	function cancelNotice(){
 		window.location.href = '/operation/getListOperation/1';
+	}
+	
+	function deleteNotice(){
+		
+		$.ajax({
+			url : "/operation/api/deleteOperation",
+			method : "POST",
+			data : JSON.stringify({
+				postNo : ${post.postNo},
+				postStatus : ${post.postStatus}
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	window.location.href = '/operation/getListOperation/1';
+	        }
+		})
+		
 	}
 </script>
 </body>

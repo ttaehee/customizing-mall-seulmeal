@@ -87,56 +87,32 @@
 
 	<!-- custom_parts -->
 	<insert id="insertMinusParts" parameterType="map">
-		INSERT INTO customparts
-		(customparts_no, customproduct_no, productparts_no, minus_name)
-		SELECT seq_customparts_no.NEXTVAL, #{customProductNo}, inner_table.*
+		INSERT INTO customparts(customparts_no, productparts_no, minus_name, customproduct_no)
+		SELECT seq_customparts_no.NEXTVAL, inner_table.*
 		FROM(
-			<foreach collection="minusParts" item="item" index="index" separator="union all">
+			<foreach collection="minusParts" item="item" separator="union all">
 				SELECT
-				#{item.parts.partsNo:NUMERIC} as productParts_no,
-				#{item.parts.name : VARCHAR} as minus_name
+				#{item.minusNo:NUMERIC} as productparts_no,
+				#{item.minusName:VARCHAR} as minus_name,
+				#{item.customProductNo:NUMERIC} as customproduct_no
 				FROM dual
-			</foreach>)inner_table
-		<selectKey keyProperty="customPartsNo" resultType="int" order="AFTER">
-			SELECT seq_customparts_no.CURRVAL FROM DUAL
-		</selectKey>
+			</foreach>
+			)inner_table
 	</insert>
 
 	<insert id="insertPlusParts" parameterType="map">
-		INSERT INTO customparts
-		(customparts_no, customproduct_no, parts_no, gram)
-		SELECT seq_customparts_no.NEXTVAL, #{customProductNo}, inner_table.*
+		INSERT INTO customparts(customparts_no, parts_no, gram, customproduct_no)
+		SELECT seq_customparts_no.NEXTVAL, inner.*
 		FROM(
 			<foreach collection="plusParts" item="item" index="index" separator="union all">
 				SELECT
 				#{item.parts.partsNo:NUMERIC} as parts_no,
-				#{item.gram:NUMERIC} as gram
+				#{item.gram:NUMERIC} as gram,
+				#{item.customProductNo:NUMERIC} as customproduct_no
 				FROM dual
-			</foreach>)inner_table
-		<selectKey keyProperty="customPartsNo" resultType="int" order="AFTER">
-			SELECT seq_customparts_no.CURRVAL FROM DUAL
-		</selectKey>
+			</foreach>
+			)inner
 	</insert>
-	
-	<!--  
-	<insert id="insertCustomParts" parameterType="map">
-		INSERT INTO customparts
-		(customparts_no, customproduct_no, productparts_no, minus_name, parts_no, gram)
-		SELECT seq_customparts_no.NEXTVAL, #{customProductNo}, inner_table.*
-		FROM(
-			<foreach collection="customParts" item="item" index="index" separator="union all">
-				SELECT
-				#{item.productPartsNo : NUMERIC} as productparts_no,
-				#{item.minusName : VARCHAR} as minus_name,
-				#{item.parts.partsNo : NUMERIC} as parts_no,
-				#{item.gram : NUMERIC} as gram
-				FROM dual
-			</foreach>)inner_table
-		<selectKey keyProperty="customPartsNo" resultType="int" order="AFTER">
-			SELECT seq_customparts_no.CURRVAL FROM DUAL
-		</selectKey>
-	</insert>
-	-->
 
 	<select id="getCustomParts" resultType="customParts">
 		SELECT * FROM customparts
@@ -174,9 +150,8 @@
 	<!-- custom_product -->
 	<insert id="insertCustomProduct">
 		INSERT INTO customproduct
-		(customproduct_no, user_id, product_no, count, price,
-		cart_status, reg_date)
-		values((seq_customproduct_no.NEXTVAL),#{user.userId}, #{product.productNo}, 
+		(customproduct_no, user_id, product_no, count, price, cart_status, reg_date)
+		values((seq_customproduct_no.NEXTVAL),#{user.userId:VARCHAR}, #{product.productNo:NUMERIC}, 
 		#{count:NUMERIC}, #{price:NUMERIC}, #{cartStatus:CHAR}, SYSDATE)
 		<selectKey keyProperty="customProductNo" resultType="int" order="AFTER">
 			SELECT seq_customproduct_no.CURRVAL FROM DUAL
@@ -185,7 +160,7 @@
 	
 	<!--커스터마이징옵션 수정페이지에서 출력 -->
 	<select id="getCustomProduct" resultMap="customProductSelectMap" parameterType="int">
-		SELECT c.count, c.price, p.product_no, p.name, p.price product_price, p.thumbnail
+		SELECT c.customproduct_no, c.count, c.price, p.product_no, p.name, p.price product_price, p.thumbnail
 		FROM customproduct c, product p
 		<where>
 			c.product_no=p.product_no AND customproduct_no = #{customProductNo}
@@ -227,7 +202,7 @@
 	<update id="updateCustomProductCount">
 		UPDATE customproduct
 		<set>
-			count={count:NUMERIC} AND price={price:NUMERIC}
+			count={count:NUMERIC}
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}

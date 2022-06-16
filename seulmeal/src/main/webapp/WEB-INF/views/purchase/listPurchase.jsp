@@ -38,7 +38,7 @@
 	 <h2>구매내역 조회</h2>
 	 <div class="col-md-6 text-right">
 	    <form class="form-inline" name="detailForm">
-	     <input type="hidden" name="userId" value="ghm4905"/>
+	     <input type="hidden" name="userId" value="${user.userId}"/>
 		 <div class="form-group">
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="0">오늘</button>
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="1">1주일</button>
@@ -50,7 +50,7 @@
 		  <input type="hidden" id="currentPage" name="currentPage" value=""/>
 		  
 		</form>
-   	</div><br/><br/>
+   	</div><br/>
 			
 	
 	 <table class="blueone" >
@@ -108,7 +108,7 @@
       function fncGetListPurchase(currentPage) {
   		$("#currentPage").val(currentPage)
   		$("form").attr("method" , "POST").attr("action" , "/purchase/getListPurchase").submit();
-  	}
+  	  }
   	
 
   	 $(function() {

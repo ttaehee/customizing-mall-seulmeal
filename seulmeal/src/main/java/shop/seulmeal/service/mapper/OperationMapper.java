@@ -19,6 +19,7 @@ public interface OperationMapper {
 	public int deleteOperation(Post post);
 	public List<Post> getListOperation(Map<String, Object> map);
 	public int getTotalCount(Map<String, Object> map);
+	public void endEvent();
 	
 	// 조회수 증가
 	public int updateOperationView(int no);

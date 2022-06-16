@@ -128,7 +128,7 @@ class PurchaseApplicationTests {
 	}	
 	
 	
-	//@Test
+	@Test
 	void insertCustomProduct() throws Exception {
 		CustomProduct customProduct=new CustomProduct();
 		User user=new User();
@@ -269,7 +269,7 @@ class PurchaseApplicationTests {
 		assertEquals(purchase.getPrice(), 10000);
 	}
 	
-	@Test
+	//@Test
 	void getPurchase() {
 		
 		Purchase purchase=new Purchase();

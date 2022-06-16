@@ -52,7 +52,7 @@
 	</div>
 	
 	<div class="container">
-	<form action="/operation/insertOperation" method="POST" enctype="multipart/form-data">
+	<form action="/operation/insertOperation" method="POST" enctype="multipart/form-data" id="insertForm">
 		<div class="row">
 			<div class="col-md-12 form-group">
 				<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
@@ -75,10 +75,10 @@
 				</div>
 			</div>
 			
-			<div class="col-md-12" style="margin-top:20px;" >
+			<div class="col-md-12 fileTag" style="margin-top:20px;" >
 				<div class="filebox" style="display: flex; justify-content:space-around;">
 						<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
-						<label class="btn btn-primary" for="ex_filename">썸네일</label> 
+						<label class="btn btn-primary" for="">썸네일</label> 
 						<input type="file" accept="image/*" name="thumnailFile" id="ex_filename" class="upload-hidden" onchange="readURL(event);" />  
 				</div>
 			</div>
@@ -96,7 +96,7 @@
 		</div>
 		
 		<div class="text-right" style="margin-top:20px;">
-			<button type="submit" class="btn btn-primary">
+			<button type="button" onclick="insertEvent()" class="btn btn-primary">
 				등록
 			</button>
 			<button type="button" onclick="cancelBtn()" class="btn btn-primary">
@@ -152,6 +152,8 @@
 		$(".endDateView").text($(this).val());
 	});
 	
+	
+	const jsonArray = [];
 	$(document).ready(function () {
 		$('#summernote').summernote({
 			height: 500,                // 에디터 높이
@@ -172,8 +174,61 @@
 			    ['view', ['fullscreen', 'help']]
 			  ],
 			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
-		});		
+			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+			callbacks : {
+				onImageUpload : function(files, editor, welEditable) {
+		            // 파일 업로드(다중업로드를 위해 반복문 사용)
+		            for (var i = files.length - 1; i >= 0; i--) {
+		            uploadSummernoteImageFile(files[i],
+		            this);
+		            		}
+		            	}
+			}
+		});
+		
+		
+	$('#summernote').summernote(setting);
+		
+		function uploadSummernoteImageFile(file, el){	    	
+			const data = new FormData;
+			data.append("file",file);
+			$.ajax({
+				data : data,
+				type : "POST",
+				url : "/uploadSummernoteImgFile",
+				contentType : false,
+				enctype : 'multipart/form-data',
+				processData : false,
+				success : function(data) {
+					$(el).summernote('editor.insertImage', data.url);					
+					jsonArray.push(data.url);
+					jsonFn(jsonArray);
+				},
+				error : function(e){
+					console.log(e);
+				}
+			})
+		}
+		
+		
+		function jsonFn(jsonArray){
+			console.log(jsonArray)
+		}
+		
+		
+		function insertEvent(){
+			if(jsonArray.length != 0){
+				for(let i=0; i<jsonArray.length; i++){
+					let str = jsonArray[i];
+					const result = str.toString().split('/')
+					const tag = `<input name="summerImg" value="\${result[3]}" />`
+					$("#insertForm").append(tag);
+					console.log(result[3]);			
+				}
+			}
+			
+			$("#insertForm").submit();
+		}
     });
 	
 </script>

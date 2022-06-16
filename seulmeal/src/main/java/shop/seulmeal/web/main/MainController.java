@@ -74,8 +74,7 @@ public class MainController {
 			search.setCurrentPage(1);
 		}		
 		search.setPageSize(pageSize);
-		System.out.println(search);
-		
+		search.setSearchCondition("0");
 		// 이벤트		
 		Map<String,Object> map = operationService.getListOperation(search, 2);		
 		model.addAttribute("listE",(List<Post>)map.get("list"));
@@ -84,10 +83,19 @@ public class MainController {
 		model.addAttribute("list",(List<Post>)map.get("list"));		
 		session.setAttribute("fList",productService.getListFoodCategory());
 		
+		// 유저 관리
+		User user = (User)session.getAttribute("user");
+		if(user == null) {
+			session.setAttribute("user", userC);
+		}	
+		
 		// 추천음식
-		User user = userC;
-		session.setAttribute("user", user);
 		System.out.println("principal : "+userC);
+		search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}		
+		search.setPageSize(pageSize);
 		if(user == null) {
 			
 			map = productService.getListProduct(search);

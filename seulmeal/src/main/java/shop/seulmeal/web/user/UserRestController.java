@@ -1,6 +1,7 @@
 package shop.seulmeal.web.user;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -11,11 +12,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import shop.seulmeal.service.confirm.ConfirmService;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.User;
+import shop.seulmeal.service.naver.impl.KakaoAPI;
+import shop.seulmeal.service.naver.impl.LoginService;
 import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
@@ -31,6 +36,10 @@ public class UserRestController {
 	
 	@Autowired
 	private ConfirmService confirmService;
+	
+	@Autowired
+	private LoginService loginService;
+	
 
 	public UserRestController() {
 		// TODO Auto-generated constructor stub
@@ -129,5 +138,13 @@ public class UserRestController {
 		return null;
 	}
 	
+	@GetMapping("api/naver")
+	public String authNaver(@RequestParam Map<String, String> resValue) {
+		System.out.println(resValue);
+		String token = loginService.getNaverAccessToken(resValue.get("state"), resValue.get("code"));
+		User user = loginService.getUserInfo(token);
+		System.out.println(user);
+		return "code : ";
+	}
 
 }

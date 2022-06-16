@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,23 +14,34 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>-->
 
 
-<style>	/* 리뷰등록 모달창 CSS */
-.modal{ 
-  position:absolute; width:100%; height:100%; background: rgba(0,0,0,0.8); top:0; left:0; display:none;
+<style> /* 리뷰등록 모달창 CSS */
+.modal {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+	top: 0;
+	left: 0;
+	display: none;
 }
 
-.modal_content{
-  width:400px; height:300px;
-  background:#fff; border-radius:10px;
-  position:relative; top:50%; left:50%;
-  margin-top:-100px; margin-left:-200px;
-  text-align:center;
-  box-sizing:border-box; padding:74px 0;
-  line-height:23px;
+.modal_content {
+	width: 440px;
+	height: 750px;
+	background: #fff;
+	border-radius: 10px;
+	position: relative;
+	top: 20%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -200px;
+	text-align: center;
+	box-sizing: border-box;
+	padding: 54px 0;
+	line-height: 23px;
 }
 </style>
 <style>
-
 @font-face {
 	font-family: 'GmarketSansMedium';
 	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
@@ -124,10 +136,17 @@ textarea {
 	width: 100%;
 }
 
+div{ -webkit-touch-callout: none;
+     user-select: none;
+     -moz-user-select: none;
+     -ms-user-select: none;
+     -webkit-user-select: none;
+}
 
 </style>
 
 </head>
+
 
 
 <body>
@@ -137,51 +156,58 @@ textarea {
 	<div class="container" style="margin-top: 20px;">
 		<div class="row">
 			<div class="col-md-6" style="height: 700px">
-				<c:if test="${!empty product.name}">
+				<c:if test="${!empty product.thumbnail}">
 					<img src="/resources/attachments/${product.thumbnail}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
 				</c:if>
-				<c:if test="${empty product.name}">
+				<c:if test="${empty product.thumbnail}">
 					<img src="http://folo.co.kr/img/gm_noimage.png" alt="..." class="img-thumbnail">
 				</c:if>
 				<div class="card-bottom" style="position: absolute; bottom: 0;">
 					<h3>
-						평점 :
-						<c:if test="${!empty product.averageRating}">
-							${product.averageRating}
-						</c:if>
-						<c:if test="${empty product.averageRating}">
-							평가 없음
-						</c:if>
+				
 					</h3>
 				</div>
 			</div>
-			<div class="col-md-6" style="height: 700px">
+			<div class="col-md-6" style="height: 700px;">
 				<div style="text-align: center;">
-					<h1 style="font-size: 36px;">${product.name}</h1>
+					<h1 style="font-size: 36px; padding-bottom: 30px;">${product.name}</h1>
 				</div>
 
-				<div class="box-line">
+				<div class="box-line" style="height: auto;">
 
-					<c:if test="${user.userId != null}">
-						<div style="display: flex; justify-content: space-between;">
-							<h4>${user.userId}님을 위한 혜택</h4>
-							<input id="coupon" type="hidden" name="coupon" value="" />
-							<button class="btn btn-primary couponBtn">쿠폰 받기</button>
-						</div>
+					<c:if test="${!empty product.averageRating}">
+					<h3>
+					<div style="display: flex; justify-content: space-between;">
+					<h5>평점</h5>
+							
+					<div class="star-ratings">
+					<div class="star-ratings-fill space-x-2 text-lg" style="width: ${product.averageRating*10}%;">
+						<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+					</div>
+					<div class="star-ratings-base space-x-2 text-lg">
+						<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+					</div>
+					</div>
+				</div>
 					</c:if>
-
+						<c:if test="${empty product.averageRating}">
+							평가 없음
+						</c:if>
+					
+						
 					<hr />
 					<div>
 						<div style="display: flex; justify-content: space-between;">
-							<h5>최대 할인가</h5>
-							<h4 style="color: red;">${product.price }원</h4>
+							<h5>할인 적용가</h5>
+							<h4 id="sale" style="color: red;">
+							<fmt:formatNumber type="number" maxFractionDigits="0"  value="${product.price - product.price*5/100}" />원</h4>
 						</div>
 						<div style="display: flex; justify-content: space-between;">
 							<h5>등록 일자</h5>
 							<h4>${product.regDate}</h4>
 						</div>
 						<div style="border: 1px solid #dce0e3; padding: 10px; background-color: #f7f8fa; max-height: 250px;">
-							<h4>간단 설명</h4>
+							<h4>한 줄 설명</h4>
 							<h5>${product.subContent}</h5>
 							<hr />
 							<h4>들어간 재료</h4>
@@ -207,22 +233,22 @@ textarea {
 							</c:if>
 							<c:if test="${user != null }">
 								<c:choose>
-								<c:when test="${product.stock !=0}">
-									<button class="btn btn-primary" style="width: 55%;">장바구니 담기</button>
-								</c:when>
-								<c:otherwise>
-									<button class="btn btn-primary" disabled="disabled">품절되었습니다.</button>
-								</c:otherwise>
+									<c:when test="${product.stock !=0}">
+										<button class="btn btn-primary" style="width: 55%;">구매옵션 보기</button>
+									</c:when>
+									<c:otherwise>
+										<button class="btn btn-primary" disabled="disabled">품절되었습니다.</button>
+									</c:otherwise>
 								</c:choose>
 							</c:if>
-							
-								<button class="btn btn-primary" style="width: 43%;">관련상품</button>
+
+							<button class="btn btn-primary" style="width: 43%;">관련상품</button>
 						</div>
 						<div style="margin-top: 10px; width: 100%;">
 							<div style="display: flex; justify-content: space-between; margin-top: 10px">
 								<c:if test="${user != null }">
-								<button class="btn btn-primary" style="width: 55%;">문의하기</button>
-								<button class="btn btn-primary" style="width: 43%;">리뷰등록</button>
+									<button class="btn btn-primary" style="width: 55%;">문의하기</button>
+									<button class="btn btn-primary" style="width: 43%;">리뷰등록</button>
 								</c:if>
 							</div>
 						</div>
@@ -326,7 +352,6 @@ textarea {
 									</c:forEach>
 								</tbody>
 							</table>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -334,21 +359,49 @@ textarea {
 		</div>
 	</div>
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
-	
-<div class="modal">	<!-- 리뷰 등록 모달창 -->
-	<div class="modal_content">
-		<form action="/product/insertReview/${product.productNo }" method="POST">
-			상품명 : ${product.name} <br />
-			작성자명 : ${user.userName }<br />
-			리뷰 제목 : <input name="title" /><br />
-			리뷰 내용 : <input name="content" /><br />
-			별점 : <input name="rating" /><br />
-			<br/>
-			<button type="submit" id="insertReviewDone">저장</button>
-			<button type="button" id="insertReviewCancel">취소</button>
-		</form>
+
+	<div class="modal">
+		<!-- 리뷰 등록 모달창 -->
+		<div class="modal_content">
+			<form action="/product/insertReview/${product.productNo }" method="POST">
+				<h2 class="text-center" style="margin-bottom:25px;">리뷰 작성</h2>
+				<div class="col-md-12 form-group" style="padding-left: 20px;">
+					<p class="text-left" style="padding-left: 13px;">상품명</p>
+					<div class="col-md-12">
+						<p class="text-left" style="padding-left: 20px;">${product.name}</p>
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">작성자명</p>
+					<div class="col-md-12">
+						<p class="text-left" style="padding-left: 20px;">${user.userName }</p>
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">리뷰 제목</p>
+					<div class="col-md-12">
+						<input type="text" class="form-control" name="title" placeholder="제목을 입력하세요" style="border: none;">
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">리뷰 내용</p>
+					<div class="col-md-12">
+						<textarea class="form-control" name="content" placeholder="내용을 입력하세요" style="height: 10em;    border: none;    resize: none;"></textarea>
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">별점</p>
+					<div class="col-md-12">
+						<input type="text" class="form-control" name="rating" placeholder="1~10" style="border: none;">
+					</div>
+				</div>
+				<div class="text-right" style="margin-top: 20px; padding-right: 10px;">
+					<button type="submit" class="btn btn-primary" id="insertReviewDone">등록</button>
+					<button type="button" onclick="cancelBtn()" class="btn btn-primary" id="insertReviewCancel">취소</button>
+				</div>
+			</form>
+		</div>
 	</div>
-</div>
 
 
 	<script type="text/javascript">
@@ -416,7 +469,7 @@ textarea {
 		 })
 		 
 		 // 장바구니
-		 $(".btn-primary:contains('장바구니')").on("click", function(){
+		 $(".btn-primary:contains('구매옵션 보기)").on("click", function(){
 			 self.location = "/purchase/insertCustomProduct/${product.productNo}";
 		 })
 		 
@@ -427,8 +480,38 @@ textarea {
 	});
 </script>
 
-<!-- 리뷰 등록 모달창  JS -->
-<script>
+<style>
+.star-ratings {
+  color: #aaa9a9; 
+  position: relative;
+  unicode-bidi: bidi-override;
+  width: max-content;
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1.3px;
+  -webkit-text-stroke-color: #2b2a29;
+}
+ 
+.star-ratings-fill {
+  color: #fff58c;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  -webkit-text-fill-color: gold;
+}
+ 
+.star-ratings-base {
+  z-index: 0;
+  padding: 0;
+}
+</style>
+
+
+	<!-- 리뷰 등록 모달창  JS -->
+	<script>
 $(function(){ 
 
   $(".btn-primary:contains('리뷰등록')").click(function(){

@@ -20,6 +20,8 @@ public interface ProductService {
 
 	public Map<String, Object> getListProduct(Search search) throws Exception;
 
+	public Map<String, Object> getListProductAsAdmin(Search search) throws Exception;
+
 	public Product getProduct(int productNo) throws Exception;
 
 	public void deleteProduct(int productNo) throws Exception;
@@ -30,6 +32,8 @@ public interface ProductService {
 	public void insertFoodCategory(String foodCategoryName) throws Exception;
 
 	public List<Foodcategory> getListFoodCategory() throws Exception;
+	
+	public List<Foodcategory> getAdminFoodCategory() throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 	
@@ -55,7 +59,9 @@ public interface ProductService {
 
 	public int updateParts(Parts parts) throws Exception;
 
-	public int deleteParts(int no) throws Exception;
+	public void deleteParts(int no) throws Exception;
+	
+	public void restoreParts(int no) throws Exception;
 
 	public Map<String, Object> getListParts(Search search) throws Exception;
 

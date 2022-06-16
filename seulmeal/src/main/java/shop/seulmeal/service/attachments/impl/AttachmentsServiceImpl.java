@@ -32,7 +32,16 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	public int insertAttachments(MultipartFile[] uploadFile, Attachments attachments) throws IllegalStateException, IOException {
 		// TODO Auto-generated method stub
 		List<Attachments> list = new ArrayList<>();
+		String origin = null;
+		
 		for (MultipartFile file : uploadFile) {
+			System.out.println("file.getOriginalFilename() : "+file.getOriginalFilename());
+			origin = file.getOriginalFilename();
+			if(file.getOriginalFilename() == null || file.getOriginalFilename() =="") {
+				origin = file.getOriginalFilename();
+				break;
+			}
+			System.out.println(file.getOriginalFilename());
 			if(!file.isEmpty()) {
 				Attachments attachment = new Attachments();
 				
@@ -49,9 +58,10 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 				file.transferTo(newFileName);
 			}
 		}
-		
-		attachmentsMapper.insertListAttachments(list);
-		
+		System.out.println("sdforing"+origin);
+		if(!origin.equals("")) {
+			attachmentsMapper.insertListAttachments(list);
+		}
 		return 0;
 	}
 
