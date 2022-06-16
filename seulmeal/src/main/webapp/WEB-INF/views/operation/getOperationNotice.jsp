@@ -49,9 +49,11 @@
 							</div>
 						</c:if>
 		        	</div>		
-		        </div>
-				<div class="row" style="min-height:700px;">
-					${post.content}
+		        </div>				
+			</div>
+			<div class="row" style="min-height:700px;">
+				<div class="col-md-10" style="margin-left:2.5%;">
+						${post.content}
 				</div>
 			</div>
 			<div class="col-md-12">
@@ -112,7 +114,7 @@
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
 	        success : function(data){
-	        	console.log(data)
+	        	window.location.href = '/operation/getListOperation/1';
 	        }
 		})
 		

@@ -112,7 +112,7 @@
 					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
 						  <td align="left">${i}</td>
-						  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -123,9 +123,9 @@
 						  	</c:forEach> 
 						  	 </td>
 						  <td align="left">
-						  	<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
+						  	<button type='button' class="btn btn-outline-primary btn-sm minus" data-no="${cpd.customProductNo}" onclick="fnCalCount('minus',this);">-</button>
 						  	&ensp; <span id ="count" name="count"> ${cpd.count} </span> &ensp;
-						  	<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button> 
+						  	<button type='button' class="btn btn-outline-primary btn-sm plus" data-no="${cpd.customProductNo}" onclick="fnCalCount('plus',this);">+</button> 
 						  </td>
 						  <td align="left">
 						  <span id="customprice" name="price">${cpd.price*cpd.count}</span>원</td>
@@ -157,24 +157,6 @@
   		$("form").attr("method" , "GET").attr("action" , "/purchase/insertPurchase").submit();
   	  }
 	
-
-	$(function (){
-	    $("change").on("click",function(){
-	    	$.ajax({
-				url:"/purchase/api/getCustomProduct/"+customProductNo,
-				method:"GET",
-		        headers : {
-		            "Accept" : "application/json",
-		            "Content-Type" : "application/json"
-		        },
-		        dataType : "json",
-		        success : function(data){	
-		        	
-		        }
-	    	});
-	    });
-	});
-	
 	
 	function fnCalCount(type, ths){
 		var stat = $(ths).parents("td").find("span[name='count']").text();
@@ -205,6 +187,25 @@
             const plustotal = parseInt($("#total").text()) + oneprice;
 			$("#total").text(plustotal);
 		}
+		
+		const customProductNo = $(ths).attr('data-no');
+		console.log(customProductNo);
+		const count = $(ths).parents("td").find("span[name='count']").text();
+		console.log(count);
+		
+		$.ajax({
+			url:"/purchase/api/updateCustomProduct/"+customProductNo+"/"+count,
+			method:"GET",
+	        headers : {
+	            "Accept" : "application/json",
+	            "Content-Type" : "application/json"
+	        },
+	        dataType : "json",
+	        success : function(data){	
+	        	
+	        }
+    	});	
+		
 	}
 	
 	

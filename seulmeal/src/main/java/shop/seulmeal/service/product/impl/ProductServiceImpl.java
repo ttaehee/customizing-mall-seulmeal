@@ -61,6 +61,20 @@ public class ProductServiceImpl implements ProductService {
 
 		return map;
 	}
+	
+	public Map<String, Object> getListProductAsAdmin(Search search) throws Exception {
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
+		List<Product> list = productMapper.getListProductAsAdmin(search);
+		int totalCount = productMapper.getTotalProductCount(search);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("totalCount", new Integer(totalCount));
+
+		return map;
+	}
 
 	@Override
 	// test done
@@ -85,6 +99,10 @@ public class ProductServiceImpl implements ProductService {
 
 	public List<Foodcategory> getListFoodCategory() throws Exception {
 		return (List<Foodcategory>)productMapper.getListFoodCategory();
+	}
+	
+	public List<Foodcategory> getAdminFoodCategory() throws Exception {
+		return (List<Foodcategory>)productMapper.getAdminFoodCategory();
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {
@@ -152,10 +170,13 @@ public class ProductServiceImpl implements ProductService {
 		return productMapper.updateParts(parts);
 	}
 
-	@Override
-	public int deleteParts(int no) throws Exception {
-		
-		return productMapper.deleteParts(no);
+	
+	public void deleteParts(int no) throws Exception {
+		productMapper.deleteParts(no);
+	}
+	
+	public void restoreParts(int no) throws Exception{
+		productMapper.restoreParts(no);
 	}
 
 	@Override

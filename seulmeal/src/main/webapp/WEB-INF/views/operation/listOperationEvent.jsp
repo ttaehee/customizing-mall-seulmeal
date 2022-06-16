@@ -39,39 +39,35 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>	
 	<br/>
 	<div class="container">
-		<div class="dropdown">
+		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+			<div class="col-6">
+				<h1 class="pt-5 mb-4 fw-bold">이벤트</h1>
+			</div>
+			
+			<div class="dropdown pt-5 mb-4 col-6">
+			
 			<div class="float-right" style="display:flex;">
-				<c:if test="${user.role == 1}">
-					<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
-				</c:if>
-				<div class="dropdown show">
-					<button class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						이벤트 목록
-					</button>					
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-						<a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a>
-						<a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a>
-						<a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a>
-					</div>
+				<div class="dropdown">
+					<c:if test="${user.role == 1}">
+						<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
+					</c:if>
+					<div class="dropdown show">
+						<button class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							이벤트 목록
+						</button>					
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a>
+							<a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a>
+							<a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a>
+						</div>
+					</div>			
 				</div>
-			    <!-- 
-				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-					이벤트 목록
-				</button>
-				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-					<li><a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a></li>
-					<li><a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a></li>
-					<li><a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a></li>
-				</ul>
-				 -->
 				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" />
-				</div>		  
-					<button type="button" class="btn btn-primary">
-					<i class="bi bi-search"></i>
-				</button>
-			</div>			
-		</div>		
+					<input type="search" placeholder="검색내용을 입력하세요" name="searchKeyword" id="searchKeyword" onkeyup="filter()" class="form-control" />
+				</div>
+			</div>
+		</div>
+		</div>			
     </div>
     
     
@@ -80,16 +76,10 @@
 			<c:forEach var="post" items="${list}">	
 				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3 cardComponet">
 					<div class="col">
-						<c:if test="${post.thumnail != null}">
-							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${post.thumnail}');">
-						</c:if>
-						<c:if test="${post.thumnail == null}">
-							<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/image/tetris.png');">
-						</c:if>
-						
+						<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${post.thumnail}');">						
 							<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-								<h2 class="display-6 fw-bold">${post.title}</h2>
-								<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}shortContent</h2>
+								<h2 class="display-6 fw-bold title">${post.title}</h2>
+								<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold shortContent">${post.shortContent}</h2>
 								<h2 class="endDateView">~${post.endDate}</h2>
 								<div style="display:flex; justify-content:space-between;">
 									<ul class="d-flex list-unstyled mt-auto">
@@ -115,22 +105,59 @@
 			</c:forEach>
 		</div>		
 	</div>
-	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
+	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>	
+
 	
-<div>
-</div>
-<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
 	$(function(){
 		$(".card-cover").on("click",function(){
 			const no =$(this).data("value");
 			window.location.href = '/operation/getOperation/2/'+no;
-		})
+		});
+		
+		$("#searchEventBtn").on("click",function(){
+			const searchKeyword = $("#searchKeyword").val();
+			if(searchKeyword == ""){
+				alert("검색내용을 입력하세요")
+				return;
+			}
+			$("#searchEvnet").submit();
+		});
 	})
+		
+	function searchEvent(){
+		const searchKeyword = $("#searchKeyword").val();
+		if(searchKeyword == ""){
+			alert("검색내용을 입력하세요")
+		}
+		$("#searchEvnet").submit();
+	}
 	
 	function insertEvent(){
 		window.location.href = '/operation/insertOperation/2';
 	}
+	
+	
+	function filter(){
+		const search = $("#searchKeyword").val();
+		const cardCom = $(".text-shadow-1")
+		
+		
+		for(let i=0; i<cardCom.length; i++){
+			title = $(cardCom[i]).find(".title");
+			shortContent = $(cardCom[i]).find(".shortContent");
+			endDate = $(cardCom[i]).find(".endDateView");
+
+			if($(title[0]).text().indexOf(search) != -1 || $(shortContent[0]).text().indexOf(search) != -1 || $(endDate[0]).text().indexOf(search) != -1){
+				$(cardCom[i]).parent().parent().parent().css("display","flex");
+			} else {
+				$(cardCom[i]).parent().parent().parent().css("display","none");
+			}
+			
+		}
+	}
+	
 </script>
 </body>
 </html>

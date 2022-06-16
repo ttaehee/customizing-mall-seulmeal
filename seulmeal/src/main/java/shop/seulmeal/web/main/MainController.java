@@ -74,8 +74,7 @@ public class MainController {
 			search.setCurrentPage(1);
 		}		
 		search.setPageSize(pageSize);
-		System.out.println(search);
-		
+		search.setSearchCondition("0");
 		// 이벤트		
 		Map<String,Object> map = operationService.getListOperation(search, 2);		
 		model.addAttribute("listE",(List<Post>)map.get("list"));
@@ -92,6 +91,11 @@ public class MainController {
 		
 		// 추천음식
 		System.out.println("principal : "+userC);
+		search = new Search();
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}		
+		search.setPageSize(pageSize);
 		if(user == null) {
 			
 			map = productService.getListProduct(search);

@@ -31,26 +31,26 @@ h1{
 	<br/><br/><br/>
 
 	<div class="container">
-	<form action="/community/insertPost" method="POST" enctype="multipart/form-data">
-		<div class="row">
-			<div class="col-md-12">
-				제목 : <input id="title" name="title" />
+		<form action="/community/insertPost" method="POST" enctype="multipart/form-data">
+			<div class="row">
+				<div class="col-md-12">
+					제목 : <input id="title" name="title" />
+				</div>
+				<div class="col-md-12">
+					<textarea id="summernote" name="content"></textarea>		
+				</div>
 			</div>
-			<div class="col-md-12">
-				<textarea id="summernote" name="content"></textarea>		
-			</div>
-		</div>
-		<div style="display:flex; justify-content: space-between;">
-			<div >
-				<input type="file" name="uploadfile" multiple="multiple" />
-			</div>
-			<div>
-				<button type="submit" class="btn btn-primary">
-					등록
-				</button>
-			</div>
-		</div>	
-	</form>
+			<div style="display:flex; justify-content: space-between;">
+				<div >
+					<input type="file" name="uploadfile" multiple="multiple" />
+				</div>
+				<div>
+					<button type="submit" class="btn btn-primary">
+						등록
+					</button>
+				</div>
+			</div>	
+		</form>
 	</div>
 
 

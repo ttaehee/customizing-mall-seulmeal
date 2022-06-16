@@ -19,7 +19,7 @@
 				<div class="col-md-12 form-group">
 					<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
 						<div class="col-md-12">
-						<input type="text" class="form-control" value="${post.title}" name="title" placeholder="제목을 입력해 주세요">
+						<input type="text" class="form-control" value="${post.title}" id="title" name="title" placeholder="제목을 입력해 주세요">
 					</div>
 				</div>
 				<div class="col-md-12" style="margin-top:20px;" >
@@ -90,6 +90,7 @@
 	})
 	//////
 	
+	const jsonArray = [];
 	$(document).ready(function () {
 		$('#summernote').summernote({
 			height: 700,                // 에디터 높이
@@ -110,8 +111,45 @@
 			    ['view', ['fullscreen', 'help']]
 			  ],
 			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
-		});		
+			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+			callbacks : {
+				onImageUpload : function(files, editor, welEditable) {
+		            // 파일 업로드(다중업로드를 위해 반복문 사용)
+		            for (var i = files.length - 1; i >= 0; i--) {
+		            uploadSummernoteImageFile(files[i],
+		            this);
+		            		}
+		            	}
+			}
+		});	
+	
+	$('#summernote').summernote(setting);
+		
+		function uploadSummernoteImageFile(file, el){
+			const data = new FormData;
+			data.append("file",file);
+			$.ajax({
+				data : data,
+				type : "POST",
+				url : "/uploadSummernoteImgFile",
+				contentType : false,
+				enctype : 'multipart/form-data',
+				processData : false,
+				success : function(data) {
+					$(el).summernote('editor.insertImage', data.url);					
+					jsonArray.push(data.url);
+					jsonFn(jsonArray);
+				},
+				error : function(e){
+					console.log(e);
+				}
+			})
+		}
+		
+		
+		function jsonFn(jsonArray){
+			console.log(jsonArray)
+		}
     });
 	
 	const deleteAttachmentNo = [];
@@ -126,6 +164,28 @@
 	}
 	
 	function updateBtn(){
+		const title = $("#title").val()
+		const content = $("#summernote").val()
+		
+		if(jsonArray.length != 0){
+			for(let i=0; i<jsonArray.length; i++){
+				let str = jsonArray[i];
+				const result = str.toString().split('/')
+				const tag = `<input name="summerImg" value="\${result[3]}" />`
+				$("#updateForm").append(tag);
+				console.log(result[3]);			
+			}
+		}
+		
+		if(title == ""){
+			alert("제목입력하세요");
+			return;
+		}
+		if(content == ""){
+			alert("내용입력하세요");
+			return;
+		}
+		
 		$("#updateForm").append(`<input name="deleteAttachmentNo" value="\${deleteAttachmentNo}" />`);
 		$("#updateForm").append(`<input name="deleteAttachmentName" value="\${deleteAttachmentName}" />`);
 		$("#updateForm").submit();
