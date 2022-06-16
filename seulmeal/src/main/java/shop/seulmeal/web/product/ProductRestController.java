@@ -51,4 +51,6 @@ public class ProductRestController {
 		productService.updateProductStock(productNo, stock);
 		return stock;
 	}
+	
+	
 }
