@@ -1,12 +1,18 @@
 package shop.seulmeal.web.operation;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,42 +44,50 @@ public class OperationRestController {
 	@Autowired
 	private ConfirmService confirmService;
 	
+	@PostMapping("deleteOperation")
+	public ResponseEntity<JSONObject> deleteOperation(@RequestBody Post post) {
+		JSONObject json = new JSONObject();
+		System.out.println(post);
+		HttpHeaders headers = new HttpHeaders();
+		int r = operationService.deleteOperation(post);
+		json.put("result", r);
+		
+		return new ResponseEntity<JSONObject>(json, headers, HttpStatus.OK);
+	}
+	
 	@PostMapping(value ="insertAnswer", consumes = {"multipart/form-data"})
 	public Comment insertAnswer(@RequestParam(value="uploadfile", required = false) MultipartFile[] uploadfile,
 								@RequestParam(value="content") String content, HttpSession session,
 								@RequestParam(value="postNo") int postNo, Comment comment, Attachments attachments) throws IllegalStateException, IOException {
+		
+		System.out.println(uploadfile.length);
 		User user = (User)session.getAttribute("user");
 		comment.setUser(user);
 		comment.setPostNo(postNo);
 		comment.setContent(content);
 		System.out.println(comment);
 		operationService.insertAnswer(comment);
-		System.out.println(uploadfile.length);
-		if(uploadfile.length > 1) {
-			attachments.setCommentNo(Integer.toString(comment.getCommentNo()));
-			
-			attachmentsService.insertAttachments(uploadfile, attachments);
-		}
-		user = null;
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		user = (User) authentication.getPrincipal();
 		
-		comment.setUser(user);
-		System.out.println("TESTSAETSAETFD");
+		if(uploadfile != null) {
+			attachments.setCommentNo(Integer.toString(comment.getCommentNo()));			
+			attachmentsService.insertAttachments(uploadfile, attachments);
+			
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("commentNo", comment.getCommentNo());
+			List<Attachments> list =attachmentsService.getAttachments(map);
+			comment.setAttachments(list);
+		}		
 
 		return comment;
 	}
 	
-	public JSONObject deleteAnswer(Comment comment, JSONObject json) {
-		int r = operationService.deleteAnswer(comment);
+	@PostMapping("deletetAnswer")
+	public int deleteAnswer(@RequestBody JSONObject data, Comment comment) {
+		comment.setCommentNo((Integer)data.get("commentNo"));
 		
-		if(r == 1) {
-			json.put("result", "success");
-		} else {
-			json.put("result", "false");
-		}		
+		int r = operationService.deleteAnswer(comment);		
 		
-		return json;
+		return r;
 	}
 	
 	@PostMapping("confirmQueryPassword")

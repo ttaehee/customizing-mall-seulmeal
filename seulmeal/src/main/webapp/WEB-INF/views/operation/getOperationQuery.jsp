@@ -104,7 +104,7 @@
         </div>
         <c:if test="${user.role==0}">        
 	        <div class="row justify-content-end">
-	            <button id="answerInsert" style="margin-top:10px; margin-right:10px;" class="btn btn-primary float-right" onclick="insertQuery()">답변등록</button>
+	            <button id="answerInsert" style="margin-top:10px; margin-right:10px;" class="btn btn-primary float-right">답변등록</button>
 	        </div>
         </c:if>
         <div class="commentArg">
@@ -121,7 +121,7 @@
 			            
 			            <c:if test="${user.userId==comment.user.userId}">
 			            	<div style="display: flex; justify-content: flex-end;">
-				            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="답변삭제">
+				            	<input data-value="${comment.commentNo}" class="btn btn-primary float-right uploadAnswerBtn deleteAnswer" onclick="deleteAnswer(this)" type="button" value="답변삭제">
 				            </div>
 			            </c:if>
 			            
@@ -184,6 +184,7 @@
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	
 <script type="text/javascript">
+	let jsonArray = [];
 	$(document).ready(function(){
 		const fileTarget = $('.filebox .upload-hidden');
 		let filename;	
@@ -234,54 +235,129 @@
 			    ['view', ['fullscreen', 'help']]
 			  ],
 			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
-		});		
+			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+			callbacks : {
+				onImageUpload : function(files, editor, welEditable) {
+		            // 파일 업로드(다중업로드를 위해 반복문 사용)
+		            for (var i = files.length - 1; i >= 0; i--) {
+		            uploadSummernoteImageFile(files[i],
+		            this);
+		            		}
+		            	}
+			}
+		});
+		
+	$('#summernote').summernote(setting);
+		
+		function uploadSummernoteImageFile(file, el){	    	
+			const data = new FormData;
+			data.append("file",file);
+			$.ajax({
+				data : data,
+				type : "POST",
+				url : "/uploadSummernoteImgFile",
+				contentType : false,
+				enctype : 'multipart/form-data',
+				processData : false,
+				success : function(data) {
+					$(el).summernote('editor.insertImage', data.url);					
+					jsonArray.push(data.url);
+					jsonFn(jsonArray);
+				},
+				error : function(e){
+					console.log(e);
+				}
+			})
+		}
+		
+		
+		function jsonFn(jsonArray){
+			console.log(jsonArray)
+		}
+		
     });
 	
-	function insertAnswer(){
-		$(".answerForm").css('display','block');
-		//$(".answerForm").attr('class','answerForm not')
-	}
-	
-	function colseModal(){
-		$(".answer").dialog("close");
-	}
-		
 	function ajaxAnswer(){
-		const form = $("#answerForm")[0];		
-		const formData = new FormData(form);
+		const form = $("#answerForm")[0];
 		
+		if(jsonArray.length != 0){
+			for(let i=0; i<jsonArray.length; i++){
+				let str = jsonArray[i];
+				const result = str.toString().split('/')
+				const tag = `<input name="summerImg" value="\${result[3]}" />`
+				form.append(tag);
+				console.log(result[3]);			
+			}
+		}
+		
+		const formData = new FormData(form);
 		$.ajax({
 			url : "/operation/api/insertAnswer",
 			method : "POST",
-			enctype: 'multipart/form-data',
 			data : formData,
 			processData: false,
 			contentType: false,
 			cache: false,
 	        success : function(data){
-	        	console.log(data)
-	        	const answer = `<div class="row" style="margin-bottom: 10px;">
-		            <div class="col-2">\${data.commentNo}</div>
-		            <div class="col-2">\${data.regDate}</div>
-		            <div class="col-2">\${data.user.userId}</div>
+	        	let answer = `	        	
+	        	<div class="answerBox">
+					<div class="answerHeaderClass">
+					<div style="display: flex;">
+						<div class="answerHeader">\${data.commentNo}</div>
+			            <div class="answerHeader">\${data.regDate}</div>
+			            <div class="answerHeader">\${data.user.userId}</div>
+		            </div>
+	            	<div style="display: flex; justify-content: flex-end;">
+		            	<input data-value="\${data.commentNo}" class='btn btn-primary float-right uploadAnswerBtn deleteAnswer' onClick="deleteAnswer(this)" type='button' value='답변삭제' />
+		            </div>
 		        </div>
-		        <div class="row justify-content-end">
-	        		<div class="col-1">
-						<a href="/download/${attachments.attachmentName}">\${data.attachmentName}</a>
-					</div>		
-		        </div>
-		        <div class="row">
-		            <div class="col" style="background-color: crimson; min-height: 100px;">\${data.content}</div>
-		        </div>
-		        <div class="row justify-content-end">
-		            <div class="col-2">답변 수정</div>
-		        </div>`
+	        
+	        	<div style="display: flex; justify-content: flex-end;">` 
+	        	if(data.attachments.length != 0){
+	        		answer += `<div class="dropdown">
+						<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
+						</a>				
+						<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">`
+						
+							data.attachments.forEach(function(e){
+								answer+= `<a class="dropdown-item" href="/download/\${e.attachmentName}">\${e.attachmentName}</a>`
+							})
+						answer+=`</div>
+					</div>`
+	        	}
+				answer+=`</div>
+				<div class="row">
+	            <div class="col" style=" min-height: 100px; margin-left:20px; margin-right:20px;">\${data.content}</div>
+	        </div>	        
+	        </div>	        
+	        `
 	        	$(".commentArg").append(answer);
 	        	$(".answer").dialog("close");
 	        }
 		})
 	}
+	
+	function deleteAnswer(e){
+		const commentNo = $(e).data("value");
+		const commentBox = $(e).parent("div").parent("div").parent("div");
+		
+		$.ajax({
+			url : "/operation/api/deletetAnswer",
+			method : "POST",
+			data : JSON.stringify({
+				commentNo : commentNo
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	if(data == 1){
+	        		commentBox.css("display","none");
+	        	}
+	        }
+		})
+	}
+	
 </script>
 </body>
 </html>

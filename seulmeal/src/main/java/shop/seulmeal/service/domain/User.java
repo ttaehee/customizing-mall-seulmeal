@@ -1,5 +1,6 @@
 package shop.seulmeal.service.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -24,7 +25,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 public class User implements UserDetails {
 	
 	/**
@@ -68,7 +69,9 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		System.out.println(this.role);
-		return Collections.emptyList();
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		authorities.add(new SimpleGrantedAuthority(this.role));
+		return authorities;
 	}
 	@Override
 	public String getUsername() {

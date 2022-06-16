@@ -48,10 +48,24 @@
 	.text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
 	
 	.card-cover {
+		min-height:400px;
 	  background-repeat: no-repeat;
 	  background-position: center center;
 	  background-size: cover;
-	}	
+	  cursor: pointer;
+	}
+	.card-cover:hover{
+		opacity: 0.7;		
+	}
+	
+	.card-cover > .text-white > .productTarget{
+		display: none;
+	}
+	
+	.card-cover:hover > .text-white > .productTarget{
+		display:block;
+		color: #fff;
+	}
 	
 	.carousel-control.left, .carousel-control.right {
 	    background-image: none
@@ -189,10 +203,10 @@
 			<div class="col">
 				<div data-value="${product.productNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
 					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
-						<h2 class="display-6fw-bold">${product.name}</h2>
-						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"/>
-						<h5>${product.price}원</h5>
-						<h5>${product.calorie}Cal</h5>
+						<h2 class="display-6fw-bold productTarget">${product.name}</h2>
+						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
+						<h5 class="productTarget">${product.price}원</h5>
+						<h5 class="productTarget">${product.calorie}Cal</h5>
 						<ul class="d-flex list-unstyled mt-auto">
 							<li class="me-auto">
 								<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>

@@ -100,7 +100,7 @@
 			SELECT p.*,c.comment_no, c.content content_c, c.user_id user_id_c, c.reg_date reg_date_c FROM post p, comments c
 			<where>
 				p.post_no=c.post_no(+)
-				AND post_status = 3 AND p.status=0
+				AND post_status = 3 AND p.status=0 AND c.status=0
 			</where>
 				AND p.post_no = #{postNo}
 		</if>
