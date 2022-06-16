@@ -61,7 +61,7 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		System.out.println(this.role);
-		return Collections.singletonList(new SimpleGrantedAuthority(this.role));
+		return Collections.emptyList();
 	}
 	@Override
 	public String getUsername() {
