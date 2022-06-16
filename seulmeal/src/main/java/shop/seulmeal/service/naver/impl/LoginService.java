@@ -50,6 +50,7 @@ public class LoginService {
 		post.setHeader("Authorization","bearer "+token);
 		String asd = "";
 		
+		
 		User user = null;		
 		try {			
 			HttpResponse res = client.execute(post);

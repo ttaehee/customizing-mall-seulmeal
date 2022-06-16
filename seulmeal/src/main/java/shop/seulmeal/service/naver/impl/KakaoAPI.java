@@ -87,6 +87,7 @@ public class KakaoAPI {
 			String line = "";
 			String result = "";
 			
+			
 			while((line = br.readLine()) != null) {
 				result += line;
 			}

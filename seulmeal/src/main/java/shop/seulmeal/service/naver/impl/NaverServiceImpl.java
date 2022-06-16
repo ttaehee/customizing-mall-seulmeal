@@ -27,6 +27,7 @@ public class NaverServiceImpl {
 	    String space = " ";                    // one space
 	    String newLine = "\n";                 // new line
 	    
+	    
 
 	    String message = new StringBuilder()
 	        .append(method)
