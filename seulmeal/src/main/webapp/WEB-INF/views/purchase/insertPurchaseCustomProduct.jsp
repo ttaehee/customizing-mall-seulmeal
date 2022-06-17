@@ -203,10 +203,10 @@
             const plus = parseInt($("#total").text()) + calprice;
             $("#total").text(plus);
 		}
-		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text());
-		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(10);
+		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text(num));
+		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(num);
 		const pprice = $(ths).closest("div").find("span[name='partsprice']").val();
-		console.log($(ths).closest("div").find("input[name='plusGram']"))
+		console.log($(ths).closest("div").find("input[name='plusGram']").val())
 
 	}
 	
