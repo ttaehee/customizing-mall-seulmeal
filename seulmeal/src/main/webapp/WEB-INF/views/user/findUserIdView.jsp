@@ -264,7 +264,7 @@ input{
 			</section>
 		</form>
 
-
+</div>
 		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
 

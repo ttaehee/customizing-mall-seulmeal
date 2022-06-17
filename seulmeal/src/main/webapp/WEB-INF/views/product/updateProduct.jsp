@@ -15,62 +15,68 @@
 	<form action="/product/updateProduct/${productNo }" method="POST" enctype="multipart/form-data">
 		<div class="row">
 			<div class="col-md-12 form-group">
+			<label for="Email3" class="col-sm-6 control-label h4">음식 카테고리 설정
+				<h6 style="margin-top: 16px">
 				<select name="no">
 					<c:forEach var="foodcategory" items="${list}">
-						<c:set var="i" value="${i+1}" />
+						<c:set var="i" value="${product.foodCategory}" />
 						<option value="${foodcategory.foodCategoryNo}">${foodcategory.name}</option>
 					</c:forEach>
 				</select>
+				</h6>
+				</label>
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >상품명</label>
+			
+			<div class="col-md-6 form-group">
+				<label for="Email3" class="col-sm-6 control-label h4" >상품명</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="name" name="name" placeholder="상품명" value="${product.name}">
 				</div>
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >짧은 내용</label>
+			<div class="col-md-6 form-group" style="margin-bottom: 50px">
+				<label for="Email3" class="col-sm-6 control-label h4" >짧은 내용</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="subContent" name="subContent" placeholder="짧은내용" value="${product.subContent}"/>
 				</div>
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >가격</label>
+			<div class="col-md-4 form-group">
+				<label for="Email3" class="col-sm-4 control-label h4" >가격</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="price" name="price" value="${product.price}"/>
 				</div>				
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >칼로리</label>
+			<div class="col-md-4 form-group">
+				<label for="Email3" class="col-sm-4 control-label h4" >칼로리</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="calorie" name="calorie" value="${product.calorie}"/>
 				</div>
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >재고</label>
+			<div class="col-md-4 form-group" style="margin-bottom: 50px">
+				<label for="Email3" class="col-sm-4 control-label h4" >재고</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="stock" name="stock" value="${product.stock}" />
 				</div>
 			</div>
-			
+			<div class="col-md-12 form-group"style="margin-bottom: 10px">
+				<label for="Email3" class="col-sm-2 control-label h4" >썸네일</label>
+			</div>
+				
 			<div class="col-md-12" style="margin-top:20px;" >
 				<div class="filebox" style="display: flex; justify-content:space-around;">
-					<input class="upload-name" value="${product.thumbnail }" disabled="disabled" style="width:90%;">
+					<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
 					<label class="btn btn-primary" for="ex_filename">썸네일</label> 
 					<input type="file" accept="image/*" name="thumbnailFile" id="ex_filename" class="upload-hidden" onchange="readURL(event);" />  
 				</div>
 			</div>
 			
-			<div class="col-md-12">
-				<textarea id="summernote" name="content" value="${product.content}"></textarea>
-			</div>
-			<div class="col-md-12" style="margin-top:20px;" >
-				<input type="file" name="uploadfile" multiple="multiple" id="ex_uploadfile" />
+			<div class="col-md-12" style="margin-top: 50px">
+				<label for="Email3" class="col-sm-4 control-label h4" >상세내용</label>
+				<textarea id="summernote" name="content">${product.content}</textarea>
 			</div>
 		</div>
 		
@@ -89,6 +95,17 @@
 </div>
 
 <script type="text/javascript">
+const deleteAttachmentNo = [];
+const deleteAttachmentName = [];
+
+function deleteAttachment(e){
+	const no = $(e).closest("div").data("value");
+	const name = $(e).closest("div").text();
+	deleteAttachmentNo.push(no);
+	deleteAttachmentName.push(name);
+	$(e).closest("div").css("display","none");
+}
+
 
 	//fileUploadTag
 	$(document).ready(function(){
@@ -105,9 +122,6 @@
 		});
 	});
 	
-	$(".filebox").on("click",()=>{
-		document.querySelector("#ex_filename").click();
-	})
 	//////
 	
 	$(document).ready(function () {

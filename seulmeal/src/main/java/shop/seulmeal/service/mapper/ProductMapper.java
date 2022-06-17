@@ -90,12 +90,12 @@ public interface ProductMapper {
 
 	// totalCount
 	public int getTotalProductCount(Search search) throws Exception;
+	
+	public int getAdminProductCount(Search search) throws Exception;
 
 	public int getTotalFoodCategoryCount() throws Exception;
 
 	public int getTotalReviewCount() throws Exception;
-
-	public int getTotalPartsCount(Search search) throws Exception;
 
 	public int getTotalFoodCategoryCount(Search search) throws Exception;
 

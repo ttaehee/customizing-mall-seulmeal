@@ -13,8 +13,8 @@
 	<div class="container">
 		<div class="row">
 			<h3>포인트</h3>
+			<button  onclick="location.href='/user/chargeUserPoint'">포인트 충전</button>	
 
-			<hr/>
 			
 		<table class="table table-striped table-hover">
 			<thead>

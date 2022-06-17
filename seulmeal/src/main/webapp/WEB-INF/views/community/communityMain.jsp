@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>메인 테스트</title>
+<title>커뮤니티 메인</title>
 
 
 <style type="text/css">
@@ -152,7 +152,7 @@ body {
 
 .post-div{
 	margin-bottom:20px;	
-	border: 1px solid black;
+	border: 1px solid #dfdfdf;
 	
 }
 
@@ -188,6 +188,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
+    border-bottom: 1px solid #dfdfdf;
 }
 
 .info .username{
@@ -242,7 +243,7 @@ body {
 
 .post-content{
     width: 100%;
-    padding: 10px;
+    padding: 10px 10px 2px 10px;
 }
 
 .likes{
@@ -263,6 +264,7 @@ body {
 .post-time{
     color: rgba(0, 0, 0, 0.5);
     font-size: 12px;
+    margin: 0px;
 }
 
 .comment-wrapper{
@@ -421,6 +423,23 @@ body {
 	cursor:pointer;
 }
 
+.bi.bi-heart.icon{
+	cursor:pointer;
+}
+
+#block-list-image {
+    margin: 10px;
+}
+
+#block-list-nickname {
+    width: 280px;
+    font-size: 17px;
+    font-weight: normal;
+}
+
+#block-list-card {
+    width: 466px;
+}
 
 </style>
 
@@ -447,7 +466,7 @@ body {
 	<!-- 검색, 정렬, 게시글 작성버튼 작성 -->
 	<div class="search-order-post">	
 	
-		<form class="form-inline" action="/community/communityMain" method="get">
+		<form class="form-inline" action="/community/communityMain" method="GET">
 			<div style="margin:auto;">
 				<div class = "search-div" >	
 				    <input style="width:180px" class="form-control mr-sm-2" id = "search" name = "searchKeyword" type="search" placeholder="게시글 제목+내용" aria-label="Search">
@@ -460,13 +479,13 @@ body {
 				<div class="order-nav">
 					<ul class="nav">
 					  <li class="nav-item">
-					    <a class="nav-link active" href="/community/communityMain?searchCondition=1&searchKeyword=">조회순</a>
+					    <a class="nav-link active"  href="/community/communityMain?searchCondition=1">조회순</a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" href="/community/communityMain?searchCondition=2">좋아요순</a>
+					    <a class="nav-link"  href="/community/communityMain?searchCondition=2">좋아요순</a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" href="/community/communityMain?searchCondition=3">최신순</a>
+					    <a class="nav-link"  href="/community/communityMain?searchCondition=3">최신순</a>
 					  </li>
 					  
 						<c:if test="${not empty sessionScope.user.userId}">
@@ -534,10 +553,10 @@ body {
 				</div>
 				<c:if test="${empty post.attachments}">
 					<div id="post-list-title">${post.title}</div>
-					<div id="post-list-content"><!-- 게시글 내용 100자 이상이면, 100자까지만 출력 -->
+					<div id="post-list-content"><!-- 게시글 내용 200자 이상이면, 200자까지만 출력 -->
 						<c:choose>
 							<c:when test="${fn:length(post.content) > 200}">
-								<a href="/community/getPost/${post.postNo}">${fn:substring(post.content, 0, 200)} ...</a>
+								<a href="/community/getPost/${post.postNo}">${fn:substring(post.content, 0, 200)}...</a>
 							</c:when>
 							<c:otherwise>
 								<a href="/community/getPost/${post.postNo}">${post.content}</a>								
@@ -549,16 +568,11 @@ body {
                 <!-- img src="img/cover 1.png" class="post-image" alt=""-->
                 <div class="post-content">
                     <div class="reaction-wrapper">
-                    	<i id = "insertLikeBtn" class="bi bi-heart icon" data-value="${post.postNo}"></i>
+                    	<i class="bi bi-heart icon" data-value="${post.postNo}"></i>
+                    	<i class="bi bi-heart-fill" style="display:none;"></i>
                     	<!-- 4.조회수, 댓글수 -->
                     	<i class="bi bi-eye icon">${post.views}</i>
                     	<i class="bi bi-chat-left icon">${post.commentCount}</i>
-                    	<!-- 
-                        <img src="img/like.PNG" class="icon" alt="좋아요">
-                        <img src="img/comment.PNG" class="icon" alt="코멘트">
-                        <img src="img/send.PNG" class="icon" alt="보내기">
-                        <img src="img/save.PNG" class="save icon" alt="저장?">
-                         -->
                     </div>
                     <!-- 5. 좋아요 수-->
                     <p class="likes">좋아요 <span class="like-cnt">${post.likeCount}</span></p>	
@@ -566,7 +580,7 @@ body {
                     	<p class="description">
                     	<c:choose>
 							<c:when test="${fn:length(post.content) > 50}">
-								${fn:substring(post.content, 0, 50)} ...
+								${fn:substring(post.content, 0, 50)}...
 							</c:when>
 							<c:otherwise>
 								${post.content}								
@@ -577,7 +591,7 @@ body {
                     	<!-- a href="/community/getPost/${post.postNo}">${post.content}</a-->
                     </c:if>
                     <!-- 6. 등록날짜-->
-                    <p class="post-time">${post.regDate}</p>
+                    <div class="post-time">${post.regDate}</div>
                 </div>
                 <!--div class="comment-wrapper">
                     <img src="img/smile.PNG" class="icon" alt="">
@@ -619,7 +633,7 @@ body {
 								<c:when test="${sessionScope.user.grade eq '3'}"><p class="sub-text">슬밀마스터</p></c:when>
 						</c:choose>
 						<!-- 선호음식 카테고리  null처리하기-->
-						<p class="sub-text">${sessionScope.user.foodCategoryName1}, ${sessionScope.user.foodCategoryName2}, ${sessionScope.user.foodCategoryName3}</p>
+						<p class="sub-text">${sessionScope.user.foodCategoryName1}  ${sessionScope.user.foodCategoryName2}  ${sessionScope.user.foodCategoryName3}</p>
 					</div>	               
 					<div class="follow-info">
 		                <p><a class="follow" role="link" href="#">팔로우 ${followCnt}</a></p> <!-- 팔로우 목록 모달창 -->
@@ -656,35 +670,36 @@ body {
                               <!-- 차단 유저 리스트 -->
                                   <c:forEach var="relation" items="${blockList}">
                                       <div class ="block-li">
-                                          <div class="blockUser_section">
+                                          <div class="blockUser_section" >
                                           
-                                              <!-- 차단 유저 프로필이미지 -->
-                                              <div class="blockUserProfileImage">
-                                              
-                                                  <c:choose>
-                                                      <c:when test="${empty relation.relationUser.profileImage}">
-                                                          <img src="/resources/attachments/profile_image/default_profile.jpg" width="40" height="40" class="rounded-circle">
-                                                      </c:when>
-                                                      <c:otherwise>
-                                                          <img src="/resources/attachments/profile_image/${relation.relationUser.profileImage}" width="40" height="40" class="rounded-circle">
-                                                      </c:otherwise>
-                                                  </c:choose>
-                                                  
-                                              </div>
-                                              
-                                              <!--  유저 닉네임 + 상태메시지 -->
-                                              <div class="id_message">
-                                                  <!-- 유저 닉네임 -->
-                                                  <div class="blockUserId">${relation.relationUser.nickName}</div>
-                                                  <!-- 상태메시지 -->
-                                                  <div class="blockUserProfileMessage">${relation.relationUser.profileMessage}</div>
-                                              </div>
-                                              
-                                              <!-- 차단 해제 버튼 -->
-                                              
-                                                  <button type="button" class="btn btn-light" id="follow_btn"
-                                                      onclick="follow(this, '{{ following_list.following_id }}')">차단해제</button>
-                                              
+                                          
+								            <div id="block-list-card" class="profile-card">
+								                <div id="block-list-image" class="profile-pic">
+								                	<c:choose>
+	                                                  <c:when test="${empty relation.relationUser.profileImage}">
+	                                                      <a href="/community/getProfile/${relation.relationUser.userId}"><img src="/resources/attachments/profile_image/default_profile.jpg"  class="rounded-circle"></a>
+	                                                  </c:when>
+	                                                  <c:otherwise>
+	                                                      <a href="/community/getProfile/${relation.relationUser.userId}"><img src="/resources/attachments/profile_image/${relation.relationUser.profileImage}" class="rounded-circle"/></a>
+	                                                  </c:otherwise>
+	                                              	</c:choose>
+								                </div>
+								                <div>
+								                   <div id="block-list-nickname" class="username" >
+								                   		<c:choose>
+										                  	<c:when test="${not empty relation.relationUser.userId}">
+																<a href="/community/getProfile/${relation.relationUser.userId}">${relation.relationUser.userId}</a>
+															</c:when>
+															<c:otherwise>
+																<a href="/community/getProfile/${relation.relationUser.userId}">${relation.relationUser.userId}</a>							
+															</c:otherwise>
+														</c:choose>	
+								                  </div>
+								                    <div id="block-list-profilemsg" class="sub-text">${relation.relationUser.profileMessage}</div>
+								                </div>
+								                <div><button class="action-btn" data-value="${relation.relationUser.userId}">차단해제</button></div>
+								            </div>
+								            
                                           </div>
                                           
                                       </div>
@@ -729,33 +744,75 @@ body {
 			});
 
 
-	// like
+	// 좋아요
 	$("i.bi.bi-heart.icon").on("click", function() {
 		
 		const postNo = $(this).data("value");
-		alert("postNo: " + postNo);
+		//alert("postNo: " + postNo);
 		console.log("postNo: " + postNo);
-		console.log($(this).parent().parent().find(".like-cnt"));
-		
-		const like_cnt = $(this).parent().parent().find(".like-cnt");
+
 		//like_cnt = <span class="like-cnt">${post.likeCount}</span>
+		const div_like_cnt = $(this).parent().parent().find("span.like-cnt");
+		console.log(div_like_cnt);
+		
 		$.ajax({
 			url : "/community/api/insertLike/" + postNo,
 			method : "POST",
-			success : function(jsonRes, status) {
-				//(status : sucess or err)
-				alert("status: " + status);
-				alert("jsonRes.likeCount: " + jsonRes.likeCount);
+			success : function (data, status, jqXHR){
+				
+				alert("좋아요 성공");
+				
+            	console.log(data); //응답 body부 데이터
+            	console.log(status); //"succes"로 고정인듯함
+            	console.log(jqXHR)
+				
+            	const likeCount = data;
+				console.log("likeCount: " + likeCount);
+				
+				div_like_cnt.html(likeCount); // 좋아요 개수 수정
+				
+			
+			}, error : function(jqXHR, status){
+				
+            	alert("좋아요 이미 누름..");
 
-				console.log("status: " + status);
-				console.log("jsonRes: " + jsonRes);
-				console.log("jsonRes.likeCount: " + jsonRes.likeCount);
-
-				like_cnt.html(jsonRes.likeCount);
+				console.log(jqXHR);	// 응답 메시지
+				console.log(status);	// "errror"로 고정인듯함
+				//console.log(errorThrown);
 			}
 		});
 
 	});
+	
+	
+	// 차단해제
+	$("button.action-btn").on("click", function() {
+		
+		const relationUserId = $(this).data("value");
+		//alert(relationUserId);
+		console.log(relationUserId);
+		
+		const line = $(this).parent().parent(); 
+		console.log(line);
+		
+		$.ajax({
+			url : "/community/api/deleteBlock/" + relationUserId,
+			method : "POST",
+			success : function(status) {
+				
+				if(status === 1){
+					alert("차단해제 완료!");
+					line.remove();
+				}else{
+					alert("차단해제 실패..")
+				}
+			}
+		});
+
+	});
+	
+	
+	
 	
 	
 	// 무한 스크롤
@@ -828,6 +885,7 @@ body {
 	         page++
 	     }        
 	 });
+	
 	
 	
 	
