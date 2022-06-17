@@ -5,20 +5,57 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+#wrap{
+    width:100%;
+    height:100%;
+}
+  
+#wrap .box{ 
+    width:300px;
+    height:300px;
+    margin:0 auto;
+}
+</style>
+
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <!-- 아래 제이쿼리는 1.0이상이면 원하는 버전을 사용하셔도 무방합니다. -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 </head>
 <body>
+
+<jsp:include page="../layer/header.jsp"></jsp:include>
+<div id="wrap">
+<div class="box">
+<h1>포인트 충전</h1>
+<input name="price" class="price">원
+
+ <button type="button" class="btn btn-default" onClick="insertPoint()">충전하기</button>
+<div>
+						<select id= "paymentOption" name="paymentOption">
+							<option value="1" selected="selected">카드결제</option>
+							<option value="2">포인트결제</option>
+						</select>
+				    </div>
+
+
+</div>
+</div>
+
+<jsp:include page="../layer/footer.jsp"></jsp:include>
+
+
 <script type="text/javascript">
 function insertPoint() {
     const price = document.querySelector(".price").value;
+    const paymentCondition = $('select[name=paymentOption]').val();
     $.ajax({
         url:"/purchase/api/insertPurchase",
         method:"POST",
         data:JSON.stringify({
             price :price,
-            status: 1,
+            paymentCondition : paymentCondition,
+            status: 1
         }),
         headers : {
             "Accept" : "application/json",
@@ -28,18 +65,18 @@ function insertPoint() {
         success : function(data){
 
 
-            IMP.init('imp31272612'); // 콘솔에서 확인
+            IMP.init('imp83644059'); // 콘솔에서 확인
             IMP.request_pay({
                 pg : 'kcp',
-                pay_method : 'card',
-                merchant_uid : data.no,
+                pay_method : data.paymentCondition,
+                merchant_uid : 08,
                 name : '포인트 충전' , //결제창에서 보여질 이름
                 amount : data.price, //실제 결제되는 가격
-                buyer_email : 'iamport@siot.do',
+               /*  buyer_email : 'iamport@siot.do',
                 buyer_name : data.member.name,
                 buyer_tel : data.member.phone,
                 buyer_addr : data.member.address,
-                buyer_postcode : '123-456'
+                buyer_postcode : '123-456' */
             }, function(rsp) {
                 console.log(rsp);
                 if ( rsp.success ) {
@@ -50,7 +87,7 @@ function insertPoint() {
                     msg += '카드 승인번호 : ' + rsp.apply_num;
                     
                     $.ajax({
-                        url:"/purchase/api/confirm",
+                        url:"api/verifyIamport",
                         method:"POST",
                         data:JSON.stringify({
                             imp_uid :rsp.imp_uid,
@@ -65,11 +102,12 @@ function insertPoint() {
                         success : function(data){
                         	
                             console.log(data);
+                            
                             if(data.success === "true"){
                             	
                             	const form = document.createElement('form');
                                 form.method="post";
-                                form.action="/point/insertPoint";
+                                form.action="/point/getChargeUserPoint";
                                 
                                 const point = document.createElement('input');
                                 const no = document.createElement('input');

@@ -35,12 +35,25 @@ input{
 .login-id-wrap{
 
     margin: 0px 10px 8px 10px;
-    padding: 10px;
+    padding:10px;
     border: solid 1px #dadada;
     background: #fff;
 }
+.message-wrap{
+
+    margin: 0px 10px 8px 10px;
+    padding: 0px 10px 0px 10px;
+    border: solid 1px #fff;
+    background: #fff;
+}
 /*input 아이디 form*/
-#input-id{
+#password{
+    border: none;
+    outline:none;
+    width:100%;
+}
+
+#confirmPassword{
     border: none;
     outline:none;
     width:100%;
@@ -237,22 +250,24 @@ input{
 		<form class="form-signin" method="post" action="/user/resetUserPassword" target="_self">
 			<section class="login-wrap">
 				<h2>비밀번호 재설정</h2>
-				<div>이메일 핸드폰</div>
 				<div class="login-id-wrap">
-					<input id="input-id" name="password" placeholder="아이디" type="text"></input>
+					<input id="password" name="password" placeholder="비밀번호" type="password"></input>
 				</div>
+				<div class="message-wrap">
+				<div id="passResult" style="font-size: 12px; color:crimson; text-align: left;"></div>
+	     		<div style="font-size: 12px; text-align: left;">비밀번호는 8글자 이상 특수문자1개, 알파벳 대문자 1개를 포함하고 공백과 아이디가 포함되지 않아야 합니다.</div>
+				</div>
+				
 				<div class="login-pw-wrap">
-					<input id="email" name="email" placeholder="이메일" type="text"></input>
+					<input id="confirmPassword" name="email" placeholder="비밀번호 확인" type="password"></input>
 				</div>
-				<div class="login-pw-wrap" id="emailCheckForm" style="display: none;">
-					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
+				<div class="message-wrap">
+				<div id="passCheck" style="font-size: 12px; color:crimson; text-align: left;"></div>
 				</div>
 				<div class="login-btn-wrap">
-					<button id="login-btn" type="submit">인증 하기</button>
+					<button id="login-btn" type="submit" disabled="disabled">확 인</button>
 				</div>
-				<div class="login-btn-wrap" style="display: none;">
-					<button id="login-btn" type="submit" >아이디 찾기</button>
-				</div>
+				
 
 			</section>
 		</form>
@@ -260,29 +275,63 @@ input{
 
 		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
-//이메일인증 확인
-function confirmEmail(){
-	const confrimNum = $("#emailCode").val();
-	const emailNum = $("#email").val();
+//비밀번호 검증
+$("#password").on("keyup",()=>{
+	const pw = $("#password").val();
+	/* const id = $("#userId").val(); */
+		
+	const reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+	/* const hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;		 */
 	
-	let url = "/user/api/confirmCode/"+emailNum+"/"+confrimNum;
-	$.ajax({
-		url: url,
-		method: "GET",
-		headers : {
-            "Accept" : "application/json",
-            "Content-Type" : "application/json"
-        },
-        dataType : "json",
-        success : function(data){
-        	alert(data.result);
-        	$("#email").attr("disabled","disabled");
-        	$("#emailBtn").attr("disabled","disabled");
-        	$("#emailCheckForm").css("display","none");
-        }
-	})
-}
+	/* if(id===''){
+		$("#passResult").css("color","crimson").text("아이디를 먼저 입력하세요.");
+		return
+	} */
+	
+	if(false === reg.test(pw)) {
+		$("#passResult").css("color","crimson").text("비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.");
+		
+		if(/(\w)\1\1\1/.test(pw)){
+			$("#passResult").css("color","crimson").text("같은 문자를 4번 이상 사용하실 수 없습니다.");
+		/* }else if(pw.search(id) > -1){			
+			$("#passResult").css("color","crimson").text("비밀번호에 아이디가 포함되었습니다."); */
+		}else if(pw.search(/\s/) != -1){
+			$("#passResult").css("color","crimson").text("비밀번호는 공백 없이 입력해주세요.");
+		}else if(hangulcheck.test(pw)){
+			$("#passResult").css("color","crimson").text("비밀번호에 한글을 사용 할 수 없습니다.");
+		}else if(pw === ''){
+			$("#passResult").css("color","crimson").text("비밀번호를 입력하세요.");
+		} 
+	} else {
+		$("#passResult").css("color","#ff4500").text("사용가능한 비밀번호 입니다.");
+		
+		if(/(\w)\1\1\1/.test(pw)){
+			$("#passResult").css("color","crimson").text("같은 문자를 4번 이상 사용하실 수 없습니다.");
+		}else if(pw.search(id) > -1){			
+			$("#passResult").css("color","crimson").text("비밀번호에 아이디가 포함되었습니다.");
+		}else if(pw.search(/\s/) != -1){
+			$("#passResult").css("color","crimson").text("비밀번호는 공백 없이 입력해주세요.");
+		}else if(hangulcheck.test(pw)){
+			$("#passResult").css("color","crimson").text("비밀번호에 한글을 사용 할 수 없습니다.");
+		}else if(pw === ''){
+			$("#passResult").css("color","crimson").text("비밀번호를 입력하세요.");
+		} 
+	}
+	
+})
 
+// 비밀번호 동일 체크
+$("#confirmPassword").on("keyup",()=>{
+	const pw = $("#password").val();
+	const pwC = $("#confirmPassword").val();
+	
+	if(pw === pwC){
+		$("#passCheck").css("color","#ff4500").text("비밀번호가 동일 합니다.");
+		$("#login-btn").removeAttr("disabled");
+	} else {
+		$("#passCheck").css("color","crimson").text("비밀번호가 일치하지 않습니다.");
+	}
+})
 </script>
 
 </body>
