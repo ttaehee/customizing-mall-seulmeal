@@ -33,6 +33,10 @@ public interface OperationMapper {
 	public int updateAnswer(Comment comment);
 	public int deleteAnswer(Comment comment);
 	
+	// admin
+	public List<Map<String,Object>> userCount(String table);
+	public List<Map<String,Object>> salePrice();
+	
 	// 테스트
 	public CustomProduct selectCus(int no);
 	

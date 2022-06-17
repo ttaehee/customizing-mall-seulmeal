@@ -77,7 +77,7 @@ public class PurchaseController {
 	
 	//커스터마이징 상품 인서트 
 	@PostMapping("insertCustomProduct")
-	@Transactional(rollbackFor= {Exception.class})
+	@Transactional(rollbackFor= Exception.class)
 	public String insertCustomProduct(@RequestParam(value="productNo") int productNo, 
 			CustomProduct customProduct, Model model, HttpSession session,
 			// 제외 상품
@@ -102,10 +102,11 @@ public class PurchaseController {
 		User user= (User)session.getAttribute("user");
 		customProduct.setUser(user);
 		
-		Map<String, Object> map=new HashMap<>();
-		
 		int result=purchaseService.insertCustomProduct(customProduct);
 		System.out.println("reusult : "+result);
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("customProductNo",customProduct.getCustomProductNo());
 		
 		// minus parts
 		List<CustomParts> minusParts = new ArrayList();
@@ -151,8 +152,6 @@ public class PurchaseController {
 			int sul=purchaseService.insertPlusParts(map);
 			System.out.println("plus result:"+sul);
 		}
-
-		map.put("customProductNo",customProduct.getCustomProductNo());
 
 		model.addAttribute("customProduct",customProduct);
 		
@@ -340,6 +339,29 @@ public class PurchaseController {
 		purchaseService.deletePurchase(purchaseNo);
 		
 		return "redirect:getListPurchase/"+userId;
-	}			
+	}	
+	
+	@RequestMapping(value="getListSale")
+	public String getListSale(Search search, String purchaseStatus, Model model, HttpSession session)
+			throws Exception {
+		
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+
+		Map<String, Object> map = purchaseService.getListSale(search, purchaseStatus);
+
+		Page resultPage 
+			= new Page(search.getCurrentPage(), 
+					((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
+		System.out.println(resultPage);
+
+		model.addAttribute("saleList", map.get("saleList"));
+		model.addAttribute("resultPage", resultPage);
+		model.addAttribute("search", search);
+
+		return "purchase/listPurchaseSale";
+	}
 	
 }

@@ -15,6 +15,9 @@ import shop.seulmeal.service.domain.Purchase;
 @Mapper
 public interface PurchaseMapper {
 	
+	//오토컴플릿
+	public List<Map> autocomplete(Map<String, Object> paramMap) throws Exception;
+	
 	//커스터마이징재료 추가 
 	public int insertMinusParts(Map<String, Object> map);
 	public int insertPlusParts(Map<String, Object> map);
@@ -70,5 +73,8 @@ public interface PurchaseMapper {
 	//개수
 	public int getCustomProductTotalCount(Map<String, Object> map);
 	public int getPurchaseTotalCount(Map<String, Object> map);
+	
+	//판매내역리스트
+	public List<Purchase> getListSale(Map<String, Object> map);
 
 }

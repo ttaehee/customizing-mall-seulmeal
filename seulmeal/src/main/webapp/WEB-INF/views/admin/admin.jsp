@@ -6,6 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자 페이지</title>
+<!-- chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 </head>
 <body>
@@ -13,7 +16,7 @@
 	    <div class="row flex-nowrap">
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
-	            <iframe class="frame" style="height:100vh; width:100%;" src="/product/admin/listProduct"></iframe>
+	            <iframe class="frame" style="height:100vh; width:100%; display:none;" src="/product/admin/listProduct"></iframe>
 	            <!-- user -->
 	            <iframe id="userListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/user/listUser/1"></iframe>
 	            <iframe id="blackUserListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/user/listUser/1"></iframe>
@@ -30,10 +33,28 @@
 	            <iframe id="noticeFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/1"></iframe>
 	            <iframe id="eventFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/2"></iframe>
 	            <iframe id="queryFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/3/0/0"></iframe>
+	            <!--<canvas id="myChart" width="400" height="200"></canvas>-->	            
+				<div>
+					<h3 class="text-center">유저 가입수</h3>
+					<canvas style="width: 100%; height: 300px;" id="user-chart"></canvas>
+				</div>
+				
+				<div style="display:flex; width: 100%;">
+					<div style="width: 50%">
+						<h3 class="text-center">판매량</h3>
+						<canvas id="mixed-chart"></canvas>
+					</div>
+					<div style="width: 50%">
+						<h3 class="text-center">매출액</h3>
+						<canvas id="mixed-chart2"></canvas>
+					</div>					
+				</div>
+	            
 	        </div>
 	    </div>
-	</div>
+	</div>	
 	
+
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -83,6 +104,162 @@
 			$("#reportPostFrame").css("display","block");
 		})
 	})	
+</script>
+
+<script>
+/*
+const ctx = document.getElementById('myChart').getContext('2d');
+
+const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+*/
+new Chart(document.getElementById("user-chart"), {	
+    type: 'bar',
+    data: {
+      labels: [
+			<c:forEach var="userCount" items="${userCount}">
+				"${userCount.MONTHLYDATA.split("-")[1]}월",
+			</c:forEach>
+    	  //"1월", "2월", "3월", "4월", "5월", "6월"
+    	  ],
+      datasets: [{
+          label: "가입수",
+          type: "bar",
+          backgroundColor: "#F3A285",
+          data: [
+				<c:forEach var="userCount" items="${userCount}">
+					${userCount.COUNT},
+				</c:forEach>
+        	  //408,547,675,734
+        	  ],
+        }]
+    },
+    options: {
+    	responsive:false,
+      title: {
+        display: true,
+        text: 'Population growth (millions): Europe & Africa'
+      },
+      legend: { display: false }
+    }
+});
+
+new Chart(document.getElementById("mixed-chart"), {	
+    type: 'bar',
+    data: {
+      labels: [
+			<c:forEach var="purchaseCount" items="${purchaseCount}">
+				"${purchaseCount.MONTHLYDATA.split("-")[1]}월",
+			</c:forEach>
+    	  //"1월", "2월", "3월", "4월", "5월", "6월"
+    	  ],
+      datasets: [{
+          label: "판매량",
+          type: "line",
+          backgroundColor:"#F3A285",
+          borderColor: "#8e5ea2",
+          data: [
+				<c:forEach var="purchaseCount" items="${purchaseCount}">
+					"${purchaseCount.COUNT}",
+				</c:forEach>
+        	  //40,547,675,734
+        	  ],
+          fill: true
+        }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Population growth (millions): Europe & Africa'
+      },
+      legend: { display: false }
+    }
+});
+
+new Chart(document.getElementById("mixed-chart2"), {	
+    type: 'bar',
+    data: {
+      labels: [
+			<c:forEach var="salePrice" items="${salePrice}">
+				"${salePrice.MONTHLYDATA.split("-")[1]}월",
+			</c:forEach>
+    	  //"1월", "2월", "3월", "4월", "5월", "6월"
+    	  ],
+      datasets: [{
+          label: "판매량",
+          type: "line",
+          backgroundColor:"#F3A285",
+          borderColor: "#3e95cd",
+          data: [
+				<c:forEach var="salePrice" items="${salePrice}">
+					"${salePrice.COUNT}",
+				</c:forEach>
+        	  //40,547,675,734
+        	  ],
+          fill: true
+        }, {
+          label: "매출액",
+          type: "line",
+          borderColor: "#3e95cd",
+          data: [],
+          fill: false
+        }, {
+          label: "가입수",
+          type: "bar",
+          backgroundColor: "rgba(0,2,0,0.2)",
+          data: [
+				
+        	  //408,547,675,734
+        	  ],
+        }, {
+          label: "123",
+          type: "bar",
+          backgroundColor: "rgba(0,0,0,0.2)",
+          backgroundColorHover: "#3e95cd",
+          data: []
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Population growth (millions): Europe & Africa'
+      },
+      legend: { display: false }
+    }
+});
 </script>
 </body>
 </html>
