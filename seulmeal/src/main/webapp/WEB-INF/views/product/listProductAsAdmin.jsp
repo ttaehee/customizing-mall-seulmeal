@@ -40,7 +40,7 @@
 
 	<div class="container">
 		
-		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+		<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold" style="padding-left: 30px;">상품 관리</h1>
 			</div>
@@ -63,7 +63,7 @@
 		<table class="table table-hover text-center">
 			<p style="text-align: right;">　</p>
 			
-			<thead style="background-color: #4b6cb7; color: #fff;">
+			<thead style="background-color: #ff4500; color: #fff;">
 				<tr>
 					<th>썸네일</th>
 					<th>상품명</th>
@@ -117,7 +117,6 @@
 		</div>
 	</div>	
 
-<jsp:include page="./listFoodCategory.jsp"></jsp:include>
 		
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 

@@ -186,7 +186,6 @@ public class ProductController {
 		System.out.println(search);
   
 		Map<String, Object> map = productService.getListProductAsAdmin(search);
-		List<Foodcategory> food = productService.getAdminFoodCategory();
 		List<Product> list = (List) map.get("list");
 
 
@@ -194,7 +193,6 @@ public class ProductController {
 				pageSize);
 
 		model.addAttribute("list", list);
-		model.addAttribute("food", food);
 		model.addAttribute("page", resultPage);
 		model.addAttribute("search", search);
 
@@ -377,12 +375,12 @@ public class ProductController {
 	@GetMapping(value= {"deleteFoodCategory/{foodCategoryNo}"})
 	public String deleteFoodCategory(@PathVariable int foodCategoryNo) throws Exception {
 		productService.deleteFoodCategory(foodCategoryNo);
-		return "/product/listFoodCategory";
+		return "redirect:/product/listFoodCategory";
 	}
 	@GetMapping(value= {"restoreFoodCategory/{foodCategoryNo}"})
 	public String restoreFoodCategory(@PathVariable int foodCategoryNo) throws Exception {
 		productService.restoreFoodCategory(foodCategoryNo);
-		return "/product/listFoodCategory";
+		return "redirect:/product/listFoodCategory";
 	}
 	
 }

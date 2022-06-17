@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 			///*
 			.antMatchers("/","/product/**","/operation/**").permitAll()
-			.antMatchers("/admin/**").hasAuthority("0")
+			.antMatchers("/admin/**").hasAuthority("1")
 			.antMatchers("/community/**").hasAnyAuthority("0","1")
 			.antMatchers("/operation/api/insertAnswer").permitAll()
 			//*/
@@ -71,12 +71,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.maximumSessions(1)
 			.maxSessionsPreventsLogin(true);
 		
-				
+		// 자동로그인	
 		http
 		.rememberMe()
 			.key("loginCookie")
 			.rememberMeParameter("checkLogin")
 			.tokenValiditySeconds(60*60);
+		
+		// iframe 설정
+		http
+		.headers()
+			.frameOptions().sameOrigin();
 		
 		http
 		.cors().configurationSource(corsConfigurationSource())

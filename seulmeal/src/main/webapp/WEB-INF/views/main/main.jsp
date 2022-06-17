@@ -226,12 +226,12 @@
 	</c:forEach>
     </div>
 	</div>
-	    
 	</section>
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	</main>		
 	<jsp:include page="../confirm.jsp"></jsp:include>
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
+	<div id="testJson">Test</div>
 	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
 <script type="text/javascript">
@@ -266,9 +266,27 @@ $jq(document).ready(function() {
 			console.log(no)
 			window.location.href="/operation/getOperation/2/"+no;
 		});
+		
+		///////////// test 코드////////////
+		$("#testJson").on("click",()=>{
+			$.ajax({
+				url : "/operation/api/jsonTest",
+				method : "POST",
+				data : JSON.stringify({
+					commentNo : 12345,
+					testNo : 56789,
+					ok : "test"
+				}),
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+		        success : function(data){
+		        	console.log(data);
+		        }
+			})
+		})
 	})
 		
-	
+
 </script>
 </body>
 </html>

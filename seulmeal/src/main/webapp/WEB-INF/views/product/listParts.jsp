@@ -16,7 +16,7 @@
 
 	<div class="container">
 		
-		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+		<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold" style="padding-left: 30px;">재료 관리</h1>
 			</div>
@@ -35,7 +35,7 @@
 		<table class="table table-hover text-center">
 			<p style="text-align: right;">* 단위 : 100g 또는 1알, 1개 기준</p>
 			
-			<thead style="background-color: #4b6cb7; color: #fff;">
+			<thead style="background-color: #ff4500; color: #fff;">
 				<tr>
 					<th>재료명</th>
 					<th>재료 가격</th>
@@ -78,7 +78,7 @@
 </div>
 		
 <jsp:include page="../layer/footer.jsp"></jsp:include>
-	</div>
+
 	
 	
 <!-- 파츠 등록 모달창 -->
@@ -97,7 +97,7 @@
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">재료 가격</p>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="price" placeholder="가격을 입력하세요" style="border: none;"></textarea>
+						<input type="text" class="form-control" name="price" placeholder="가격을 입력하세요" style="border: none;">
 					</div>
 				</div>
 				<div class="col-md-12 form-group">

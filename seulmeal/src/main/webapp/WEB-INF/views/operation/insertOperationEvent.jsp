@@ -154,6 +154,7 @@
 	
 	
 	const jsonArray = [];
+	
 	$(document).ready(function () {
 		$('#summernote').summernote({
 			height: 500,                // 에디터 높이
@@ -214,22 +215,22 @@
 		function jsonFn(jsonArray){
 			console.log(jsonArray)
 		}
-		
-		
-		function insertEvent(){
-			if(jsonArray.length != 0){
-				for(let i=0; i<jsonArray.length; i++){
-					let str = jsonArray[i];
-					const result = str.toString().split('/')
-					const tag = `<input name="summerImg" value="\${result[3]}" />`
-					$("#insertForm").append(tag);
-					console.log(result[3]);			
-				}
-			}
-			
-			$("#insertForm").submit();
-		}
+				
     });
+	
+	function insertEvent(){
+		if(jsonArray.length != 0){
+			for(let i=0; i<jsonArray.length; i++){
+				let str = jsonArray[i];
+				const result = str.toString().split('/')
+				const tag = `<input name="summerImg" value="\${result[3]}" />`
+				$("#insertForm").append(tag);
+				console.log(result[3]);			
+			}
+		}
+		
+		$("#insertForm").submit();
+	}
 	
 </script>
 </body>

@@ -184,7 +184,6 @@ public class UserRestController {
 			json.put("result", "인증완료");
 			json.put("userId", userId);
 			session.removeAttribute(confirm);
-			session.removeAttribute("userId");
 		} else {
 			json.put("result", "인증실패");
 		}

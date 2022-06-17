@@ -43,13 +43,13 @@
 	                    <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Product</span></a>
 	                <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
 	                    <li class="w-100">
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">판매 상품</span></a>
+	                        <a href="#" class="nav-link px-0" id="productList"> <span class="d-none d-sm-inline">판매 상품</span></a>
 	                    </li>
 	                    <li>
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">판매 재료</span></a>
+	                        <a href="#" class="nav-link px-0" id="partsList"> <span class="d-none d-sm-inline">판매 재료</span></a>
 	                    </li>
 	                    <li>
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">음식카테고리</span></a>
+	                        <a href="#" class="nav-link px-0" id="foodCategoryList"> <span class="d-none d-sm-inline">음식카테고리</span></a>
 	                    </li>
 	                </ul>
 	            </li>
