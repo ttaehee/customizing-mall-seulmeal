@@ -122,4 +122,15 @@ public class OperationRestController {
 		json.put("result", "sucess");
 		return json;
 	}
+	
+	@PostMapping("jsonTest")	
+	public JSONObject testRequestBody(@RequestBody JSONObject test) {
+		System.out.println("======================Test Start=============================");
+		System.out.println("JSON============="+test+"=============");
+		System.out.println("CommentNo============="+test.get("commentNo")+"=============");
+		System.out.println("testNo============="+test.get("testNo")+"=============");
+		System.out.println("ok============="+test.get("ok")+"=============");
+		System.out.println("======================Test End=============================");
+		return test;
+	}
 }

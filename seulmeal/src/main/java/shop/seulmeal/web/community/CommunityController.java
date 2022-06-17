@@ -78,7 +78,7 @@ public class CommunityController {
 	
 	
 	// M
-	// 무한스크롤
+	// 게시판 메인
 	@GetMapping("/communityMain") // o
 	public String communityMain(@RequestParam(required = false) String searchKeyword,
 			@RequestParam(required = false) String searchCondition, Model model, HttpSession session) throws Exception {
@@ -91,7 +91,7 @@ public class CommunityController {
 		// 전체 post
 		Search search = new Search();
 		search.setCurrentPage(1);
-		search.setPageSize(13);
+		search.setPageSize(20);//pageSize
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchCondition);
 		Map<String, Object> map = communityService.getListPost(search, null); // 모든 게시글

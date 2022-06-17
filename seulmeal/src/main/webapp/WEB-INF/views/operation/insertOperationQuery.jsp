@@ -173,21 +173,22 @@
 		function jsonFn(jsonArray){
 			console.log(jsonArray)
 		}
-		
-		function insertQuery(){
-			if(jsonArray.length != 0){
-				for(let i=0; i<jsonArray.length; i++){
-					let str = jsonArray[i];
-					const result = str.toString().split('/')
-					const tag = `<input name="summerImg" value="\${result[3]}" />`
-					$("#insertForm").append(tag);
-					console.log(result[3]);			
-				}
-			}
-			
-			$("#insertForm").submit();
-		}
+				
     });
+	
+	function insertQuery(){
+		if(jsonArray.length != 0){
+			for(let i=0; i<jsonArray.length; i++){
+				let str = jsonArray[i];
+				const result = str.toString().split('/')
+				const tag = `<input name="summerImg" value="\${result[3]}" />`
+				$("#insertForm").append(tag);
+				console.log(result[3]);			
+			}
+		}
+		
+		$("#insertForm").submit();
+	}
 	
 	function checkClick(e){
 		$(".password").css("display","flex");

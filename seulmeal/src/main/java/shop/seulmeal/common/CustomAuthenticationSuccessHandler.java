@@ -34,6 +34,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 		
 		if(session != null) {
 			String targetUrl = (String)session.getAttribute("prevPage");
+			System.out.println(targetUrl);
 			if(targetUrl != null) {
 				System.out.println("==========saveUrl Go : "+targetUrl);
 				session.removeAttribute("prevPage");
