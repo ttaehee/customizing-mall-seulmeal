@@ -10,12 +10,14 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -152,14 +154,16 @@ public class PurchaseController {
 			int sul=purchaseService.insertPlusParts(map);
 			System.out.println("plus result:"+sul);
 		}
-
-		model.addAttribute("customProduct",customProduct);
 		
 		System.out.println("ccccc:"+customProduct.getCartStatus());
+		
 		if(customProduct.getCartStatus().equals("1")) {
 			return "redirect:/purchase/getListCustomProduct";
 		}else {
-			return "redirect:/purchase/insertPurchaseDirect";
+			model.addAttribute("customProduct", customProduct);
+			model.addAttribute("cartStatus", "0");
+			
+			return "purchase/insertPurchase";
 		}
 		
 	}
@@ -246,22 +250,6 @@ public class PurchaseController {
 		return "redirect:/purchase/getListCustomProduct";
 	}	
 	
-	
-	//바로구매하기 구매정보입력창
-	@GetMapping("insertPurchaseDirect/{customProductNo}")
-	public String insertPurchaseDirect(int customProductNo, CustomProduct customProduct, Model model) {
-		
-		System.out.println("/insertPurchase : GET");
-		
-		customProduct=purchaseService.getCustomProduct(customProductNo);
-		
-		model.addAttribute("customProduct", customProduct);
-		model.addAttribute("cartStatus", "0");
-		
-		return "purchase/insertPurchase";
-		
-	}
-	
 	//장바구니 거쳐서 구매정보입력창
 	@GetMapping("insertPurchase")
 	public String insertPurchase(Model model, HttpSession session) {
@@ -278,7 +266,7 @@ public class PurchaseController {
 		search.setPageSize(pageSize);
 	
 		Map<String, Object> map=purchaseService.getListCustomProduct(search, userId);
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! : "+map.get("cproductList"));
+
 		Page resultPage 
 		= new Page(search.getCurrentPage(), 
 				((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
@@ -289,6 +277,27 @@ public class PurchaseController {
 		return "purchase/insertPurchase";
 		
 	}
+	
+	//포인트만으로 결제시
+	@PostMapping("insertPurchase")
+	public String insertPurchase(Purchase purchase, @AuthenticationPrincipal User user, Model model) throws Exception {
+	
+		System.out.println("/purchase/insertPurchase : "+purchase);
+
+		purchase.setUser(user);
+	      
+		int result=purchaseService.insertPurchase(purchase);
+		System.out.println("/purchase/insertPurchase insert : "+result);
+		
+		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
+		System.out.println("/purchase/insertPurchase get : "+purchase);
+		purchase.setUser(user);
+		
+		model.addAttribute(purchase);
+
+		return "purchase/getPurchase";	
+		
+	}	
 	
 	@GetMapping("getPurchase/{purchaseNo}")
 	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {

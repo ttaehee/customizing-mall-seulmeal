@@ -179,7 +179,7 @@
 	<select id="getListCustomProduct" resultMap="customProductSelectMap" parameterType="map">
 		SELECT *
 		FROM (SELECT vt.*, ROWNUM AS row_seq
-			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, cpd.price, pd.calorie
+			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.thumbnail, cpd.price, pd.calorie
 			    FROM customproduct cpd, product pd
 				WHERE cpd.product_no=pd.product_no AND cpd.user_id=#{userId} AND cpd.cart_status='1'
 				ORDER BY cpd.customproduct_no) vt

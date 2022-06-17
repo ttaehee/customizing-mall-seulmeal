@@ -76,7 +76,7 @@
 			    <h6 class="card-subtitle mb-2 text-muted"></h6>
 			    <p class="card-text"><c:forEach var="parts" items="${partsList}">
 					<div class="container productparts">${parts.name} &emsp;&emsp; 
-					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.partsNo}" data-partsName="${parts.name}">제외하기</button>
+					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.productPartsNo}" data-partsName="${parts.name}">제외하기</button>
 					</div>
 					</c:forEach>
 				</p>
@@ -231,37 +231,46 @@
 	}
 	
 	function fncGetParts(){
-		 $.ajax({
-				url:"/product/api/getPartsName/"+$(".search").val(),
-				method:"GET",
-		        headers : {
-		            "Accept" : "application/json",
-		            "Content-Type" : "application/json"
-		        },
-		        dataType : "json",
-		        success : function(data){	        	
-		        	console.log(data);
+		const inputTag = $(".partSearch").parent('div').find("input[name='searchKeyword']");
+		
+		if(inputTag.val().trim() != null){
+			if(inputTag.val() != $('.name').text()){
+				$.ajax({
+					url:"/product/api/getPartsName/"+$(".search").val(),
+					method:"GET",
+			        headers : {
+			            "Accept" : "application/json",
+			            "Content-Type" : "application/json"
+			        },
+			        dataType : "json",
+			        success : function(data){	        	
+			        	console.log(data);
 
-		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='plusName' value='"+data.name+"' />"
-		        	+"<input type='hidden' class='price' name='plusPrice' value='"+data.price+"' />"
-		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+"<span class='name'>" +data.name + "</span><button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
-		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
-		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
-		            +"<input type='hidden' name='plusGram' value='10'/>"
-		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
-         			&ensp; <span class='gram' name='gram'>10</span> &ensp; 
-        			<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
-	               + "</div></div></div></div>" 
+			        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='plusName' value='"+data.name+"' />"
+			        	+"<input type='hidden' class='price' name='plusPrice' value='"+data.price+"' />"
+			            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+"<span class='name'>" +data.name + "</span><button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
+			            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
+			            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
+			            +"<input type='hidden' name='plusGram' value='10'/>"
+			            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
+	         			&ensp; <span class='gram' name='gram'>10</span> &ensp; 
+	        			<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
+		               + "</div></div></div></div>" 
 
-	               $(".search").val('');
-	               $(".plusparts").append(parts);
-	               
-	                
-	                const productprice = $("#total").text();
-	                const result = parseInt(productprice)+parseInt(data.price);
-	                $("#total").text(result);
-		        }
-			})
+		               $(".search").val('');
+		               $(".plusparts").append(parts);
+		               
+		                
+		                const productprice = $("#total").text();
+		                const result = parseInt(productprice)+parseInt(data.price);
+		                $("#total").text(result);
+			        }
+				})
+			}else{
+				alert("이미 추가되어있는 재료입니다.");
+				inputTag.val('');
+			}
+		}
 	 }
 	
 	
@@ -302,12 +311,7 @@
 		 
 		$(".partSearch").on("click",()=>{
 			
-			if($(".partSearch").parent('div').find("input[name='searchKeyword']").val() != $('.name').text()){
-				fncGetParts();
-			}else{
-				alert("이미 추가되어있는 재료입니다.");
-			}
-			
+			fncGetParts();
 		})
 	})
 	

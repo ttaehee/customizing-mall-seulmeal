@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -41,6 +41,11 @@
 		button:hover{
 			color: #ff4500;
 		}
+		
+		img{
+		width: 70px;
+		height: 70px;
+		}	
 		
 	</style>
 	
@@ -105,7 +110,7 @@
 					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
 						  <td align="left">${i}</td>
-						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
