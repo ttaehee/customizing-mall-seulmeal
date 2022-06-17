@@ -23,7 +23,7 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container" style="margin-top:20px;">
-	<div style="color:#4b6cb7; border-bottom: 2px solid #4b6cb7; margin-bottom: 30px;">
+	<div style="color:#ff4500; border-bottom: 2px solid #ff4500; margin-bottom: 30px;">
 		<h1>문의 등록</h1>
 	</div>
 
@@ -63,7 +63,7 @@
 				</div>
 				<input type="hidden" name="postStatus" value="3" />
 			</div>
-				<div class="col-md-12" style="margin-top:20px; padding-top:10px; padding-bottom:10px; border-top: 3px solid #4b6cb7; border-bottom: 3px solid #4b6cb7;">
+				<div class="col-md-12" style="margin-top:20px; padding-top:10px; padding-bottom:10px; border-top: 3px solid #ff4500; border-bottom: 3px solid #ff4500;">
 					<div class="filebox" style="display: flex; justify-content:space-around;">
 							<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
 							<label class="btn btn-primary" for="ex_filename">업로드</label> 

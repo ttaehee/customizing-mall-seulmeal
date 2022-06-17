@@ -113,7 +113,7 @@
 		</div>
 	</div>
 	
-	<div class="row" style="border-bottom: 2px double #4b6cb7; border-top: 2px double #4b6cb7; margin-top:20px;">
+	<div class="row" style="border-bottom: 2px double #ff4500; border-top: 2px double #ff4500; margin-top:20px;">
 		<div class="container" style="display:flex; justify-content: flex-end;">	
 			<span style="margin-bottom:10px; margin-top:10px;">
 				<c:if test="${user.role == 1}">

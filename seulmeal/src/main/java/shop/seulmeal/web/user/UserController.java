@@ -274,35 +274,51 @@ public class UserController {
 
 	}
 	
+	@GetMapping("findUserPasswordView")
+	public String findUserPasswordView() throws Exception {
 		
-	@GetMapping("findUserPassword")
-	public String findUserPassword(String userId, String phone, String email) throws Exception {
 		
-		if(phone !=null) {
-			User user = userService.confirmUserPhone(phone);
-
-			if (userId.equals(user.getUserId())) {
-				
-				return "user/resetUserPassword";
-
-			} else {
-				return "<script>alert('등록된 아이디가 없습니다.');</script>";
-			}
-			
-		} else {
-			
-			User user = userService.confirmUserEmail(email);
-			
-			if (userId.equals(user.getUserId())) {
-				
-				return "user/resetUserPassword";
-
-			} else {
-				return "<script>alert('등록된 아이디가 없습니다.');</script>";
-			}
-		}
+		return "user/findUserPasswordView";
+	}
+	
+		
+	@PostMapping("findUserPasswordView")
+	public String findUserPassword(String userId, String phone, String email, HttpSession session) throws Exception {
+		
+		session.setAttribute("userId", userId);
+		
+		
+		
+		return "redirect:/user/resetUserPassword/"+userId;
 		
 	}
+	
+	@GetMapping("resetUserPassword")
+	public String resetUserPassword() throws Exception {
+		
+		
+		return "user/resetUserPassword";
+	}
+	
+	
+	
+	
+	@PostMapping("resetUserPassword")
+	public String resetUserPassword( String password, HttpSession session) throws Exception {
+		
+		String userId = (String)session.getAttribute("userId");
+		
+		User user = new User();
+		user.setUserId(userId);
+		user.setPassword(password);
+		
+		userService.updatePassword(user);
+		
+		return "redirect:/";
+	}
+	
+	
+	
 	
 	@GetMapping("userGradeModal")
 	public String userGradeModal() throws Exception {

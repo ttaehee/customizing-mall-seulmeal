@@ -12,7 +12,7 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container" style="margin-top:20px;">
-		<h1 style="color:#4b6cb7; border-bottom: 2px solid #4b6cb7; margin-bottom: 30px;">공지 수정</h1>
+		<h1 style="color:#ff4500; border-bottom: 2px solid #ff4500; margin-bottom: 30px;">공지 수정</h1>
 		<form id="updateForm" action="/operation/updateOperation" method="POST" enctype="multipart/form-data">
 			<div class="row">
 				<input type="hidden" name="postNo" value="${post.postNo}" />

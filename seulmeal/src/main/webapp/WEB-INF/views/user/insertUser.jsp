@@ -167,7 +167,7 @@
 		        	if(data.result ==="fail"){
 		        		$("#checkUserId").css("color","crimson").text("중복된 아이디입니다.");
 		        	} else if(data.result ==="success") {
-		        		$("#checkUserId").css("color","#4b6cb7").text("사용가능한 아이디입니다.");
+		        		$("#checkUserId").css("color","#ff4500").text("사용가능한 아이디입니다.");
 		        	} else {
 		        		alert(data);
 		        		alert("서버오류");
@@ -208,7 +208,7 @@
 				$("#passResult").css("color","crimson").text("비밀번호를 입력하세요.");
 			} 
 		} else {
-			$("#passResult").css("color","#4b6cb7").text("사용가능한 비밀번호 입니다.");
+			$("#passResult").css("color","#ff4500").text("사용가능한 비밀번호 입니다.");
 			
 			if(/(\w)\1\1\1/.test(pw)){
 				$("#passResult").css("color","crimson").text("같은 문자를 4번 이상 사용하실 수 없습니다.");
@@ -231,7 +231,7 @@
 		const pwC = $("#confirmPassword").val();
 		
 		if(pw === pwC){
-			$("#passCheck").css("color","#4b6cb7").text("비밀번호가 동일 합니다.");
+			$("#passCheck").css("color","#ff4500").text("비밀번호가 동일 합니다.");
 		} else {
 			$("#passCheck").css("color","crimson").text("비밀번호가 일치하지 않습니다.");
 		}
@@ -252,7 +252,7 @@
 		        dataType : "json",
 		        success : function(data){
 		        	if(data.result === "success"){
-		        		$("#checknickName").css("color","#4b6cb7").text("사용가능한 닉네임 입니다.");
+		        		$("#checknickName").css("color","#ff4500").text("사용가능한 닉네임 입니다.");
 		        		return;
 		        	}
 		        	if(data.result === "fail"){

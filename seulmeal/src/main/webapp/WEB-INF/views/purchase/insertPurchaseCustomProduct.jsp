@@ -52,14 +52,14 @@
 		}
 		
 		.card {
-	        margin: 0 auto; /* Added */
-	        float: none; /* Added */
-	        margin-bottom: 10px; /* Added */
+	        margin: 0 auto; 
+	        float: none;
+	        margin-bottom: 10px; 
 		}		
 		
 	</style>
 	
-	<form class="cc" method="post">
+	<form class="cc" name="insertCustom" method="post">
 		<input type="hidden" name="productNo" value="${product.productNo}"/>
 		<div class="container">
 		<h2>커스터마이징 : ${product.name}</h2> 
@@ -86,14 +86,13 @@
 			  </div>
 			</div>
 			
-			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			<div class="card" id="insertcard" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
 				<div class="card-body">
 				    <h6 class="card-title">추가재료</h6>
 				    <h8 class="card-subtitle mb-2 text-muted">*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</h8>
 				    <p class="card-text">
 						<div class="container">
 							재료 검색 : 
-							<form class="searchProduct">
 								<div style="display:flex;">	
 									<div class="form-outline">
 										<input name="searchKeyword" type="search" class="form-control search" value="" />
@@ -102,7 +101,6 @@
 										<i class="bi bi-search"></i>
 									</button>
 								</div>
-							</form> 
 						</div>
 						<div class="container">
 							<div class="plusparts"></div>
@@ -130,27 +128,14 @@
 				</div><br/>
 
 		<div class="container">
-		<h5>추가재료</h5>
-		*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</div>
-		<div class="container">
-			재료 검색 : 
-			<form class="searchProduct">
-				<div style="display:flex;">	
-					<div class="form-outline">
-						<input name="searchKeyword" type="search" class="form-control search" val="" />
-					</div>		  
-					<button type="button" class="btn btn-primary partSearch">
-						<i class="bi bi-search"></i>
-					</button>
-				
 				<div class="container" style="display: flex; justify-content: center;">
-					<button class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="0" onClick="fncInsertCustomProduct()">바로 구매하기</button>
-					<button class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="1" onClick="fncInsertCustomProduct()">장바구니 담기</button>
-					 <button class="btn btn-primary" onclick="history.back(-1)">취&nbsp;소</button>
+					<button type="button" class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="0" onClick="fncInsertCustomProduct(this)">바로 구매하기</button>
+					<button type="button" class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="1" onClick="fncInsertCustomProduct(this)">장바구니 담기</button>
+					 <button type="button" class="btn btn-primary" onclick="history.back(-1)">취&nbsp;소</button>
 				</div><br/><br/>	
 		</div>
-
 	</form>
+	
 
 		
 	<script type="text/javascript">
@@ -158,16 +143,18 @@
 	const minusNo = [];
 	const minusName = [];
 
-	function fncInsertCustomProduct() {
+	function fncInsertCustomProduct(ths) {
 		
 		alert("제외한 재료 : "+minusName)
 		const count = $("#customProductCount").text();
 		const customprice= $("#total").text();
+		const cartStatus = $(ths).val();
 		
 		$(".cc").append(`<input name ="count" value="\${count}">`);
 		$(".cc").append(`<input name ="minusNoA" value="\${minusNo}">`);
 		$(".cc").append(`<input name ="minusNameA" value="\${minusName}">`);
 		$(".cc").append(`<input name ="price" value="\${customprice}">`);
+		$(".cc").append(`<input name ="cartStatus" value="\${cartStatus}">`);
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
 	 }
 
@@ -186,14 +173,6 @@
 	        $(this).attr("disabled","disabled");
 	    })
 	});
-	
-	
-	$(function() {	
-		 $( "a[href='#' ]").on("click" , function() {
-				$("form")[0].reset();
-		});
-	});	
-	
 	
 	function search(){
 		var word = $(".search").val();
@@ -258,9 +237,14 @@
 	}
 	
 	
-	$(()=>{
+	 $(function(){
 		$(".partSearch").on("click",()=>{
-			$.ajax({
+			fncEnter();
+		})
+	})
+	
+	function fncEnter(){
+		 $.ajax({
 				url:"/product/api/getPartsName/"+$(".search").val(),
 				method:"GET",
 		        headers : {
@@ -273,24 +257,44 @@
 
 		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
 		        	+"<input type='hidden' class='price' name='plusprice' value='"+data.price+"' />"
-		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+ data.name
+		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+ data.name + "<button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
 		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
 		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
 		            +"<input type='hidden' name='plusGram' value='10'/>"
 		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
-            		&ensp; <span class='gram' name='gram'>10</span> &ensp; 
-           		 <button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
-	               + "</div></div>" 
+         			&ensp; <span class='gram' name='gram'>10</span> &ensp; 
+        			<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>`
+	               + "</div></div></div></div>" 
 
-		        	$(".plusparts").append(parts);
+	               $(".search").val('');
+	               $(".plusparts").append(parts);
+	               
 	                
 	                const productprice = $("#total").text();
 	                const result = parseInt(productprice)+parseInt(data.price);
 	                $("#total").text(result);
 		        }
 			})
-		})
-	})
+	 }
+	
+	
+	 $(".search").keydown(function(key){
+		        if(key.keyCode==13) {
+			           fncEnter();
+			    }     
+	});
+	
+
+	document.insertCustom.addEventListener("keydown", evt => {
+		  if (evt.code === "Enter") 
+		  evt.preventDefault();
+		});
+	
+	
+	function fncClose(ths){
+		 $(ths).closest("div").parent().remove();
+		
+	}
 	
 </script>
 

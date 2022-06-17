@@ -60,6 +60,14 @@ span.a {
 	width: 500px;
 	padding: 5px;
 }
+
+.jumbotron {
+  min-width: 585px;
+  margin: 100px auto;
+  display: flex;
+  justify-content: center;
+  margin: 10px 10px 10px 10px;
+}
 </style>
 
 
@@ -71,8 +79,20 @@ span.a {
 	<br />
 
 	
+	<!-- div class="jumbotron jumbotron-fluid" >
+	  <div class="container" style="width:50%; margin : auto;">
+	 
+	    <h5 class="display-8">Fluid jumbotron</h5>
+	    
+	    <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+	    
+	  </div>
+	</div-->
+	
+	
 	<div class="container">
-
+	
+		<div>
 		<c:if test="${sessionScope.user.userId == post.user.userId}">
 			<button id="updatePostBtn" type="button"
 				class="btn btn-primary" onclick="location.href='/community/updatePost/${post.postNo}'">수정</button>
@@ -82,7 +102,6 @@ span.a {
 
 		<!-- 게시글 이미지 또는 제목/간략내용 -->
 		<div class="attach">
-			<div class="your-class">
 				<c:forEach var="attachment" items="${attachmentList}">
 					<div>
 						<img style="height: 60vh;"
@@ -124,33 +143,31 @@ span.a {
 			<i class="bi bi-chat-left"></i> <span id="c_cnt">${post.commentCount}</span>
 		</div>
 
-		<!-- 등록날짜 -->
-		<div class="comment_count">
-			<span id="r_cnt">등록날짜 : ${post.regDate}</span>
+		<!-- 제목, 내용 -->
+		<div id="accordion" style="margin-top:50px;">			
+				<div class="card" style="min-height: 500px;">
+	
+					<div id="post-title" class="card">
+					  <div class="card-body" style="font-size: 25px">
+							<strong>${post.title}</strong>
+					  </div>
+					</div>
+					
+					<div id="post-content" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+						<div class="card-body"  style="font-size: 18px">
+							 ${post.content}
+						</div>
+					</div>
+					
+				</div>
+				<!-- 등록날짜 -->
+				<div id="r_cnt">등록날짜 : ${post.regDate}</div>
 		</div>
-
-
-	<div id="accordion">			
-			<div class="card" style="min-height: 500px;">
-
-				<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						제목 : ${post.title}
-					</div>
-				</div>
-
-
-				<div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
-					<div class="card-body">
-						 내용 : ${post.content}
-					</div>
-				</div>
-			</div>
-	</div>
+		<!-- 제목, 내용 끝-->
 	</div>
 
 
-<!-- 댓글 -->
+<!-- 댓글 컨테이너 -->
 	<div class="container" style="margin-top:20px;">
 	
 		<!-- Comments section-->
@@ -167,6 +184,7 @@ span.a {
 								class="btn btn-primary">등록</button>
 						</div>
 
+					<div id ="comment_container">
 						<!-- Comments-->
 						<c:forEach var="comment" items="${commentList}">
 							<div class="d-flex mb-4">
@@ -176,7 +194,7 @@ span.a {
 										src="/resources/attachments/profile_image/${comment.user.profileImage}"
 										alt="..." />
 								</div>
-								<div class="ms-3">
+								<div id="comment_div" class="ms-3">
 									<div class="fw-bold">${comment.user.nickName}</div>
 									<span class="a">${comment.content}</span> <span class="b">${comment.regDate}</span>
 									<span class="c">${comment.updateDate}</span>
@@ -190,7 +208,7 @@ span.a {
 								</div>
 							</div>
 						</c:forEach>
-
+					</div>
 
 					</div>
 				</div>
@@ -203,34 +221,22 @@ span.a {
 	<br />
 
 
-
-
-
-	<span id="commentPlus" style="color: red"></span>
-
-
-
 	<script>
 		$("#insertCommentBtn")
-				.on(
-						"click",
-						function() {
+				.on("click",function() {
 
 							var postNo = ${post.postNo};
 							var content = $("#comment_content").val();
-							var layer = $("#layer").val();
 
 							var jsonReq = {
 								"postNo" : postNo,
 								"content" : content,
-								"layer" : layer
 							}
 
-							alert("jsonReq: " + jsonReq);
-							console.log("jsonReq: " + jsonReq);
+							alert("성공?");
+							//console.log("jsonReq: " + jsonReq);
 
-							$
-									.ajax({
+									$.ajax({
 										url : "/community/api/insertComment",
 										method : "POST",
 										data : JSON.stringify(jsonReq), //@RequestBody
@@ -247,18 +253,23 @@ span.a {
 											alert("jsonRes : " + jsonRes);
 											console.log("jsonRes : " + jsonRes);
 
-											// 응답받은 dto 객체 json 형태를 str으로 
-											var strData = jsonRes["user"]["nickName"]
-													+ ", "
-													+ jsonRes["user"]["profileImage"]
-													+ ", "
-													+ jsonRes["content"]
-													+ ", "
-													+ jsonRes["regDate"]
-													+ ", "
-													+ jsonRes["updateDate"];
-											alert(strData);
+											// 댓글 append										
+											const comment = `
+											<div class="d-flex mb-4">
+												<div class="flex-shrink-0">
+													<img width="40" height="40" class="rounded-circle"
+														src="/resources/attachments/profile_image/\${jsonRes.user.profileImage}"
+														alt="..." />
+												</div>
+												<div id="comment_div" class="ms-3">
+													<div class="fw-bold">\${jsonRes.user.nickName}</div>
+													<span class="a">\${jsonRes.content}</span> <span class="b">\${jsonRes.regDate}</span>
+													<span class="c">\${jsonRes.updateDate}</span>
+												</div>
+											</div>`
 
+											$("#comment_container").prepend(comment);
+											
 											// 입력값 지우기 ^
 											$("#comment_content").value("");
 										}

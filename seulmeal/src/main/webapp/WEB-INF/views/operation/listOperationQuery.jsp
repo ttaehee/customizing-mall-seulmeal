@@ -11,7 +11,7 @@
 		cursor: pointer;
 	}
 	.psBtn:hover{
-		color: #4b6cb7 !important;
+		color: #ff4500 !important;
 	}
 	
 
@@ -19,7 +19,7 @@
 .pwWrap {
   width: 80%;
   max-width: 450px;
-  background-color:#4b6cb7;
+  background-color:#ff4500;
   margin: 20px auto;
 }
 
@@ -70,7 +70,7 @@
   border: 1px solid #fff;
   padding: 12px 0;
   cursor: pointer;
-  background: #4b6cb7;
+  background: #ff4500;
 }
 
 .pwWrap .numberSection .number:last-child {
@@ -92,7 +92,7 @@
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
-		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+		<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">문의 목록</h1><h5 class="align-bottom">문의 목록입니다.</h5>				
 			</div>
@@ -122,7 +122,7 @@
 		
 		
 		<table class="table table-hover text-center">
-			<thead style="background-color: #4b6cb7; color: #fff;">
+			<thead style="background-color: #ff4500; color: #fff;">
 				<tr>
 					<th>번호</th>
 					<th>제목</th>

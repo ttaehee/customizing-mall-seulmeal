@@ -87,7 +87,7 @@ public class PurchaseRestController {
 		
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
 		System.out.println("/purchase/api/insertPurchase get : "+purchase);
-		//purchase.setUser(user);
+		purchase.setUser(user);
 		System.out.println("1111111111111111+++++++++++++++++++++++"+purchase);
 
 		return purchase;	
