@@ -55,6 +55,7 @@
 	  cursor: pointer;
 	}
 	.card-cover:hover{
+		
 		opacity: 0.7;		
 	}
 	

@@ -58,14 +58,14 @@
 		</where>
 		ORDER BY 
 			<choose>
-				<when test="searchSort = '1'"> p.reg_date ASC</when>
-				<when test="searchSort = '2'"> p.reg_date DESC</when>
-				<when test="searchSort = '3'"> p.price ASC</when>
-				<when test="searchSort = '4'"> p.price DESC</when>
-				<when test="searchSort = '5'"> p.like_count ASC</when>
-				<when test="searchSort = '6'"> p.like_count DESC</when>
-				<when test="searchSort = '7'"> p.review_count ASC</when>
-				<when test="searchSort = '8'"> p.review_count DESC</when>
+				<when test="searchSort = '1'"> p.reg_date DESC</when>
+				<when test="searchSort = '2'"> p.reg_date ASC</when>
+				<when test="searchSort = '3'"> p.price DESC</when>
+				<when test="searchSort = '4'"> p.price ASC</when>
+				<when test="searchSort = '5'"> p.like_count DESC</when>
+				<when test="searchSort = '6'"> p.like_count ASC</when>
+				<when test="searchSort = '7'"> p.review_count DESC</when>
+				<when test="searchSort = '8'"> p.review_count ASC</when>
 			<otherwise>p.name DESC</otherwise>
 			</choose>
 			 ) inner_table WHERE ROWNUM &lt;= #{endRowNum} )
@@ -104,6 +104,23 @@
 
 
 	<select id="getTotalProductCount" resultType="int">
+		SELECT COUNT(*) FROM ( 
+		SELECT product_no FROM product p, foodcategory f
+		<where>
+			p.foodcategory_no = f.foodcategory_no
+			AND p.status =' 0'
+			<if test="searchKeyword != '' ">
+				AND (
+				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'
+				OR sub_content like '%'||#{searchKeyword}||'%' OR sub_content like '%'||#{searchKeyword}||'%')
+			</if>
+			<if test="searchCondition != null">
+				AND p.foodcategory_no = #{searchCondition}
+			</if>			
+		</where>) countTable
+	</select>
+	
+	<select id="getAdminProductCount" resultType="int">
 		SELECT COUNT(*) FROM ( 
 		SELECT product_no FROM product p, foodcategory f
 		<where>
@@ -353,13 +370,13 @@
 		WHERE row_seq BETWEEN
 		#{search.startRowNum} AND #{search.endRowNum}
 	</select>
-
+ 
 	<!-- ROW Count -->
 	<select id="getTotalPartsCount" resultType="int" parameterType="map">
 		SELECT COUNT(*)
 		FROM( SELECT * FROM parts
 		<where>
-			AND status = '0'
+			AND status = #{search.searchCondition}
 		</where>
 		) countTable
 	</select>
@@ -367,11 +384,12 @@
 	<!-- PRODUCPARTS -->
 	<!-- 재료 넣기 -->
 	<insert id="insertProudctParts">
-		INSERT INTO productparts(productparts_no, product_no, parts_no)
+		INSERT INTO productparts(productparts_no, product_no, parts_no, parts_name)
 		SELECT seq_productparts_no.NEXTVAL, A.* FROM(
 		<foreach collection="list" item="parts" separator="UNION ALL">
 			SELECT #{parts.productNo:INTEGER} as product_no,
-			#{parts.partsNo:INTEGER} as parts_no
+			#{parts.partsNo:INTEGER} as parts_no,
+			#{parts.name:VARCHAR} as parts_name
 			from dual
 		</foreach>
 		) A

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.RespectBinding;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
@@ -55,6 +55,9 @@ public class ProductController {
 		System.out.println(this.getClass());
 	}
 
+	
+	
+	/* <PRODUCT> */
 
 	@GetMapping("insertProduct")
 	public String insertProduct(Model model) throws Exception {
@@ -103,7 +106,7 @@ public class ProductController {
 		}		
 
 		System.out.println("상품 : " + product);
-		return "redirect:/product/getProduct/"+product.getProductNo();
+		return "redirect:/product/admin/listProduct";
 	}
 
 	@GetMapping("getProduct/{prodNo}")
@@ -199,9 +202,6 @@ public class ProductController {
 		return "/product/listProductAsAdmin";
 	}
 	
-	
-	
-	
 
 	@GetMapping(value = { "updateProduct/{productNo}" })
 	public String updateProduct(@PathVariable int productNo, Model model) throws Exception {
@@ -226,19 +226,21 @@ public class ProductController {
 		productService.updateProduct(product);
 		
 		return "redirect:/product/getProduct/" + product.getProductNo();
-	}
-	
-	@GetMapping(value = {"deleteProduct/{productNo}"})
-	public String deleteProduct(@PathVariable int productNo) throws Exception {
+	}	
+	@GetMapping(value = {"deleteProduct/{currentPage}/{productNo}"})
+	public String deleteProduct(@PathVariable int currentPage, @PathVariable int productNo) throws Exception {
 		productService.deleteProduct(productNo);
-		return "redirect:/product/admin/listProduct";
+		return "redirect:/product/admin/listProduct/"+currentPage;
 	}
 	
-	@GetMapping(value = {"restoreProduct/{productNo}"})
-	public String restoreProduct(@PathVariable int productNo) throws Exception {
+	@GetMapping(value = {"restoreProduct/{currentPage}/{productNo}"})
+	public String restoreProduct(@PathVariable int currentPage, @PathVariable int productNo) throws Exception {
 		productService.restoreProduct(productNo);
-		return "redirect:/product/admin/listProduct";
+		return "redirect:/product/admin/listProduct/"+currentPage;
 	}
+	
+	
+	/* < PARTS > */
 	
 	@GetMapping(value = {"insertParts"} )
 	public String insertParts(Parts parts, Model model) throws Exception {
@@ -249,7 +251,7 @@ public class ProductController {
 	@PostMapping(value = {"insertParts"})
 	public String insertParts(Parts parts) throws Exception {
 		productService.insertParts(parts);
-		return "redirect:/product/listParts/0";
+		return "redirect:/product/listParts/1/0";
 	}
 	
 	@GetMapping(value = {"listParts/{currentPage}/{searchCondition}", "listParts"})
@@ -300,9 +302,28 @@ public class ProductController {
 	public String updateParts(@PathVariable int partsNo, Parts parts) throws Exception {
 		parts.setPartsNo(partsNo);
 		productService.updateParts(parts);
-		return "redirect:/product/listParts";
+		return "redirect:/product/listParts/1/0";
 	}
 	
+	@GetMapping(value = {"deleteParts/{partsNo}"})
+	public String deleteParts(@PathVariable int partsNo) throws Exception { 
+		productService.deleteParts(partsNo);
+		
+		return "redirect:/product/listParts/1/0";
+	}
+	@GetMapping(value = {"restoreParts/{partsNo}"})
+	public String restoreParts(@PathVariable int partsNo) throws Exception { 
+		productService.restoreParts(partsNo);
+		
+		return "redirect:/product/listParts/1/1";
+	}
+	
+	
+	
+	
+	
+	
+	/* < REVIEW > */
 
 	@GetMapping(value = { "insertReview/{productNo}" })
 	public String insertReview(@PathVariable int productNo, HttpSession session, Model model) throws Exception {
@@ -320,6 +341,14 @@ public class ProductController {
 		
 		return "redirect:/product/getProduct/"+productNo;
 	}
+	
+	@GetMapping(value = { "getReview/{reviewNo}" })
+	public String getReview(@PathVariable int reviewNo, Model model) throws Exception {
+		Review review = productService.getReview(reviewNo);
+
+		model.addAttribute("review", review);
+		return "/product/getReview";
+	}
 
 	@GetMapping(value = { "updateReview/{reviewNo}" })
 	public String updateReview(@PathVariable int reviewNo, Model model) throws Exception {
@@ -334,26 +363,9 @@ public class ProductController {
 		return "redirect:/product/getReview/" + reviewNo;
 	}
 
-	@GetMapping(value = { "getReview/{reviewNo}" })
-	public String getReview(@PathVariable int reviewNo, Model model) throws Exception {
-		Review review = productService.getReview(reviewNo);
+	
 
-		model.addAttribute("review", review);
-		return "/product/getReview";
-	}
-
-	@GetMapping(value = {"deleteParts/{partsNo}"})
-	public String deleteParts(@PathVariable int partsNo) throws Exception { 
-		productService.deleteParts(partsNo);
-		
-		return "redirect:/product/listParts/1/0";
-	}
-	@GetMapping(value = {"restoreParts/{partsNo}"})
-	public String restoreParts(@PathVariable int partsNo) throws Exception { 
-		productService.restoreParts(partsNo);
-		
-		return "redirect:/product/listParts/1/1";
-	}
+	
 	
 	@GetMapping(value = {"insertFoodCategory"})
 	public String insertFoodCategory(String name) throws Exception {
