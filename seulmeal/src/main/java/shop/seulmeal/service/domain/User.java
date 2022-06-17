@@ -36,13 +36,13 @@ public class User implements UserDetails {
 	private String userName;
 	@JsonIgnore
 	private String password;
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	//@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;
 	private String address;
 	private String phone;
 	private String email;
 	private String grade;
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	//@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date regDate;
 	private Date loginDate;
 	private int blockCount;
