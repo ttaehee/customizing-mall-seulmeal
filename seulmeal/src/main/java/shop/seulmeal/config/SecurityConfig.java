@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			///*
 			.antMatchers("/","/product/**","/operation/**").permitAll()
 			.antMatchers("/admin/**").hasAuthority("0")
-			.antMatchers("/community/**").hasAnyAuthority("0","1")
+			.antMatchers("/community/**").permitAll()//hasAnyAuthority("0","1")
 			.antMatchers("/operation/api/insertAnswer").permitAll()
 			//*/
 			//.antMatchers("/**").permitAll()
