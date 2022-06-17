@@ -134,7 +134,7 @@
 	          </ul>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link active headerNav" aria-current="page" href="/product/getListProduct">신상품</a>
+	          <a class="nav-link active headerNav" aria-current="page" href="/product/listProduuct/1">신상품</a>
 	        </li>
 	        <li class="nav-item">
 	          <a class="nav-link headerNav" href="/community/communityMain">게시판</a>
@@ -179,13 +179,13 @@
 <script type="text/javascript">	
 	$(".searchP").on("keypress",(e)=>{
 		if(e.keyCode === 13){
-			$(".searchProduct").attr("action","/product/getListProduct").submit();
+			$(".searchProduct").attr("action","/product/listProduct").submit();
 		}
 	})
 	
 	function searchProduct(){
 		
-		let url = "/product/getListProduct";
+		let url = "/product/lististProduct/1";
 		if('${searchCondition}' !== ''){
 			url += "/${searchCondition}";
 		}
