@@ -12,6 +12,9 @@ import shop.seulmeal.service.domain.Purchase;
 
 public interface PurchaseService {
 	
+	//오토컴플릿
+	public List<Map>autocomplete(Map<String, Object> paramMap) throws Exception;
+	
 	//커스터마이징재료 추가 
 	public int insertMinusParts(Map<String, Object> map);
 	public int insertPlusParts(Map<String, Object> map);

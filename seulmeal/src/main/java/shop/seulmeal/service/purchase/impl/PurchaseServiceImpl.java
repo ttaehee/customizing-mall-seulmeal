@@ -60,6 +60,12 @@ public class PurchaseServiceImpl implements PurchaseService{
 		System.out.println(this.getClass());
 	}
 	
+	//오토컴플릿
+	@Override
+	public List<Map> autocomplete(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		return purchaseMapper.autocomplete(paramMap);
+	}	
 	
 	//커스터마이징재료 
 	@Override

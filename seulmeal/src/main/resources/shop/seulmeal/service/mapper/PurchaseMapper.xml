@@ -85,6 +85,13 @@
 		</collection>
 	</resultMap>
 	
+	<!-- autocomplete -->
+	<select id="autocomplete" parameterType="map" resultType="map">
+		SELECT name
+		FROM parts
+		WHERE name LIKE  '%'|| #{value} || '%'
+	</select>
+	
 
 	<!-- custom_parts -->
 	<insert id="insertMinusParts" parameterType="map">

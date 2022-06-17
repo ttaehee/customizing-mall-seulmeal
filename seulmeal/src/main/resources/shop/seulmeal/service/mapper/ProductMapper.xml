@@ -367,15 +367,16 @@
 	<!-- PRODUCPARTS -->
 	<!-- 재료 넣기 -->
 	<insert id="insertProudctParts">
-		INSERT INTO productparts(productparts_no, product_no, parts_no)
-		SELECT seq_productparts_no.NEXTVAL, A.* FROM(
-		<foreach collection="list" item="parts" separator="UNION ALL">
-			SELECT #{parts.productNo:INTEGER} as product_no,
-			#{parts.partsNo:INTEGER} as parts_no
-			from dual
-		</foreach>
-		) A
-	</insert>
+      INSERT INTO productparts(productparts_no, product_no, parts_no, parts_name)
+      SELECT seq_productparts_no.NEXTVAL, A.* FROM(
+      <foreach collection="list" item="parts" separator="UNION ALL">
+         SELECT #{parts.productNo:INTEGER} as product_no,
+         #{parts.partsNo:INTEGER} as parts_no,
+         #{parts.name:VARCHAR} as parts_name
+         from dual
+      </foreach>
+      ) A
+   </insert>
 
 	<select id="getProductParts" resultType="parts">
 		SELECT * FROM PRODUCTPARTS pp, PARTS p

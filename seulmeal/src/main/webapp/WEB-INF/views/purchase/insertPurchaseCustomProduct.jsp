@@ -9,7 +9,6 @@
 <head>
 	<meta charset="UTF-8">
 	<title>커스터마이징 옵션</title>
-	<script src="./data.js"></script>
 </head>
 
 <style>
@@ -52,22 +51,17 @@
 	        margin: 0 auto; 
 	        float: none;
 	        margin-bottom: 10px; 
-		}		
-		
+		}	
+
 	</style>
 
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	
 	<form class="cc" name="insertCustom" method="post">
 		<input type="hidden" name="productNo" value="${product.productNo}"/>
 		<div class="container">
 		<h2>커스터마이징 : ${product.name}</h2> 
-		
-		<!-- <div class="row" style="justify-content: center; display: flex;"> -->
 		
 			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
 			  <div class="card-body">
@@ -210,12 +204,10 @@
             $("#total").text(plus);
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text());
-		console.log(pgram)
 		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(10);
-		const pprice = $(ths).closest("div").find("input[name='plusPrice']").val();
+		const pprice = $(ths).closest("div").find("span[name='partsprice']").val();
 		console.log($(ths).closest("div").find("input[name='plusGram']"))
-		
-		console.log($(ths).closest("div").find("span[name='gram']").text());
+
 	}
 	
 	
@@ -238,24 +230,7 @@
 		}
 	}
 	
-	
-	 $(function(){
-		 $(".search").autocomplete({ 
-				source: List,	// source는 data.js파일 내부의 List 배열
-				focus : function(event, ui) { // 방향키로 자동완성단어 선택 가능하게 만들어줌	
-					return false;
-				},
-				minLength: 1,// 최소 글자수
-				delay: 100,	//autocomplete 딜레이 시간(ms)
-				//disabled: true, //자동완성 기능 끄기
-			});
-		 
-		$(".partSearch").on("click",()=>{
-			fncEnter();
-		})
-	})
-	
-	function fncEnter(){
+	function fncGetParts(){
 		 $.ajax({
 				url:"/product/api/getPartsName/"+$(".search").val(),
 				method:"GET",
@@ -267,9 +242,9 @@
 		        success : function(data){	        	
 		        	console.log(data);
 
-		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
-		        	+"<input type='hidden' class='price' name='plusprice' value='"+data.price+"' />"
-		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+ data.name + "<button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
+		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='plusName' value='"+data.name+"' />"
+		        	+"<input type='hidden' class='price' name='plusPrice' value='"+data.price+"' />"
+		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+"<span class='name'>" +data.name + "</span><button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
 		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
 		            +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
 		            +"<input type='hidden' name='plusGram' value='10'/>"
@@ -290,9 +265,56 @@
 	 }
 	
 	
+	 $(function(){ 
+		 $(".search").autocomplete({ 
+			 source : function(request, response) { //source: 입력시 보일 목록
+			     $.ajax({
+			           url : "/purchase/api/autocomplete"   
+			         , type : "POST"
+			         , dataType: "JSON"
+			         , data : {value: request.term}	// 검색 키워드
+			         , success : function(data){ 	// 성공
+			        	 response(
+			                 $.map(data.resultList, function(item) {
+			                     return {
+			                    	     label : item.NAME,    	// 목록에 표시되는 값
+			                             value : item.NAME 		// 선택 시 input창에 표시되는 값
+			                     };
+			                     console.log(data);
+			                 })
+			             );    //response
+			         }
+			         ,error : function(){ //실패
+			             alert("오류가 발생했습니다.");
+			         }
+			     });
+			 }
+				,focus : function(event, ui) { // 방향키로 자동완성단어 선택 가능하게 만들어줌	
+					return false;
+				},
+				minLength: 1,// 최소 글자수
+				delay: 100	//autocomplete 딜레이 시간(ms),
+				, select : function(evt, ui) { 
+		      	// 아이템 선택시 실행 ui.item 이 선택된 항목을 나타내는 객체, lavel/value/idx를 가짐
+					console.log(ui.item.label);
+			 }
+		 });
+		 
+		$(".partSearch").on("click",()=>{
+			
+			if($(".partSearch").parent('div').find("input[name='searchKeyword']").val() != $('.name').text()){
+				fncGetParts();
+			}else{
+				alert("이미 추가되어있는 재료입니다.");
+			}
+			
+		})
+	})
+	
+	
 	 $(".search").keydown(function(key){
 		        if(key.keyCode==13) {
-			           fncEnter();
+			           fncGetParts();
 			    }     
 	});
 	
