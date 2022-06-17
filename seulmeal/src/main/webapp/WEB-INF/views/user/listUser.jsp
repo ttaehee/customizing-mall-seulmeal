@@ -12,14 +12,14 @@
 		color:#fff !important;
 	}
 	#blackList:hover{
-	color: #4b6cb7 !important;
+	color: #ff4500 !important;
 }
 </style>
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
-	<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+	<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">회원목록</h1>
 			</div>
@@ -37,7 +37,7 @@
 		
 		
 		<table class="table table-hover text-center">
-			<thead style="background-color: #4b6cb7; color: #fff;">
+			<thead style="background-color: #ff4500; color: #fff;">
 				<tr>
 					<th>아이디</th>
 					<th>이름</th>

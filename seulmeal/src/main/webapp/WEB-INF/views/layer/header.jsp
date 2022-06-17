@@ -53,8 +53,9 @@
 	ul.nav li.dropdown:hover > ul.dropdown-menu { display:block; margin:0; }
 </style>
 	<!-- 어드민 -->
+	<!-- 
 	<c:if test="${user.role == 1}">
-		<div style="background:#BAD7DF; display:flex; justify-content:space-between;">
+		<div style="display:flex; justify-content:space-between;">
 			<h3>오늘 할일</h3>
 			<h4>신규 주문</h4>
 			<h4>교환/반품 승인</h4>
@@ -62,7 +63,7 @@
 			<h4>재고 소진</h4>
 			<h4>문의 답변대기</h4>
 		</div>
-	</c:if>
+	</c:if> -->
 	<div class="header" style="background:#fff; padding-top:10px; ">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
 		<div id="google_translate_element" class="hd_lang" style="padding-top:10px;"></div>
@@ -128,12 +129,12 @@
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	          	<c:forEach var="foodcategory" items="${fList}">
-	          		<li><a class="dropdown-item" href="/product/getListProduct/${foodcategory.foodCategoryNo}">${foodcategory.name}</a></li>
+	          		<li><a class="dropdown-item" href="/product/listProduct/1/${foodcategory.foodCategoryNo}">${foodcategory.name}</a></li>
 				</c:forEach>
 	          </ul>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link active headerNav" aria-current="page" href="/product/getListProduct">신상품</a>
+	          <a class="nav-link active headerNav" aria-current="page" href="/product/listProduct/1">신상품</a>
 	        </li>
 	        <li class="nav-item">
 	          <a class="nav-link headerNav" href="/community/communityMain">게시판</a>
@@ -178,13 +179,13 @@
 <script type="text/javascript">	
 	$(".searchP").on("keypress",(e)=>{
 		if(e.keyCode === 13){
-			$(".searchProduct").attr("action","/product/getListProduct").submit();
+			$(".searchProduct").attr("action","/product/listProduct").submit();
 		}
 	})
 	
 	function searchProduct(){
 		
-		let url = "/product/getListProduct";
+		let url = "/product/lististProduct/1";
 		if('${searchCondition}' !== ''){
 			url += "/${searchCondition}";
 		}

@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>슬밀 아이디 찾기</title>
+	<title>슬밀 비밀번호 재설정</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="login.js"></script>
 <style type="text/css">
@@ -59,13 +59,6 @@ input{
     outline:none;
     width:100%;
 }
-/*input 패스워드 form*/
-#emailCode{
-    border: none;
-    outline:none;
-    width:100%;
-}
-
 /*로그인버튼박스*/
  .login-btn-wrap{
     height: 52px;
@@ -241,12 +234,12 @@ input{
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="main">
 		<!--로그인 부분-->
-		<form class="form-signin" method="post" action="/user/findUserId" target="_self">
+		<form class="form-signin" method="post" action="/user/resetUserPassword" target="_self">
 			<section class="login-wrap">
-				<h2>아이디 찾기</h2>
-				
+				<h2>비밀번호 재설정</h2>
+				<div>이메일 핸드폰</div>
 				<div class="login-id-wrap">
-					<input id="input-id" name="name" placeholder="이름" type="text"></input>
+					<input id="input-id" name="password" placeholder="아이디" type="text"></input>
 				</div>
 				<div class="login-pw-wrap">
 					<input id="email" name="email" placeholder="이메일" type="text"></input>
@@ -254,11 +247,11 @@ input{
 				<div class="login-pw-wrap" id="emailCheckForm" style="display: none;">
 					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
 				</div>
-				<div class="login-btn-wrap" id="confirm">
-					<button id="login-btn" type="button" onclick="idSearch()">인증 번호 받기</button>
+				<div class="login-btn-wrap">
+					<button id="login-btn" type="submit">인증 하기</button>
 				</div>
-				<div class="login-btn-wrap" id="findId" style="display: none;">
-					<button id="login-btn" type="button" onclick="confirmEmail()">아이디 찾기</button>
+				<div class="login-btn-wrap" style="display: none;">
+					<button id="login-btn" type="submit" >아이디 찾기</button>
 				</div>
 
 			</section>
@@ -267,44 +260,6 @@ input{
 
 		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
-
-//이메일 중복체크
-function idSearch(){
-	const idSearch = {
-			name: $("#input-id").val(),
-			email: $("#email").val(),
-			idSearch: "1"
-	}
-	
-	console.log(idSearch)
-	
-	 $.ajax({
-		url: "/user/api/confirmUserEmail",
-		method: "GET", 
-		data: idSearch,
-		headers : {
-            "Accept" : "application/json",
-            "Content-Type" : "application/json"
-        },
-        dataType : "json",
-        success : function(data){
-        	if(data.result === "success"){
-        		alert("인증번호를 입력하세요");
-        		$("#emailCheckForm").css("display","block");
-        		$("#findId").css("display","block");
-        		$("#confirm").css("display","none");
-        		return;
-        	}
-        	if(data.result === "fail"){
-        		alert("가입시 등록한 정보가 맞는지 다시 확인해주세요");
-        		return;
-        	}
-        }
-	})		 
-}
-
-
-
 //이메일인증 확인
 function confirmEmail(){
 	const confrimNum = $("#emailCode").val();
@@ -320,11 +275,10 @@ function confirmEmail(){
         },
         dataType : "json",
         success : function(data){
-        	alert(data.userId);
-        	/* $("#email").attr("disabled","disabled");
-        	$("#emailBtn").attr("disabled","disabled"); */
-        	/* $("#login-btn").css("display","none");
-        	$("#findId").css("display","block"); */
+        	alert(data.result);
+        	$("#email").attr("disabled","disabled");
+        	$("#emailBtn").attr("disabled","disabled");
+        	$("#emailCheckForm").css("display","none");
         }
 	})
 }

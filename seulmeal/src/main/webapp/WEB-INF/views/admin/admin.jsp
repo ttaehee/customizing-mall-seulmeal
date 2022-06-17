@@ -13,10 +13,15 @@
 	    <div class="row flex-nowrap">
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
-	            <iframe class="frame" style="height:100vh; width:100%;" src="/product/getListProduct"></iframe>
+	            <iframe class="frame" style="height:100vh; width:100%;" src="/product/admin/listProduct"></iframe>
 	            <!-- user -->
 	            <iframe id="userListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/user/listUser/1"></iframe>
 	            <iframe id="blackUserListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/user/listUser/1"></iframe>
+	            
+	            <!-- product -->
+	            <iframe id="productListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/admin/listProduct/1"></iframe>
+	            <iframe id="partsListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/listParts/1/0"></iframe>
+	            <iframe id="foodCategoryListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/listFoodCategory"></iframe>
 	            
 	            <!-- community -->
 	            <iframe id="reportPostFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/community/getListReportPost"></iframe>
@@ -56,6 +61,21 @@
 			$(".frame").css("display","none");
 			$("#blackUserListFrame").css("display","block");
 		})
+		
+		// product		
+		$("#productList").on("click",()=>{
+			$(".frame").css("display","none");
+			$("#productListFrame").css("display","block");
+		})
+		$("#partsList").on("click",()=>{
+			$(".frame").css("display","none");
+			$("#partsListFrame").css("display","block");
+		})
+		$("#foodCategoryList").on("click",()=>{
+			$(".frame").css("display","none");
+			$("#foodCategoryListFrame").css("display","block");
+		})
+		
 		
 		// 커뮤니티
 		$("#reportPost").on("click",()=>{

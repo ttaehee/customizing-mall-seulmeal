@@ -54,6 +54,8 @@ public interface UserService {
 	public void updateBlackList() throws Exception;
 	
 	public void updateGrade() throws Exception;
+	
+	public int updatePassword(User user) throws Exception;
 
 	
 }

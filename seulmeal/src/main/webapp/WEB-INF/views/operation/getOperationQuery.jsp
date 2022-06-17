@@ -19,14 +19,14 @@
 	}
 	
 	.answerHeaderClass{
-		border-bottom: 1px solid #4b6cb7;
+		border-bottom: 1px solid #ff4500;
 		margin-bottom: 10px;
 		display: flex;
 		justify-content: space-between;
 	}
 	
 	.answerBox{
-		border: 1px solid #4b6cb7;
+		border: 1px solid #ff4500;
 		border-radius: 10px;
 	}
 	.answerBox+.answerBox{

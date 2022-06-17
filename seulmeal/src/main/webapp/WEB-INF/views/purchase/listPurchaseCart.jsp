@@ -176,7 +176,7 @@
 			const minus = price - oneprice;
 			$(ths).parents("tr").find("span[name='price']").text(minus);
 			const minustotal = parseInt($("#total").text()) - oneprice;
-			$("#total").text((minustotal));
+			$("#total").text(minustotal);
 
 		}else{
 			num++;

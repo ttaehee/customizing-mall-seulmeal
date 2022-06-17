@@ -84,7 +84,7 @@ public class OperationController {
 	}
 	
 	@PostMapping("insertOperation")
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile,
 					MultipartFile thumnailFile, Attachments attachments, String summerImg, HttpSession session) throws IllegalStateException, IOException {
 		User user = (User)session.getAttribute("user");
@@ -118,7 +118,7 @@ public class OperationController {
 		operationService.insertOperation(post);
 		
 		System.out.println(uploadfile.length);
-		if(uploadfile.length > 1) {
+		if(uploadfile != null) {
 			attachments.setPostNo(Integer.toString(post.getPostNo()));
 			
 			attachmentsService.insertAttachments(uploadfile, attachments);

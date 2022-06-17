@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>슬밀 아이디 찾기</title>
+	<title>슬밀 비밀번호 찾기</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="login.js"></script>
 <style type="text/css">
@@ -59,13 +59,11 @@ input{
     outline:none;
     width:100%;
 }
-/*input 패스워드 form*/
 #emailCode{
     border: none;
     outline:none;
     width:100%;
 }
-
 /*로그인버튼박스*/
  .login-btn-wrap{
     height: 52px;
@@ -241,12 +239,11 @@ input{
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="main">
 		<!--로그인 부분-->
-		<form class="form-signin" method="post" action="/user/findUserId" target="_self">
+		<form class="form-signin" method="post" action="/user/findUserPasswordView" target="_self">
 			<section class="login-wrap">
-				<h2>아이디 찾기</h2>
-				
+				<h2>비밀번호 찾기</h2>
 				<div class="login-id-wrap">
-					<input id="input-id" name="name" placeholder="이름" type="text"></input>
+					<input id="input-id" name="userId" placeholder="아이디" type="text"></input>
 				</div>
 				<div class="login-pw-wrap">
 					<input id="email" name="email" placeholder="이메일" type="text"></input>
@@ -255,15 +252,15 @@ input{
 					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
 				</div>
 				<div class="login-btn-wrap" id="confirm">
-					<button id="login-btn" type="button" onclick="idSearch()">인증 번호 받기</button>
+					<button id="login-btn" type="button" onclick="idSearch()">인증 하기</button>
 				</div>
-				<div class="login-btn-wrap" id="findId" style="display: none;">
-					<button id="login-btn" type="button" onclick="confirmEmail()">아이디 찾기</button>
+				<div class="login-btn-wrap" id="reset" style="display: none;">
+					<button id="login-btn" type="button" onclick="confirmEmail()" >비밀번호 재설정</button>
 				</div>
 
 			</section>
 		</form>
-
+</div>
 
 		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
@@ -271,9 +268,9 @@ input{
 //이메일 중복체크
 function idSearch(){
 	const idSearch = {
-			name: $("#input-id").val(),
+			id: $("#input-id").val(),
 			email: $("#email").val(),
-			idSearch: "1"
+			idSearch: "0"
 	}
 	
 	console.log(idSearch)
@@ -291,7 +288,7 @@ function idSearch(){
         	if(data.result === "success"){
         		alert("인증번호를 입력하세요");
         		$("#emailCheckForm").css("display","block");
-        		$("#findId").css("display","block");
+        		$("#reset").css("display","block");
         		$("#confirm").css("display","none");
         		return;
         	}
@@ -302,7 +299,6 @@ function idSearch(){
         }
 	})		 
 }
-
 
 
 //이메일인증 확인
@@ -320,11 +316,13 @@ function confirmEmail(){
         },
         dataType : "json",
         success : function(data){
-        	alert(data.userId);
-        	/* $("#email").attr("disabled","disabled");
-        	$("#emailBtn").attr("disabled","disabled"); */
-        	/* $("#login-btn").css("display","none");
-        	$("#findId").css("display","block"); */
+        	if(data.result === "인증완료"){
+        		location.href='/user/resetUserPassword'
+        		return;
+        	}
+        	if(data.result === "인증실패"){
+        		alert("인증번호가 틀렸습니다 다시 입력해주세요");
+        		return;
         }
 	})
 }

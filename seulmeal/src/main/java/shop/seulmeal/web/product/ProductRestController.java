@@ -1,9 +1,11 @@
 package shop.seulmeal.web.product;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.product.ProductService;
 
@@ -45,12 +48,5 @@ public class ProductRestController {
 		System.out.println(parts);
 		return parts;
 	}
-	
-	@PostMapping("updateProductStock")
-	public int updateProductStock(int productNo, int stock) throws Exception {
-		productService.updateProductStock(productNo, stock);
-		return stock;
-	}
-	
-	
+
 }

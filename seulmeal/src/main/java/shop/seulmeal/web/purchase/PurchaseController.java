@@ -85,7 +85,7 @@ public class PurchaseController {
 			// 추가 상품
 			String plusPartsNo, String plusPrice, String plusGram) throws Exception {
 		
-		System.out.println("insertCustomProduct POST");
+		System.out.println("insertCustomProduct POST : "+customProduct);
 
 		System.out.println("========== minusNo : "+minusNoA);
 		System.out.println("========== minusName : "+minusNameA);
@@ -102,8 +102,10 @@ public class PurchaseController {
 		User user= (User)session.getAttribute("user");
 		customProduct.setUser(user);
 		
+		Map<String, Object> map=new HashMap<>();
+		
 		int result=purchaseService.insertCustomProduct(customProduct);
-		System.out.println("reuslt : "+result);
+		System.out.println("reusult : "+result);
 		
 		// minus parts
 		List<CustomParts> minusParts = new ArrayList();
@@ -119,6 +121,9 @@ public class PurchaseController {
 				minusParts.add(minus);
 			}
 			customProduct.setMinusParts(minusParts);
+			map.put("minusParts",minusParts);
+			int re=purchaseService.insertMinusParts(map);
+			System.out.println("minus result:"+re);
 		}
 		
 		// plus parts
@@ -142,25 +147,16 @@ public class PurchaseController {
 				plusParts.add(plus);
 			}
 			customProduct.setPlusParts(plusParts);
-		}
-		
-		Map<String, Object> map=new HashMap<>();
-		map.put("customProductNo",customProduct.getCustomProductNo());
-		
-		if(minusParts.size()>0) {
-			map.put("minusParts",minusParts);
-			int re=purchaseService.insertMinusParts(map);
-			System.out.println("minus reslut:"+re);
-		}
-		
-		if(plusParts.size()>0) {
 			map.put("plusParts",plusParts);
 			int sul=purchaseService.insertPlusParts(map);
-			System.out.println("plus reslut:"+sul);
+			System.out.println("plus result:"+sul);
 		}
-		
+
+		map.put("customProductNo",customProduct.getCustomProductNo());
+
 		model.addAttribute("customProduct",customProduct);
 		
+		System.out.println("ccccc:"+customProduct.getCartStatus());
 		if(customProduct.getCartStatus().equals("1")) {
 			return "redirect:/purchase/getListCustomProduct";
 		}else {
@@ -261,7 +257,7 @@ public class PurchaseController {
 		customProduct=purchaseService.getCustomProduct(customProductNo);
 		
 		model.addAttribute("customProduct", customProduct);
-		model.addAttribute("cartStatus", 0);
+		model.addAttribute("cartStatus", "0");
 		
 		return "purchase/insertPurchase";
 		
@@ -269,18 +265,27 @@ public class PurchaseController {
 	
 	//장바구니 거쳐서 구매정보입력창
 	@GetMapping("insertPurchase")
-	public String insertPurchase(Search search, Model model, HttpSession session) {
+	public String insertPurchase(Model model, HttpSession session) {
 		
 		System.out.println("/insertPurchase : GET");
 		
-		//User user=(User)session.getAttribute("user");
-		//String userId=user.getUserId();
-		String userId="ghm4905";
+		User user=(User)session.getAttribute("user");
+		String userId=user.getUserId();
 		
+		Search search = new Search();
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+	
 		Map<String, Object> map=purchaseService.getListCustomProduct(search, userId);
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! : "+map.get("cproductList"));
+		Page resultPage 
+		= new Page(search.getCurrentPage(), 
+				((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
 		
 		model.addAttribute("customProductList", map.get("cproductList"));
-		model.addAttribute("cartStatus", 1);
+		model.addAttribute("cartStatus", "1");
 		
 		return "purchase/insertPurchase";
 		
