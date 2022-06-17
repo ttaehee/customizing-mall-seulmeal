@@ -13,7 +13,7 @@
 	    <div class="row flex-nowrap">
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
-	            <iframe class="frame" style="height:100vh; width:100%;" src="/product/getListProduct"></iframe>
+	            <iframe class="frame" style="height:100vh; width:100%;" src="/product/admin/listProduct"></iframe>
 	            <!-- user -->
 	            <iframe id="userListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/user/listUser/1"></iframe>
 	            <iframe id="blackUserListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/user/listUser/1"></iframe>

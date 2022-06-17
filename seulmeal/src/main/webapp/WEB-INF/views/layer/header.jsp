@@ -129,12 +129,12 @@
 	          </a>
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	          	<c:forEach var="foodcategory" items="${fList}">
-	          		<li><a class="dropdown-item" href="/product/getListProduct/${foodcategory.foodCategoryNo}">${foodcategory.name}</a></li>
+	          		<li><a class="dropdown-item" href="/product/listProduct/1/${foodcategory.foodCategoryNo}">${foodcategory.name}</a></li>
 				</c:forEach>
 	          </ul>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link active headerNav" aria-current="page" href="/product/listProduuct/1">신상품</a>
+	          <a class="nav-link active headerNav" aria-current="page" href="/product/listProduct/1">신상품</a>
 	        </li>
 	        <li class="nav-item">
 	          <a class="nav-link headerNav" href="/community/communityMain">게시판</a>
