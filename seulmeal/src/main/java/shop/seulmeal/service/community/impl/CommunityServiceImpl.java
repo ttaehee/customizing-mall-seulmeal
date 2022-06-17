@@ -246,6 +246,7 @@ public class CommunityServiceImpl implements CommunityService {
 			}
 		}
 		
+		
 		System.out.println("/////db 존재 x, insert block!");
 		return communityMapper.insertRelation(relation);
 	}

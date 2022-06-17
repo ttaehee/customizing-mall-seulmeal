@@ -391,10 +391,10 @@ public class UserController {
 	
 	
 	
-	@GetMapping("chargeuserPoint")
+	@GetMapping("chargeUserPoint")
 	public String chargeUserPoint() throws Exception {
 		
-		return "user/chargeUserPoint";
+		return "user/insertPoint";
 	}
 	
 	@GetMapping("getChargeUserPoint")

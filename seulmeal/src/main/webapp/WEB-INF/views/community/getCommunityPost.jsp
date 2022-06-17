@@ -28,27 +28,6 @@ img {
 }
 
 /*
-.carousel-item {
-  height: 100%;
-  min-height: 100%;
-  background: no-repeat center center scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-*/
-
-/*
-.carousel-inner > .carousel-item > img {
-      top: 0;
-      left: 0;
-      min-width: 100%;
-      min-height: 400px;
-    }
-*/
-
-/*
 .your_class{
 	text-align: center;
   	height: 50%;
@@ -61,13 +40,30 @@ span.a {
 	padding: 5px;
 }
 
-.jumbotron {
-  min-width: 585px;
-  margin: 100px auto;
-  display: flex;
-  justify-content: center;
-  margin: 10px 10px 10px 10px;
+img.rounded-circle{
+	width:60px;
+	height:60px;
+	
 }
+
+.info{
+	display: flex;
+}
+
+#reg-date{
+	text-align:right;
+	margin-right: 15px;
+}
+
+.comment_count{
+	margin-bottom: 0px;
+}
+
+#post-content-body{
+	margin-bottom: 80px;
+}
+
+
 </style>
 
 
@@ -77,50 +73,52 @@ span.a {
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
 	<br />
-
-	
-	<!-- div class="jumbotron jumbotron-fluid" >
-	  <div class="container" style="width:50%; margin : auto;">
-	 
-	    <h5 class="display-8">Fluid jumbotron</h5>
-	    
-	    <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-	    
-	  </div>
-	</div-->
-	
 	
 	<div class="container">
 	
-		<div>
+	<div>
 		<c:if test="${sessionScope.user.userId == post.user.userId}">
 			<button id="updatePostBtn" type="button"
 				class="btn btn-primary" onclick="location.href='/community/updatePost/${post.postNo}'">수정</button>
 			<button id="deletePostBtn" type="button" 
 				class="btn btn-primary"  onclick="location.href='/community/deletePost/${post.postNo}'">삭제</button>
 		</c:if>
+	</div>
 
 		<!-- 게시글 이미지 또는 제목/간략내용 -->
-		<div class="attach">
+		<div class="your-class" style="margin-bottom:30px">
 				<c:forEach var="attachment" items="${attachmentList}">
 					<div>
 						<img style="height: 60vh;"
 							src="/resources/attachments/${attachment.attachmentName}" alt="">
 					</div>
 				</c:forEach>
-			</div>
-		</div>
-		
-		<!-- 프로필 이미지 -->
-		<div class="profile_img">
-			프로필 이미지 : <img width="40" height="40" class="rounded-circle"
-				src="/resources/attachments/profile_image/${post.user.profileImage}">
 		</div>
 
-		<!-- 닉네임 -->
-		<div class="nick">
-			닉네임 : <strong>${post.user.nickName}</strong>
+		
+		
+		<div class="info">
+			<!-- 프로필 이미지 -->
+			<div class="user"> 
+				<div class="profile-img">
+					<c:if test="${not empty post.user.profileImage}">
+						<img class="rounded-circle"
+						src="/resources/attachments/profile_image/${post.user.profileImage}">
+					</c:if>
+					<c:if test="${empty post.user.profileImage}">
+						<img class="rounded-circle"
+						src="/resources/attachments/profile_image/default_profile.jpg">
+					</c:if>
+				</div>
+				
+				<!-- 닉네임 -->
+				<div class="nick">
+					<strong>${post.user.nickName}</strong>
+				</div>
+			</div>
+
 		</div>
+
 
 
 		<!-- 좋아요 -->		
@@ -130,38 +128,34 @@ span.a {
 				class="btn btn-primary">좋아요</button>
 			<button id="deleteLikeBtn" data-value="${post.postNo}" type="button"
 				class="btn btn-primary">좋아요 취소</button>
-			<span id="like_cnt">좋아요 ${post.likeCount}개</span>
 		</div>
 
-		<!-- 조회수 -->
-		<div class="view_count">
-			<i class="bi bi-eye"></i> <span id="v_cnt">${post.views}</span>
-		</div>
 
-		<!-- 댓글수 -->
-		<div class="comment_count">
-			<i class="bi bi-chat-left"></i> <span id="c_cnt">${post.commentCount}</span>
-		</div>
 
 		<!-- 제목, 내용 -->
 		<div id="accordion" style="margin-top:50px;">			
 				<div class="card" style="min-height: 500px;">
 	
 					<div id="post-title" class="card">
-					  <div class="card-body" style="font-size: 25px">
+					  <div id="post-title-body" class="card-body" style="font-size: 25px">
 							<strong>${post.title}</strong>
 					  </div>
 					</div>
 					
 					<div id="post-content" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
-						<div class="card-body"  style="font-size: 18px">
+						<div id="post-content-body" class="card-body"  style="font-size: 18px">
 							 ${post.content}
 						</div>
 					</div>
 					
+					<div class="comment_count">
+						<span id="like_cnt">좋아요  <span class="like-cnt">${post.likeCount}</span>개</span>
+						<i class="bi bi-eye"></i> <span id="v_cnt">${post.views}</span>
+						<i class="bi bi-chat-left"></i> <span id="c_cnt">${post.commentCount}</span>
+						<div id ="reg-date">${post.regDate}</div>
+					</div>
 				</div>
-				<!-- 등록날짜 -->
-				<div id="r_cnt">등록날짜 : ${post.regDate}</div>
+				
 		</div>
 		<!-- 제목, 내용 끝-->
 	</div>
@@ -190,9 +184,15 @@ span.a {
 							<div class="d-flex mb-4">
 								<!-- Parent comment-->
 								<div class="flex-shrink-0">
-									<img width="40" height="40" class="rounded-circle"
-										src="/resources/attachments/profile_image/${comment.user.profileImage}"
-										alt="..." />
+									<c:if test="${not empty comment.user.profileImage}">
+										<img width="40" height="40" class="rounded-circle"
+										src="/resources/attachments/profile_image/${comment.user.profileImage}"/>
+									</c:if>
+									<c:if test="${empty comment.user.profileImage}">
+										<img width="40" height="40" class="rounded-circle"
+										src="/resources/attachments/profile_image/default_profile.jpg"/>
+									</c:if>
+									
 								</div>
 								<div id="comment_div" class="ms-3">
 									<div class="fw-bold">${comment.user.nickName}</div>
@@ -357,25 +357,18 @@ span.a {
 
 		});
 
-		$(document)
-				.ready(
-						function() {
-							$('.your-class')
-									.slick(
-											{
-												dots : true,
-												infinite : true,
-												speed : 500,
-												fade : true,
-												cssEase : 'linear',
-												arrows : true,
-												prevArrow : "<button type='button' class='slick-prev pull-left'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
-												nextArrow : "<button type='button' class='slick-next pull-right'><i class='fa fa-angle-right' aria-hidden='true'></i></button>"
-
-											});
-						});
+		$(document).ready(function() {
+			$('.your-class').slick(
+				{
+					 dots: true,
+					  infinite: true,
+					  speed: 500,
+					  fade: true,
+					  cssEase: 'linear'
+					});
+		});
 	
-		
+
 		
 		
 		
