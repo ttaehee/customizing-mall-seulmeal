@@ -60,6 +60,7 @@ function check() {
 				</c:forEach>
 			</tbody>
 		</table>
+<jsp:include page="../layer/footer.jsp"></jsp:include>
 
 <script type="text/javascript"> 
 $(function() {

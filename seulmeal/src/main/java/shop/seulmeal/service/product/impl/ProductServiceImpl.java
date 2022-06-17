@@ -67,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
 			search.setSearchKeyword("");
 		}
 		List<Product> list = productMapper.getListProductAsAdmin(search);
-		int totalCount = productMapper.getTotalProductCount(search);
+		int totalCount = productMapper.getAdminProductCount(search);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
