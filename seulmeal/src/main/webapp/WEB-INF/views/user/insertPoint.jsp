@@ -25,24 +25,22 @@
 <body>
 
 <jsp:include page="../layer/header.jsp"></jsp:include>
-<div id="wrap">
-<div class="box">
-<h1>포인트 충전</h1>
-<input name="price" class="price">원
+	<div id="wrap">
+		<div class="box">
+			<h1>포인트 충전</h1>
+			<input name="price" class="price">원
+			<div>
+				<select id="paymentOption" name="paymentOption">
+					<option value="1" selected="selected">카드결제</option>
+					<option value="2">포인트결제</option>
+				</select>
+			</div>
+			<button type="button" class="btn btn-default" onClick="insertPoint()">충전하기</button>
 
- <button type="button" class="btn btn-default" onClick="insertPoint()">충전하기</button>
-<div>
-						<select id= "paymentOption" name="paymentOption">
-							<option value="1" selected="selected">카드결제</option>
-							<option value="2">포인트결제</option>
-						</select>
-				    </div>
+		</div>
+	</div>
 
-
-</div>
-</div>
-
-<jsp:include page="../layer/footer.jsp"></jsp:include>
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
 
 
 <script type="text/javascript">
@@ -194,7 +192,5 @@ function iamport(){
 	});
 }
 </script>
-<input class="price" name="price" />
-<button onclick="insertPoint()">Test</button>
 </body>
 </html>

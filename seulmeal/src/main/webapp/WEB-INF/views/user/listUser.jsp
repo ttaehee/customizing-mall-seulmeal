@@ -24,7 +24,7 @@
 				<h1 class="pt-5 mb-4 fw-bold">회원목록</h1>
 			</div>
 			<form method="get" action="/user/listUser/0/0">
-				<div class="float-right" style="display: flex;">
+				<div class="float-right" style="display: flex;"><!--style="display: flex;"  -->
 					<div class="form-outline">
 						<input type="search" id="form1" class="form-control" name="searchKeyword" placeholder="아이디 or 이름" />
 					</div>
