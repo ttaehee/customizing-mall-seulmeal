@@ -289,7 +289,7 @@ function idSearch(){
         dataType : "json",
         success : function(data){
         	if(data.result === "success"){
-        		alert("인증번호를 입력하세요");
+        		/* alert("인증번호를 입력하세요"); */
         		$("#emailCheckForm").css("display","block");
         		$("#findId").css("display","block");
         		$("#confirm").css("display","none");
