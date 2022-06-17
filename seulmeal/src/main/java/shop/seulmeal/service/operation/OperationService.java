@@ -20,4 +20,8 @@ public interface OperationService {
 	public List<Comment> getListAnswer(int no);
 	public int updateAnswer(Comment comment);
 	public int deleteAnswer(Comment comment);
+	
+	// admin
+	public List<Map<String,Object>> userCount(String table);
+	public List<Map<String,Object>> salePrice();
 }
