@@ -270,8 +270,8 @@
 											<div class="card-body">
 												<input type="text" id="usepoint" name="usepoint" value="" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
 												(100P 단위로 사용가능)<br/><br/>
-												<input type="text" id="password" name="password" value="" placeholder="비밀번호" style="width:150px;"></input>
-												<button type="button" class="btn btn-outline-primary" style="font-size:18px;" onClick="fnCalTotal()">확인</button>
+												<input type="password" id="password" name="password" value="" placeholder="비밀번호" style="width:150px;"></input>
+												<button type="button" class="btn btn-outline-primary" id="confirm" style="font-size:18px;" onClick="fnCalTotal()">확인</button>
 											</div>
 										</div>
 									</div>
@@ -339,7 +339,7 @@
 		        		alert("포인트적용완료");
 		        		$("#total").text(total);
 		        		
-		        		$(this).attr("disabled","disabled");
+		        		$('#confirm').attr("disabled","disabled");
 		        		
 		        	}else if(data.success==='pt'){
 		        		alert("보유포인트 내에서 입력하세요.");
