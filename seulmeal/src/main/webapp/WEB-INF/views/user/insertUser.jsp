@@ -30,9 +30,9 @@
 	    </div>
 	  </div>
 	  <div class="form-group">
-	    <label for="Password3" class="col-sm-2 control-label">Password</label>
+	    <label for="Password3" class="col-sm-2 control-label">비밀번호</label>
 	    <div class="col-sm-10">
-	      <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+	      <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
 	      <div id="passResult" style="color:crimson;"></div>
 	      <div style="font-size: 15px;">비밀번호는 8글자 이상 특수문자1개, 알파벳 대문자 1개를 포함하고 공백과 아이디가 포함되지 않아야 합니다.</div>
 	    </div>
@@ -40,7 +40,7 @@
 	  <div class="form-group">
 	    <label for="Password3" class="col-sm-2 control-label">비밀번호 확인</label>
 	    <div class="col-sm-10">
-	      <input type="password" class="form-control" id="confirmPassword"  placeholder="Password">
+	      <input type="password" class="form-control" id="confirmPassword"  placeholder="비밀번호 확인">
 	      <div id="passCheck" style="color:crimson;"></div>
 	    </div>	    
 	  </div>

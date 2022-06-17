@@ -252,12 +252,11 @@ input{
 					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
 				</div>
 				<div class="login-btn-wrap" id="confirm">
-					<button id="login-btn" type="button" onclick="idSearch()">인증 하기</button>
+					<button id="login-btn" type="button" onclick="idSearch()">인증 번호 받기</button>
 				</div>
 				<div class="login-btn-wrap" id="reset" style="display: none;">
 					<button id="login-btn" type="button" onclick="confirmEmail()" >비밀번호 재설정</button>
 				</div>
-
 			</section>
 		</form>
 </div>
@@ -275,7 +274,7 @@ function idSearch(){
 	
 	console.log(idSearch)
 	
-	 $.ajax({
+	  $.ajax({
 		url: "/user/api/confirmUserEmail",
 		method: "GET", 
 		data: idSearch,
@@ -297,7 +296,7 @@ function idSearch(){
         		return;
         	}
         }
-	})		 
+	})		  
 }
 
 
@@ -323,6 +322,8 @@ function confirmEmail(){
         	if(data.result === "인증실패"){
         		alert("인증번호가 틀렸습니다 다시 입력해주세요");
         		return;
+        		
+        	}
         }
 	})
 }

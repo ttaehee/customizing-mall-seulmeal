@@ -3,7 +3,7 @@ package shop.seulmeal.service.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,6 +42,7 @@ public class User implements UserDetails {
 	private String phone;
 	private String email;
 	private String grade;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date regDate;
 	private Date loginDate;
 	private int blockCount;

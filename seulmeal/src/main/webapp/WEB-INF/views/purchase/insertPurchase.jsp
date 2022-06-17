@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -38,7 +39,7 @@
         font-size: 14px;
       }
 	input[type="checkbox"]:checked + label::after{
-        content:'🗸';
+        content:'v';
         font-size: 16px;
         width: 20px;
         height: 20px;
@@ -100,7 +101,7 @@
 		 </div>
 		</div><br/>
 	
-		<table class="table table-hover" style="border-color: #FF4500;">
+		<table class="table table-hover" style="border-color: #FF4500; width:900px;">
 	 
 	        <thead>
 	          <tr>
@@ -110,7 +111,6 @@
 	            <th align="center">옵션</th>
 	             <th align="center">수량</th>
 	            <th align="center">합계</th>
-	            <th align="center"></th>
 	          </tr>
 	        </thead>
 	        
@@ -131,15 +131,12 @@
 							  	</c:forEach> 
 							  	 </td>
 							  <td align="left">
-							  	<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
-							  	&ensp; <span id ="count" name="count"> ${customProduct.count} </span> &ensp;
-							  	<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button> 
+							  	<span id ="count" name="count"> ${customProduct.count} </span>
 							  </td>
 							  <td align="left">
 							  <span id="customprice" name="price">${customProduct.price*cpd.count}</span>원</td>
 							  <td align="left">
 							  	<button type="button" class="btn btn-outline-primary change" onclick="window.location.href='/purchase/updateCustomProduct/' + ${customProduct.customProductNo}">수정</button>
-							  	<button type="button" class="btn btn-outline-primary delete" onclick="window.location.href='/purchase/deleteCustomProduct/' + ${customProduct.customProductNo}">x</button>
 							  </td>
 							  <c:set var="sum" value="${customProduct.price*customProduct.count}" />
 						  </tr>  
@@ -150,52 +147,44 @@
 				<c:when test="${cartStatus eq '1'}">
 	
 				<tbody style="font-size:15px">
-					<c:set var="sum" value="0" />
-					<c:set var="customprice" value="0" />
-					<c:set var="i" value="0" />
-					<c:forEach var="cpd" items="${customProductList}">
-						<c:set var="i" value="${i+1}" />
-						<c:set var="customprice" value="${cpd.price}" />
-						<tr class="ct_list_pop">
-							  <td align="left">${i}</td>
-							  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
-							  <td align="left">${cpd.product.name}</td>
-							  <td align="left">
-							  <c:forEach var="pp" items="${cpd.plusParts}">
-							  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
-							  	</c:forEach>
-							  <c:forEach var="mp" items="${cpd.minusParts}">
-							  	- ${mp.minusName} <br/>
-							  	</c:forEach> 
-							  	 </td>
-							  <td align="left">
-							  	<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
-							  	&ensp; <span id ="count" name="count"> ${cpd.count} </span> &ensp;
-							  	<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalCount('plus',this);">+</button> 
-							  </td>
-							  <td align="left">
-							  <span id="customprice" name="price">${cpd.price*cpd.count}</span>원</td>
-							  <td align="left">
-							  	<button type="button" class="btn btn-outline-primary change" onclick="window.location.href='/purchase/updateCustomProduct/' + ${cpd.customProductNo}">수정</button>
-							  	<button type="button" class="btn btn-outline-primary delete" onclick="window.location.href='/purchase/deleteCustomProduct/' + ${cpd.customProductNo}">x</button>
-							  </td>
-							  <c:set var="sum" value="${sum+cpd.price*cpd.count}" />
-							  
-						  </tr>  
-					  </c:forEach>
-				  
-				</c:when>
-			</c:choose>
-			
+				<c:set var="sum" value="0" />
+				<c:set var="customprice" value="0" />
+				<c:set var="i" value="0" />
+				<c:forEach var="cpd" items="${customProductList}">
+					<c:set var="i" value="${i+1}" />
+					<c:set var="customprice" value="${cpd.price}" />
+					<tr class="ct_list_pop">
+						  <td align="left">${i}</td>
+						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+						  <td align="left">${cpd.product.name}</td>
+						  <td align="left">
+						  <c:forEach var="pp" items="${cpd.plusParts}">
+						  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
+						  	</c:forEach>
+						  <c:forEach var="mp" items="${cpd.minusParts}">
+						  	- ${mp.minusName} <br/>
+						  	</c:forEach> 
+						  	 </td>
+						  <td align="left">
+						  	<span id ="count" name="count"> ${cpd.count} </span> 
+						  </td>
+						  <td align="left">
+						  <span id="customprice" name="price">${cpd.price*cpd.count}</span>원</td>
+						  <c:set var="sum" value="${sum+cpd.price*cpd.count}" />
+						  
+					  </tr>  
+				  </c:forEach>
 	        </tbody>
+	        </c:when>
+	        </c:choose>
 	      </table><br/>
 	 </div>
 	
-	<div class="container" style="justify-content: center; display: flex">
+	<div class="container">
 	<div class="row">
 	<div class="col-xs-6">
 	 
-	<div class="card" style=" border-radius: 10px; width:450px;">
+	<div class="card" style=" border-radius: 10px; width:470px; min-height: 670px;">
 		<div class="card-body">
 		    <h6 class="card-title">배송정보</h6>
 		    <h8 class="card-subtitle mb-2 text-muted"></h8>
@@ -247,44 +236,71 @@
 			</div>
 	
 			<div class="col-xs-3">
-				<div class="card" style="border-radius: 10px; min-height: 430px; width: 300px;">
+				<div class="card" style="border-radius: 10px; width: 370px;">
 					<div class="card-body">
 					    <h6 class="card-title">결제수단</h6>
 					    <h8 class="card-subtitle mb-2 text-muted"></h8>
 					    <p class="card-text">
 					    	<div>
-					    		<input type="checkbox" id="pay1" name="paymentCondition" value="0" />신용카드&ensp;
+					    		<input type="checkbox" id="pay1" name="paymentCondition" value="0" />신용카드&ensp;&ensp;&ensp;
 					    		<label for="pay1"></label><br/>
 					    		<input type="checkbox" id="pay2" name="paymentCondition" value="1"/>네이버페이&ensp;
 					    		<label for="pay2"></label><br/>
 					    		<input type="checkbox" id="pay3" name="paymentCondition" value="2"/>카카오페이&ensp;
 					    		<label for="pay3"></label>
-					    	</div><br/><br/>
-				    		<div>포인트사용(보유 ${user.totalPoint}P)</div>>
-							<input type="text" id="usepoint" name="usepoint" value="" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
-							(100P 단위로 사용가능)<br/><br/>
-							<input type="text" id="password" name=""password"" value="" placeholder="비밀번호" style="width:150px;"></input>
-							<button type="button" class="btn btn-outline-primary" style="font-size:18px;" onClick="fnCalTotal()">확인</button>							
+					    	</div><br/>
+
+							<div class="header" id="head">
+								<!-- 아코디언-->
+								
+								<div>
+									<a class="bg_links" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapse"> 포인트사용(보유 ${user.totalPoint}P) </a>
+								</div>	
+					
+							</div>
+					
+							<!-- 아코디언 바디 -->
+							<div class="container" style="margin-top: 20px;">
+								<div id="accordion">
+									<div class="card">
+									
+									
+									
+										<div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+											<div class="card-body">
+												<input type="text" id="usepoint" name="usepoint" value="" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
+												(100P 단위로 사용가능)<br/><br/>
+												<input type="text" id="password" name="password" value="" placeholder="비밀번호" style="width:150px;"></input>
+												<button type="button" class="btn btn-outline-primary" style="font-size:18px;" onClick="fnCalTotal()">확인</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+													
 						</p>
 					</div>
 				</div><br/>
 				
-				<div class="card" style="border-radius: 10px; min-height: 80px; width: 300px;">
+				<div class="card" style="border-radius: 10px; min-height: 80px; width: 370px;">
 					<div class="card-body">
-					    <h6 class="card-title"></h6>
+					    <h6 class="card-title">최종결제금액</h6>
 					    <h8 class="card-subtitle mb-2 text-muted"></h8>
 					    <p class="card-text">
-					    	<div style="text-align: right; font-size:17px;">최종결제금액&ensp;</div>
 							<div style="text-align: right;">KRW&ensp;&ensp;<span id="total" style="font-size: 20px;">${sum}</span>&ensp;</div>
-							<button type="button" class="pay" id="pay" style="background-color:#FFF; border-radius:5px; border-color:#FF4500; font-size:22px; width: 250px" onClick="iamport()">결제하기</button>		
+							<button type="button" class="pay" id="pay" style="background-color:#FFF; border-radius:5px; border-color:#FF4500; font-size:22px; width: 320px" onClick="iamport()">결제하기</button>		
 						</p>
+						<div id="pluspoint">
+							적립예정 포인트 : <fmt:parseNumber var= "pluspoint" pattern="#,###" value="${sum*0.05}"/>P
+						</div>
 	
 					</div>
 				</div><br/>
 				
 			</div>
 		</div>
-	</div>
+	</div><br/><br/>
 
 	</form>
 	
@@ -294,10 +310,57 @@
 	function fnCalTotal(){
 		const usepoint = parseInt($('#usepoint').val());
 		const password = $('#password').val();
+		console.log(password);
+		console.log(password);
 		const sum = parseInt($('#total').text());
 		const total = sum-usepoint;
 		
-		$("#total").text(total);
+		if(total<0){
+			alert("결제금액보다 적은 포인트를 입력하세요.");
+			$('#usepoint').val('');
+			return;
+		}
+		
+			$.ajax({
+				url: "/purchase/api/confirmPassword",
+				method : "POST",
+		        data:JSON.stringify({
+		        	password : password,
+		        	totalPoint : usepoint
+				}),
+				headers : {
+					"Accept" : "application/json",
+					"Content-Type" : "application/json"
+				},
+				dataType : "json",
+		        success : function(data){	
+		        	console.log(data);
+		        	if(data.success==='true'){
+		        		alert("포인트적용완료");
+		        		$("#total").text(total);
+		        		
+		        		$(this).attr("disabled","disabled");
+		        		
+		        	}else if(data.success==='pt'){
+		        		alert("보유포인트 내에서 입력하세요.");
+		        		$('#usepoint').val('');
+		        		$('#password').val('');
+		    			return;
+		    			
+		        	}else if(data.success==='pw'){
+		        		alert("비밀번호를 다시 입력하세요.");
+		        		$('#usepoint').val('');
+		        		$('#password').val('');
+		        		return;
+		        		
+		        	}else{
+		        		alert("다시 시도해주세요.");
+		        		$('#usepoint').val('');
+		        		$('#password').val('');
+		        		return;
+		        	}
+		        }
+	    	});		
 	}
 		
 	
@@ -311,6 +374,8 @@
 		const message = $('#message').val();
 		const price = $('#total').val();
 		const paymentCondition = 0;
+		const usePoint = $('#usepoint').val();
+		const plusPoint = $('#pluspoint').val();
 		
 		
 		//const point = $('#usepoint').val();
@@ -326,9 +391,10 @@
 				email : email,
 				message : message,
 				price : price,
-				paymentCondition : paymentCondition
-				//point : point,
-				//customProductNo : customProductNo
+				paymentCondition : paymentCondition,
+				usePoint : usePoint,
+				plusPoint : plusPoint
+				//customProductNo : customProductNo 리스트로...
 			}),
 			headers : {
 				"Accept" : "application/json",

@@ -2,6 +2,7 @@ package shop.seulmeal.web.purchase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -55,6 +58,15 @@ public class PurchaseRestController {
 	public PurchaseRestController(){
 		System.out.println(this.getClass());
 	}
+	
+	@PostMapping("autocomplete")
+	public @ResponseBody Map<String, Object> autocomplete(@RequestParam Map<String, Object> paramMap) throws Exception{
+		
+		List<Map> resultList = purchaseService.autocomplete(paramMap);
+		paramMap.put("resultList", resultList);
+
+		return paramMap;
+	}
 
 	//장바구니에서 수량변경
 	@GetMapping("updateCustomProduct/{customProductNo}/{count}")
@@ -72,15 +84,38 @@ public class PurchaseRestController {
 		
 	}	
 	
+	@PostMapping("confirmPassword")
+	public JSONObject confirmPassword(@RequestBody Map temp, HttpSession session) throws Exception {
+	
+		System.out.println("/purchase/api/confirmPassword : "+temp);
+		
+		String password=(String) temp.get("password");
+		int usePoint=(int) temp.get("totalPoint");
+		
+		User user=(User)session.getAttribute("user");
+		String realPw=user.getPassword();
+		int realPt=user.getTotalPoint();
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		JSONObject json=new JSONObject();
+		if(encoder.matches(password, realPw) && usePoint<=realPt) {
+			json.put("success", "true");
+		}else if(usePoint > realPt) {
+			json.put("success","pt");
+		}else {
+			json.put("success","pw");
+		}
+		return json;	
+	}	
+	
+	
 	@PostMapping("insertPurchase")
 	public Purchase insertPurchase(@RequestBody Purchase purchase, @AuthenticationPrincipal User user) throws Exception {
 	
 		System.out.println("/purchase/api/insertPurchase : "+purchase);
-		
 
 		purchase.setUser(user);
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+user);
-
 	      
 		int result=purchaseService.insertPurchase(purchase);
 		System.out.println("/purchase/api/insertPurchase insert : "+result);
@@ -88,7 +123,6 @@ public class PurchaseRestController {
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
 		System.out.println("/purchase/api/insertPurchase get : "+purchase);
 		purchase.setUser(user);
-		System.out.println("1111111111111111+++++++++++++++++++++++"+purchase);
 
 		return purchase;	
 		

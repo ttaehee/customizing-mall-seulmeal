@@ -116,7 +116,6 @@
 			</nav>
 		</div>
 	</div>	
-
 		
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 
@@ -135,20 +134,22 @@
 	
 	
 	$(function(){ 
-
+		const page = 
 		$(".btn-update").click(function(){
-			  const no =$(this).data("value");
+			var page = getAttribute('')
+			const no =$(this).data("value");
+			  
 			window.location.href = '/product/updateProduct/'+no;
 		  });
 		
 		  $(".btn-delete").click(function(){
 			  const no =$(this).data("value");
-			window.location.href = '/product/deleteProduct/'+no;
+			window.location.href = '/product/deleteProduct/1/'+no;
 		  });
 		  
 		  $(".btn-restore").click(function(){
 			  const no =$(this).data("value");
-			window.location.href = '/product/restoreProduct/'+no;
+			window.location.href = '/product/restoreProduct/1/'+no;
 		  });
 		  
 		});

@@ -38,15 +38,8 @@
 	        margin: 20px auto;
 		}
 		
-		#order{
-		    bottom: 200px;
-		    right: 11000px;
-		    width: 200px;
-		    border: 3px solid #73AD21;
-		}
-		
 		button:hover{
-			color:gray;
+			color: #ff4500;
 		}
 		
 	</style>
@@ -89,7 +82,7 @@
 		 </div>
 		</div><br/>
 		
-		 <table class="table table-hover" >
+		 <table class="table table-hover" style="width: 1000px;">
 	 
 	        <thead>
 	          <tr>
@@ -143,7 +136,7 @@
 	      <div class="container" style="justify-content: center; display:flex;">
 				<h5>결제예정 금액 :  <span id="total">${total}</span>원</h5>
 				<div style="border:none; float:right">
-				<button class="button" id="order" style="margin-left:200px; font-size:20px; border:1px black; background-color:white;" onclick="fncInsertPurchase()">전체상품주문</button>
+				<button class="button" id="order" style="margin-left:200px; padding: 5px; font-size:20px; border:1px #FF4500; background-color:white;" onclick="fncInsertPurchase()">전체상품주문</button>
 				</div>
 		</div>
 		
