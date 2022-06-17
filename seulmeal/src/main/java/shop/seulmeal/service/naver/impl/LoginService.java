@@ -71,7 +71,7 @@ public class LoginService {
 			user.setEmail(rootbody.get("email").asText());
 			user.setPhone((rootbody.get("mobile").asText()).replace("+82", "0"));
 			user.setUserName(rootbody.get("name").asText());
-			user.setBirth(date);
+			//user.setBirth(date);
 			System.out.println(user);
 		} catch (Exception e) {
 			e.printStackTrace();
