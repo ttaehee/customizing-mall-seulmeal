@@ -153,6 +153,7 @@ body {
 .post-div{
 	margin-bottom:20px;	
 	border: 1px solid #dfdfdf;
+	border-radius: 3px;
 	
 }
 
@@ -623,7 +624,16 @@ body {
 	                    <!-- img src="img/profile-pic.png" alt="로그인유저"-->
 	                </div>
 					<div class ="profile-user-info">
-	                    <p class="username"><a style ="font-size: 19px;" class = "username" href="/community/getProfile/${sessionScope.user.userId}">${sessionScope.user.nickName}</a></p>
+	                    <p class="username">
+	                    	<c:choose> 
+								<c:when test="${not empty sessionScope.user.userId}">
+									<a style ="font-size: 19px;" class = "username" href="/community/getProfile/${sessionScope.user.userId}">${sessionScope.user.nickName}</a>
+								</c:when>
+								<c:otherwise>
+									<a style ="font-size: 19px;" class = "username" href="/community/getProfile/${sessionScope.user.userId}">${sessionScope.user.userId}</a>							
+								</c:otherwise>						
+							</c:choose>
+	                    </p>
 	                    <!-- a class="update_profile" style="margin:30px">프로필 이미지 변경</a-->
 	                    <p class="sub-text">${sessionScope.user.profileMessage}</p>
 	                    <c:choose>
@@ -635,9 +645,9 @@ body {
 						<!-- 선호음식 카테고리  null처리하기-->
 						<p class="sub-text">${sessionScope.user.foodCategoryName1}  ${sessionScope.user.foodCategoryName2}  ${sessionScope.user.foodCategoryName3}</p>
 					</div>	               
-					<div class="follow-info">
-		                <p><a class="follow" role="link" href="#">팔로우 ${followCnt}</a></p> <!-- 팔로우 목록 모달창 -->
-		                <p><a class="follower" role="link" href="#">팔로워 ${followerCnt}</a></p> <!-- 팔로워 목록 모달창 -->
+					<div class="follow-info"><!-- 팔로우 모달창 실행 버튼 -->
+		                <p><a id = "followModal_Btn" class="follow" role="link" data-toggle="modal" data-target="#followModal">팔로우 ${followCnt}</a></p> <!-- 팔로우 목록 모달창 -->
+		                <p><a id = "followerModal_Btn" class="follower" role="link" href="#">팔로워 ${followerCnt}</a></p> <!-- 팔로워 목록 모달창 -->
 		                <a id="block-user-list" data-toggle="modal" data-target="#blockUserModal">차단유저목록</a>
 		            </div>
 	            </div>
@@ -645,7 +655,7 @@ body {
 		</div><!-- wraaper 끝 -->
 	</section><!-- main 끝 -->
 
-
+	
 
 
 		<!-- 차단목록 모달 -->
@@ -722,6 +732,25 @@ body {
 
 
 
+		<!-- 팔로우 모달창 실행 -->
+		<div id="followModal" data-value="${sessoinScope.user.userId}" class="modal fade"  aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static" tabindex="-1" role="dialog">
+			<div class="modal-dialog" >
+				<div id = "follow-modal" class="modal-content">
+					<!-- 외부 모달 창 load 되는 곳 -->
+				</div>
+			</div>
+		</div>
+		
+		
+		
+		<!-- 팔로워 모달창 실행 -->
+		<div id="followerModal" data-value="${sessoinScope.user.userId}" class="modal fade"  aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static" tabindex="-1" role="dialog">
+			<div class="modal-dialog" >
+				<div id = "follower-modal" class="modal-content">
+					<!-- 외부 모달 창 load 되는 곳 -->
+				</div>
+			</div>
+		</div>
 
 
 
@@ -743,10 +772,11 @@ body {
 					});
 			});
 
+	
 
-	// 좋아요
+	// 좋아요, 좋아요 취소
 	$("i.bi.bi-heart.icon").on("click", function() {
-		
+				
 		const postNo = $(this).data("value");
 		//alert("postNo: " + postNo);
 		console.log("postNo: " + postNo);
@@ -760,29 +790,45 @@ body {
 			method : "POST",
 			success : function (data, status, jqXHR){
 				
-				alert("좋아요 성공");
-				
             	console.log(data); //응답 body부 데이터
-            	console.log(status); //"succes"로 고정인듯함
-            	console.log(jqXHR)
-				
-            	const likeCount = data;
-				console.log("likeCount: " + likeCount);
-				
-				div_like_cnt.html(likeCount); // 좋아요 개수 수정
-				
+				//console.log(JSON.stringify(data));
+            	//console.log(status); //"succes"
+            	//console.log(jqXHR)
+				           	
+            	const first_key = Object.keys(data)[0];
+            	const value = data[first_key];
+            	
+            	console.log(first_key);
+            	console.log(value);
+            	
+            	if(first_key === '좋아요'){
+            		alert("좋아요");
+            	}else if(first_key === '좋아요 취소'){
+            		alert("좋아요 취소");
+            	}
+        
+				div_like_cnt.html(value); // 좋아요 개수 수정
 			
 			}, error : function(jqXHR, status){
-				
-            	alert("좋아요 이미 누름..");
-
 				console.log(jqXHR);	// 응답 메시지
-				console.log(status);	// "errror"로 고정인듯함
-				//console.log(errorThrown);
+				console.log(status); // "errror"
 			}
 		});
 
 	});
+	
+	/*
+	function red_heart_show() {  // 함수 선언 : 빈 하트 클릭 시
+	    $(".red_heart").show() // 빨간 하트 보여주기
+	    $(".empty_heart").hide() // 빈 하트 숨기기
+	    $(".heart_count").show() // 좋아요 텍스트 보여주기
+	  }
+
+	  function empty_heart_show() {  // 함수 선언 : 빨간 하트 클릭 시
+	    $(".empty_heart").show()
+	    $(".red_heart").hide()
+	    $(".heart_count").hide()
+	  }*/
 	
 	
 	// 차단해제
@@ -814,7 +860,7 @@ body {
 	
 	
 	
-	
+
 	// 무한 스크롤
 	let page = 2;
 	$(window).on("scroll", function() {
@@ -887,7 +933,31 @@ body {
 	 });
 	
 	
+	/*
+	$("#followModal").on("click", function() {
+		
+		const userId = $(this).data(value);
+		
+		$.ajax({
+			url : "/community/api/deleteBlock/" + relationUserId,
+			method : "POST",
+			success : function(status) {
+				
+				if(status === 1){
+					alert("차단해제 완료!");
+					line.remove();
+				}else{
+					alert("차단해제 실패..")
+				}
+			}
+		});
+
+	});
+	*/
 	
+	
+	$("#follow-modal").load("/community/followModal");
+	$("#follower-modal").load("/community/followerModal");
 	
 </script>
 </body>

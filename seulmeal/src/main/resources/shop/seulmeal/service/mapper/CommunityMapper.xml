@@ -492,6 +492,7 @@
 	<resultMap type="Relation" id="relationSelectMap">
 		<result property="relationNo" column="relation_no" jdbcType="NUMERIC" />
 		<result property="userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="relationUser.role" column="role" jdbcType="VARCHAR" />
 		<result property="relationUser.userId" column="relation_user_id" jdbcType="VARCHAR" />
 		<result property="relationUser.nickName" column="nickname" jdbcType="VARCHAR" />
 		<result property="relationUser.profileImage" column="profile_image" jdbcType="VARCHAR" />
@@ -644,7 +645,7 @@
 	<select id="getListRelation" parameterType="map" resultMap="relationSelectMap">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT r.*, u.nickname, u.profile_image,u.profile_message
+				FROM	(SELECT r.*, u.nickname, u.profile_image,u.profile_message, u.role
 						 FROM relation r, users u
   							<where>
 								r.relation_user_id = u.user_id
@@ -733,7 +734,7 @@
 	<select id="getListFollower" parameterType="map" resultMap="relationSelectMap">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT r.*, u.nickname, u.profile_image,u.profile_message 
+				FROM	(SELECT r.*, u.nickname, u.profile_image,u.profile_message, u.role
 								FROM relation r, users u 
 								<where> 
 									r.relation_user_id = u.user_id 

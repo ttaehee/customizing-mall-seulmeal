@@ -124,16 +124,20 @@ public class CommunityServiceImpl implements CommunityService {
 		// userId가 like 눌렀는지 체크
 		Like dbLike = communityMapper.checkLike(like);
 		
-		// 이미 눌렀을 때,  실행 x
-		if(dbLike != null) {
-			System.out.println("///////이미 좋아요 눌렀음, insert 실패");
+		// 좋아요
+		if(dbLike == null) {
+			
+			communityMapper.postLikeCountUp(like.getPostNo());
+			communityMapper.insertLike(like);
+			return 1;
+			
+		} else { // 좋아요 취소
+		
+			System.out.println("///////이미 좋아요 눌렀음, 좋아요 취소");
+			communityMapper.postLikeCountDown(dbLike.getPostNo());
+			communityMapper.deleteLike(dbLike);
 			return -1;
 		}
-		
-		// 누르지 않았을 때
-		communityMapper.postLikeCountUp(like.getPostNo());
-
-		return communityMapper.insertLike(like);
 	}
 
 	@Override

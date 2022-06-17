@@ -9,27 +9,20 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.attachments.AttachmentsService;
@@ -207,28 +200,27 @@ public class CommunityRestController {
 	
 
 	@PostMapping("insertLike/{postNo}") // oo
-	public ResponseEntity<Integer> insertLike(@PathVariable String postNo, HttpSession session) {
+	public Map<String,Integer> insertLike(@PathVariable String postNo, HttpSession session) {
 
 		Like like = new Like();
 		like.setPostNo(Integer.parseInt(postNo));
 		//like.setUserId(userId);
 		like.setUserId(((User)session.getAttribute("user")).getUserId());
 
-		// 좋아요
-		if(communityService.insertLike(like) == -1) {
-			System.out.println("/////////"+communityService.insertLike(like));
-			return ResponseEntity.badRequest().build();	// 400 상태코드만 반환
-		}
-
-		// 좋아요한 게시글의 좋아요 개수를 return 하기 위함 (status = '0'인 게시글만 select)
+		Map<String,Integer> map = new HashMap<>();
+		int result = communityService.insertLike(like);
 		Post post = communityService.getLikePost(Integer.parseInt(postNo));
 		
-		System.out.println("/////////post.getLikeCount():" + post.getLikeCount());
-
-		// 좋아요 수 데이터와 상태코드 반환
-		return new ResponseEntity<Integer>(post.getLikeCount(), HttpStatus.OK);	
+		
+		if(result == 1) {
+			map.put("좋아요", post.getLikeCount());
+			return map;
+		}else{
+			map.put("좋아요 취소", post.getLikeCount());
+			return map;			
+		}
 	}
-
+/*
 	@PostMapping("deleteLike/{postNo}") // oo
 	public Post deleteLike(@PathVariable String postNo, HttpSession session) {
 
@@ -247,7 +239,7 @@ public class CommunityRestController {
 		
 		return post;
 	}
-
+*/
 	@PostMapping("insertFollow/{relationUserId}") // o
 	public int insertFollow(@PathVariable String relationUserId, HttpSession session) {
 
