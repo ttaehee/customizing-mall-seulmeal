@@ -19,6 +19,11 @@
 	  background-position: center center;
 	  background-size: cover;
 	}
+	.card-cover:hover{
+		opacity: 0.7;
+		cursor: pointer;		
+	}
+	
 </style>
 </head>
 <body style="background-color: #fff;">

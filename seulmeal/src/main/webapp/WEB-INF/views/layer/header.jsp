@@ -21,6 +21,9 @@
 <!-- slick -->
 <script type="text/javascript" src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
 
+<!-- chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <!-- bootStrap -->

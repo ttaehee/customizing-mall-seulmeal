@@ -1,5 +1,6 @@
 package shop.seulmeal.web.main;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,13 +120,18 @@ public class MainController {
 	}
 	
 	@GetMapping("/admin")
-	public String adminPage(HttpSession session) throws Exception {
+	public String adminPage(HttpSession session, Model model) throws Exception {
 		User user = (User)session.getAttribute("user");
+		model.addAttribute("userCount",operationService.userCount("users"));
+		model.addAttribute("purchaseCount",operationService.userCount("purchase"));
+		model.addAttribute("salePrice",operationService.salePrice());
+		
 		if(user != null) {
 			if(user.getRole().equals("1")) {
 				return "admin/admin";
 			}
 		}
+		
 		
 		return "redirect:/";
 	}

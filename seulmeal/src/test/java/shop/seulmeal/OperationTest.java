@@ -69,9 +69,13 @@ class OperationTest {
 	@Value("${chatBot.secretKey}")
 	String api;
 	
-	
-	
 	@Test
+	void userCount() {
+		List<Map<String,Object>> map =operationMapper.userCount("users");
+		System.out.println(map);
+	}
+	
+	//@Test
 	void operation() {
 		Post post = new Post();
 		post.setPostNo(127);

@@ -101,4 +101,17 @@ public class OperationServiceImpl implements OperationService {
 		operationMapper.endEvent();
 	}
 
+	@Override
+	public List<Map<String, Object>> userCount(String table) {
+		// TODO Auto-generated method stub
+		
+		return operationMapper.userCount(table);
+	}
+
+	@Override
+	public List<Map<String, Object>> salePrice() {
+		// TODO Auto-generated method stub
+		return operationMapper.salePrice();
+	}
+
 }
