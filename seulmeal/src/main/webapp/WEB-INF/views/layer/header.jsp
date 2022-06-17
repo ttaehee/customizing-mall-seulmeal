@@ -53,8 +53,9 @@
 	ul.nav li.dropdown:hover > ul.dropdown-menu { display:block; margin:0; }
 </style>
 	<!-- 어드민 -->
+	<!-- 
 	<c:if test="${user.role == 1}">
-		<div style="background:#BAD7DF; display:flex; justify-content:space-between;">
+		<div style="display:flex; justify-content:space-between;">
 			<h3>오늘 할일</h3>
 			<h4>신규 주문</h4>
 			<h4>교환/반품 승인</h4>
@@ -62,7 +63,7 @@
 			<h4>재고 소진</h4>
 			<h4>문의 답변대기</h4>
 		</div>
-	</c:if>
+	</c:if> -->
 	<div class="header" style="background:#fff; padding-top:10px; ">
 	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
 		<div id="google_translate_element" class="hd_lang" style="padding-top:10px;"></div>
