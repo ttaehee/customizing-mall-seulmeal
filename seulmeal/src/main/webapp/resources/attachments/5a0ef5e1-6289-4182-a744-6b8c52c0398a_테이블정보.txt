@@ -1,0 +1,81 @@
+// 재료
+CREATE TABLE part(
+	partNo VARCHAR2(50) not null,
+	partName VARCHAR2(50) not null,
+	primary key(partNo)
+);
+
+INSERT INTO part VALUES (1,'감자'); 
+
+INSERT INTO part VALUES (2,'고구마'); 
+
+INSERT INTO part VALUES (3,'돼지고기 등심');
+
+INSERT INTO part VALUES (4,'소고기등심');
+
+// 상품에 들어간 재료
+CREATE TABLE prodPart(
+	prodPartNo VARCHAR2(50) not null,
+	prodNo VARCHAR2(50) not null REFERENCES tproduct(prodNo),
+	partNo VARCHAR2(50) not null REFERENCES part(partNo),
+	primary key(prodPartNo)
+);
+
+
+INSERT INTO prodPart VALUES (1,1,1); 
+
+INSERT INTO prodPart VALUES (2,1,2);
+
+INSERT INTO prodPart VALUES (3,2,3);
+
+INSERT INTO prodPart VALUES (4,2,2);
+
+
+// 상품
+CREATE TABLE tproduct(
+	prodNo VARCHAR2(50) not null,
+	prodName VARCHAR2(50) not null,
+	primary key(prodNo)
+);
+
+INSERT INTO tproduct VALUES (1,'감자국'); 
+
+INSERT INTO tproduct VALUES (2,'고구마국'); 
+
+INSERT INTO tproduct VALUES (3,'돼지고기 찌개');
+
+select tp.prodNo, prodName,partName from tproduct t, prodPart tp, part p where t.prodNo = tp.prodNo AND p.partNo = tp.partNo AND prodName = '감자국';
+
+// 커스텀 상품에 들어간 재료
+CREATE TABLE cusprodPart(
+	cusprodPartNo VARCHAR2(50) not null,
+	cusprodNo VARCHAR2(50) not null REFERENCES cusproduct(cusprodNo),
+	partNo VARCHAR2(50) not null REFERENCES part(partNo),
+	partCount VARCHAR2(50) not null,
+	primary key(cusprodPartNo)
+);
+
+INSERT INTO cusprodPart VALUES(1,1,1,300); 
+INSERT INTO cusprodPart VALUES(2,1,2,200); 
+
+// 커스텀 상품
+CREATE TABLE cusproduct(
+	cusprodNo VARCHAR2(50) not null,
+	prodNo VARCHAR2(50) not null REFERENCES tproduct(prodNo),
+	primary key(cusprodNo)
+);
+
+INSERT INTO cusproduct VALUES(1,1); 
+
+select tp.prodNo 상품번호, prodName 상품명 ,p.partNo 상품원재료 , ctp.PartNo 커스텀재료, ctp.partCount 커스텀재료량
+FROM cusproduct ct, tproduct t, prodPart tp, cusprodPart ctp, part p
+where ct.prodNo = t.prodNo AND ct.cusprodNo = ctp.cusprodNo AND t.prodNo = tp.prodNo AND p.partNo = tp.partNo AND ctp.partNo=p.partNo AND ctp.cusprodNo = 1;
+
+
+select *
+FROM cusproduct ct, tproduct t, prodPart tp, cusprodPart ctp, part p
+where ct.prodNo = t.prodNo AND ct.cusprodNo = ctp.cusprodNo AND t.prodNo = tp.prodNo AND p.partNo = tp.partNo AND ctp.partNo=p.partNo AND ctp.cusprodNo = 1;
+
+SELECT t.prodNo, prodName, p.partNo, partName
+FROM tproduct t, prodPart tp, part p 
+WHERE t.prodNo = tp.prodNo AND tp.partNo = p.partNo AND t.prodNo = 1;

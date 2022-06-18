@@ -71,7 +71,8 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	public int deleteAttachments(String noA, String nameA) {
 		// TODO Auto-generated method stub
 		System.out.println(noA);
-		if(!noA.isEmpty()) {
+		
+		if(noA !=null && !noA.isEmpty()) {
 			String[] noAa = noA.split(",");
 			String[] nameAa = nameA.split(",");
 			
