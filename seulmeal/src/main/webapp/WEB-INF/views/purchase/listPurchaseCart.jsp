@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -38,16 +38,14 @@
 	        margin: 20px auto;
 		}
 		
-		#order{
-		    bottom: 200px;
-		    right: 11000px;
-		    width: 200px;
-		    border: 3px solid #73AD21;
+		button:hover{
+			color: #ff4500;
 		}
 		
-		button:hover{
-			color:gray;
-		}
+		img{
+		width: 70px;
+		height: 70px;
+		}	
 		
 	</style>
 	
@@ -89,7 +87,7 @@
 		 </div>
 		</div><br/>
 		
-		 <table class="table table-hover" >
+		 <table class="table table-hover" style="width: 1000px;">
 	 
 	        <thead>
 	          <tr>
@@ -112,7 +110,7 @@
 					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
 						  <td align="left">${i}</td>
-						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -143,7 +141,7 @@
 	      <div class="container" style="justify-content: center; display:flex;">
 				<h5>결제예정 금액 :  <span id="total">${total}</span>원</h5>
 				<div style="border:none; float:right">
-				<button class="button" id="order" style="margin-left:200px; font-size:20px; border:1px black; background-color:white;" onclick="fncInsertPurchase()">전체상품주문</button>
+				<button class="button" id="order" style="margin-left:200px; padding: 5px; font-size:20px; border:1px #FF4500; background-color:white;" onclick="fncInsertPurchase()">전체상품주문</button>
 				</div>
 		</div>
 		

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -16,16 +16,31 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
 	<style>
+	
+	h2{
+		text-align: left; 
+	}
+
+	h2:after {
+		content: "";
+		display: block;
+		width: 170px;
+		border-bottom: 1px solid #bcbcbc;
+		margin: 20px 0px;
+		padding:0px 10px 0px 10px;
+	}
+	
 	 body { background: #fff; }
-		.blueone {
-		  	width: 100%;
-  			border-top: 1px solid #444444;
-  			border-collapse: collapse;
-		}  
-		th, td {
-		  border-bottom: 1px solid #444444;
-		  padding: 10px;
-		}
+		.table-hover {
+	  	width: 100%;
+ 		border-top: 1px solid #444444;
+ 		border-collapse: collapse;
+	}  
+	
+	th, td {
+	  border-bottom: 1px solid #444444;
+	  padding: 10px;
+	}
 		
 		
 		
@@ -40,6 +55,7 @@
 	    <form class="form-inline" name="detailForm">
 	     <input type="hidden" name="userId" value="${user.userId}"/>
 		 <div class="form-group">
+			 <button class="btn btn-primary status" style="margin-right:10px;" onclick="location.href='/purchase/getListPurchase'">전체</button>
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="0">오늘</button>
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="1">1주일</button>
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="2">1개월</button>
@@ -53,7 +69,7 @@
    	</div><br/>
 			
 	
-	 <table class="blueone" >
+	 <table class="table table-hover" style="width: 1000px;">
  
         <thead>
           <tr>
@@ -103,7 +119,7 @@
       </table>
       </div>
       
-      <script>
+	<script>
       
       function fncGetListPurchase(currentPage) {
   		$("#currentPage").val(currentPage)
@@ -118,8 +134,30 @@
   			fncGetListPurchase(1);
   			});
   	 });
+  	 
+  	 
+  	setRowspan(num) {	//num 병합을 원하는 열
+  	  var mergeItem = "";	//병합구분값
+  	  var mergeCount = 0;	//병합 수
+  	  var mergeRowNum = 0;	//병합들어갈 row
+
+  	  $('tr','#table1').each(function(row){  // #테이블ID값
+  	    if(row > 0 ){
+  	      var item = $(':eq(' + num +')',$(this)).html();
+  	      if(mergeItem != item  ) {
+  	        mergeCount = 1;
+  	        mergeItem = item ;
+  	        mergeRowNum = row;
+  	      }else{
+  	        mergeCount = mergeCount + 1;
+  	        $("tr:eq("+mergeRowNum+") > td:eq("+num+")").attr("rowspan",mergeCount);
+  	        $('td:eq('+num+')',$(this)).hide();	//병합될 값들 숨김처리
+  	      }
+  	    }
+  	  })
+  	}
       
-      </script>
+	</script>
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>	
 

@@ -85,6 +85,13 @@
 		</collection>
 	</resultMap>
 	
+	<!-- autocomplete -->
+	<select id="autocomplete" parameterType="map" resultType="map">
+		SELECT name
+		FROM parts
+		WHERE name LIKE  '%'|| #{value} || '%'
+	</select>
+	
 
 	<!-- custom_parts -->
 	<insert id="insertMinusParts" parameterType="map">
@@ -172,7 +179,7 @@
 	<select id="getListCustomProduct" resultMap="customProductSelectMap" parameterType="map">
 		SELECT *
 		FROM (SELECT vt.*, ROWNUM AS row_seq
-			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, cpd.price, pd.calorie
+			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.thumbnail, cpd.price, pd.calorie
 			    FROM customproduct cpd, product pd
 				WHERE cpd.product_no=pd.product_no AND cpd.user_id=#{userId} AND cpd.cart_status='1'
 				ORDER BY cpd.customproduct_no) vt
@@ -331,6 +338,20 @@
 						AND to_date(reg_date, 'yy/mm/dd') &gt;=to_date(add_months(SYSDATE,-3),'yy/mm/dd')
 					</if>
 				</if> </where>) countTable	
+	</select>
+	
+	<select id="getLisSale" resultMap="purchaseSelectMap" parameterType="map">
+		SELECT purchase_no, user_id, price, address, name, message, purchase_status, reg_date, payment_condition, amount
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT *
+				FROM purchase
+				status='0' AND purchase_status!='0'
+				<if test="purchaseStatus != null">
+					AND purchase_status={purchaseStatus:VARCHAR}
+				</if>
+				ORDER BY purchase_no) inner_table
+			WHERE ROWNUM &lt; = #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
 
 
