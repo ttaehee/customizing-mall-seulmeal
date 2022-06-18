@@ -92,7 +92,6 @@
 
 </head>
 <body> <!-- #BAD7DF -->
-	
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 	<div id="carouselExampleIndicators" class="carousel slide">
 	<div class="your-class">

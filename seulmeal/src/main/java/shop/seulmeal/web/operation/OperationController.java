@@ -198,8 +198,8 @@ public class OperationController {
 		// 삭제
 		attachmentsService.deleteAttachments(deleteAttachmentNo,deleteAttachmentName);
 		// 등록
-		System.out.println(uploadfile.length);
-		if(uploadfile.length > 1) {
+		System.out.println(uploadfile);
+		if(uploadfile != null) {
 			attachments.setPostNo(Integer.toString(post.getPostNo()));
 			
 			attachmentsService.insertAttachments(uploadfile, attachments);

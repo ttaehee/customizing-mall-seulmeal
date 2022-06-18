@@ -103,6 +103,7 @@
 				AND post_status = 3 AND p.status=0 AND c.status=0
 			</where>
 				AND p.post_no = #{postNo}
+				ORDER BY c.reg_date desc
 		</if>
 	</select>
 	

@@ -59,7 +59,7 @@
 			<div class="col-md-12">
 				<div class="row" style="border-bottom: 2px double #ff4500; border-top: 2px double #ff4500; justify-content: flex-end;">					
 					<span style="margin-bottom:10px; margin-top:10px;">
-						<c:if test="${user.role == 0}">							
+						<c:if test="${user.role == 1}">							
 							<c:if test="${user.userId == post.user.userId}">
 								<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="삭제" onclick="deleteNotice()">
 							</c:if>
