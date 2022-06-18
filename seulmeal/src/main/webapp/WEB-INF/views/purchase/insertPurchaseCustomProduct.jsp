@@ -79,7 +79,7 @@
 			    <h6 class="card-subtitle mb-2 text-muted"></h6>
 			    <p class="card-text"><c:forEach var="parts" items="${partsList}">
 					<div class="container productparts">${parts.name} &emsp;&emsp; 
-					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.partsNo}" data-partsName="${parts.name}">제외하기</button>
+					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.productPartsNo}" data-partsName="${parts.name}">제외하기</button>
 					</div>
 					</c:forEach>
 				</p>

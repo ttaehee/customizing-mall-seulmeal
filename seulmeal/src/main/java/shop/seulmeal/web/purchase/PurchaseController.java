@@ -68,6 +68,10 @@ public class PurchaseController {
 		Product product=productService.getProduct(productNo);
 		List<Parts> partsList=productService.getProductParts(productNo);
 		
+		for (Parts parts : partsList) {
+			
+		}
+		
 		model.addAttribute("product",product);
 		model.addAttribute("partsList",partsList);
 		
