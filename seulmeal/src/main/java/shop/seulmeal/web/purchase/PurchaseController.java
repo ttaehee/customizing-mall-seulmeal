@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,7 +26,6 @@ import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
-import shop.seulmeal.service.domain.ProductParts;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
@@ -270,10 +268,6 @@ public class PurchaseController {
 		search.setPageSize(pageSize);
 	
 		Map<String, Object> map=purchaseService.getListCustomProduct(search, userId);
-
-		Page resultPage 
-		= new Page(search.getCurrentPage(), 
-				((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
 		
 		model.addAttribute("customProductList", map.get("cproductList"));
 		model.addAttribute("cartStatus", "1");
@@ -284,9 +278,10 @@ public class PurchaseController {
 	
 	//포인트만으로 결제시
 	@PostMapping("insertPurchase")
-	public String insertPurchase(Purchase purchase, @AuthenticationPrincipal User user, Model model) throws Exception {
-	
+	public String insertPurchase(Purchase purchase, Integer[] customProductNo, @AuthenticationPrincipal User user, Model model) throws Exception {
+		
 		System.out.println("/purchase/insertPurchase : "+purchase);
+		System.out.println("/purchase/insertPurchase : "+customProductNo[0]);
 
 		purchase.setUser(user);
 	      
@@ -297,9 +292,21 @@ public class PurchaseController {
 		System.out.println("/purchase/insertPurchase get : "+purchase);
 		purchase.setUser(user);
 		
+		//구매완료로 구매상태변경
+		purchaseService.updatePurchase(purchase);
+		
+		//customProduct 에 구매번호추가, 장바구니리스트에서 삭제
+		CustomProduct cp=new CustomProduct();
+		//String[] customProductNo = customProductNoList.split(",");
+		for(int i=0; i<customProductNo.length; i++) {
+			cp=purchaseService.getCustomProduct(customProductNo[i]);
+			cp.setPurchaseNo(purchase.getPurchaseNo());
+			purchaseService.updateCustomProduct(cp);
+		}
+		
 		model.addAttribute(purchase);
 
-		return "purchase/getPurchase";	
+		return "redirect:/purchase/getPurchase/"+purchase.getPurchaseNo();	
 		
 	}	
 	

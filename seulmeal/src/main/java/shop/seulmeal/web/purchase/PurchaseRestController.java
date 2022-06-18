@@ -89,8 +89,8 @@ public class PurchaseRestController {
 	
 		System.out.println("/purchase/api/confirmPassword : "+temp);
 		
-		String password=(String) temp.get("password");
-		int usePoint=(int) temp.get("totalPoint");
+		String password=(String)temp.get("password");
+		int usePoint=(int)temp.get("usePoint");
 		
 		User user=(User)session.getAttribute("user");
 		String realPw=user.getPassword();
@@ -111,20 +111,50 @@ public class PurchaseRestController {
 	
 	
 	@PostMapping("insertPurchase")
-	public Purchase insertPurchase(@RequestBody Purchase purchase, @AuthenticationPrincipal User user) throws Exception {
-	
+	public Map insertPurchase(@RequestBody Map map, Purchase purchase, @AuthenticationPrincipal User user) throws Exception {
+		
+		System.out.println("________:"+map);
+		
+		purchase.setName((String)map.get("name"));
+		purchase.setAddress((String)map.get("address"));
+		purchase.setPhone((String)map.get("phone"));
+		purchase.setEmail((String)map.get("email"));
+		purchase.setMessage((String)map.get("message"));
+		purchase.setPrice(Integer.parseInt((String)map.get("price")));
+		purchase.setPaymentCondition((String)map.get("paymentCondition"));
+		
+		int usePoint=(Integer.parseInt((String)map.get("usePoint")));
+		String[] customProductNo=((String)map.get("customProductNo")).split(",");
+		System.out.println("aaaaaaa:"+customProductNo);
+		
+		
+		/*
 		System.out.println("/purchase/api/insertPurchase : "+purchase);
 
 		purchase.setUser(user);
 	      
 		int result=purchaseService.insertPurchase(purchase);
-		System.out.println("/purchase/api/insertPurchase insert : "+result);
+		System.out.println("/purchase/insertPurchase insert : "+result);
 		
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
-		System.out.println("/purchase/api/insertPurchase get : "+purchase);
-		purchase.setUser(user);
+		System.out.println("/purchase/insertPurchase get : "+purchase);
+		purchase.setUser(user);	
+		
+		/*
+		//customProduct 에 구매번호추가, 장바구니리스트에서 삭제
+		List<CustomProduct> cpList=new ArrayList<CustomProduct>();
+		//String[] customProductNo = customProductNoList.split(",");
+		for(int i=0; i<customProductNo.length; i++) {
+			CustomProduct cp=new CustomProduct();
+			cp=purchaseService.getCustomProduct(customProductNo[i]);
+			cp.setPurchaseNo(purchase.getPurchaseNo());
+			cpList.add(cp);
+		}
+		
+		purchase.setCustomProduct(cpList);
+		*/
 
-		return purchase;	
+		return map;	
 		
 	}	
 	
@@ -144,6 +174,7 @@ public class PurchaseRestController {
 		
 		System.out.println("/purchase/api/verifyIamport : "+purchase);
 		
+		//결제완료 시 구매상태 상품준비중으로 변경
 		int success=purchaseService.updatePurchase(purchase);
 		System.out.println("/purchase/api/verifyIamport update : "+success);
 		

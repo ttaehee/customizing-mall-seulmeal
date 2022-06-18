@@ -199,7 +199,7 @@
 	<update id="updateCustomProduct">
 		UPDATE customproduct
 		<set>
-			purchase_no=#{purchase.purchaseNo:NUMERIC} AND cart_status = '0'
+			purchase_no=#{purchaseNo:NUMERIC}, cart_status = '0'
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}

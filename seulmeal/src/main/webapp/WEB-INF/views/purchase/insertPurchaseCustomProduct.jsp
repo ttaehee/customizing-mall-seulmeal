@@ -161,10 +161,10 @@
 	        minusNo.push(partsNo);
 	        	       	        
 	        const partsName = $(this).attr('data-partsName'); 
-	        minusName.push(partsName)
+	        minusName.push(partsName);
 	        
 	        alert(partsName+" 제외되었습니다.");
-	        console.log("minusNo : "+minusNo)
+	        console.log("minusNo : "+minusNo);
 	        
 	        $(this).attr("disabled","disabled");
 	    })

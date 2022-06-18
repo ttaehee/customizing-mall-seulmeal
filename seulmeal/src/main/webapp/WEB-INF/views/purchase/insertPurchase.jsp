@@ -125,6 +125,7 @@
 	
 				<tbody style="font-size:15px">
 						<tr class="ct_list_pop">
+							  <input type="hidden" id="customProductNo" name="customProductNo" value="${customProduct.customProductNo}"/>
 							  <td align="left">1</td>
 							  <td align="left" data-value="${customProduct.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${customProduct.product.thumbnail}'></td>
 							  
@@ -141,7 +142,7 @@
 							  	<span id ="count" name="count"> ${customProduct.count} </span>
 							  </td>
 							  <td align="left">
-							  <span id="customprice" name="price">${customProduct.price*customProduct.count}</span>원</td>
+							  <span id="customprice" name="customPrice">${customProduct.price*customProduct.count}</span>원</td>
 							  <c:set var="sum" value="${customProduct.price*customProduct.count}" />
 						  </tr>  
 
@@ -158,6 +159,7 @@
 					<c:set var="i" value="${i+1}" />
 					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
+						  <input type="hidden" class="customProductNo" name="customProductNo" value="${cpd.customProductNo}"/>
 						  <td align="left">${i}</td>
 						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 						  <td align="left">${cpd.product.name}</td>
@@ -173,7 +175,7 @@
 						  	<span id ="count" name="count"> ${cpd.count} </span> 
 						  </td>
 						  <td align="left">
-						  <span id="customprice" name="price">${cpd.price*cpd.count}</span>원</td>
+						  <span id="customprice" name="customPrice">${cpd.price*cpd.count}</span>원</td>
 						  <c:set var="sum" value="${sum+cpd.price*cpd.count}" />
 						  
 					  </tr>  
@@ -296,7 +298,7 @@
 							<button type="button" class="pay" id="pay" style="background-color:#FFF; border-radius:5px; border-color:#FF4500; font-size:22px; width: 320px" onClick="iamport()">결제하기</button>		
 						</p>
 						<div id="pluspoint">
-							적립예정 포인트 : <fmt:parseNumber var= "pluspoint" pattern="#,###" value="${sum*0.05}"/>P
+							적립예정 포인트 : <span id="pluspoint">${sum*0.05}</span>P
 						</div>
 	
 					</div>
@@ -312,20 +314,18 @@
 	<script type="text/javascript">
 	
 	
-	let usepoint = 0;
-
-	let sum = parseInt($('#price').text());
 
 	function fnCalTotal(){
 		
+		let usepoint = 0;
 		if($('#usepoint').val().trim() != null){
 			usepoint = parseInt($('#usepoint').val());
 		}
+		let sum = parseInt($('#price').text());
+		
 		console.log(usepoint);
 		let total = sum-usepoint;
-		console.log(total);
 		const password = $('#password').val();
-		console.log(password);
 		
 		if(total<0){
 			alert("결제금액보다 적은 포인트를 입력하세요.");
@@ -338,7 +338,7 @@
 				method : "POST",
 		        data:JSON.stringify({
 		        	password : password,
-		        	totalPoint : usepoint
+		        	usePoint : usepoint
 				}),
 				headers : {
 					"Accept" : "application/json",
@@ -378,25 +378,35 @@
 	
 	function iamport(){
 		
+		var form1 = $(".cc").serialize();
+		console.log(form1);
+		
+		if($('#usepoint').val().trim() == null){
+			$('#usepoint').val('0');
+		}
+		
 		const userId = $('#userId').val();
 		const name = $('#name').val();
 		const address = $('#address').val();
 		const phone = $('#phone').val();
 		const email = $('#email').val();
 		const message = $('#message').val();
-		const price = $('#price').val();
-		if($('#usepoint').val().trim() != null){
-			usepoint = parseInt($('#usepoint').val());
-		}
+		const price = $('#price').text();
+		console.log(price);
+		const usePoint = $('#usepoint').val();
 		const plusPoint = $('#pluspoint').val();
-		//const customProductNo = $('#customProductNo').val();
+		const customProductNo = $('#customProductNo').val();
 		const paymentCondition = 0;
 		
-		if(price==0){
+		if(parseInt($('#price').val())==0){
+			
 			$(".cc").append(`<input name ="paymentCondition" value="1">`);
+			
 			
 			$("form").attr("method" , "POST").attr("action" , "/purchase/insertPurchase").submit();
 		}else{
+			
+			$(".cc").append(`<input name ="paymentCondition" value="0">`);
 
 			$.ajax({
 				url:"/purchase/api/insertPurchase",
@@ -410,7 +420,8 @@
 					price : price,
 					paymentCondition : paymentCondition,
 					usePoint : usePoint,
-					plusPoint : plusPoint
+					customProductNo : customProductNo
+					//plusPoint : plusPoint
 					//customProductNo : customProductNo 리스트로...
 				}),
 				headers : {

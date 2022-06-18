@@ -14,6 +14,13 @@
 
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
+
+	<style>
+		img{
+			width: 70px;
+			height: 70px;
+		}
+	</style>
 	 
 	 <br/>
 	 <h2>구매상품 정보</h2>
@@ -36,7 +43,7 @@
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">
 			      <td align="left">${purchase.regDate}[${purchase.purchaseNo}]</td>
-				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 				  <td align="left">${cpd.count}</td>
 				  <td align="left">${cpd.product.name}</td>
 				  <td align="left">
