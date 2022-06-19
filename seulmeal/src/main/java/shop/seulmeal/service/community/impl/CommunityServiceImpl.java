@@ -85,17 +85,19 @@ public class CommunityServiceImpl implements CommunityService {
 
 		return map;
 	}
-
-	@Override
-	public int updateComment(Comment comment) {
-		return communityMapper.updateComment(comment);
-	}
-
+	
 	@Override
 	public int deleteComment(int commentNo) {
 		//communityMapper.postCommentCountUp(); Comment comment?
 		return communityMapper.deleteComment(commentNo);
 	}
+
+	/*
+	@Override
+	public int updateComment(Comment comment) {
+		return communityMapper.updateComment(comment);
+	}*/
+
 
 	// Report
 	@Override
@@ -139,7 +141,7 @@ public class CommunityServiceImpl implements CommunityService {
 			return -1;
 		}
 	}
-
+/*
 	@Override
 	public int deleteLike(Like like) {
 		
@@ -155,7 +157,7 @@ public class CommunityServiceImpl implements CommunityService {
 		communityMapper.postLikeCountDown(like.getPostNo());
 		return communityMapper.deleteLike(like);
 	}
-
+*/
 	@Override
 	public Post getLikePost(int postNo) {
 		return communityMapper.getPost(postNo);

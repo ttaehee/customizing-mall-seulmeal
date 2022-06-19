@@ -54,12 +54,8 @@ body {
 	align-items: center;
 }
 
-.brand-img {
-	height: 100%;
-	margin-top: 5px;
-}
 
-.search-box {
+#search{
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
@@ -73,13 +69,18 @@ body {
 	text-transform: capitalize;
 }
 
-.search-box::placeholder {
+#search::placeholder {
 	color: rgba(0, 0, 0, 0.5);
 }
 
 .nav-items {
 	height: 22px;
 	position: relative;
+}
+
+section.main{
+	margin:0px;
+	padding:40px 0px;
 }
 
 .icon {
@@ -114,7 +115,7 @@ body {
     max-width: 1000px;
     display: grid;
     grid-template-columns: 60% 40%;
-    grid-gap: 30px;
+    grid-gap: 40px;
 }
 
 .left-col{
@@ -122,39 +123,10 @@ body {
     flex-direction: column;
 }
 
-.status-wrapper{
-    width: 100%;
-    height: 120px;
-    background: #fff;
-    border: 1px solid #dfdfdf;
-    border-radius: 2px;
-    padding: 10px;
-    padding-right: 0;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    overflow-x: auto;
-}
-
-.status-wrapper::-webkit-scrollbar{
-    display: none;
-}
-
-.status-card{
-    flex: 0 0 auto;
-    width: 80px;
-    max-width: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 15px;
-}
-
-.post-div{
+.post-card{
 	margin-bottom:20px;	
 	border: 1px solid #dfdfdf;
 	border-radius: 3px;
-	
 }
 
 .profile-pic{
@@ -235,7 +207,6 @@ body {
 	
 }
 
-
 .post-image{
     width: 100%;
     height: 500px;
@@ -268,6 +239,7 @@ body {
     margin: 0px;
 }
 
+/*
 .comment-wrapper{
     width: 100%;
     height: 50px;
@@ -288,7 +260,7 @@ body {
     outline: none;
     font-size: 14px;
 }
-
+*/
 .comment-btn,
 .action-btn{
     width: 70px;
@@ -302,6 +274,9 @@ body {
     opacity: 0.5;
 }
 
+
+
+/* 좋아요수, 조회수, 댓글수 아이콘*/
 .reaction-wrapper{
     width: 100%;
     height: 50px;
@@ -310,7 +285,6 @@ body {
     align-items: center;
 }
 
-/* 좋아요수, 조회수, 댓글수 아이콘*/
 .reaction-wrapper .icon{
     height: 25px;
     margin: 0;
@@ -328,7 +302,7 @@ body {
 .right-col{
     padding: 10px;
     position:fixed;
-    left:58%;
+    left:65%;
 }
 
 .profile-card{
@@ -337,7 +311,8 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 10px 0px 0px 100px;
-    /*border: 1px solid black;*/
+    border: 1px solid #dfdfdf;
+	border-radius: 3px;
 }
 
 /* 내 프로필 카드- 내 프로필 이미지*/
@@ -386,6 +361,8 @@ body {
     font-size: 12px;
 }
 
+
+
 .suggestion-text{
     font-size: 14px;
     color: rgba(0, 0, 0, 0.5);
@@ -393,7 +370,7 @@ body {
     margin: 20px 0;
 }
 
-
+/*
 @media (max-width: 1100px){
     .right-col, .search-box{
         display: none;
@@ -415,30 +392,49 @@ body {
         height: 300px;
     }
 }
+*/
 
 .slick-dots{
 	height:30px;
-}
-
-#block-user-list{
-	cursor:pointer;
 }
 
 .bi.bi-heart.icon{
 	cursor:pointer;
 }
 
-#block-list-image {
+div.modal-content{
+	width:120%;
+}
+
+#block-list-card,
+#follow-list-card,
+#follower-list-card {
+    height: 60px;
+}
+
+#block-user-list,
+#follow-user-list,
+#follower-user-list{
+	cursor:pointer;
+}
+
+#block-list-image,
+#follow-list-image,
+#follower-list-image{
     margin: 10px;
 }
 
-#block-list-nickname {
-    width: 280px;
+#block-list-nickname,
+#follow-list-nickname,
+#follower-list-nickname {
+    width: 265px;
     font-size: 17px;
     font-weight: normal;
 }
 
-#block-list-card {
+#block-list-card,
+#follow-list-card,
+#follower-list-card {
     width: 466px;
 }
 
@@ -448,32 +444,21 @@ body {
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
-	<!-- 내비 검색바 -->
-	<nav class="navbar">
-		<div class="nav-wrapper">
-			<img src="img/logo.PNG" class="brand-img" alt=""> <input
-				type="text" class="search-box" placeholder="search">
-			<div class="nav-items">
-				<img src="img/home.PNG" class="icon" alt=""> <img
-					src="img/messenger.PNG" class="icon" alt=""> <img
-					src="img/add.PNG" class="icon" alt=""> <img
-					src="img/explore.PNG" class="icon" alt=""> <img
-					src="img/like.PNG" class="icon" alt="">
-				<div class="icon user-profile"></div>
-			</div>
-		</div>
-	</nav>
-
 	<!-- 검색, 정렬, 게시글 작성버튼 작성 -->
 	<div class="search-order-post">	
 	
-		<form class="form-inline" action="/community/communityMain" method="GET">
+		<form class="navbar" action="/community/communityMain" method="GET">
 			<div style="margin:auto;">
-				<div class = "search-div" >	
-				    <input style="width:180px" class="form-control mr-sm-2" id = "search" name = "searchKeyword" type="search" placeholder="게시글 제목+내용" aria-label="Search">
-				    <button class="btn btn-outline-success my-2 my-sm-0" id="searchBtn" type="submit">검색</button>
+				<div class = "nav-wrapper" >	
+				    <input  class="form-control mr-sm-2" id = "search" name = "searchKeyword"  placeholder="제목+내용" type="search" aria-label="Search">
+				    <!-- button class="btn btn-outline-success my-2 my-sm-0" id="searchBtn" type="submit">검색</button-->
 			    </div>
 			</div>
+			<c:if test="${not empty sessionScope.user.userId}">
+				<button  type="button" onclick="location.href='/community/insertPost'" class="btn btn-primary">
+					게시글 작성
+				</button>
+			</c:if>
 		</form>
 			
 			<div class="order-inline">
@@ -488,13 +473,6 @@ body {
 					  <li class="nav-item">
 					    <a class="nav-link"  href="/community/communityMain?searchCondition=3">최신순</a>
 					  </li>
-					  
-						<c:if test="${not empty sessionScope.user.userId}">
-							<button  type="button" onclick="location.href='/community/insertPost'" class="btn btn-primary">
-								게시글 작성
-							</button>
-						</c:if>
-						
 					</ul>
 				</div>
 			</div>				
@@ -512,61 +490,40 @@ body {
 		
 		<c:forEach var="post" items="${postList}">
 		
-			<div class="post-div">
+			<div class="post-card">
                 <div class="info">
                     <div class="user">
                     	<!-- 1. 프로필 이미지 -->
                     	<div class="profile-pic">
-                    	
-                  		  	<c:choose> 
-								<c:when test="${not empty post.user.profileImage}">
-									<a href="/community/getProfile/${post.user.userId}"><img src="/resources/attachments/profile_image/${post.user.profileImage}"/></a>
-								</c:when>
-								<c:otherwise>
-									<a href="/community/getProfile/${post.user.userId}"><img src="/resources/attachments/profile_image/default_profile.jpg"/></a>							
-								</c:otherwise>						
-							</c:choose>
-                    	
+							<a class ="profile-link" href="/community/getProfile/${post.user.userId}">
+								<img id="profile-img" src="/resources/attachments/profile_image/${post.user.profileImage}"/>
+							</a>
                     	</div>
 						<!-- 2. 닉네임 -->                       
-                        <p class="username">
-                        	<c:choose> 
-								<c:when test="${not empty post.user.nickName}">
-									<a href="/community/getProfile/${post.user.userId}">${post.user.nickName}</a>
-								</c:when>
-								<c:otherwise>
-									<a href="/community/getProfile/${post.user.userId}">${post.user.userId}</a>							
-								</c:otherwise>						
-							</c:choose>
+                        <p id = "post_nickname" class="username">
+							<a class ="profile-link" href="/community/getProfile/${post.user.userId}">${post.user.nickName}</a>
                         </p>
                     </div>
                     <!-- 게시글 옵션 아이콘 -->
                     <i id = "option_icon" class="bi bi-three-dots"></i>
-                    <!-- img src="img/option.PNG" class="options" alt="옵션"-->
                 </div>
                 <!-- 3. 게시글사진/제목+간략내용 -->
 	            <div class="your-class">
 	                <c:if test="${not empty post.attachments}">
 						<c:forEach var="attach" items="${post.attachments}">
-							<a href="/community/getPost/${post.postNo}"><img class="post-image" src="/resources/attachments/${attach.attachmentName}"/></a>
+							<a class ="post-link" href="/community/getPost/${post.postNo}">
+								<img id = "post-img" class="post-image" src="/resources/attachments/${attach.attachmentName}"/>
+							</a>
 						</c:forEach>									
 					</c:if>
 				</div>
 				<c:if test="${empty post.attachments}">
 					<div id="post-list-title">${post.title}</div>
-					<div id="post-list-content"><!-- 게시글 내용 200자 이상이면, 200자까지만 출력 -->
-						<c:choose>
-							<c:when test="${fn:length(post.content) > 200}">
-								<a href="/community/getPost/${post.postNo}">${fn:substring(post.content, 0, 200)}...</a>
-							</c:when>
-							<c:otherwise>
-								<a href="/community/getPost/${post.postNo}">${post.content}</a>								
-							</c:otherwise>
-						</c:choose>
+					<div id="post-list-content">
+						<a class ="post-link" href="/community/getPost/${post.postNo}">${post.shortContent}</a>								
 					</div>
 				</c:if>
 				
-                <!-- img src="img/cover 1.png" class="post-image" alt=""-->
                 <div class="post-content">
                     <div class="reaction-wrapper">
                     	<i class="bi bi-heart icon" data-value="${post.postNo}"></i>
@@ -578,30 +535,16 @@ body {
                     <!-- 5. 좋아요 수-->
                     <p class="likes">좋아요 <span class="like-cnt">${post.likeCount}</span></p>	
                     <c:if test="${not empty post.attachments}">
-                    	<p class="description">
-                    	<c:choose>
-							<c:when test="${fn:length(post.content) > 50}">
-								${fn:substring(post.content, 0, 50)}...
-							</c:when>
-							<c:otherwise>
-								${post.content}								
-							</c:otherwise>
-						</c:choose>
-                    	</p>
-                    
-                    	<!-- a href="/community/getPost/${post.postNo}">${post.content}</a-->
+                    	<p class="description">${post.shortContent} ...</p>
                     </c:if>
                     <!-- 6. 등록날짜-->
                     <div class="post-time">${post.regDate}</div>
                 </div>
-                <!--div class="comment-wrapper">
-                    <img src="img/smile.PNG" class="icon" alt="">
-                    <input type="text" class="comment-box" placeholder="Add a comment">
-                    <button class="comment-btn">post</button>
-                </div-->
             </div>
          	
          </c:forEach>   
+        
+        <!-- 무한스크롤 / RestController postList가 붙는 곳 -->
         
       </div>      
 	<!-- 게시글 col 끝-->
@@ -626,7 +569,7 @@ body {
 					<div class ="profile-user-info">
 	                    <p class="username">
 	                    	<c:choose> 
-								<c:when test="${not empty sessionScope.user.userId}">
+								<c:when test="${not empty sessionScope.user.nickName}">
 									<a style ="font-size: 19px;" class = "username" href="/community/getProfile/${sessionScope.user.userId}">${sessionScope.user.nickName}</a>
 								</c:when>
 								<c:otherwise>
@@ -645,9 +588,9 @@ body {
 						<!-- 선호음식 카테고리  null처리하기-->
 						<p class="sub-text">${sessionScope.user.foodCategoryName1}  ${sessionScope.user.foodCategoryName2}  ${sessionScope.user.foodCategoryName3}</p>
 					</div>	               
-					<div class="follow-info"><!-- 팔로우 모달창 실행 버튼 -->
-		                <p><a id = "followModal_Btn" class="follow" role="link" data-toggle="modal" data-target="#followModal">팔로우 ${followCnt}</a></p> <!-- 팔로우 목록 모달창 -->
-		                <p><a id = "followerModal_Btn" class="follower" role="link" href="#">팔로워 ${followerCnt}</a></p> <!-- 팔로워 목록 모달창 -->
+					<div class="follow-info"><!-- 팔로우, 팔로워, 차단 모달창 클릭 -> 실행-->
+		                <p><a id = "follow-user-list"  data-toggle="modal" data-target="#followModal">팔로우 ${followMap.followTotalCount}</a></p> <!-- 팔로우 목록 모달창 -->
+		                <p><a id = "follower-user-list"  data-toggle="modal" data-target="#followerModal">팔로워 ${followerMap.followerTotalCount}</a></p> <!-- 팔로워 목록 모달창 -->
 		                <a id="block-user-list" data-toggle="modal" data-target="#blockUserModal">차단유저목록</a>
 		            </div>
 	            </div>
@@ -656,105 +599,12 @@ body {
 	</section><!-- main 끝 -->
 
 	
-
-
-		<!-- 차단목록 모달 -->
-              <div id="blockUserModal" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable modal-md " role="document">
-                  <div class="modal-content">
-                  
-                  
-                      <!-- 외부 모달 창 load 되는 곳 -->
-                          <!-- 헤더 -->
-                          <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalScrollableTitle">차단 유저 목록</h5>
-                              <button type="button" class="close" data-dismiss="modal"
-                                  aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                              </button>
-                          </div>
-                      
-                      
-                      <div class="modal-body">
-                          
-                              <!-- 차단 유저 리스트 -->
-                                  <c:forEach var="relation" items="${blockList}">
-                                      <div class ="block-li">
-                                          <div class="blockUser_section" >
-                                          
-                                          
-								            <div id="block-list-card" class="profile-card">
-								                <div id="block-list-image" class="profile-pic">
-								                	<c:choose>
-	                                                  <c:when test="${empty relation.relationUser.profileImage}">
-	                                                      <a href="/community/getProfile/${relation.relationUser.userId}"><img src="/resources/attachments/profile_image/default_profile.jpg"  class="rounded-circle"></a>
-	                                                  </c:when>
-	                                                  <c:otherwise>
-	                                                      <a href="/community/getProfile/${relation.relationUser.userId}"><img src="/resources/attachments/profile_image/${relation.relationUser.profileImage}" class="rounded-circle"/></a>
-	                                                  </c:otherwise>
-	                                              	</c:choose>
-								                </div>
-								                <div>
-								                   <div id="block-list-nickname" class="username" >
-								                   		<c:choose>
-										                  	<c:when test="${not empty relation.relationUser.userId}">
-																<a href="/community/getProfile/${relation.relationUser.userId}">${relation.relationUser.userId}</a>
-															</c:when>
-															<c:otherwise>
-																<a href="/community/getProfile/${relation.relationUser.userId}">${relation.relationUser.userId}</a>							
-															</c:otherwise>
-														</c:choose>	
-								                  </div>
-								                    <div id="block-list-profilemsg" class="sub-text">${relation.relationUser.profileMessage}</div>
-								                </div>
-								                <div><button class="action-btn" data-value="${relation.relationUser.userId}">차단해제</button></div>
-								            </div>
-								            
-                                          </div>
-                                          
-                                      </div>
-                                  </c:forEach>
-                  
-                    	  </div>
-                      
-                      
-                          <!-- 푸터 -->
-                          <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                          </div>			    	
-                                    
-                    </div>
-                </div>
-            </div>
-            <!-- 모달 끝 -->
-
-
-
-
-
-		<!-- 팔로우 모달창 실행 -->
-		<div id="followModal" data-value="${sessoinScope.user.userId}" class="modal fade"  aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static" tabindex="-1" role="dialog">
-			<div class="modal-dialog" >
-				<div id = "follow-modal" class="modal-content">
-					<!-- 외부 모달 창 load 되는 곳 -->
-				</div>
-			</div>
-		</div>
 		
 		
-		
-		<!-- 팔로워 모달창 실행 -->
-		<div id="followerModal" data-value="${sessoinScope.user.userId}" class="modal fade"  aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static" tabindex="-1" role="dialog">
-			<div class="modal-dialog" >
-				<div id = "follower-modal" class="modal-content">
-					<!-- 외부 모달 창 load 되는 곳 -->
-				</div>
-			</div>
-		</div>
-
-
-
-
+		<!-- include 모달창  -->
+		<jsp:include page="listCommunityFollowUserModal.jsp"></jsp:include>
+		<jsp:include page="listCommunityFollowerUserModal.jsp"></jsp:include>
+		<jsp:include page="listCommunityBlockUserModal.jsp"></jsp:include>
 
 <script type="text/javascript">
 
@@ -832,7 +682,7 @@ body {
 	
 	
 	// 차단해제
-	$("button.action-btn").on("click", function() {
+	$("button.action-btn:contains('차단해제')").on("click", function() {
 		
 		const relationUserId = $(this).data("value");
 		//alert(relationUserId);
@@ -850,17 +700,42 @@ body {
 					alert("차단해제 완료!");
 					line.remove();
 				}else{
-					alert("차단해제 실패..")
+					alert("차단해제 실패..");
 				}
 			}
 		});
 
 	});
 	
-	
-	
-	
+	  
+	/* 팔로우 해제
+	$("button.action-btn:contains('팔로우 해제')").on("click", function() {
+			
+			const relationUserId = $(this).data("value");
+			//alert(relationUserId);
+			console.log(relationUserId);
+			
+			const line = $(this).parent().parent(); 
+			console.log(line);
+			
+			$.ajax({
+				url : "/community/api/deleteBlock/" + relationUserId,
+				method : "POST",
+				success : function(status) {
+					
+					if(status === 1){
+						alert("차단해제 완료!");
+						line.remove();
+					}else{
+						alert("차단해제 실패..");
+					}
+				}
+			});
 
+		});
+	*/  
+	
+/*
 	// 무한 스크롤
 	let page = 2;
 	$(window).on("scroll", function() {
@@ -899,7 +774,7 @@ body {
 	                              $("#scroll_test").append(card);
 	                              
 	                              
-	                              /*
+	                              //
 	                              $( "#send:contains('배송하기')" ).on("click" , function() {
 	                                 const prodNo = $(this).data("value");
 	                                 self.location = "/updateTranCode?prodNo="+prodNo+"&tranCode=2&menu=${param.menu}&con=''";
@@ -916,7 +791,7 @@ body {
 	                                    self.location = "/product/updateProduct?prodNo="+prodNo;
 	                                 })
 	                              }
-	                              */
+	                            //
 	                              
 	                           }
 	                           
@@ -931,33 +806,108 @@ body {
 	         page++
 	     }        
 	 });
-	
-	
-	/*
-	$("#followModal").on("click", function() {
-		
-		const userId = $(this).data(value);
-		
-		$.ajax({
-			url : "/community/api/deleteBlock/" + relationUserId,
-			method : "POST",
-			success : function(status) {
-				
-				if(status === 1){
-					alert("차단해제 완료!");
-					line.remove();
-				}else{
-					alert("차단해제 실패..")
-				}
-			}
-		});
-
-	});
 	*/
 	
+
+	$(function(){
+		
+		let currentPage = 2;
+		
+		$(window).scroll(function(){
+			
+			let $window = $(this);
+			let scrollTop = $window.scrollTop();
+			let windowHeight = $window.height();
+			let documentHeight = $(document).height();
+			
+			if(scrollTop + windowHeight + 10 >= documentHeight){
+				currentPage ++;
+				setTimeout(getListPost,200);//0.2초
+			}
+			
+			function getListPost(){
+				$.ajax({
+					url:"/community/api/getListPost?currentPage="+currentPage,
+					type:"GET",
+					datatype:"json",
+					success: function(data, status, jqXHR){
+						/*
+						alert("페이지 로드 성공");
+						console.log("success status: "+ status);
+						console.log("data: " + data);
+						console.log("jqXHR: "+ jqXHR);
+						*/
+						//console.log("json/stringify: "+JSON.stringify(data));						
+						//const posts = JSON.stringify(data);					
+						
+						
+						for(let i = 0; i<data.length; i++){
+							
+							let postCard = $(".post-card").clone()[0];
+							
+							const post = data[i];
+							
+							console.log(post);
+
+							
+							/*
+							console.log("프로필이미지: "+post.user.profileImage)							
+							console.log("postNo: "+post.postNo)
+							console.log("아이디: "+post.user.userId)
+							console.log("닉네임: "+post.user.nickName)
+							console.log("사진유무: "+post.attachments)
+							console.log("사진이름: "+post.attachments[0].attachmentName)
+							console.log("제목: "+post.title)
+							console.log("내용: "+post.content)
+							console.log("조회수: "+post.views)
+							console.log("댓글수: "+post.commentCount)
+							console.log("좋아요수: "+post.likeCount)
+							console.log("등록일자: "+post.regDate)
+							*/
+							
+							
+							$(postCard).find(".profile-pic.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
+							$(postCard).find("#profile-img").attr("src","/resources/attachments/profile_image/"+post.user.profileImage);
+							$(postCard).find("#profile-nick").text(post.user.nickName);
+							
+							if(post.attachments != null){
+								for(var j = 0; j < post.attachments.length; j++){
+									$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
+									$(postCard).find("#post-img").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
+								}
+							}else{
+								$(postCard).find("#post-list-title").text(post.title);
+								$(postCard).find("#post-shortContent").text(post.shortContent);
+							}
+							
+							$(postCard).find("i.bi.bi-heart.icon").attr("data-value",post.postNo);
+							$(postCard).find("i.bi.bi-eye.icon").text(post.views);
+							$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
+							$(postCard).find(".like-cnt").text(post.likeCount);
+							$(postCard).find(".description").text(post.shortContent);
+							$(postCard).find(".post-time").text(post.regDate);
+														
+							console.log(postCard);
+							
+							$(".left-col").append(postCard);
+							
+						}
+
+					}, error: function(status, jqXHR){
+						console.log("error status: "+ status);
+						console.log("jqXHR: "+ jqXHR);
+						alert("페이지 로드 실패");
+					}
+					
+				})
+			}
+			
+		})
+	});
 	
-	$("#follow-modal").load("/community/followModal");
-	$("#follower-modal").load("/community/followerModal");
+
+	
+	
 	
 </script>
 </body>

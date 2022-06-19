@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,9 +47,6 @@ public class CommunityRestController {
 	@Autowired
 	private AttachmentsService attachmentsService;
 	
-	@Autowired 
-	private CommunityMapper communityMapper;
-
 	@Autowired
 	private UserService userService;
 
@@ -59,6 +57,7 @@ public class CommunityRestController {
 		System.out.println(this.getClass());
 	}
 
+	/*
 	@GetMapping("/communityMain") // o
 	public Map<String,Object> communityMain(@RequestParam(required = false) String searchKeyword,
 			@RequestParam(required = false) String searchCondition, HttpSession session) throws Exception {
@@ -93,12 +92,12 @@ public class CommunityRestController {
 		System.out.println("//////////////////"+postList);
 		
 		
-		/* product
-		Search productSearch = new Search();
-		productSearch.setCurrentPage(1);
-		productSearch.setPageSize(3);
-		Map<String, Object> productMap = productService.getListProduct(productSearch);
-		*/
+//		product
+//		Search productSearch = new Search();
+//		productSearch.setCurrentPage(1);
+//		productSearch.setPageSize(3);
+//		Map<String, Object> productMap = productService.getListProduct(productSearch);
+		
 
 		// 팔로우, 팔로워 수
 		String userId = ((User) session.getAttribute("user")).getUserId();
@@ -127,24 +126,61 @@ public class CommunityRestController {
 
 		return resultMap;
 	}
-
+*/
 	
-	
-	
+	// 무한스크롤
 	@GetMapping("getListPost") // oo
-	public List<Post> getListPost(@RequestParam(required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String userId) {
+	public List<Post> getListPost(@RequestParam(required = false, defaultValue = "2") int currentPage,
+			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String searchOption ,@RequestParam(required = false) String userId) {
 
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
-		search.setPageSize(3);
+		search.setPageSize(5);
 		search.setSearchKeyword(searchKeyword);
+		search.setSearchCondition(searchOption);
 
+		// 메인 게시글 : userId = null (searchKeyword, searchOption 존재)
+		// 내 프로필 게시글 : userId = session (searchKeyword, searchOption 존재x)
+		// 타 프로필 게시글 : userId  (위와 동일)
 		Map<String, Object> map = communityService.getListPost(search, userId);
-		map.put("search", search);
+		//map.put("search", search);
 		
+		Map<String, Object> attachMap = new HashMap<>();
 		List<Post> postList = (List<Post>)map.get("postList");
-		
+				
+		for(Post post : postList) {
+			attachMap.put("postNo", post.getPostNo());
+			post.setAttachments(attachmentsService.getAttachments(attachMap));
+			
+			// 닉네임없는 유저, id를 닉네임으로 저장
+			if(post.getUser().getNickName() == null) {
+				post.getUser().setNickName(post.getUser().getUserId());
+			}
+			
+			// 프로필이미지 없는 유저, 기본이미지로 저장
+			if(post.getUser().getProfileImage() == null) {
+				post.getUser().setProfileImage("default_profile.jpg");
+			}
+			
+			
+			if(post.getAttachments() == null) {
+				
+				if(post.getContent().length() > 200) {
+					post.setShortContent(post.getContent().substring(0, 201));					
+				}else {
+					post.setShortContent(post.getContent());
+				}
+			}else {
+				
+				if(post.getContent().length() > 50) {
+					post.setShortContent(post.getContent().substring(0, 51));					
+				}else {
+					post.setShortContent(post.getContent());
+				}
+			}
+		}
+	
+		System.out.println("/////"+postList);
 		return postList;
 	}
 
@@ -166,22 +202,30 @@ public class CommunityRestController {
 	@PostMapping("/insertComment") // oo
 	public Comment insertComment(@RequestBody Comment comment, HttpSession session) {
 
-		System.out.println("/////////"+comment);
 		User user = (User)session.getAttribute("user");
 		comment.setUser(user);
-		
+	
 		communityService.insertComment(comment);
-		System.out.println("/////////"+comment);
-		return communityService.getComment(comment.getCommentNo()); 
+		Comment dbComment = communityService.getComment(comment.getCommentNo());
+		
+		return dbComment; 
 
 	}
+
+	@PostMapping("/deleteComment/{commentNo}") // ^o
+	public void deleteComment(@PathVariable int commentNo) {
+		System.out.println("///////////"+commentNo);
+		
+		communityService.deleteComment(commentNo);
+	}
 	
+	/*
 	@GetMapping("/updateComment/{commentNo}") // oo
 	public Comment updateComment(@PathVariable int commentNo) {
 		
 		return communityService.getComment(commentNo); 
-	}
-	
+	}*/
+	/*
 	@PatchMapping("/updateComment/{commentNo}") // o^
 	public Comment updateComment(@PathVariable int commentNo, @RequestBody Comment comment) {
 		
@@ -189,14 +233,8 @@ public class CommunityRestController {
 		communityService.updateComment(comment);
 		
 		return communityService.getComment(commentNo); 
-	}
+	}*/
 	
-	@PostMapping("/deleteComment/{commentNo}") // ^o
-	public void deleteComment(@PathVariable int commentNo) {
-		System.out.println("///////////"+commentNo);
-		
-		communityService.deleteComment(commentNo);
-	}
 	
 
 	@PostMapping("insertLike/{postNo}") // oo
@@ -257,7 +295,7 @@ public class CommunityRestController {
 		return followCnt;
 	}
 	
-	@DeleteMapping("deleteFollow/{relationUserId}") // o
+	@PostMapping("deleteFollow/{relationUserId}") // o
 	public int deleteFollow(@PathVariable String relationUserId, HttpSession session) {
 
 		Relation relation = new Relation();
@@ -284,7 +322,7 @@ public class CommunityRestController {
 		search.setSearchKeyword(searchKeyword);
 
 		String userId = ((User)session.getAttribute("user")).getUserId();
-		Map<String, Object> map = communityService.getListFollow(search, userId, "0");
+		Map<String, Object> map = communityService.getListFollow(null, userId, "0");//검색없는 	전체목록
 
 		return (List<Relation>) map.get("followList");
 	}
@@ -334,7 +372,7 @@ public class CommunityRestController {
 		User user = new User();
 		user.setUserId(relationUserId);
 		relation.setRelationUser(user);
-
+		
 		return communityService.deleteBlock(relation);
 	}
 	

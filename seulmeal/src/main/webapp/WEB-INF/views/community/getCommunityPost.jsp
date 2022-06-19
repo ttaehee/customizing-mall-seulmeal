@@ -182,26 +182,18 @@ img.rounded-circle{
 						<!-- Comments-->
 						<c:forEach var="comment" items="${commentList}">
 							<div class="d-flex mb-4">
-								<!-- Parent comment-->
 								<div class="flex-shrink-0">
-									<c:if test="${not empty comment.user.profileImage}">
-										<img width="40" height="40" class="rounded-circle"
+									<img width="40" height="40" class="rounded-circle"
 										src="/resources/attachments/profile_image/${comment.user.profileImage}"/>
-									</c:if>
-									<c:if test="${empty comment.user.profileImage}">
-										<img width="40" height="40" class="rounded-circle"
-										src="/resources/attachments/profile_image/default_profile.jpg"/>
-									</c:if>
-									
 								</div>
 								<div id="comment_div" class="ms-3">
 									<div class="fw-bold">${comment.user.nickName}</div>
-									<span class="a">${comment.content}</span> <span class="b">${comment.regDate}</span>
-									<span class="c">${comment.updateDate}</span>
+									<span class="a">${comment.content}</span>
+									<span class="b">${comment.regDate}</span>
 
 									<c:if test="${sessionScope.user.userId == comment.user.userId}">
-										<button id="updateCommentBtn" type="button"
-											class="btn btn-primary" data-value="${comment.commentNo}">수정</button>
+										<!-- button id="updateCommentBtn" type="button"
+											class="btn btn-primary" data-value="${comment.commentNo}">수정</button-->
 										<button id="deleteCommentBtn" type="button"
 											class="btn btn-primary" data-value="${comment.commentNo}">삭제</button>
 									</c:if>
@@ -232,8 +224,6 @@ img.rounded-circle{
 								"postNo" : postNo,
 								"content" : content,
 							}
-
-							alert("성공?");
 							//console.log("jsonReq: " + jsonReq);
 
 									$.ajax({
@@ -243,56 +233,57 @@ img.rounded-circle{
 										//data : jsonReq,
 										dataType : "json", // 받는 타입
 										contentType : "application/json; charset=utf-8", // 보내는 타입
-										success : function(jsonRes, status) {
-
-											//(status : sucess or err)
-											alert("status: " + status);
-											console.log("status: " + status);
-
-											// 응답받은 dto 객체 json 형태
-											alert("jsonRes : " + jsonRes);
-											console.log("jsonRes : " + jsonRes);
+										success : function(data, status, jqXHR) {
+											console.log("data : " + data.regDate);
+											console.log("success status: "+ status);
+											console.log("jqXHR: "+ jqXHR);
+											
 
 											// 댓글 append										
 											const comment = `
 											<div class="d-flex mb-4">
 												<div class="flex-shrink-0">
 													<img width="40" height="40" class="rounded-circle"
-														src="/resources/attachments/profile_image/\${jsonRes.user.profileImage}"
-														alt="..." />
+														src="/resources/attachments/profile_image/\${data.user.profileImage}"/>
 												</div>
 												<div id="comment_div" class="ms-3">
-													<div class="fw-bold">\${jsonRes.user.nickName}</div>
-													<span class="a">\${jsonRes.content}</span> <span class="b">\${jsonRes.regDate}</span>
-													<span class="c">\${jsonRes.updateDate}</span>
+													<div class="fw-bold">\${data.user.nickName}</div>
+													<span class="a">\${data.content}</span>
+													<span class="b">\${data.regDate}</span>
+													
 												</div>
 											</div>`
 
 											$("#comment_container").prepend(comment);
 											
-											// 입력값 지우기 ^
+											// 입력값 지우기 왜안됨?
 											$("#comment_content").value("");
+											
+										},error: function(status, jqXHR){
+											console.log("error status: "+ status);
+											console.log("jqXHR: "+ jqXHR);
 										}
 									});
 
 						});
 
 		$("#deleteCommentBtn").on("click", function() {
-
+			alert("1")
 			const commentNo = $(this).data("value");
-
-			alert("commentNo: " + commentNo);
 			console.log("commentNo: " + commentNo);
+			console.log("////"+$(this).parent().parent());
 
 			$.ajax({
 				url : "/community/api/deleteComment/" + commentNo,
 				method : "POST",
 
-				success : function(status) {
-					//(status : sucess or err)
-					alert("status: " + status);
-					console.log("status: " + status);
+				success : function(data, status, jqXHR) {
+					console.log("data: " + data);
+					console.log("success status: " + status);
+					console.log("jqXHR: " + jqXHR);
 
+					
+					console.log("////"+$(this).parent().parent());
 					console.log('삭제 테스트..');
 					//var tagName = $(this).closest('tr.ct_list_pop');
 					//console.log($(this));
@@ -300,6 +291,9 @@ img.rounded-circle{
 					//$(this).closest('tr.ct_list_pop');
 					//$(this).closest('tr.ct_list_pop').remove();
 					//$("#tr_comment").remove();
+				}, error: function(status, jqXHR){
+					console.log("error status: "+ status);
+					console.log("jqXHR: "+ jqXHR);
 				}
 			});
 
