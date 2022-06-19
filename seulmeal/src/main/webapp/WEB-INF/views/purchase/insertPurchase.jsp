@@ -125,7 +125,7 @@
 	
 				<tbody style="font-size:15px">
 						<tr class="ct_list_pop">
-							  <input type="hidden" id="customProductNo" name="customProductNo" value="${customProduct.customProductNo}"/>
+							  <input type="hidden" class="customProductNo" name="customProductNo" value="${customProduct.customProductNo}"/>
 							  <td align="left">1</td>
 							  <td align="left" data-value="${customProduct.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${customProduct.product.thumbnail}'></td>
 							  
@@ -153,11 +153,9 @@
 	
 				<tbody style="font-size:15px">
 				<c:set var="sum" value="0" />
-				<c:set var="customprice" value="0" />
 				<c:set var="i" value="0" />
 				<c:forEach var="cpd" items="${customProductList}">
 					<c:set var="i" value="${i+1}" />
-					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
 						  <input type="hidden" class="customProductNo" name="customProductNo" value="${cpd.customProductNo}"/>
 						  <td align="left">${i}</td>
@@ -274,7 +272,7 @@
 									
 										<div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 											<div class="card-body">
-												<input type="text" id="usepoint" name="usepoint" value="" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
+												<input input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="usepoint" name="usepoint" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
 												(100P 단위로 사용가능)<br/><br/>
 												<input type="password" id="password" name="password" value="" placeholder="비밀번호" style="width:150px;"></input>
 												<button type="button" class="btn btn-outline-primary" id="confirm" style="font-size:18px;" onClick="fnCalTotal()">확인</button>
@@ -318,9 +316,12 @@
 	function fnCalTotal(){
 		
 		let usepoint = 0;
-		if($('#usepoint').val().trim() != null){
+		if(!$('#usepoint').val()){
+			usepoint = 0;
+		}else{
 			usepoint = parseInt($('#usepoint').val());
 		}
+		
 		let sum = parseInt($('#price').text());
 		
 		console.log(usepoint);
@@ -352,6 +353,8 @@
 		        		$("#price").text(total);
 		        		
 		        		$('#confirm').attr("disabled","disabled");
+		        		document.getElementById('usepoint').readOnly = true;
+		        		document.getElementById('password').readOnly = true;
 		        		
 		        	}else if(data.success==='pt'){
 		        		alert("보유포인트 내에서 입력하세요.");
@@ -377,13 +380,17 @@
 		
 	
 	function iamport(){
-		
+			
 		var form1 = $(".cc").serialize();
-		console.log(form1);
 		
-		if($('#usepoint').val().trim() == null){
-			$('#usepoint').val('0');
+		let customNo = [];
+		let ar = $(".customProductNo").get();
+		console.log(ar);
+		
+		for ( var i = 0; i < ar.length; i++) {
+			customNo.push(ar[i].value);
 		}
+		console.log(customNo);
 		
 		const userId = $('#userId').val();
 		const name = $('#name').val();
@@ -392,21 +399,17 @@
 		const email = $('#email').val();
 		const message = $('#message').val();
 		const price = $('#price').text();
-		console.log(price);
-		const usePoint = $('#usepoint').val();
-		const plusPoint = $('#pluspoint').val();
-		const customProductNo = $('#customProductNo').val();
-		const paymentCondition = 0;
+		const usePoint = (!$('#usepoint').val()) ? "0": $('#usepoint').val();
+		//const plusPoint = $('#pluspoint').val();
 		
 		if(parseInt($('#price').val())==0){
 			
-			$(".cc").append(`<input name ="paymentCondition" value="1">`);
-			
-			
+			$(".cc").append(`<input type="hidden" name ="paymentCondition" value="1">`);
+					
 			$("form").attr("method" , "POST").attr("action" , "/purchase/insertPurchase").submit();
 		}else{
-			
-			$(".cc").append(`<input name ="paymentCondition" value="0">`);
+			$(".cc").append(`<input type="hidden" id ="paymentCondition" value="0">`);
+			const paymentCondition = $('#paymentCondition').val();
 
 			$.ajax({
 				url:"/purchase/api/insertPurchase",
@@ -420,9 +423,8 @@
 					price : price,
 					paymentCondition : paymentCondition,
 					usePoint : usePoint,
-					customProductNo : customProductNo
+					customProductNo : customNo
 					//plusPoint : plusPoint
-					//customProductNo : customProductNo 리스트로...
 				}),
 				headers : {
 					"Accept" : "application/json",
@@ -430,13 +432,13 @@
 				},
 				dataType : "json",
 				success : function(data){
-	
+					console.log(data);
 					IMP.init('imp83644059'); 
 					IMP.request_pay(
 					    { 
 			 		  	pay_method: data.paymentCondition,
 			  		  	merchant_uid: data.purchaseNo,
-			  		  	name: "상품",
+			  		  	name: "밀키트",
 			  		  	amount: data.price,
 			   		 	buyer_email: data.email,
 			   			buyer_name: data.name,

@@ -43,7 +43,8 @@ public interface PurchaseMapper {
 	public List<CustomProduct> getListCustomProduct(Map<String, Object> map);
 	
 	//커스터마이징상품 수정(구매번호추가), 커스터마이징재료 수정은 delete 후 다시 insert
-	public int updateCustomProduct(CustomProduct customProduct);
+	public int updateCustomProductPurchaseNo(CustomProduct customProduct);
+	public int updateCustomProductStatus(CustomProduct customProduct);
 	
 	//장바구니에서 커스터마이징상품 수량변경
 	public int updateCustomProductCount(CustomProduct customProduct);

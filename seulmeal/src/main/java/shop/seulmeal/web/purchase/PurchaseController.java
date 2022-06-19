@@ -301,7 +301,8 @@ public class PurchaseController {
 		for(int i=0; i<customProductNo.length; i++) {
 			cp=purchaseService.getCustomProduct(customProductNo[i]);
 			cp.setPurchaseNo(purchase.getPurchaseNo());
-			purchaseService.updateCustomProduct(cp);
+			purchaseService.updateCustomProductPurchaseNo(cp);
+			purchaseService.updateCustomProductStatus(cp);
 		}
 		
 		model.addAttribute(purchase);

@@ -74,8 +74,8 @@
 	<h2>구매정보</h2>
 	구매번호 : ${purchase.purchaseNo} <br/>
 	구매일자 : ${purchase.regDate} <br/>
-	구매자이름 : ${purchase.user.userName} <br/>
-	구매자 휴대전화 : ${purchase.user.phone} <br/>
+	구매자이름 : ${user.userName} <br/>
+	구매자 휴대전화 : ${user.phone} <br/>
 	구매처리상태 : 
 		<c:choose>
 			<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
@@ -85,21 +85,21 @@
 		</c:choose><br/>
 	적립 포인트 :
 		<c:choose>
-			<c:when test="${purchase.user.grade eq '0'}"> <fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.005}" />P<br/>
-			(${purchase.user.userName}님은 슬밀프랜드 등급으로 구매금액의 0.5%가 적립됩니다)</c:when>
-			<c:when test="${purchase.user.grade eq '1'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.01}" />P<br/>
-			(${purchase.user.userName}님은 슬밀패밀리 등급으로 구매금액의 1%가 적립됩니다)</c:when>
-			<c:when test="${purchase.user.grade eq '2'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.03}" />P<br/>
-			(${purchase.user.userName}님은 슬밀히어로 등급으로 구매금액의 3%가 적립됩니다)</c:when>
-			<c:when test="${purchase.user.grade eq '3'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.05}" />P<br/>
-			(${purchase.user.userName}님은 슬밀마스터 등급으로 구매금액의 5%가 적립됩니다)</c:when>
+			<c:when test="${user.grade eq '0'}"> <fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.005}" />P<br/>
+			(${user.userName}님은 슬밀프랜드 등급으로 구매금액의 0.5%가 적립됩니다)</c:when>
+			<c:when test="${user.grade eq '1'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.01}" />P<br/>
+			(${user.userName}님은 슬밀패밀리 등급으로 구매금액의 1%가 적립됩니다)</c:when>
+			<c:when test="${user.grade eq '2'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.03}" />P<br/>
+			(${user.userName}님은 슬밀히어로 등급으로 구매금액의 3%가 적립됩니다)</c:when>
+			<c:when test="${user.grade eq '3'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.05}" />P<br/>
+			(${user.userName}님은 슬밀마스터 등급으로 구매금액의 5%가 적립됩니다)</c:when>
 		</c:choose><br/>
 	 <br/><br/>
 	
 	<h2>결제정보</h2>
 	<c:out value="총 구매금액 : ${price}원"></c:out> <br/>
-	포인트사용 :  ${price-purchase.amount} <br/>
-	총 결제금액 : ${purchase.amount} <br/>
+	포인트사용 :  ${price-purchase.amount}P<br/>
+	총 결제금액 : ${purchase.amount}원 <br/>
 	결제방법 : 
 		<c:choose>
 			<c:when test="${purchase.paymentCondition eq '0'}">카드결제</c:when>

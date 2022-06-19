@@ -39,7 +39,9 @@ public interface PurchaseService {
 	public Map<String, Object> getListCustomProduct(Search search, String userId);
 	
 	//커스터마이징상품 수정(구매번호추가)
-	public int updateCustomProduct(CustomProduct customProduct);
+	public int updateCustomProductPurchaseNo(CustomProduct customProduct);
+	//커스터마이징상품 수정(장바구니리스트에서 삭제)
+	public int updateCustomProductStatus(CustomProduct customProduct);
 	
 	//장바구니에서 커스터마이징상품 수량변경 
 	public int updateCustomProductCount(CustomProduct customProduct);

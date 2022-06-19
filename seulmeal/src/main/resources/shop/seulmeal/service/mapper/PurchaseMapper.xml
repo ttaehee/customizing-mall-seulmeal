@@ -196,10 +196,20 @@
 	</select>
 	
 	<!-- 구매후 구매번호추가 / 커스터마이징재료 수정은 delete 후 다시 insert -->
-	<update id="updateCustomProduct">
+	<update id="updateCustomProductPurchaseNo">
 		UPDATE customproduct
 		<set>
-			purchase_no=#{purchaseNo:NUMERIC}, cart_status = '0'
+			purchase_no=#{purchaseNo:NUMERIC}
+		</set>
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</update>
+	
+	<update id="updateCustomProductStatus">
+		UPDATE customproduct
+		<set>
+			cart_status = '0'
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}

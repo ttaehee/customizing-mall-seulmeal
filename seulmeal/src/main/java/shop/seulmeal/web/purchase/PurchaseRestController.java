@@ -10,28 +10,17 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
-import shop.seulmeal.service.domain.Parts;
-import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.purchase.PurchaseService;
@@ -111,50 +100,45 @@ public class PurchaseRestController {
 	
 	
 	@PostMapping("insertPurchase")
-	public Map insertPurchase(@RequestBody Map map, Purchase purchase, @AuthenticationPrincipal User user) throws Exception {
+	public Purchase insertPurchase(@RequestBody Map<String, Object> map, Purchase purchase, HttpSession session) throws Exception {
 		
 		System.out.println("________:"+map);
 		
+		System.out.println("aaaaaaa:"+map.get("customProductNo"));
+		
+		User user=(User)(session.getAttribute("user"));
+		
+		purchase.setUser(user);
 		purchase.setName((String)map.get("name"));
 		purchase.setAddress((String)map.get("address"));
 		purchase.setPhone((String)map.get("phone"));
 		purchase.setEmail((String)map.get("email"));
 		purchase.setMessage((String)map.get("message"));
 		purchase.setPrice(Integer.parseInt((String)map.get("price")));
-		purchase.setPaymentCondition((String)map.get("paymentCondition"));
+		purchase.setPaymentCondition(String.valueOf(map.get("paymentCondition")));
+		
+		purchaseService.insertPurchase(purchase);
 		
 		int usePoint=(Integer.parseInt((String)map.get("usePoint")));
-		String[] customProductNo=((String)map.get("customProductNo")).split(",");
-		System.out.println("aaaaaaa:"+customProductNo);
 		
+		ArrayList customProductNo=(ArrayList) map.get("customProductNo");
+		System.out.println("oobobbbbj:"+customProductNo);
 		
-		/*
-		System.out.println("/purchase/api/insertPurchase : "+purchase);
-
-		purchase.setUser(user);
-	      
-		int result=purchaseService.insertPurchase(purchase);
-		System.out.println("/purchase/insertPurchase insert : "+result);
-		
-		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
-		System.out.println("/purchase/insertPurchase get : "+purchase);
-		purchase.setUser(user);	
-		
-		/*
-		//customProduct 에 구매번호추가, 장바구니리스트에서 삭제
 		List<CustomProduct> cpList=new ArrayList<CustomProduct>();
-		//String[] customProductNo = customProductNoList.split(",");
-		for(int i=0; i<customProductNo.length; i++) {
+		for(int i=0; i<customProductNo.size(); i++) {
 			CustomProduct cp=new CustomProduct();
-			cp=purchaseService.getCustomProduct(customProductNo[i]);
+			cp=purchaseService.getCustomProduct(Integer.parseInt((String)customProductNo.get(i)));
 			cp.setPurchaseNo(purchase.getPurchaseNo());
+			System.out.println("ccccccccc:"+cp);
+			purchaseService.updateCustomProductPurchaseNo(cp);
 			cpList.add(cp);
 		}
 		
-		purchase.setCustomProduct(cpList);
-		*/
+		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
+		purchase.setUser(user);
+		System.out.println("ppppppp:"+purchase);
 
-		return map;	
+		return purchase;	
 		
 	}	
 	
@@ -170,16 +154,24 @@ public class PurchaseRestController {
 	   }   
 	
 	@PostMapping("verifyIamport")
-	public JSONObject verifyIamport(@RequestBody Purchase purchase) {
+	public JSONObject verifyIamport(@RequestBody Purchase purchase, HttpSession session) {
 		
 		System.out.println("/purchase/api/verifyIamport : "+purchase);
 		
 		//결제완료 시 구매상태 상품준비중으로 변경
 		int success=purchaseService.updatePurchase(purchase);
 		System.out.println("/purchase/api/verifyIamport update : "+success);
-		
+			
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
 		System.out.println("/purchase/api/verifyIamport purchaseNo : "+ purchase.getPurchaseNo());
+		User user=(User)(session.getAttribute("user"));
+		purchase.setUser(user);		
+		
+		//커스터마이징상품은 장바구니리스트에서 삭제 
+		List<CustomProduct> cpList=purchase.getCustomProduct();
+		for(CustomProduct cp : cpList) {
+			purchaseService.updateCustomProductStatus(cp);
+		}
 		
 		String token=purchaseService.getImportToken();
 		System.out.println("/purchase/api/verifyIamport token : "+ token);
