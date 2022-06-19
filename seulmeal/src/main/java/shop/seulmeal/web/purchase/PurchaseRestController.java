@@ -104,8 +104,6 @@ public class PurchaseRestController {
 		
 		System.out.println("________:"+map);
 		
-		System.out.println("aaaaaaa:"+map.get("customProductNo"));
-		
 		User user=(User)(session.getAttribute("user"));
 		
 		purchase.setUser(user);
@@ -122,21 +120,18 @@ public class PurchaseRestController {
 		int usePoint=(Integer.parseInt((String)map.get("usePoint")));
 		
 		ArrayList customProductNo=(ArrayList) map.get("customProductNo");
-		System.out.println("oobobbbbj:"+customProductNo);
 		
 		List<CustomProduct> cpList=new ArrayList<CustomProduct>();
 		for(int i=0; i<customProductNo.size(); i++) {
 			CustomProduct cp=new CustomProduct();
 			cp=purchaseService.getCustomProduct(Integer.parseInt((String)customProductNo.get(i)));
 			cp.setPurchaseNo(purchase.getPurchaseNo());
-			System.out.println("ccccccccc:"+cp);
 			purchaseService.updateCustomProductPurchaseNo(cp);
 			cpList.add(cp);
 		}
 		
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
 		purchase.setUser(user);
-		System.out.println("ppppppp:"+purchase);
 
 		return purchase;	
 		
