@@ -145,11 +145,28 @@
 				</div>
 		</div>
 		
+		
+		<!-- 페이징처리 -->
+		<div class="container">
+			<div class="row" style="justify-content : center;">
+					<nav aria-label="...">
+					  <ul class="pagination">
+					  	<c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage}">
+					  		<li class="page-item"><a class="page-link" href="/purchase/getListCustomProduct/${i}">${i}</a></li>
+					  	</c:forEach>
+					  </ul>
+					</nav>
+				</div>
+			</div>	
+		
+		
 	</div>
 	</form>
+	
+<jsp:include page="../layer/footer.jsp"></jsp:include>	
 
 		
-	<script type="text/javascript">
+<script type="text/javascript">
 	
 	function fncInsertPurchase() {
   		$("form").attr("method" , "GET").attr("action" , "/purchase/insertPurchase").submit();
@@ -208,9 +225,7 @@
 	
 	
 	
-	</script>
-
-<jsp:include page="../layer/footer.jsp"></jsp:include>	
+</script>
 
 </body>
 </html>

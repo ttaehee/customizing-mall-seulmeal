@@ -160,7 +160,7 @@ public class PurchaseController {
 		System.out.println("ccccc:"+customProduct.getCartStatus());
 		
 		if(customProduct.getCartStatus().equals("1")) {
-			return "redirect:/purchase/getListCustomProduct";
+			return "redirect:/purchase/getListCustomProduct/1";
 		}else {
 			model.addAttribute("customProduct", customProduct);
 			model.addAttribute("cartStatus", "0");
@@ -171,8 +171,8 @@ public class PurchaseController {
 	}
 	
 	//장바구니 리스트 
-	@GetMapping("getListCustomProduct")
-	public String getListCustomProduct(Model model, HttpSession session) {
+	@GetMapping("getListCustomProduct/{currentPage}")
+	public String getListCustomProduct(@PathVariable(required = false) String currentPage, Model model, HttpSession session) {
 		System.out.println("/getListCustomProduct");
 		
 		User user=(User)session.getAttribute("user");
