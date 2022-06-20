@@ -152,8 +152,11 @@ public class ConfirmService {
 			mimeMessageHelper.setTo(to);
 			
 			mimeMessageHelper.setSubject("seulMeal 인증메일 입니다");
+			String ct ="<img style='width:600px; height:300px;' src=\'http://54.185.65.132:8080/seulmeal/resources/attachments/image/seulMeal.png\' /><br><br>";			
+			content += "<br><br>";
 			content += "<a href='http://localhost:7100/'>seulMealFactory</a><br/>";
-			mimeMessageHelper.setText(content, true);
+			ct += content;
+			mimeMessageHelper.setText(ct, true);
 			javaMailSender.send(mimeMessage);
 			System.out.println("성공");
 		} catch (Exception e) {

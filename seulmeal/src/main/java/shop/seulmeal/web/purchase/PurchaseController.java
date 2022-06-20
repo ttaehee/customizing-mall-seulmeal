@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -25,7 +26,6 @@ import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
-import shop.seulmeal.service.domain.ProductParts;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
@@ -67,6 +67,10 @@ public class PurchaseController {
 		
 		Product product=productService.getProduct(productNo);
 		List<Parts> partsList=productService.getProductParts(productNo);
+		
+		for (Parts parts : partsList) {
+			
+		}
 		
 		model.addAttribute("product",product);
 		model.addAttribute("partsList",partsList);
@@ -152,21 +156,23 @@ public class PurchaseController {
 			int sul=purchaseService.insertPlusParts(map);
 			System.out.println("plus result:"+sul);
 		}
-
-		model.addAttribute("customProduct",customProduct);
 		
 		System.out.println("ccccc:"+customProduct.getCartStatus());
+		
 		if(customProduct.getCartStatus().equals("1")) {
-			return "redirect:/purchase/getListCustomProduct";
+			return "redirect:/purchase/getListCustomProduct/1";
 		}else {
-			return "redirect:/purchase/insertPurchaseDirect";
+			model.addAttribute("customProduct", customProduct);
+			model.addAttribute("cartStatus", "0");
+			
+			return "purchase/insertPurchase";
 		}
 		
 	}
 	
 	//장바구니 리스트 
-	@GetMapping("getListCustomProduct")
-	public String getListCustomProduct(Model model, HttpSession session) {
+	@GetMapping("getListCustomProduct/{currentPage}")
+	public String getListCustomProduct(@PathVariable(required = false) String currentPage, Model model, HttpSession session) {
 		System.out.println("/getListCustomProduct");
 		
 		User user=(User)session.getAttribute("user");
@@ -246,22 +252,6 @@ public class PurchaseController {
 		return "redirect:/purchase/getListCustomProduct";
 	}	
 	
-	
-	//바로구매하기 구매정보입력창
-	@GetMapping("insertPurchaseDirect/{customProductNo}")
-	public String insertPurchaseDirect(int customProductNo, CustomProduct customProduct, Model model) {
-		
-		System.out.println("/insertPurchase : GET");
-		
-		customProduct=purchaseService.getCustomProduct(customProductNo);
-		
-		model.addAttribute("customProduct", customProduct);
-		model.addAttribute("cartStatus", "0");
-		
-		return "purchase/insertPurchase";
-		
-	}
-	
 	//장바구니 거쳐서 구매정보입력창
 	@GetMapping("insertPurchase")
 	public String insertPurchase(Model model, HttpSession session) {
@@ -278,10 +268,6 @@ public class PurchaseController {
 		search.setPageSize(pageSize);
 	
 		Map<String, Object> map=purchaseService.getListCustomProduct(search, userId);
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!! : "+map.get("cproductList"));
-		Page resultPage 
-		= new Page(search.getCurrentPage(), 
-				((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
 		
 		model.addAttribute("customProductList", map.get("cproductList"));
 		model.addAttribute("cartStatus", "1");
@@ -289,6 +275,41 @@ public class PurchaseController {
 		return "purchase/insertPurchase";
 		
 	}
+	
+	//포인트만으로 결제시
+	@PostMapping("insertPurchase")
+	public String insertPurchase(Purchase purchase, Integer[] customProductNo, @AuthenticationPrincipal User user, Model model) throws Exception {
+		
+		System.out.println("/purchase/insertPurchase : "+purchase);
+		System.out.println("/purchase/insertPurchase : "+customProductNo[0]);
+
+		purchase.setUser(user);
+	      
+		int result=purchaseService.insertPurchase(purchase);
+		System.out.println("/purchase/insertPurchase insert : "+result);
+		
+		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
+		System.out.println("/purchase/insertPurchase get : "+purchase);
+		purchase.setUser(user);
+		
+		//구매완료로 구매상태변경
+		purchaseService.updatePurchase(purchase);
+		
+		//customProduct 에 구매번호추가, 장바구니리스트에서 삭제
+		CustomProduct cp=new CustomProduct();
+		//String[] customProductNo = customProductNoList.split(",");
+		for(int i=0; i<customProductNo.length; i++) {
+			cp=purchaseService.getCustomProduct(customProductNo[i]);
+			cp.setPurchaseNo(purchase.getPurchaseNo());
+			purchaseService.updateCustomProductPurchaseNo(cp);
+			purchaseService.updateCustomProductStatus(cp);
+		}
+		
+		model.addAttribute(purchase);
+
+		return "redirect:/purchase/getPurchase/"+purchase.getPurchaseNo();	
+		
+	}	
 	
 	@GetMapping("getPurchase/{purchaseNo}")
 	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {

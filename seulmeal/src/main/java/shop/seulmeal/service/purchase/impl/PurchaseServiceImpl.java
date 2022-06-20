@@ -128,9 +128,15 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public int updateCustomProduct(CustomProduct customProduct) {
+	public int updateCustomProductPurchaseNo(CustomProduct customProduct) {
 		// TODO Auto-generated method stub
-		return purchaseMapper.updateCustomProduct(customProduct);
+		return purchaseMapper.updateCustomProductPurchaseNo(customProduct);
+	}
+	
+	@Override
+	public int updateCustomProductStatus(CustomProduct customProduct) {
+		// TODO Auto-generated method stub
+		return purchaseMapper.updateCustomProductStatus(customProduct);
 	}
 	
 	@Override

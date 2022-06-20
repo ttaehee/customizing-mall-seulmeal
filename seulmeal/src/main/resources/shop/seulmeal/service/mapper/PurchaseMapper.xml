@@ -179,7 +179,7 @@
 	<select id="getListCustomProduct" resultMap="customProductSelectMap" parameterType="map">
 		SELECT *
 		FROM (SELECT vt.*, ROWNUM AS row_seq
-			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, cpd.price, pd.calorie
+			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.thumbnail, cpd.price, pd.calorie
 			    FROM customproduct cpd, product pd
 				WHERE cpd.product_no=pd.product_no AND cpd.user_id=#{userId} AND cpd.cart_status='1'
 				ORDER BY cpd.customproduct_no) vt
@@ -196,10 +196,20 @@
 	</select>
 	
 	<!-- 구매후 구매번호추가 / 커스터마이징재료 수정은 delete 후 다시 insert -->
-	<update id="updateCustomProduct">
+	<update id="updateCustomProductPurchaseNo">
 		UPDATE customproduct
 		<set>
-			purchase_no=#{purchase.purchaseNo:NUMERIC} AND cart_status = '0'
+			purchase_no=#{purchaseNo:NUMERIC}
+		</set>
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</update>
+	
+	<update id="updateCustomProductStatus">
+		UPDATE customproduct
+		<set>
+			cart_status = '0'
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}

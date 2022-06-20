@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -41,9 +41,12 @@
 	  border-bottom: 1px solid #444444;
 	  padding: 10px;
 	}
-		
-		
-		
+	
+	img{
+			width: 70px;
+			height: 70px;
+		}
+	
 	</style>
 
 
@@ -89,7 +92,7 @@
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">
 			      <td align="left"><a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}[${purchase.purchaseNo}]</a></td>
-				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 				  <td align="left">${cpd.count}</td>
 				  <td align="left">${cpd.product.name}</td>
 				  <td align="left">
@@ -135,27 +138,7 @@
   			});
   	 });
   	 
-  	 
-  	setRowspan(num) {	//num 병합을 원하는 열
-  	  var mergeItem = "";	//병합구분값
-  	  var mergeCount = 0;	//병합 수
-  	  var mergeRowNum = 0;	//병합들어갈 row
 
-  	  $('tr','#table1').each(function(row){  // #테이블ID값
-  	    if(row > 0 ){
-  	      var item = $(':eq(' + num +')',$(this)).html();
-  	      if(mergeItem != item  ) {
-  	        mergeCount = 1;
-  	        mergeItem = item ;
-  	        mergeRowNum = row;
-  	      }else{
-  	        mergeCount = mergeCount + 1;
-  	        $("tr:eq("+mergeRowNum+") > td:eq("+num+")").attr("rowspan",mergeCount);
-  	        $('td:eq('+num+')',$(this)).hide();	//병합될 값들 숨김처리
-  	      }
-  	    }
-  	  })
-  	}
       
 	</script>
 

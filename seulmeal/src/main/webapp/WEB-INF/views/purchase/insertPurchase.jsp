@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -39,7 +39,8 @@
         font-size: 14px;
       }
 	input[type="checkbox"]:checked + label::after{
-        content:'v';
+        content:'V';
+        color: #FF4500;
         font-size: 16px;
         width: 20px;
         height: 20px;
@@ -58,6 +59,11 @@
 		margin: 20px 0px;
 		padding:0px 10px 0px 10px;
 	}
+	
+	img{
+		width: 70px;
+		height: 70px;
+	}
 
 </style>
 <!-- iamport.payment.js -->
@@ -67,7 +73,7 @@
 	 <div class="container">
 	  <div class="row">
 		 <div class="col-xs-4" style="padding: 100px 0px 0px 40px;">
-		 	<h2>구매</h2>
+		 	<h2>구매&emsp;&emsp;</h2>
 		 </div>
 		 <div class="col-xs-4">
 		 	<div style="border:1px solid; padding:1px 0px 0px 12px; margin:20px; width:600px; margin-top:80px; border-radius: 3px; border-color: #969696;">
@@ -101,7 +107,7 @@
 		 </div>
 		</div><br/>
 	
-		<table class="table table-hover" style="border-color: #FF4500; width:900px;">
+		<table class="table table-hover" style="border-color: #FF4500; width:1000px;">
 	 
 	        <thead>
 	          <tr>
@@ -119,8 +125,10 @@
 	
 				<tbody style="font-size:15px">
 						<tr class="ct_list_pop">
+							  <input type="hidden" class="customProductNo" name="customProductNo" value="${customProduct.customProductNo}"/>
 							  <td align="left">1</td>
-							  <td align="left" data-value="${customProduct.product.productNo}" title="Click : 상품확인" >${customProduct.product.thumbnail}</td>
+							  <td align="left" data-value="${customProduct.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${customProduct.product.thumbnail}'></td>
+							  
 							  <td align="left">${customProduct.product.name}</td>
 							  <td align="left">
 							  <c:forEach var="pp" items="${customProduct.plusParts}">
@@ -134,10 +142,7 @@
 							  	<span id ="count" name="count"> ${customProduct.count} </span>
 							  </td>
 							  <td align="left">
-							  <span id="customprice" name="price">${customProduct.price*cpd.count}</span>원</td>
-							  <td align="left">
-							  	<button type="button" class="btn btn-outline-primary change" onclick="window.location.href='/purchase/updateCustomProduct/' + ${customProduct.customProductNo}">수정</button>
-							  </td>
+							  <span id="customprice" name="customPrice">${customProduct.price*customProduct.count}</span>원</td>
 							  <c:set var="sum" value="${customProduct.price*customProduct.count}" />
 						  </tr>  
 
@@ -148,14 +153,13 @@
 	
 				<tbody style="font-size:15px">
 				<c:set var="sum" value="0" />
-				<c:set var="customprice" value="0" />
 				<c:set var="i" value="0" />
 				<c:forEach var="cpd" items="${customProductList}">
 					<c:set var="i" value="${i+1}" />
-					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
+						  <input type="hidden" class="customProductNo" name="customProductNo" value="${cpd.customProductNo}"/>
 						  <td align="left">${i}</td>
-						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -169,7 +173,7 @@
 						  	<span id ="count" name="count"> ${cpd.count} </span> 
 						  </td>
 						  <td align="left">
-						  <span id="customprice" name="price">${cpd.price*cpd.count}</span>원</td>
+						  <span id="customprice" name="customPrice">${cpd.price*cpd.count}</span>원</td>
 						  <c:set var="sum" value="${sum+cpd.price*cpd.count}" />
 						  
 					  </tr>  
@@ -184,7 +188,7 @@
 	<div class="row">
 	<div class="col-xs-6">
 	 
-	<div class="card" style=" border-radius: 10px; width:470px; min-height: 670px;">
+	<div class="card" style=" border-radius: 10px; width:470px; min-height: 670px; margin-left: 60px;">
 		<div class="card-body">
 		    <h6 class="card-title">배송정보</h6>
 		    <h8 class="card-subtitle mb-2 text-muted"></h8>
@@ -268,10 +272,10 @@
 									
 										<div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
 											<div class="card-body">
-												<input type="text" id="usepoint" name="usepoint" value="" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
+												<input input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="usepoint" name="usepoint" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
 												(100P 단위로 사용가능)<br/><br/>
-												<input type="text" id="password" name="password" value="" placeholder="비밀번호" style="width:150px;"></input>
-												<button type="button" class="btn btn-outline-primary" style="font-size:18px;" onClick="fnCalTotal()">확인</button>
+												<input type="password" id="password" name="password" value="" placeholder="비밀번호" style="width:150px;"></input>
+												<button type="button" class="btn btn-outline-primary" id="confirm" style="font-size:18px;" onClick="fnCalTotal()">확인</button>
 											</div>
 										</div>
 									</div>
@@ -288,11 +292,11 @@
 					    <h6 class="card-title">최종결제금액</h6>
 					    <h8 class="card-subtitle mb-2 text-muted"></h8>
 					    <p class="card-text">
-							<div style="text-align: right;">KRW&ensp;&ensp;<span id="total" style="font-size: 20px;">${sum}</span>&ensp;</div>
+							<div style="text-align: right;">KRW&ensp;&ensp;<span id="price" style="font-size: 20px;">${sum}</span>&ensp;</div>
 							<button type="button" class="pay" id="pay" style="background-color:#FFF; border-radius:5px; border-color:#FF4500; font-size:22px; width: 320px" onClick="iamport()">결제하기</button>		
 						</p>
 						<div id="pluspoint">
-							적립예정 포인트 : <fmt:parseNumber var= "pluspoint" pattern="#,###" value="${sum*0.05}"/>P
+							적립예정 포인트 : <span id="pluspoint">${sum*0.05}</span>P
 						</div>
 	
 					</div>
@@ -306,14 +310,23 @@
 	
 	
 	<script type="text/javascript">
+	
+	
 
 	function fnCalTotal(){
-		const usepoint = parseInt($('#usepoint').val());
+		
+		let usepoint = 0;
+		if(!$('#usepoint').val()){
+			usepoint = 0;
+		}else{
+			usepoint = parseInt($('#usepoint').val());
+		}
+		
+		let sum = parseInt($('#price').text());
+		
+		console.log(usepoint);
+		let total = sum-usepoint;
 		const password = $('#password').val();
-		console.log(password);
-		console.log(password);
-		const sum = parseInt($('#total').text());
-		const total = sum-usepoint;
 		
 		if(total<0){
 			alert("결제금액보다 적은 포인트를 입력하세요.");
@@ -326,7 +339,7 @@
 				method : "POST",
 		        data:JSON.stringify({
 		        	password : password,
-		        	totalPoint : usepoint
+		        	usePoint : usepoint
 				}),
 				headers : {
 					"Accept" : "application/json",
@@ -337,9 +350,11 @@
 		        	console.log(data);
 		        	if(data.success==='true'){
 		        		alert("포인트적용완료");
-		        		$("#total").text(total);
+		        		$("#price").text(total);
 		        		
-		        		$(this).attr("disabled","disabled");
+		        		$('#confirm').attr("disabled","disabled");
+		        		document.getElementById('usepoint').readOnly = true;
+		        		document.getElementById('password').readOnly = true;
 		        		
 		        	}else if(data.success==='pt'){
 		        		alert("보유포인트 내에서 입력하세요.");
@@ -365,6 +380,17 @@
 		
 	
 	function iamport(){
+			
+		var form1 = $(".cc").serialize();
+		
+		let customNo = [];
+		let ar = $(".customProductNo").get();
+		console.log(ar);
+		
+		for ( var i = 0; i < ar.length; i++) {
+			customNo.push(ar[i].value);
+		}
+		console.log(customNo);
 		
 		const userId = $('#userId').val();
 		const name = $('#name').val();
@@ -372,85 +398,90 @@
 		const phone = $('#phone').val();
 		const email = $('#email').val();
 		const message = $('#message').val();
-		const price = $('#total').val();
-		const paymentCondition = 0;
-		const usePoint = $('#usepoint').val();
-		const plusPoint = $('#pluspoint').val();
+		const price = $('#price').text();
+		const usePoint = (!$('#usepoint').val()) ? "0": $('#usepoint').val();
+		//const plusPoint = $('#pluspoint').val();
 		
-		
-		//const point = $('#usepoint').val();
-		//const customProductNo = $('#customProductNo').val();
-		
-		$.ajax({
-			url:"/purchase/api/insertPurchase",
-			method:"POST",
-			data:JSON.stringify({
-				name : name,
-				address : address,
-				phone : phone,
-				email : email,
-				message : message,
-				price : price,
-				paymentCondition : paymentCondition,
-				usePoint : usePoint,
-				plusPoint : plusPoint
-				//customProductNo : customProductNo 리스트로...
-			}),
-			headers : {
-				"Accept" : "application/json",
-				"Content-Type" : "application/json"
-			},
-			dataType : "json",
-			success : function(data){
+		if(parseInt($('#price').val())==0){
+			
+			$(".cc").append(`<input type="hidden" name ="paymentCondition" value="1">`);
+					
+			$("form").attr("method" , "POST").attr("action" , "/purchase/insertPurchase").submit();
+		}else{
+			$(".cc").append(`<input type="hidden" id ="paymentCondition" value="0">`);
+			const paymentCondition = $('#paymentCondition').val();
 
-				IMP.init('imp83644059'); 
-				IMP.request_pay(
-				    { 
-		 		  	pay_method: data.paymentCondition,
-		  		  	merchant_uid: data.purchaseNo,
-		  		  	name: "상품",
-		  		  	amount: data.price,
-		   		 	buyer_email: data.email,
-		   			buyer_name: data.name,
-		  			buyer_tel: data.phone,
-		  		  	buyer_addr: data.address,
-		   		 	buyer_postcode: "01181"
-					}, function(rsp) {
-						console.log(rsp);
-						if(rsp.success){
-							var msg = '결제가 완료되었습니다.';
-					        msg += '고유ID : ' + rsp.imp_uid;
-					        msg += '상점 거래ID : ' + rsp.merchant_uid;
-					        msg += '결제 금액 : ' + rsp.paid_amount;
-					        msg += '카드 승인번호 : ' + rsp.apply_num;
-			  		      	
-			  		      	 $.ajax({
-			  		  			url:"api/verifyIamport",
-			  		  			method:"POST",
-			  		  			data:JSON.stringify({
-			  		  				imp_uid : rsp.imp_uid,
-			  		  				purchaseNo : rsp.merchant_uid,
-			  		  				amount : rsp.paid_amount
-			  		  			}),
-			  		  			headers : {
-			  		  				"Accept" : "application/json",
-			  		  				"Content-Type" : "application/json"
-			  		  			},
-			  		  			dataType : "json",
-			  		  			success : function(data){
-			  		  				console.log(data);
-			  		  				window.location.href='/purchase/getPurchase/' + data.purchase.purchaseNo;
-			  		  			}
-			  		      	 })
-						}else{
-							var msg = '결제에 실패하였습니다.';
-					         msg += '에러내용 : ' + rsp.error_msg;
-	
-						}
-					alert(msg);
-				})
-			}
-		})
+			$.ajax({
+				url:"/purchase/api/insertPurchase",
+				method:"POST",
+				data:JSON.stringify({
+					name : name,
+					address : address,
+					phone : phone,
+					email : email,
+					message : message,
+					price : price,
+					paymentCondition : paymentCondition,
+					usePoint : usePoint,
+					customProductNo : customNo
+					//plusPoint : plusPoint
+				}),
+				headers : {
+					"Accept" : "application/json",
+					"Content-Type" : "application/json"
+				},
+				dataType : "json",
+				success : function(data){
+					console.log(data);
+					IMP.init('imp83644059'); 
+					IMP.request_pay(
+					    { 
+			 		  	pay_method: data.paymentCondition,
+			  		  	merchant_uid: data.purchaseNo,
+			  		  	name: "밀키트",
+			  		  	amount: data.price,
+			   		 	buyer_email: data.email,
+			   			buyer_name: data.name,
+			  			buyer_tel: data.phone,
+			  		  	buyer_addr: data.address,
+			   		 	buyer_postcode: "01181"
+						}, function(rsp) {
+							console.log(rsp);
+							if(rsp.success){
+								var msg = '결제가 완료되었습니다.';
+						        msg += '고유ID : ' + rsp.imp_uid;
+						        msg += '상점 거래ID : ' + rsp.merchant_uid;
+						        msg += '결제 금액 : ' + rsp.paid_amount;
+						        msg += '카드 승인번호 : ' + rsp.apply_num;
+				  		      	
+				  		      	 $.ajax({
+				  		  			url:"api/verifyIamport",
+				  		  			method:"POST",
+				  		  			data:JSON.stringify({
+				  		  				imp_uid : rsp.imp_uid,
+				  		  				purchaseNo : rsp.merchant_uid,
+				  		  				amount : rsp.paid_amount
+				  		  			}),
+				  		  			headers : {
+				  		  				"Accept" : "application/json",
+				  		  				"Content-Type" : "application/json"
+				  		  			},
+				  		  			dataType : "json",
+				  		  			success : function(data){
+				  		  				console.log(data);
+				  		  				window.location.href='/purchase/getPurchase/' + data.purchase.purchaseNo;
+				  		  			}
+				  		      	 })
+							}else{
+								var msg = '결제에 실패하였습니다.';
+						         msg += '에러내용 : ' + rsp.error_msg;
+		
+							}
+						alert(msg);
+					})
+				}
+			})
+		}
 	}
 	</script>
 	

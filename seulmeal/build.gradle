@@ -19,6 +19,8 @@ repositories {
 	mavenCentral()
 }
 
+//bootWar.enabled = false
+//war.enabled = true
 dependencies {
 	// �옄諛붾찓�씪
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
