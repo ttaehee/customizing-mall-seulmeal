@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
-import javax.xml.ws.RespectBinding;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,14 +17,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
+import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Review;
@@ -98,7 +96,7 @@ public class ProductController {
 				list.add(parts);
 			}		
 
-			int r = productService.insertProudctParts(list);
+			int r = productService.insertProductParts(list);
 			
 			if (r == no.length) {
 				System.out.println("성공");
@@ -176,8 +174,11 @@ public class ProductController {
 	
 	@GetMapping(value = { "/admin/listProduct/{currentPage}/{searchCondition}", "/admin/listProduct/{currentPage}", "/admin/listProduct" })
 	public String getListProductAsAdmin(Model model, Search search, @PathVariable(required = false) String currentPage,
-			@PathVariable(required = false) String searchCondition) throws Exception {
-
+			@PathVariable(required = false) String searchCondition, HttpSession session) throws Exception {
+		if(session.getAttribute(currentPage) != null) {
+			session.removeAttribute(currentPage);
+		}
+	
 		if (currentPage != null) {
 			search.setCurrentPage(new Integer(currentPage));
 		}
@@ -187,6 +188,8 @@ public class ProductController {
 		search.setPageSize(pageSize);
 		search.setSearchCondition(searchCondition);
 		System.out.println(search);
+		
+		session.setAttribute("currentPage", currentPage);
   
 		Map<String, Object> map = productService.getListProductAsAdmin(search);
 		List<Product> list = (List) map.get("list");
@@ -227,17 +230,26 @@ public class ProductController {
 		
 		return "redirect:/product/getProduct/" + product.getProductNo();
 	}	
-	@GetMapping(value = {"deleteProduct/{currentPage}/{productNo}"})
-	public String deleteProduct(@PathVariable int currentPage, @PathVariable int productNo) throws Exception {
+	@GetMapping(value = {"deleteProduct/{productNo}"})
+	public String deleteProduct(@PathVariable int productNo, HttpSession session) throws Exception {
 		productService.deleteProduct(productNo);
+		String currentPage = (String) session.getAttribute("currentPage");
+		session.removeAttribute(currentPage);
 		return "redirect:/product/admin/listProduct/"+currentPage;
 	}
 	
-	@GetMapping(value = {"restoreProduct/{currentPage}/{productNo}"})
-	public String restoreProduct(@PathVariable int currentPage, @PathVariable int productNo) throws Exception {
+	@GetMapping(value = {"restoreProduct/{productNo}"})
+	public String restoreProduct(@PathVariable int productNo, HttpSession session) throws Exception {
 		productService.restoreProduct(productNo);
+		String currentPage = (String) session.getAttribute("currentPage");
+		session.removeAttribute(currentPage);
 		return "redirect:/product/admin/listProduct/"+currentPage;
 	}
+	
+	
+	
+	
+	
 	
 	
 	/* < PARTS > */
@@ -256,66 +268,64 @@ public class ProductController {
 	
 	@GetMapping(value = {"listParts/{currentPage}/{searchCondition}", "listParts"})
 	public String getListParts(Model model, Search search, @PathVariable(required = false) String currentPage,
-				@PathVariable(required = false) String searchCondition) throws Exception {
+				@PathVariable(required = false) String searchCondition, HttpSession session) throws Exception {
 
-			if (currentPage != null) {
-				search.setCurrentPage(new Integer(currentPage));
-			}
-			if (search.getCurrentPage() == 0) {
-				search.setCurrentPage(1);
-			}
-			search.setPageSize(pageSize);
-			
-			search.setSearchCondition(searchCondition);
-			System.out.println(search);
-
-			Map<String, Object> map = productService.getListParts(search);
-			List<Parts> list = (List) map.get("list");
-			List<Parts> listr = new ArrayList();
-
-			for (Parts parts : list) {
-				listr.add(parts);
-			}
-
-			Page resultPage = new Page
-					(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
-
-			model.addAttribute("list", listr);
-			model.addAttribute("page", resultPage);
-			model.addAttribute("search", search);
-
-			return "/product/listParts";
-	}
+		if(session.getAttribute(currentPage) != null) {
+			session.removeAttribute(currentPage);
+		}
 	
-	@GetMapping(value = {"updateParts/{partsNo}"})
-	public String updateParts(@PathVariable int partsNo, Model model) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("partsNo", partsNo);
+		if (currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		System.out.println(search);
 		
-		model.addAttribute("parts", (Parts)productService.getParts(map));
-		
-		
-		return "/product/updateParts";
+		session.setAttribute("currentPage", currentPage);
+
+		Map<String, Object> map = productService.getListParts(search);
+		List<Parts> list = (List) map.get("list");
+		List<Parts> listr = new ArrayList();
+
+		for (Parts parts : list) {
+			listr.add(parts);
+		}
+
+		Page resultPage = new Page
+				(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit, pageSize);
+
+		model.addAttribute("list", listr);
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
+
+		return "/product/listParts";
 	}
 	
 	@PostMapping(value = {"updateParts/{partsNo}"})
-	public String updateParts(@PathVariable int partsNo, Parts parts) throws Exception {
+	public String updateParts(@PathVariable int partsNo, Parts parts, HttpSession session) throws Exception {
 		parts.setPartsNo(partsNo);
 		productService.updateParts(parts);
-		return "redirect:/product/listParts/1/0";
+		String currentPage = (String) session.getAttribute("currentPage");
+		session.removeAttribute(currentPage);
+		return "redirect:/product/listParts/"+currentPage+"/0";
 	}
-	
-	@GetMapping(value = {"deleteParts/{partsNo}"})
-	public String deleteParts(@PathVariable int partsNo) throws Exception { 
-		productService.deleteParts(partsNo);
 		
-		return "redirect:/product/listParts/1/0";
+	@GetMapping(value = {"deleteParts/{partsNo}"})
+	public String deleteParts(@PathVariable int partsNo, HttpSession session) throws Exception { 
+		productService.deleteParts(partsNo);
+		String currentPage = (String) session.getAttribute("currentPage");
+		session.removeAttribute(currentPage);
+		return "redirect:/product/listParts/"+currentPage+"/0";
 	}
 	@GetMapping(value = {"restoreParts/{partsNo}"})
-	public String restoreParts(@PathVariable int partsNo) throws Exception { 
+	public String restoreParts(@PathVariable int partsNo, HttpSession session) throws Exception { 
 		productService.restoreParts(partsNo);
-		
-		return "redirect:/product/listParts/1/1";
+		String currentPage = (String) session.getAttribute("currentPage");
+		session.removeAttribute(currentPage);
+		return "redirect:/product/listParts/"+currentPage+"/1";
 	}
 	
 	
@@ -341,14 +351,6 @@ public class ProductController {
 		
 		return "redirect:/product/getProduct/"+productNo;
 	}
-	
-	@GetMapping(value = { "getReview/{reviewNo}" })
-	public String getReview(@PathVariable int reviewNo, Model model) throws Exception {
-		Review review = productService.getReview(reviewNo);
-
-		model.addAttribute("review", review);
-		return "/product/getReview";
-	}
 
 	@GetMapping(value = { "updateReview/{reviewNo}" })
 	public String updateReview(@PathVariable int reviewNo, Model model) throws Exception {
@@ -362,10 +364,60 @@ public class ProductController {
 		productService.updateReview(review);
 		return "redirect:/product/getReview/" + reviewNo;
 	}
+	
+	@GetMapping(value= {"listReview/{currentPage}/{searchCondition}","listReview/{currentPage}", "listReview"})
+	public String getListReviewAsAdmin(HttpSession session, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition, Search search, Model model) throws Exception {
+		
+		if(session.getAttribute(currentPage) != null) {
+			session.removeAttribute(currentPage);
+		}
+		
+		if (currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+		System.out.println(search);
+		
+		session.setAttribute("currentPage", currentPage);
+		  
+		Map<String, Object> map =  productService.getListReviewAsAdmin(search);
+		List<Review> list = (List) map.get("list");
+
+		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+				pageSize);
+		
+		model.addAttribute("review", list);
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
+	
+		return "/product/listReview";
+	}
+	
+	@GetMapping(value= {"deleteReview/{reviewNo}"})
+	public String deleteReview(@PathVariable int reviewNo, HttpSession session) throws Exception {
+		productService.deleteReview(reviewNo);
+		String currentPage = (String) session.getAttribute("currentPage");
+		session.removeAttribute(currentPage);
+		return "redirect:/product/listReview/"+currentPage;
+	}
+	
+	@GetMapping(value= {"restoreReview/{reviewNo}"})
+	public String restoreReview(@PathVariable int reviewNo, HttpSession session) throws Exception {
+		productService.restoreReview(reviewNo);
+		String currentPage = (String) session.getAttribute("currentPage");
+		session.removeAttribute(currentPage);
+		return "redirect:/product/listReview/"+currentPage;
+	}
 
 	
-
 	
+	
+	
+	/* FOODCATEGORY */
 	
 	@GetMapping(value = {"insertFoodCategory"})
 	public String insertFoodCategory(String name) throws Exception {
@@ -395,4 +447,43 @@ public class ProductController {
 		return "redirect:/product/listFoodCategory";
 	}
 	
+	
+	
+	
+	/* 상품 좋아요 리스트 */
+	@GetMapping(value= {"listLikeProduct/{currentPage}", "listLikeProduct"})
+	public String getListLikeProduct(HttpSession session, Search search, @PathVariable(required=false) String currentPage, Model model ) throws Exception {
+		if(session.getAttribute(currentPage) != null) {
+			session.removeAttribute(currentPage);
+		}
+	
+		if (currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		System.out.println(search);
+		
+		session.setAttribute("currentPage", currentPage);
+		
+		User user = (User) session.getAttribute("user");
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("userId", user.getUserId());
+		map.put("search", search);
+
+		Map<String, Object> result = productService.getListLikeProduct(map);
+		List<Like> list = (List) result.get("list");
+		
+
+		Page resultPage = new Page
+				(search.getCurrentPage(), ((Integer) result.get("totalCount")).intValue(), pageUnit, pageSize);
+
+		model.addAttribute("list", list);
+		model.addAttribute("page", resultPage);
+		model.addAttribute("search", search);
+
+		return "/product/listLikeProduct";
+	}
 }

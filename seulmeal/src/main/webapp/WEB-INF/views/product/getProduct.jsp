@@ -188,12 +188,12 @@ div{ -webkit-touch-callout: none;
 						<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
 					</div>
 					</div>
+					
 				</div>
 					</c:if>
 						<c:if test="${empty product.averageRating}">
 							평가 없음
 						</c:if>
-					
 						
 					<hr />
 					<div>

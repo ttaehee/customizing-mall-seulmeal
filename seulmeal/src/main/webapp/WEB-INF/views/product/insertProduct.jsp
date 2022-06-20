@@ -14,45 +14,48 @@
 <div class="container">
 	<form action="/product/insertProduct" method="POST" enctype="multipart/form-data">
 		<div class="row">
-			<div class="col-md-12 form-group">
-				<select name="no">
+			<div class="col-md-6 form-group">
+				<label for="Email3" class="col-sm-6 control-label h4" >음식 카테고리</label>
+					<div class="col-md-12">
+					<select name="no" style="width: 160px">
 					<c:forEach var="foodcategory" items="${list}">
 						<c:set var="i" value="${i+1}" />
 						<option value="${foodcategory.foodCategoryNo}">${foodcategory.name}</option>
 					</c:forEach>
 				</select>
+				</div>
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >상품명</label>
+			<div class="col-md-6 form-group">
+				<label for="Email3" class="col-sm-5 control-label h4" >상품명</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="name" name="name" placeholder="상품명">
 				</div>
 			</div>
 			
 			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >짧은 내용</label>
+				<label for="Email3" class="col-sm-5 control-label h4" >짧은 내용</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="subContent" name="subContent" placeholder="짧은내용" />
 				</div>
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >가격</label>
+			<div class="col-md-4 form-group">
+				<label for="Email3" class="col-sm-4 control-label h4" >가격</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="price" name="price" />
 				</div>				
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >칼로리</label>
+			<div class="col-md-4 form-group">
+				<label for="Email3" class="col-sm-4 control-label h4" >칼로리</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="calorie" name="calorie" />
 				</div>
 			</div>
 			
-			<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-2 control-label h4" >재고</label>
+			<div class="col-md-4 form-group">
+				<label for="Email3" class="col-sm-4 control-label h4" >재고</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="stock" name="stock" />
 				</div>
@@ -94,6 +97,11 @@
 </div>
 
 <script type="text/javascript">
+$(".btn-primary:contains('취소')").click(function(){
+	window.location.href = '/product/admin/listProduct';
+});
+
+
 	$(()=>{
 		$(".partSearch").on("click",()=>{
 			$.ajax({
