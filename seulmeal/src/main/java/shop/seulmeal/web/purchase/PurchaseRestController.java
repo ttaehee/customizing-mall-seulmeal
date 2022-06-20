@@ -6,11 +6,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import shop.seulmeal.service.domain.CustomProduct;
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
+import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.purchase.PurchaseService;
 import shop.seulmeal.service.user.UserService;
 
@@ -33,6 +38,10 @@ public class PurchaseRestController {
 	@Autowired
 	@Qualifier("purchaseServiceImpl")
 	private PurchaseService purchaseService;
+	
+	@Autowired
+	@Qualifier("productServiceImpl")
+	private ProductService productService;
 	
 	@Autowired
 	@Qualifier("userServiceImpl")
@@ -73,6 +82,25 @@ public class PurchaseRestController {
 		
 	}	
 	
+	//커스터마이징 상품 옵션수정
+	@GetMapping("getCustomProduct/{customProductNo}")
+	@Transactional(rollbackFor= {Exception.class})
+	public Map<String, Object> getCustomProduct(@PathVariable int customProductNo, CustomProduct customProduct, Model model) throws Exception {
+		
+		System.out.println("/purchase/api/getCustomProduct :Get");
+		
+		customProduct=purchaseService.getCustomProduct(customProductNo);
+		
+		List<Parts> partsList=productService.getProductParts(customProduct.getProduct().getProductNo());
+		
+		Map<String, Object> map=new HashedMap();
+		map.put("customProduct", customProduct);
+		map.put("partsList",partsList);
+		
+		return map;
+	}	
+	
+	//포인트사용 시 비밀번호확인
 	@PostMapping("confirmPassword")
 	public JSONObject confirmPassword(@RequestBody Map temp, HttpSession session) throws Exception {
 	
@@ -98,7 +126,7 @@ public class PurchaseRestController {
 		return json;	
 	}	
 	
-	
+	//아임포트 결제 전 DB에 insertPurchase
 	@PostMapping("insertPurchase")
 	public Purchase insertPurchase(@RequestBody Map<String, Object> map, Purchase purchase, HttpSession session) throws Exception {
 		

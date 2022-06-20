@@ -22,7 +22,7 @@ public interface CommunityService {
 	public int insertComment(Comment comment);
 	public Comment getComment(int commentNo);
 	public Map<String,Object> getListcomment(Search search, int postNo);
-	public int updateComment(Comment comment);
+	//public int updateComment(Comment comment);
 	public int deleteComment(int commentNo);
 	 
 	//Report
@@ -32,7 +32,7 @@ public interface CommunityService {
 
 	//Like
 	public int insertLike(Like like);
-	public int deleteLike(Like like);
+	//public int deleteLike(Like like);
 	public Post getLikePost(int postNo);
 	
 	//Relation

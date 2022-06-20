@@ -12,6 +12,7 @@
 		id="postSelectMap">
 		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
 		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.role" column="role" jdbcType="VARCHAR" />
 		<result property="user.nickName" column="nickname" jdbcType="VARCHAR" />
 		<result property="user.profileImage" column="profile_image" jdbcType="VARCHAR" />
 		<result property="user.profileMessage" column="profile_message" jdbcType="VARCHAR" />
@@ -72,7 +73,7 @@
 	<select id="getListPost" parameterType="map" resultMap="postSelectMap">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT p.*, u.nickname, u.profile_image, u.profile_message
+				FROM	(SELECT p.*, u.nickname, u.profile_image, u.profile_message, u.role
  						FROM post p, users u	  
 						  	<where>
 						  		p.user_id = u.user_id
@@ -90,7 +91,7 @@
 							<if test="search.searchCondition == null">
 								p.reg_date
 							</if>
-							<if test="search.searchCondition != null">
+							<if test="userId == null and search.searchCondition != null">
 								<choose>
 									<when test="search.searchCondition == 1">views</when>
 									<when test="search.searchCondition == 2">like_count</when>
@@ -222,6 +223,7 @@
 	<resultMap type="shop.seulmeal.service.domain.Comment" id="commentSelectMap">
 		<result property="commentNo" column="comment_no" jdbcType="NUMERIC" />
 		<result property="user.userId" column="user_id" jdbcType="VARCHAR" />
+		<result property="user.role" column="role" jdbcType="VARCHAR" />
 		<result property="user.profileImage" column="profile_image" jdbcType="VARCHAR" />
 		<result property="user.nickName" column="nickname" jdbcType="VARCHAR" />
 		<result property="postNo" column="post_no" jdbcType="NUMERIC" />
@@ -253,7 +255,7 @@
 	</insert>
 
 	<select id="getComment" parameterType="int" resultMap="commentSelectMap">
-		SELECT c.*, u.nickname, u.profile_image 
+		SELECT c.*, u.nickname, u.profile_image, u.role
 		FROM comments c, users u
 		<where>
 			c.user_id = u.user_id
@@ -304,7 +306,7 @@
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 	  					FROM		(	
-	  						SELECT c.*, u.nickname, u.profile_image
+	  						SELECT c.*, u.nickname, u.profile_image, u.role
 							FROM comments c, users u
 							<where>
 								c.user_id = u.user_id
@@ -508,130 +510,8 @@
 		<result property="regDate" column="reg_date" jdbcType="DATE" />
 		<result property="relationStatus" column="relation_status" jdbcType="VARCHAR" />
 	</resultMap>
-	
-	<!-- insert id="insertFollow" parameterType="Relation">
-		INSERT INTO 
-			relation(
-				relation_no, 
-				user_id, 
-				relation_user_id, 
-				reg_date, 
-				relation_status)
-		VALUES(
-			seq_relation_no.nextval, 
-			#{userId}, 
-			#{followingUserId}, 
-			SYSDATE, 
-			'0')
-	</insert-->
-
-	<!--  X , 페이징 처리 -->
-	<!--  select id="getListFollow">
-		SELECT 
-			relation_user_id 
-		FROM 
-			relation
-		<where>
-			relation_status = '0'
-			AND user_id = #{userId}
-		</where>
-	</select-->
-	
-	<!-- select id="getFollowTotalCount" parameterType="map" resultMap="relationSelectMap">
-
-		SELECT COUNT(*) 
-		FROM (SELECT * FROM relation r, users u 
-			<where> 
-				r.relation_user_id = u.user_id 
-				AND r.relation_status = '0'
-				AND r.user_id = #{userId}
-			</where>
-			<if test="search.searchKeyword != null">
-				AND relation_user_id LIKE ('%'||#{search.searchKeyword}||'%')
-			</if> ) countTable
-	</select-->
-	
-	
-
-	
-
-	<!-- delete id="deleteFollow" parameterType="Relation">
-		DELETE FROM 
-			relation
-		<where>
-			relation_status = '0'
-			AND user_id = #{userId} 
-			AND relation_user_id = #{followingUserId}
-		</where>
-	</delete-->
 
 
-
-	
-	<!-- delete id="deleteFollowAll">
-		DELETE FROM relation
-		<where>
-			relation_status = '0'
-		</where>
-	</delete-->
-
-
-	<!-- 6. Block -->
-
-
-	<!-- insert id="insertBlock" parameterType="Relation">
-		INSERT INTO relation(relation_no, user_id, relation_user_id, reg_date, relation_status)
-		VALUES(seq_relation_no.nextval, #{userId}, #{relationUser.userId}, SYSDATE, '1')
-	</insert-->
-	
-
-	
-	
-	<!-- 차단 리스트 -->
-	<!-- select id="getListBlock" parameterType="map" resultMap="relationSelectMap">
-		SELECT *
-		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT r.*, u.nickname, u.profile_image,u.profile_message
-						 FROM relation r, users u
-							<where>
-								r.relation_user_id = u.user_id
-								AND r.relation_status = '1'
-								<if test="userId != null">
-									AND r.user_id = #{userId}
-								</if>								
-								<if test="search.searchKeyword != null">
-									AND r.relation_user_id LIKE ('%'||#{search.searchKeyword}||'%')								
-								</if>
-							</where>							
-							ORDER BY r.reg_date )inner_table
-				WHERE ROWNUM &lt;= #{search.endRowNum})
-		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}	
-	</select-->
-	
-	<!-- select id="getTotalBlockCount" parameterType="map" resultType="int" >
-		SELECT COUNT(*)
-	  	FROM(	SELECT r.* FROM relation r, users u
-  							<where>
-								r.relation_user_id = u.user_id
-								AND r.relation_status = '1'
-								<if test="userId != null">
-									AND r.user_id = #{userId}
-								</if>
-								<if test="search.searchKeyword != null">
-									AND r.relation_user_id LIKE ('%'||#{search.searchKeyword}||'%')								
-								</if>
-							</where> ) countTable
-	</select-->
-	
-	<!-- delete id="deleteBlock" parameterType="Relation">
-		DELETE FROM 
-			relation
-		<where>
-			relation_no = #{relationNo}
-		</where>
-	</delete-->
-	
-	
 	<insert id="insertRelation" parameterType="Relation">
 		INSERT INTO 
 			relation(relation_no, user_id, relation_user_id, reg_date, relation_status)
@@ -663,8 +543,6 @@
 	</select>
 	
 
-	
-	
 	
 	<!-- relation 총 개수 -->
 	<!-- map : 1.userId 2.search 3.relationStatus -->
@@ -737,16 +615,18 @@
 				FROM	(SELECT r.*, u.nickname, u.profile_image,u.profile_message, u.role
 								FROM relation r, users u 
 								<where> 
-									r.relation_user_id = u.user_id 
+									r.user_id = u.user_id 
 									AND r.relation_user_id = #{relationUserId}
 									AND r.relation_status = '0'
-									<if test = "search.searchKeyword != null">
+									<if test = "search != null and search.searchKeyword != null">
 										AND r.user_id LIKE ('%'||#{search.searchKeyword}||'%')
 									</if>
 								</where>							
-								ORDER BY r.reg_date )inner_table
+								ORDER BY r.reg_date )inner_table 
+								<if test="search == null">)</if>
+								<if test="search != null">
 				WHERE ROWNUM &lt;= #{search.endRowNum})
-		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}	
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}</if>	
 	</select>
 	
 	
