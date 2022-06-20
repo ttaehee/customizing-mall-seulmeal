@@ -17,6 +17,17 @@
 	
 	<div class="container">
 		<h2>판매내역 목록</h2><br/>
+		
+		<form class="form-inline" name="detailForm">
+		
+		<div class="form-group">
+			 <button class="btn btn-primary status" style="margin-right:10px;" onclick="location.href='/purchase/getListSale'">전체</button>
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="1">상품준비중</button>
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="2">배송중</button>
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="3">배송완료</button>
+			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="3">구매확정</button>
+		  </div>
+		  
 		 <table class="table table-hover" style="width: 1000px;">
 	 
 	        <thead>
@@ -39,7 +50,7 @@
 					<c:set var="i" value="${i+1}" />
 					<tr class="ct_list_pop">
 						  <td align="left">${i}</td>
-						  <td align="left">${sale.purchaseNo}</td>
+						  <td align="left"><a href="/purchase/getPurchase/${sale.purchaseNo}">${sale.purchaseNo}</td>
 						  <td align="left">${sale.regDate}</td>
 						   <td align="left">${sale.user.userId}</td>
 						  <td align="left">
@@ -54,7 +65,7 @@
 						  <td>
 						  
 						  	<c:choose>
-								<c:when test="${sale.purchaseStatus eq '1'}"><button type="button" class="btn btn-outline-primary btn-sm" onClick="fncPurchaseStatus()">배송하기</button></c:when>
+								<c:when test="${sale.purchaseStatus eq '1'}"><button type="button" class="btn btn-outline-primary btn-sm" data-value="${sale.purchaseNo}" onClick="fncPurchaseStatus(this)">배송하기</button></c:when>
 								<c:when test="${sale.purchaseStatus eq '2'}">&ensp;배송중</c:when>
 								<c:when test="${sale.purchaseStatus eq '3'}">&ensp;배송완료</c:when>
 								<c:when test="${sale.purchaseStatus eq '4'}">&ensp;구매확정</c:when>
@@ -64,6 +75,7 @@
 				  </c:forEach>
 	        </tbody>
 	      </table><br/>
+	      <form class="form-inline" name="detailForm">
 	 </div>
 	 
 	 <!-- 페이징처리 -->
@@ -82,10 +94,18 @@
 		
 <script type="text/javascript">
 	
-	function fncPurchaseStatus(){
+	function fncPurchaseStatus(ths){
+		
+		const purchaseNo=$(ths).data('value');	
+		console.log(purchaseNo);
+		
 		$.ajax({
-			url:"/purchase/api/updatePurchaseCode/"+customProductNo+"/"+count,
-			method:"GET",  
+			url:"/purchase/api/updatePurchaseCode",
+			method:"POST",  
+			data:JSON.stringify({
+				purchaseNo : purchaseNo,
+				purchaseStatus: "2"
+			}),
 	        headers : {
 	            "Accept" : "application/json",
 	            "Content-Type" : "application/json"
@@ -96,6 +116,20 @@
 	        }
     	});	
 	}
+	
+	function fncGetListSale(currentPage) {
+
+  		$("form").attr("method" , "POST").attr("action" , "/purchase/getListSale/1").submit();
+  	  }
+  	
+
+  	 $(function() {
+  		  
+  		 $(".status").on("click" , function() {
+
+  			fncGetListSale(1);
+  			});
+  	 });
 	
 </script>
 

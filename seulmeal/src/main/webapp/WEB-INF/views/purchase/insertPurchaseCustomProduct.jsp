@@ -21,16 +21,17 @@
 			content: "";
 			display: block;
 			width: 300px;
-			border-bottom: 1px solid #bcbcbc;
+			border-bottom: 2px solid #FF4500;
 			margin: 20px auto;
 		}
 		
-		h5:after {
+		h6:after {
 	        content: "";
 	        display: block;
-	        width: 100px;
-	        border-bottom: 1px solid #bcbcbc;
+	        width: 60px;
+	        border-bottom: 2px solid #FF4500;
 	        margin: 20px 0px;
+	        margin-top: 10px;
 		}
 		
 		.close {
@@ -63,17 +64,16 @@
 		<div class="container">
 		<h2>커스터마이징 : ${product.name}</h2> 
 		
-			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
 			  <div class="card-body">
 			    <h6 class="card-title" id="price">${product.price}원</h6>
 			    <h8 class="card-subtitle mb-2 text-muted">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</h8>
 			  </div>
 			</div>
 		    
-			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
 			  <div class="card-body">
 			    <h6 class="card-title">제품구성</h6>
-			    <h6 class="card-subtitle mb-2 text-muted"></h6>
 			    <p class="card-text"><c:forEach var="parts" items="${partsList}">
 					<div class="container productparts">${parts.name} &emsp;&emsp; 
 					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.productPartsNo}" data-partsName="${parts.name}">제외하기</button>
@@ -83,7 +83,7 @@
 			  </div>
 			</div>
 			
-			<div class="card" id="insertcard" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			<div class="card" id="insertcard" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
 				<div class="card-body">
 				    <h6 class="card-title">추가재료</h6>
 				    <h8 class="card-subtitle mb-2 text-muted">*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</h8>
@@ -92,7 +92,7 @@
 							재료 검색 : 
 								<div style="display:flex;">	
 									<div class="form-outline">
-										<input name="searchKeyword" type="search" class="form-control search" value="" />
+										<input name="searchKeyword" type="search" class="form-control search" value="" style="border-color: #FF4500; border-width: 2px;"/>
 									</div>		  
 									<button type="button" class="btn btn-primary partSearch" onclick="search()">
 										<i class="bi bi-search"></i>
@@ -106,9 +106,8 @@
 				  </div>
 			</div>	  
 
-		  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+		  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
 					<div class="card-body">
-					    <h6 class="card-title"></h6>
 					    <h8 class="card-subtitle mb-2 text-muted"></h8>
 					    <p class="card-text">
 							<div>커스터마이징상품 금액 :&ensp;<span id="total">${product.price}</span>원</div><br/>
@@ -127,7 +126,7 @@
 				<div class="container" style="display: flex; justify-content: center;">
 					<button type="button" class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="0" onClick="fncInsertCustomProduct(this)">바로 구매하기</button>
 					<button type="button" class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="1" onClick="fncInsertCustomProduct(this)">장바구니 담기</button>
-					 <button type="button" class="btn btn-primary" onclick="history.back(-1)">취&nbsp;소</button>
+					 <button type="button" class="btn btn-primary" onClick="history.back(-1)">취&nbsp;소</button>
 				</div><br/><br/>	
 		</div>
 	</form>

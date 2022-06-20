@@ -168,7 +168,7 @@ public class PurchaseRestController {
 	@PostMapping("updatePurchaseCode")
 	public Purchase updatePurchaseCode(@RequestBody Purchase purchase) throws Exception {
 
-	      System.out.println("/purchase/api/updatePurchase : POST");
+	      System.out.println("/purchase/api/updatePurchaseCode : POST"+purchase);
 	      
 	      purchaseService.updatePurchaseCode(purchase);
 	      purchase=purchaseService.getPurchase(purchase.getPurchaseNo());

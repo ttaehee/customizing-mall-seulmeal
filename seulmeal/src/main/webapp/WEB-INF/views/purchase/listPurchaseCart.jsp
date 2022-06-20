@@ -39,12 +39,41 @@
 		}
 		
 		button:hover{
-			color: #ff4500;
+			color: #FF607F;
 		}
 		
 		img{
 			width: 70px;
 			height: 70px;
+		}	
+		
+		h6:after {
+	        content: "";
+	        display: block;
+	        width: 80px;
+	        border-bottom: 2px solid #000000;
+	        margin: 20px 0px;
+	        margin-top: 10px;
+		}
+		
+		.close {
+		  display:inline-block;
+		  padding:2px 5px;
+		  font-weight: 700;
+		  text-shadow: 0 1px 0 #fff;
+		  font-size: 1rem;
+		}
+		
+		.close:hover {
+		  border: 0;
+		  cursor:pointer;
+		  opacity: .75;
+		}
+		
+		.card {
+	        margin: 0 auto; 
+	        float: none;
+	        margin-bottom: 10px; 
 		}	
 		
 	</style>
@@ -165,22 +194,21 @@
 	</form>
 		
 		<!-- Modal -->
-		<div id="changeModal" class="modal fade" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+		<div id="changeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-scrollable modal-lg " role="document">
 			<div class="modal-content">
 
 				<!-- 헤더 -->
-				<div class="modal-header">
+				<div class="modal-header" style="background-color: #282828; color: white;">
 					<h3 class="modal-title" id="productName"></h3>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
 						<span aria-hidden="true">&times;</span>
 					</button><br/>
 										
 				</div>
 
 				<!-- 바디 -->
-				<div id="follow-modal-body" class="modal-body">
+				<div id="follow-modal-body" class="modal-body" style="background-color: #282828;">
 
 					<form class="cc" name="insertCustom" method="post">
 						<input type="hidden" id="customProductNo" name="customProductNo"/>
@@ -189,7 +217,6 @@
 							<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
 							  <div class="card-body">
 							    <h6 class="card-title">제품구성</h6>
-							    <h6 class="card-subtitle mb-2 text-muted"></h6>
 							    <p class="card-text">
 										<div class="container productParts">
 										</div>
@@ -206,7 +233,7 @@
 											재료 검색 : 
 												<div style="display:flex;">	
 													<div class="form-outline">
-														<input name="searchKeyword" type="search" class="form-control searchS" value="" />
+														<input name="searchKeyword" type="search" class="form-control search" value=""/>
 													</div>		  
 													<button type="button" class="btn btn-primary partSearch" onclick="search()">
 														<i class="bi bi-search"></i>
@@ -222,7 +249,6 @@
 				
 					  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
 								<div class="card-body">
-								    <h6 class="card-title"></h6>
 								    <h8 class="card-subtitle mb-2 text-muted"></h8>
 								    <p class="card-text">
 										<div>커스터마이징상품 금액 :&ensp;<span id="customPrice"></span>원</div><br/>
@@ -472,7 +498,7 @@
 	
 	//추가재료 검색 + autocomplete
 	 $(function(){ 
-		 $(".searchS").autocomplete({ 
+		 $(".search").autocomplete({ 
 			 source : function(request, response) { //source: 입력시 보일 목록
 			     $.ajax({
 			           url : "/purchase/api/autocomplete"   
@@ -561,7 +587,7 @@
 	
 	//모달창 닫으면 추가한데이터 삭제
 	$('#changeModal').on('hidden.bs.modal', function (e) {
-		$(this).find('.searchS').remove();
+		$(this).find('.search').val('');
 		$(this).find('.partsList').remove();
 		$(this).find('.searchparts').remove();
 	});

@@ -91,7 +91,12 @@
 			<c:forEach var="purchase" items="${purchaseList}">
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">
-			      <td align="left"><a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}[${purchase.purchaseNo}]</a></td>
+			      <td align="left">
+			      	<a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}[${purchase.purchaseNo}]</a>
+			      	<div>
+			      		<c:if test="${purchase.purchaseStatus eq '2'}"></c:if>
+			      	</div>
+			      </td>
 				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 				  <td align="left">${cpd.count}</td>
 				  <td align="left">${cpd.product.name}</td>

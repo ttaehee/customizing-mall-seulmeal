@@ -16,14 +16,64 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
 	<style>
+
 		img{
-			width: 70px;
-			height: 70px;
+			width: 200px;
+			height: 200px;
 		}
+		
+		.card{
+			width: 300px;
+			text-align: center;
+		}
+		
+		p {
+		    margin:20px 0px;
+		}
+		
+		h5:after {
+	       content: "";
+			display: block;
+			width: 70px;
+			border-bottom: 1px solid #bcbcbc;
+			margin-top: 10px;
+			margin: 20px 0px;
+			padding:0px 10px 0px 10px;
+		}
+		 
 	</style>
 	 
 	 <div class="container">
 	 <h2>구매상품 정보</h2>
+
+		    <div class="container">
+		        <c:set var="price" value="0" />
+				<c:forEach var="cpd" items="${purchase.customProduct}">
+		          <p></p>
+		          <div class="card">
+		            <div class="card-header" style="background-color: #FF4500; color: #FFF;">
+		              ${cpd.product.name}
+		            </div>
+		            <div>
+		            <img src='/resources/attachments/${cpd.product.thumbnail}'>
+		              <p class="card-text">
+			              <c:forEach var="pp" items="${cpd.plusParts}">
+						  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
+						  </c:forEach>
+						  <c:forEach var="mp" items="${cpd.minusParts}">
+						  	- ${mp.minusName} <br/>
+						  </c:forEach> 
+					  </p>
+		              <span class="btn btn-primary">${cpd.price*cpd.count}</span>원
+		              <c:set var="price" value="${price+cpd.price*cpd.count}" />
+		            </div>
+		          </div>
+		        </c:forEach>
+		    </div>
+	</div>
+	
+	<div class="container">
+
 	 <table class="table table-hover" style="width: 1000px;">
  
         <thead>
@@ -70,13 +120,16 @@
 			  </c:forEach> 
         </tbody>
       </table>
-      
-	<h2>구매정보</h2>
-	구매번호 : ${purchase.purchaseNo} <br/>
-	구매일자 : ${purchase.regDate} <br/>
-	구매자이름 : ${user.userName} <br/>
-	구매자 휴대전화 : ${user.phone} <br/>
-	구매처리상태 : 
+    </div>
+     
+    <div class="container">
+    
+	<h5>구매정보</h5>
+	<div>구매번호 : ${purchase.purchaseNo} </div>
+	<div>구매일자 : ${purchase.regDate} </div>
+	<div>구매자이름 : ${user.userName} </div>
+	<div>구매자 휴대전화 : ${user.phone} </div>
+	<div>구매처리상태 : 
 		<c:choose>
 			<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
 			<c:when test="${purchase.purchaseStatus eq '2'}">배송중</c:when>
@@ -96,7 +149,7 @@
 		</c:choose><br/>
 	 <br/><br/>
 	
-	<h2>결제정보</h2>
+	<h5>결제정보</h5>
 	<c:out value="총 구매금액 : ${price}원"></c:out> <br/>
 	포인트사용 :  ${price-purchase.amount}P<br/>
 	총 결제금액 : ${purchase.amount}원 <br/>
@@ -107,13 +160,14 @@
 			<c:when test="${purchase.paymentCondition eq '2'}">포인트결제 + 카드결제</c:when>
 		</c:choose><br/><br/>
 	
-	<h2>배송정보</h2>
+	<h5>배송정보</h5>
 	받으시는분 : ${purchase.name} <br/>
 	주소 : ${purchase.address} <br/>
 	휴대전화 : ${purchase.phone} <br/>
 	배송메시지 : ${purchase.message} <br/><br/>
 	
-	<button id="ok">확인</button>
+	<button type="button" style="background-color:#FFF; border-radius:5px; background-color:#FFF; font-size:16px; width: 80px" onClick="history.back(-1)">확인</button>
+	</div>
 	</div>
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>	
