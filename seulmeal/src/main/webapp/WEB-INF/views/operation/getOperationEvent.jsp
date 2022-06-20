@@ -97,8 +97,25 @@
 		
 				<!-- 2번 -->
 				<div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+					
 					<div class="card-body">
-						${post.content }
+						<div class="row justify-content-end" style="margin-right: 10px;">
+				        	<div class="col-1">
+				        		<c:if test="${post.attachments.size() != 0}">
+					        		<div class="dropdown show">
+										<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
+										</a>					
+										<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+											<c:forEach var="attachments" items="${post.attachments}">		          	
+								            	<a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
+								            </c:forEach>
+										</div>
+									</div>
+								</c:if>
+				        	</div>		
+				        </div>
+						${post.content }						
 					</div>
 				</div>
 		
@@ -118,6 +135,7 @@
 			<span style="margin-bottom:10px; margin-top:10px;">
 				<c:if test="${user.role == 1}">
 					<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="수정" onclick="updateEvent()">
+					<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="삭제" onclick="deleteEvent()">
 				</c:if>
 				<input class="btn btn-primary" style="width: 60px;" value="목록" onclick="cancelEvent()">
 			</span>
@@ -132,6 +150,24 @@
 	
 	function cancelEvent(){
 		window.location.href = '/operation/getListOperation/2';
+	}
+	
+	function deleteEvent(){
+		
+		$.ajax({
+			url : "/operation/api/deleteOperation",
+			method : "POST",
+			data : JSON.stringify({
+				postNo : ${post.postNo},
+				postStatus : ${post.postStatus}
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	window.location.href = '/operation/getListOperation/2';
+	        }
+		})
+		
 	}
 </script>
 </body>

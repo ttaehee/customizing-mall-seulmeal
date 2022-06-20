@@ -52,7 +52,7 @@
 								<h5>비밀번호</h5>
 							</div>
 							<div>
-								<input type="password" style="height: 70%;" />
+								<input type="password" name="password" style="height: 70%;" />
 							</div>
 						</div>
 					</div>					

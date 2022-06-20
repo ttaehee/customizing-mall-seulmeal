@@ -87,6 +87,8 @@ public class UserRestController {
 		if(user == null) {			
 			int num = confirmService.confirmNum();
 			String message = "인증번호는 ["+num+"] 입니다";
+			System.out.println("message : "+message);
+			
 			confirmService.sendSMS(phone, message);
 			session.setAttribute(phone, num);
 			json.put("result", "success");

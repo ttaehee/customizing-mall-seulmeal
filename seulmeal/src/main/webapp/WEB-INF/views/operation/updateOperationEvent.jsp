@@ -53,6 +53,7 @@
 	
 	<div class="container">
 	<form action="/operation/updateOperation" method="POST" enctype="multipart/form-data">
+		<input name="postNo" value="${postNo}" type="hidden" />
 		<div class="row">
 			<div class="col-md-12 form-group">
 				<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
