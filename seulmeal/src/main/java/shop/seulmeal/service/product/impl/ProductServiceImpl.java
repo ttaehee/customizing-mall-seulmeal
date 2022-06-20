@@ -12,6 +12,7 @@ import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.Review;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.ProductMapper;
@@ -39,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 	public void updateProduct(Product product) throws Exception {
 		productMapper.updateProduct(product);
 	}
-	
+
 	public int updateProductStock(int productNo, int stock) throws Exception {
 		Product product = productMapper.getProduct(productNo);
 		product.setStock(stock);
@@ -49,11 +50,11 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Map<String, Object> getListProduct(Search search) throws Exception {
-		if(search.getSearchKeyword() == null) {
+		if (search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
 		List<Product> list = productMapper.getListProduct(search);
-		int totalCount = productMapper.getTotalProductCount(search);
+		int totalCount = productMapper.getProductTotalCount(search);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
@@ -61,13 +62,13 @@ public class ProductServiceImpl implements ProductService {
 
 		return map;
 	}
-	
+
 	public Map<String, Object> getListProductAsAdmin(Search search) throws Exception {
-		if(search.getSearchKeyword() == null) {
+		if (search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
 		List<Product> list = productMapper.getListProductAsAdmin(search);
-		int totalCount = productMapper.getAdminProductCount(search);
+		int totalCount = productMapper.getProductTotalCountAsAdmin(search);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
@@ -87,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
 	public void deleteProduct(int productNo) throws Exception {
 		productMapper.deleteProduct(productNo);
 	}
-	
+
 	public void restoreProduct(int productNo) throws Exception {
 		productMapper.restoreProduct(productNo);
 	}
@@ -98,17 +99,17 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public List<Foodcategory> getListFoodCategory() throws Exception {
-		return (List<Foodcategory>)productMapper.getListFoodCategory();
+		return (List<Foodcategory>) productMapper.getListFoodCategory();
 	}
-	
+
 	public List<Foodcategory> getAdminFoodCategory() throws Exception {
-		return (List<Foodcategory>)productMapper.getAdminFoodCategory();
+		return (List<Foodcategory>) productMapper.getAdminFoodCategory();
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {
 		productMapper.deleteFoodCategory(foodCategoryNo);
 	}
-	
+
 	@Override
 	public void restoreFoodCategory(int foodCategoryNo) throws Exception {
 		productMapper.restoreFoodCategory(foodCategoryNo);
@@ -127,13 +128,25 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Review getReview(int reviewNo) throws Exception {
+
 		return productMapper.getReview(reviewNo);
 	}
 
 	@Override
 	public Map<String, Object> getListReview(Search search) throws Exception {
 		List<Review> list = productMapper.getListReview(search);
-		int totalCount = productMapper.getTotalReviewCount();
+		int totalCount = productMapper.getReviewTotalCount(search);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("totalCount", new Integer(totalCount));
+
+		return map;
+	}
+
+	public Map<String, Object> getListReviewAsAdmin(Search search) throws Exception {
+		List<Review> list = productMapper.getListReviewAsAdmin(search);
+		int totalCount = productMapper.getReviewTotalCountAsAdmin(search);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
@@ -146,55 +159,71 @@ public class ProductServiceImpl implements ProductService {
 	public void deleteReview(int reviewNo) throws Exception {
 		productMapper.deleteReview(reviewNo);
 	}
-	
+
 	@Override
 	public void restoreReview(int reviewNo) throws Exception {
 		productMapper.restoreReview(reviewNo);
 	}
 
+	public int insertReviewReport(Report report) throws Exception {
+		return productMapper.insertReviewReport(report);
+	}
+
+	public Map<String, Object> getListReviewReport(Search search) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("reportList", productMapper.getListReviewReport(search));
+		map.put("reportTotalCount", productMapper.getReportTotalCount());
+
+		return map;
+	}
+
+	public int deleteReviewReport(int reviewNo) throws Exception {
+		return productMapper.deleteReviewReport(reviewNo);
+	}
+
 	// Parts 관련
 	@Override
 	public int insertParts(Parts parts) throws Exception {
+
 		return productMapper.insertParts(parts);
 	}
 
 	@Override
 	public Parts getParts(Map<String, Object> map) throws Exception {
-		
+
 		return productMapper.getParts(map);
 	}
 
 	@Override
 	public int updateParts(Parts parts) throws Exception {
-		
+
 		return productMapper.updateParts(parts);
 	}
 
-	
 	public void deleteParts(int no) throws Exception {
 		productMapper.deleteParts(no);
 	}
-	
-	public void restoreParts(int no) throws Exception{
+
+	public void restoreParts(int no) throws Exception {
 		productMapper.restoreParts(no);
 	}
 
 	@Override
 	public Map<String, Object> getListParts(Search search) throws Exception {
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("search", search);
 
 		map.put("list", productMapper.getListParts(map));
-		map.put("totalCount", productMapper.getTotalPartsCount(map));
+		map.put("totalCount", productMapper.getPartsTotalCount(map));
 
 		return map;
 	}
 
 	// ProductParts 관련
 	@Override
-	public int insertProudctParts(List<Parts> list) throws Exception {
-		return productMapper.insertProudctParts(list);
+	public int insertProductParts(List<Parts> list) throws Exception {		
+		return productMapper.insertProductParts(list);
 	}
 
 	@Override
@@ -206,23 +235,33 @@ public class ProductServiceImpl implements ProductService {
 	public int deleteProductParts(int productPartsNo) throws Exception {
 		return productMapper.deleteProductParts(productPartsNo);
 	}
-
-	public void insertProductLike(Like like) throws Exception{
-		productMapper.insertProductLike(like);
-	}
-	public Map<String, Object> getListProductLike(Search search, String userId) throws Exception{
 	
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("search", search);
-		List<Like> list = productMapper.getListProductLike(map);
-		map.remove("userId", userId);
-		map.put("list", list);
-		map.put("totalCount", productMapper.getTotalProductLikeCount(userId));
+	public String checkOutLike(Map<String, Object> map) throws Exception{		
+		return checkOutLike(map);
+	}
+
+	public String updateLikeProduct(Map<String, Object> map) throws Exception {
+
+		if(productMapper.checkOutLike(map) == null) {
+			productMapper.insertLikeProduct(map);
+			return "Liked";
+		}else {
+			productMapper.deleteLikeProduct(map);
+			return "Deleted";
+		}
+	}
+
+	public Map<String, Object> getListLikeProduct(Map<String, Object> map) throws Exception {
+		List<Like> list = productMapper.getListLikeProduct(map);
+		Map<String, Object> result = new HashMap<String,Object>();
 		
-		return map;
+		String userId = (String) map.get("userId");
+		int totalCount = productMapper.getLikeProductTotalCount(userId);
+		
+		result.put("list", list);
+		result.put("totalCount", totalCount);
+
+		return result;
 	}
-	public void deleteProductLike(Like like) throws Exception{
-		productMapper.deleteProductLike(like);
-	}
+
 }
