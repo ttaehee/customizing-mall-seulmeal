@@ -46,14 +46,13 @@
 <script type="text/javascript">
 function insertPoint() {
     const price = document.querySelector(".price").value;
-    const paymentCondition = $('select[name=paymentOption]').val();
+    
     $.ajax({
-        url:"/purchase/api/insertPurchase",
+        url:"/user/api/insertPoint",
         method:"POST",
         data:JSON.stringify({
             price :price,
-            paymentCondition : paymentCondition,
-            status: 1
+            status: 2
         }),
         headers : {
             "Accept" : "application/json",
@@ -65,9 +64,9 @@ function insertPoint() {
 
             IMP.init('imp83644059'); // 콘솔에서 확인
             IMP.request_pay({
-                pg : 'kcp',
-                pay_method : data.paymentCondition,
-                merchant_uid : 08,
+                
+                
+                merchant_uid : data.pointNo,
                 name : '포인트 충전' , //결제창에서 보여질 이름
                 amount : data.price, //실제 결제되는 가격
                /*  buyer_email : 'iamport@siot.do',
@@ -85,7 +84,7 @@ function insertPoint() {
                     msg += '카드 승인번호 : ' + rsp.apply_num;
                     
                     $.ajax({
-                        url:"api/verifyIamport",
+                        url:"/user/api/verifyIamport",
                         method:"POST",
                         data:JSON.stringify({
                             imp_uid :rsp.imp_uid,

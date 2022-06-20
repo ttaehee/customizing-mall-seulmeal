@@ -58,6 +58,8 @@ public interface UserMapper {
 	
 	public int insertPoint(Point point) throws Exception;
 	
+	public Point getPoint(int pointNo) throws Exception;
+	
 	//public Point getPoint(Point point) throws Exception;
 	
 	public List<Point> getListPoint(Map<String, Object> map) throws Exception;

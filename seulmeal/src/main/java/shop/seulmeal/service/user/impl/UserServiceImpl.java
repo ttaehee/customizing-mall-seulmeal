@@ -216,6 +216,13 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		return userMapper.updatePassword(user);
 	}
 
+
+	@Override
+	public Point getPoint(int pointNo) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getPoint(pointNo);
+	}
+
 	
 
 
