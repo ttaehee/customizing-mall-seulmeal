@@ -12,10 +12,16 @@
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <meta charset="UTF-8">
+<style type="text/css">
+	a{
+		color: #fff !important;
+		font-weight: bold;
+	}
+</style>
 <title>관리자 사이드 바</title>
 </head>
 <body>	
-	<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark" style="position:fixed;">
+	<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0" style="position:fixed; background-image: linear-gradient(-60deg, #ff7000 0%, #ff4500 78%);">
 	    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" >
 	        <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
 	            <span class="fs-5 d-none d-sm-inline">seulMeal</span>
@@ -67,7 +73,7 @@
 	                    <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Purchase</span> </a>
 	                    <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
 	                    <li class="w-100">
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">판매내역</span> 1</a>
+	                        <a href="/purchase/getListSale" class="nav-link px-0"> <span class="d-none d-sm-inline">판매내역</span> 1</a>
 	                    </li>
 	                    <li>
 	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">리뷰관리</span> 2</a>

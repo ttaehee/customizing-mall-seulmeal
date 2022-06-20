@@ -85,6 +85,13 @@
 		</collection>
 	</resultMap>
 	
+	<!-- autocomplete -->
+	<select id="autocomplete" parameterType="map" resultType="map">
+		SELECT name
+		FROM parts
+		WHERE name LIKE  '%'|| #{value} || '%'
+	</select>
+	
 
 	<!-- custom_parts -->
 	<insert id="insertMinusParts" parameterType="map">
@@ -172,7 +179,7 @@
 	<select id="getListCustomProduct" resultMap="customProductSelectMap" parameterType="map">
 		SELECT *
 		FROM (SELECT vt.*, ROWNUM AS row_seq
-			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, cpd.price, pd.calorie
+			FROM (SELECT cpd.customproduct_no, cpd.count, pd.product_no, pd.name, pd.thumbnail, cpd.price, pd.calorie
 			    FROM customproduct cpd, product pd
 				WHERE cpd.product_no=pd.product_no AND cpd.user_id=#{userId} AND cpd.cart_status='1'
 				ORDER BY cpd.customproduct_no) vt
@@ -189,21 +196,31 @@
 	</select>
 	
 	<!-- 구매후 구매번호추가 / 커스터마이징재료 수정은 delete 후 다시 insert -->
-	<update id="updateCustomProduct">
+	<update id="updateCustomProductPurchaseNo">
 		UPDATE customproduct
 		<set>
-			purchase_no=#{purchase.purchaseNo:NUMERIC} AND cart_status = '0'
+			purchase_no=#{purchaseNo:NUMERIC}
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}
 		</where>
 	</update>
 	
-	<!--장바구니에서 커스터마이징상품 수량 변경 -->
+	<update id="updateCustomProductStatus">
+		UPDATE customproduct
+		<set>
+			cart_status = '0'
+		</set>
+		<where>
+			customproduct_no = #{customProductNo}
+		</where>
+	</update>
+	
+	<!--장바구니에서 커스터마이징상품 수량 변경 / 옵션 취소하고 다시 선택-->
 	<update id="updateCustomProductCount">
 		UPDATE customproduct
 		<set>
-			count={count:NUMERIC}
+			count=#{count:NUMERIC}, price=#{price:NUMERIC}
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}
@@ -331,6 +348,31 @@
 						AND to_date(reg_date, 'yy/mm/dd') &gt;=to_date(add_months(SYSDATE,-3),'yy/mm/dd')
 					</if>
 				</if> </where>) countTable	
+	</select>
+	
+	<select id="getSaleTotalCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+	  	FROM( SELECT *
+			FROM purchase
+			<where>
+				purchase_status!='0'
+				<if test="purchaseStatus != null">
+					AND purchase_status=#{purchaseStatus:VARCHAR}
+				</if> </where>) countTable	
+	</select>
+	
+	<select id="getListSale" resultMap="purchaseSelectMap" parameterType="map">
+		SELECT purchase_no, user_id, price, address, name, message, purchase_status, reg_date, payment_condition, amount
+		FROM (SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (SELECT *
+				FROM purchase
+				where purchase_status!='0'
+				<if test="purchaseStatus != null">
+					AND purchase_status=#{purchaseStatus:VARCHAR}
+				</if>
+				ORDER BY purchase_no) inner_table
+			WHERE ROWNUM &lt; = #{search.endRowNum})
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
 
 

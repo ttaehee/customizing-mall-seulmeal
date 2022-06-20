@@ -103,6 +103,7 @@
 				AND post_status = 3 AND p.status=0 AND c.status=0
 			</where>
 				AND p.post_no = #{postNo}
+				ORDER BY c.reg_date desc
 		</if>
 	</select>
 	
@@ -274,6 +275,25 @@
 		</where>
 	</update>
 	
+	<!-- admin page -->
+	<select id="userCount" resultType="map">
+		SELECT COUNT(*) as count,
+		TO_CHAR(TO_DATE(reg_date), 'YYYY-MM') as MONTHLYDATA
+		FROM ${table}
+		<where>
+			reg_date &gt;= '22/01/01' AND reg_date &lt; '23/01/01'
+		</where>
+		GROUP BY TO_CHAR(TO_DATE(reg_date), 'YYYY-MM')
+		ORDER BY MONTHLYDATA
+	</select>
 	
+	<select id="salePrice" resultType="map">
+		SELECT sum(price) as count,
+		TO_CHAR(TO_DATE(reg_date), 'YYYY-MM') as MONTHLYDATA
+		FROM purchase
+		WHERE reg_date &gt;= '22/01/01' AND reg_date &lt; '23/01/01'
+		GROUP BY TO_CHAR(TO_DATE(reg_date), 'YYYY-MM')
+		ORDER BY MONTHLYDATA
+	</select>
 	
 </mapper>

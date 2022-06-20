@@ -227,7 +227,7 @@ class PurchaseApplicationTests {
 		customProduct.setCustomProductNo(5);
 		customProduct.setPurchaseNo(3);
 		
-		purchaseMapper.updateCustomProduct(customProduct);
+		purchaseMapper.updateCustomProductPurchaseNo(customProduct);
 
 		System.out.println("결과 : "+purchaseMapper.getCustomProduct(5));
 		
@@ -239,7 +239,7 @@ class PurchaseApplicationTests {
 		CustomProduct customProduct=new CustomProduct();
 		customProduct.setCustomProductNo(3);
 		
-		purchaseMapper.updateCustomProduct(customProduct);
+		purchaseMapper.updateCustomProductStatus(customProduct);
 
 		System.out.println("결과 : "+purchaseMapper.getCustomProduct(3));
 		

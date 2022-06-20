@@ -12,10 +12,12 @@ import shop.seulmeal.service.domain.Purchase;
 
 public interface PurchaseService {
 	
+	//오토컴플릿
+	public List<Map>autocomplete(Map<String, Object> paramMap) throws Exception;
+	
 	//커스터마이징재료 추가 
-	public int insertMinusParts(Map<String, Object> map);
-	public int insertPlusParts(Map<String, Object> map);
-	//public int insertCustomParts(Map<String, Object> map);
+	public int insertMinusParts(int customProductNo, String minusNo, String minusName);
+	public int insertPlusParts(int customProductNo, String plusPartsNo, String plusPrice, String plusGram);
 	
 	//커스터마이징상재료 상세 
 	public CustomParts getCustomParts(int CustomPartsNo);
@@ -37,7 +39,9 @@ public interface PurchaseService {
 	public Map<String, Object> getListCustomProduct(Search search, String userId);
 	
 	//커스터마이징상품 수정(구매번호추가)
-	public int updateCustomProduct(CustomProduct customProduct);
+	public int updateCustomProductPurchaseNo(CustomProduct customProduct);
+	//커스터마이징상품 수정(장바구니리스트에서 삭제)
+	public int updateCustomProductStatus(CustomProduct customProduct);
 	
 	//장바구니에서 커스터마이징상품 수량변경 
 	public int updateCustomProductCount(CustomProduct customProduct);
@@ -75,4 +79,7 @@ public interface PurchaseService {
 	
 	// 아임포트 결제정보에서 amount 조회
 	public String getAmount(String token, String mId);
+	
+	//판매내역리스트 
+	public Map<String, Object> getListSale(Search search, String purchaseStatus);
 }

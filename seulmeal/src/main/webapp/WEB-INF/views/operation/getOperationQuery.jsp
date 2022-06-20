@@ -58,8 +58,15 @@
 <script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>	
 	<div class="container">
         <div class="row">
-            <div class="col" style="border-bottom: 2px solid; margin-top:20px; ">            	
-            	<h1>${post.title}<c:if test="${post.publicStatus==1}"><i class="bi bi-lock-fill"></i></c:if></h1>
+            <div class="col" style="border-bottom: 2px solid; margin-top:20px; display:flex; ">            	
+            	<h1>${post.title}
+            		<c:if test="${post.regDate != post.updateDate}">
+            			<h5 style="margin: 15px 0px 10px 0px;"><span class="badge badge-primary">수정된내용</span></h5>
+            		</c:if>            	
+            		<c:if test="${post.publicStatus==1}">
+            			<i class="bi bi-lock-fill"></i>
+            		</c:if>
+            	</h1>
             </div>            
         </div>
         <div class="row" style="text-align: center;">
@@ -332,7 +339,7 @@
 	        </div>	        
 	        </div>	        
 	        `
-	        	$(".commentArg").append(answer);
+	        	$(".commentArg").prepend(answer);
 	        	$(".answer").dialog("close");
 	        }
 		})

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -16,19 +16,37 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
 	<style>
+	
+	h2{
+		text-align: left; 
+	}
+
+	h2:after {
+		content: "";
+		display: block;
+		width: 170px;
+		border-bottom: 1px solid #bcbcbc;
+		margin: 20px 0px;
+		padding:0px 10px 0px 10px;
+	}
+	
 	 body { background: #fff; }
-		.blueone {
-		  	width: 100%;
-  			border-top: 1px solid #444444;
-  			border-collapse: collapse;
-		}  
-		th, td {
-		  border-bottom: 1px solid #444444;
-		  padding: 10px;
+		.table-hover {
+	  	width: 100%;
+ 		border-top: 1px solid #444444;
+ 		border-collapse: collapse;
+	}  
+	
+	th, td {
+	  border-bottom: 1px solid #444444;
+	  padding: 10px;
+	}
+	
+	img{
+			width: 70px;
+			height: 70px;
 		}
-		
-		
-		
+	
 	</style>
 
 
@@ -40,6 +58,7 @@
 	    <form class="form-inline" name="detailForm">
 	     <input type="hidden" name="userId" value="${user.userId}"/>
 		 <div class="form-group">
+			 <button class="btn btn-primary status" style="margin-right:10px;" onclick="location.href='/purchase/getListPurchase'">전체</button>
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="0">오늘</button>
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="1">1주일</button>
 			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="2">1개월</button>
@@ -53,7 +72,7 @@
    	</div><br/>
 			
 	
-	 <table class="blueone" >
+	 <table class="table table-hover" style="width: 1000px;">
  
         <thead>
           <tr>
@@ -73,7 +92,7 @@
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">
 			      <td align="left"><a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}[${purchase.purchaseNo}]</a></td>
-				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" >${cpd.product.thumbnail}</td>
+				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
 				  <td align="left">${cpd.count}</td>
 				  <td align="left">${cpd.product.name}</td>
 				  <td align="left">
@@ -103,7 +122,7 @@
       </table>
       </div>
       
-      <script>
+	<script>
       
       function fncGetListPurchase(currentPage) {
   		$("#currentPage").val(currentPage)
@@ -118,8 +137,10 @@
   			fncGetListPurchase(1);
   			});
   	 });
+  	 
+
       
-      </script>
+	</script>
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>	
 

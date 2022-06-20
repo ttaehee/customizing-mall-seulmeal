@@ -1,5 +1,12 @@
 server:
   port: 7100
+  
+  #ssl:
+  #  enabled: true
+  #  key-store: src/main/resources/bootsecurity.p12
+  #  key-store-password: 123456
+  #  key-store-type: PKCS12
+  #  key-alias: bootsecurity
 
 
 spring: 
@@ -27,6 +34,7 @@ spring:
       location: ./src/main/webapp/resources/attachments/
 
   datasource:
+    #url: jdbc:log4jdbc:oracle:thin:@db202204092247_medium?TNS_ADMIN=/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/oracleWallet/Wallet_DB202204092247
     url: jdbc:log4jdbc:oracle:thin:@db202204092247_medium?TNS_ADMIN=./oracleWallet/Wallet_DB202204092247
     username: admin
     password: Vywjdans!234

@@ -395,7 +395,7 @@ div{ -webkit-touch-callout: none;
 						<input type="text" class="form-control" name="rating" placeholder="1~10" style="border: none;">
 					</div>
 				</div>
-				<div class="text-right" style="margin-top: 20px; padding-right: 10px;">
+				<div class="text -right" style="margin-top: 20px; padding-right: 10px;">
 					<button type="submit" class="btn btn-primary" id="insertReviewDone">등록</button>
 					<button type="button" onclick="cancelBtn()" class="btn btn-primary" id="insertReviewCancel">취소</button>
 				</div>

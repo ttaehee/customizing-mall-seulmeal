@@ -92,10 +92,12 @@
 
 </head>
 <body> <!-- #BAD7DF -->
-	
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 	<div id="carouselExampleIndicators" class="carousel slide">
 	<div class="your-class">
+		<div class="carousel-inner">
+			<img style="width: 100%; height:600px;" src="/resources/attachments/image/seulMeal.png" alt="">
+		</div>
 		<c:forEach var="post" items="${listE}">
 			<div class="carousel-inner"  id="eventBanner"  data-value="${post.postNo}">
 				<c:if test="${post.thumnail == null}">
