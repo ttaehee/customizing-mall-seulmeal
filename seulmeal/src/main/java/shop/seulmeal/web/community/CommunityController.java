@@ -73,27 +73,57 @@ public class CommunityController {
 	@GetMapping("/communityMain") // o
 	public String communityMain(@RequestParam(required = false) String searchKeyword,
 			@RequestParam(required = false) String searchCondition, Model model, HttpSession session) throws Exception {
-
-		// 1. communityService.getListPost();
-		// 2. productService.getListProduct() 추천밀키트 리스트
+		
+		// 비회원 게시판 사용불가
+		if(session.getAttribute("user") == null) {
+			return "user/login";
+		}
 
 		// 전체 post
 		Search search = new Search();
 		search.setCurrentPage(1);
-		search.setPageSize(5);//pageSize
+		search.setPageSize(pageSize);//pageSize
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchCondition);
 		Map<String, Object> postMap = communityService.getListPost(search, null); // 모든 게시글
+		// 게시글 무한스크롤 -> maxPage 필요
+		Page resultPage = new Page(1, (int) postMap.get("postTotalCount"), pageUnit, pageSize);
+		System.out.println("//postTotalC:"+ postMap.get("postTotalCount"));
 		
-		Page resultPage = new Page(search.getCurrentPage(), (int) postMap.get("postTotalCount"), pageUnit, search.getPageSize());
-
+		
 		Map<String, Object> attachMap = new HashMap<>();
 		List<Post> postList = (List<Post>) postMap.get("postList");
 		List<Attachments> attachmentList = new ArrayList<>();
 
 		for(Post post : postList) {
 			attachMap.put("postNo", post.getPostNo());
-			post.setAttachments(attachmentsService.getAttachments(attachMap));  
+			post.setAttachments(attachmentsService.getAttachments(attachMap));
+			
+			// 닉네임없는 유저, id를 닉네임으로 저장
+			if(post.getUser().getNickName() == null) {
+				post.getUser().setNickName(post.getUser().getUserId());
+			}
+			
+			// 프로필이미지 없는 유저, 기본이미지로 저장
+			if(post.getUser().getProfileImage()==null) {
+				post.getUser().setProfileImage("default_profile.jpg");
+			}
+			
+			if(post.getAttachments() == null) {
+				
+				if(post.getContent().length() > 200) {
+					post.setShortContent(post.getContent().substring(0, 201));					
+				}else {
+					post.setShortContent(post.getContent());
+				}
+			}else {
+				
+				if(post.getContent().length() > 50) {
+					post.setShortContent(post.getContent().substring(0, 51));					
+				}else {
+					post.setShortContent(post.getContent());
+				}
+			}			
 		}
 		
 		/* product
@@ -103,27 +133,21 @@ public class CommunityController {
 		Map<String, Object> productMap = productService.getListProduct(productSearch);
 		*/
 
-		// 팔로우, 팔로워 수
+		// 팔로우, 팔로워 목록 및 count
 		String userId = ((User) session.getAttribute("user")).getUserId();
 
-		Map<String, Object> followMap = new HashMap<>();
-		followMap.put("userId", userId);
-		followMap.put("relationUserId", userId);
-		followMap.put("relationStatus", "0");
-
-		int followCnt = communityMapper.getRelationTotalCount(followMap);
-		int followerCnt = communityMapper.getFollowerTotalCount(followMap);
-
+		Map<String, Object> followMap = communityService.getListFollow(null, userId, "0");
+		Map<String, Object> followerMap = communityService.getListFollower(null, userId);
+		
 		// 차단유저 목록
 		List<Relation> blockList = (List<Relation>)communityService.getListBlock(null, userId, "1").get("blockList");
-		
 		
 		//model
 		model.addAttribute("postList", postList);
 		model.addAttribute("resultPage",resultPage);
 		//model.addAttribute("productList", (List<Product>) productMap.get("list"));
-		model.addAttribute("followCnt", followCnt);
-		model.addAttribute("followerCnt", followerCnt);
+		model.addAttribute("followMap", followMap);
+		model.addAttribute("followerMap", followerMap);
 		model.addAttribute("blockList", blockList);
 
 		return "community/communityMain";
@@ -173,16 +197,20 @@ public class CommunityController {
 		map02.put("postNo", postNo);
 		List<Attachments> attachmentList =  attachmentsService.getAttachments(map02);
 
-		// 댓글 목록 
+		// 댓글 목록 (무한스크롤 -> maxPage 필요)
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(pageSize);
 		Map<String, Object> map = communityService.getListcomment(search, postNo);
+		Page resultPage = new Page(1, (int) map.get("commentTotalCount"), pageUnit, pageSize);
+		System.out.println("///"+map.get("commentTotalCount"));
+		System.out.println("///"+resultPage);
 
 		// model
 		model.addAttribute("post", post);
 		model.addAttribute("attachmentList", attachmentList);
 		model.addAttribute("commentList", (List<Comment>) map.get("commentList"));
+		model.addAttribute("resultPage",resultPage);
 
 		System.out.println("////////"+attachmentList);
 		return "community/getCommunityPost";
@@ -275,17 +303,23 @@ public class CommunityController {
 	}
 
 	@GetMapping("getProfile/{userId}")
-	public String getProfile(@PathVariable String userId, Model model) throws Exception {
+	public String getProfile(@PathVariable String userId, Model model, HttpSession session) throws Exception {
 
 		User user = userService.getProfile(userId);
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(3);//
 
+		
+		Map map = null;
 		// 본인 게시글 목록
-		Map map = communityService.getListPost(search, userId);
+		if(((User)session.getAttribute("user")).getUserId().equals(userId)){
+			map = communityService.getListPost(search, ((User)session.getAttribute("user")).getUserId());
+		}else {// 타인 게시글 목록
+			map = communityService.getListPost(search, userId);
+		}
 		model.addAttribute("postList", (List<Post>) map.get("postList"));
-
+		
 		// 팔로우, 팔로워 수
 		Map<String, Object> map02 = new HashMap<>();
 		map02.put("userId", userId);
@@ -335,18 +369,6 @@ public class CommunityController {
 
 		return "redirect:/community/getProfile/" + user.getUserId();
 	}
-
-
-	@GetMapping("followModal")
-	public String followModal() {
-		return "/community/listCommunityFollowUserModal";
-	}
-	
-	@GetMapping("followerModal")
-	public String followerModal() {
-		return "/community/listCommunityFollowerUserModal";
-	}
-
 
 	
 }
