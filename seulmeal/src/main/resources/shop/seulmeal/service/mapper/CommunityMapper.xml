@@ -306,7 +306,7 @@
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 	  					FROM		(	
-	  						SELECT c.*, u.nickname, u.profile_image
+	  						SELECT c.*, u.nickname, u.profile_image, u.role
 							FROM comments c, users u
 							<where>
 								c.user_id = u.user_id

@@ -86,9 +86,11 @@ public class CommunityController {
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchCondition);
 		Map<String, Object> postMap = communityService.getListPost(search, null); // 모든 게시글
+		// 게시글 무한스크롤 -> maxPage 필요
+		Page resultPage = new Page(1, (int) postMap.get("postTotalCount"), pageUnit, pageSize);
+		System.out.println("//postTotalC:"+ postMap.get("postTotalCount"));
 		
-		Page resultPage = new Page(search.getCurrentPage(), (int) postMap.get("postTotalCount"), pageUnit, search.getPageSize());
-
+		
 		Map<String, Object> attachMap = new HashMap<>();
 		List<Post> postList = (List<Post>) postMap.get("postList");
 		List<Attachments> attachmentList = new ArrayList<>();
@@ -195,16 +197,20 @@ public class CommunityController {
 		map02.put("postNo", postNo);
 		List<Attachments> attachmentList =  attachmentsService.getAttachments(map02);
 
-		// 댓글 목록 
+		// 댓글 목록 (무한스크롤 -> maxPage 필요)
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(pageSize);
 		Map<String, Object> map = communityService.getListcomment(search, postNo);
+		Page resultPage = new Page(1, (int) map.get("commentTotalCount"), pageUnit, pageSize);
+		System.out.println("///"+map.get("commentTotalCount"));
+		System.out.println("///"+resultPage);
 
 		// model
 		model.addAttribute("post", post);
 		model.addAttribute("attachmentList", attachmentList);
 		model.addAttribute("commentList", (List<Comment>) map.get("commentList"));
+		model.addAttribute("resultPage",resultPage);
 
 		System.out.println("////////"+attachmentList);
 		return "community/getCommunityPost";

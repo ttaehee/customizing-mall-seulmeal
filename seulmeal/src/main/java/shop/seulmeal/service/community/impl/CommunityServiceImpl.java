@@ -88,7 +88,8 @@ public class CommunityServiceImpl implements CommunityService {
 	
 	@Override
 	public int deleteComment(int commentNo) {
-		//communityMapper.postCommentCountUp(); Comment comment?
+		Comment comment = communityMapper.getComment(commentNo);
+		communityMapper.postCommentCountDown(comment.getPostNo());
 		return communityMapper.deleteComment(commentNo);
 	}
 

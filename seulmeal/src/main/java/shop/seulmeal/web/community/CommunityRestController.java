@@ -135,7 +135,7 @@ public class CommunityRestController {
 
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
-		search.setPageSize(5);
+		search.setPageSize(pageSize);
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchOption);
 
@@ -179,13 +179,14 @@ public class CommunityRestController {
 				}
 			}
 		}
-	
+		System.out.println(("/////"+map.get("postTotalCount")));
 		System.out.println("/////"+postList);
 		return postList;
 	}
 
+	// 댓글 무한스크롤
 	@GetMapping("getListComment/{postNo}") // oo
-	public Map<String, Object> getListComment(@RequestParam(required = false, defaultValue = "1") int currentPage,
+	public List<Comment> getListComment(@RequestParam(required = false, defaultValue = "2") int currentPage,
 			@PathVariable int postNo) {
 
 		Search search = new Search();
@@ -193,9 +194,8 @@ public class CommunityRestController {
 		search.setPageSize(pageSize);
 
 		Map<String, Object> map = communityService.getListcomment(search, postNo);
-		map.put("search", search);
-
-		return map;
+		
+		return (List<Comment>)map.get("commentList");
 	}
 	
 	//Comment
@@ -214,8 +214,6 @@ public class CommunityRestController {
 
 	@PostMapping("/deleteComment/{commentNo}") // ^o
 	public void deleteComment(@PathVariable int commentNo) {
-		System.out.println("///////////"+commentNo);
-		
 		communityService.deleteComment(commentNo);
 	}
 	

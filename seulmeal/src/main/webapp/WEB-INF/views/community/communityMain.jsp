@@ -490,58 +490,58 @@ div.modal-content{
 		
 		<c:forEach var="post" items="${postList}">
 		
-			<div class="post-card">
-                <div class="info">
-                    <div class="user">
-                    	<!-- 1. 프로필 이미지 -->
-                    	<div class="profile-pic">
-							<a class ="profile-link" href="/community/getProfile/${post.user.userId}">
-								<img id="profile-img" src="/resources/attachments/profile_image/${post.user.profileImage}"/>
-							</a>
-                    	</div>
-						<!-- 2. 닉네임 -->                       
-                        <p id = "post_nickname" class="username">
-							<a class ="profile-link" href="/community/getProfile/${post.user.userId}">${post.user.nickName}</a>
-                        </p>
+                <div class="post-card">
+                    <div class="info">
+                        <div class="user">
+                            <!-- 1. 프로필 이미지 -->
+                            <div class="profile-pic">
+                                <a class ="profile-link" href="/community/getProfile/${post.user.userId}">
+                                    <img class="profile-img" src="/resources/attachments/profile_image/${post.user.profileImage}"/>
+                                </a>
+                            </div>
+                            <!-- 2. 닉네임 -->                       
+                            <p id = "post_nickname" class="username">
+                                <a id= "profile-nick" class ="profile-link2" href="/community/getProfile/${post.user.userId}">${post.user.nickName}</a>
+                            </p>
+                        </div>
+                        <!-- 게시글 옵션 아이콘 -->
+                        <i id = "option_icon" class="bi bi-three-dots"></i>
                     </div>
-                    <!-- 게시글 옵션 아이콘 -->
-                    <i id = "option_icon" class="bi bi-three-dots"></i>
-                </div>
-                <!-- 3. 게시글사진/제목+간략내용 -->
-	            <div class="your-class">
-	                <c:if test="${not empty post.attachments}">
-						<c:forEach var="attach" items="${post.attachments}">
-							<a class ="post-link" href="/community/getPost/${post.postNo}">
-								<img id = "post-img" class="post-image" src="/resources/attachments/${attach.attachmentName}"/>
-							</a>
-						</c:forEach>									
-					</c:if>
-				</div>
-				<c:if test="${empty post.attachments}">
-					<div id="post-list-title">${post.title}</div>
-					<div id="post-list-content">
-						<a class ="post-link" href="/community/getPost/${post.postNo}">${post.shortContent}</a>								
-					</div>
-				</c:if>
-				
-                <div class="post-content">
-                    <div class="reaction-wrapper">
-                    	<i class="bi bi-heart icon" data-value="${post.postNo}"></i>
-                    	<i class="bi bi-heart-fill" style="display:none;"></i>
-                    	<!-- 4.조회수, 댓글수 -->
-                    	<i class="bi bi-eye icon">${post.views}</i>
-                    	<i class="bi bi-chat-left icon">${post.commentCount}</i>
+                    <!-- 3. 게시글사진/제목+간략내용 -->
+                    <div class="your-class">
+                        <c:if test="${not empty post.attachments}">
+                            <c:forEach var="attach" items="${post.attachments}">
+                                <a class ="post-link" href="/community/getPost/${post.postNo}">
+                                    <img id = "post-img" class="post-image" src="/resources/attachments/${attach.attachmentName}"/>
+                                </a>
+                            </c:forEach>									
+                        </c:if>
                     </div>
-                    <!-- 5. 좋아요 수-->
-                    <p class="likes">좋아요 <span class="like-cnt">${post.likeCount}</span></p>	
-                    <c:if test="${not empty post.attachments}">
-                    	<p class="description">${post.shortContent} ...</p>
+                    <c:if test="${empty post.attachments}">
+                        <div class="post-list-title">${post.title}</div>
+                        <div id="post-list-content">
+                            <a class="post-shortContent" href="/community/getPost/${post.postNo}">${post.shortContent}</a>								
+                        </div>
                     </c:if>
-                    <!-- 6. 등록날짜-->
-                    <div class="post-time">${post.regDate}</div>
+                    
+                    <div class="post-content">
+                        <div class="reaction-wrapper">
+                            <i class="bi bi-heart icon" data-value="${post.postNo}"></i>
+                            <i class="bi bi-heart-fill" style="display:none;"></i>
+                            <!-- 4.조회수, 댓글수 -->
+                            <i class="bi bi-eye icon">${post.views}</i>
+                            <i class="bi bi-chat-left icon">${post.commentCount}</i>
+                        </div>
+                        <!-- 5. 좋아요 수-->
+                        <p class="likes">좋아요 <span class="like-cnt">${post.likeCount}</span></p>	
+                        <c:if test="${not empty post.attachments}">
+                            <p class="description">${post.shortContent} ...</p>
+                        </c:if>
+                        <!-- 6. 등록날짜-->
+                        <div class="post-time">${post.regDate}</div>
+                    </div>
                 </div>
-            </div>
-         	
+                         	
          </c:forEach>   
         
         <!-- 무한스크롤 / RestController postList가 붙는 곳 -->
@@ -809,99 +809,101 @@ div.modal-content{
 	*/
 	
 
+	// 게시글 무한스크롤
 	$(function(){
 		
 		let currentPage = 2;
+		let maxPage = ${resultPage.maxPage};
+		//alert(maxPage);
 		
 		$(window).scroll(function(){
 			
 			let $window = $(this);
 			let scrollTop = $window.scrollTop();
 			let windowHeight = $window.height();
-			let documentHeight = $(document).height();
+			let documentHeight = $(document).height();		
 			
-			if(scrollTop + windowHeight + 10 >= documentHeight){
-				currentPage ++;
+			if(scrollTop + windowHeight + 1 >= documentHeight && currentPage <= maxPage){
 				setTimeout(getListPost,200);//0.2초
 			}
 			
-			function getListPost(){
-				$.ajax({
-					url:"/community/api/getListPost?currentPage="+currentPage,
-					type:"GET",
-					datatype:"json",
-					success: function(data, status, jqXHR){
-						/*
-						alert("페이지 로드 성공");
-						console.log("success status: "+ status);
-						console.log("data: " + data);
-						console.log("jqXHR: "+ jqXHR);
-						*/
-						//console.log("json/stringify: "+JSON.stringify(data));						
-						//const posts = JSON.stringify(data);					
-						
-						
-						for(let i = 0; i<data.length; i++){
-							
-							let postCard = $(".post-card").clone()[0];
-							
-							const post = data[i];
-							
-							console.log(post);
-
-							
-							/*
-							console.log("프로필이미지: "+post.user.profileImage)							
-							console.log("postNo: "+post.postNo)
-							console.log("아이디: "+post.user.userId)
-							console.log("닉네임: "+post.user.nickName)
-							console.log("사진유무: "+post.attachments)
-							console.log("사진이름: "+post.attachments[0].attachmentName)
-							console.log("제목: "+post.title)
-							console.log("내용: "+post.content)
-							console.log("조회수: "+post.views)
-							console.log("댓글수: "+post.commentCount)
-							console.log("좋아요수: "+post.likeCount)
-							console.log("등록일자: "+post.regDate)
-							*/
-							
-							
-							$(postCard).find(".profile-pic.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
-							$(postCard).find("#profile-img").attr("src","/resources/attachments/profile_image/"+post.user.profileImage);
-							$(postCard).find("#profile-nick").text(post.user.nickName);
-							
-							if(post.attachments != null){
-								for(var j = 0; j < post.attachments.length; j++){
-									$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
-									$(postCard).find("#post-img").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
-								}
-							}else{
-								$(postCard).find("#post-list-title").text(post.title);
-								$(postCard).find("#post-shortContent").text(post.shortContent);
-							}
-							
-							$(postCard).find("i.bi.bi-heart.icon").attr("data-value",post.postNo);
-							$(postCard).find("i.bi.bi-eye.icon").text(post.views);
-							$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
-							$(postCard).find(".like-cnt").text(post.likeCount);
-							$(postCard).find(".description").text(post.shortContent);
-							$(postCard).find(".post-time").text(post.regDate);
-														
-							console.log(postCard);
-							
-							$(".left-col").append(postCard);
-							
-						}
-
-					}, error: function(status, jqXHR){
-						console.log("error status: "+ status);
-						console.log("jqXHR: "+ jqXHR);
-						alert("페이지 로드 실패");
-					}
+				function getListPost(){
 					
-				})
-			}
-			
+					$.ajax({
+						url:"/community/api/getListPost?currentPage="+currentPage,
+						type:"GET",
+						datatype:"json",
+						success: function(data, status, jqXHR){
+
+							console.log("success status: "+ status);
+							console.log("data: " + data);
+							console.log("jqXHR: "+ jqXHR);
+							console.log("json/stringify: "+JSON.stringify(data));						
+							//const posts = JSON.stringify(data);					
+							
+							for(let i = 0; i<data.length; i++){
+								
+								let postCard = $(".post-card").clone()[0];
+								let post = data[i];
+								//console.log($(".post-card").clone()[0]);
+								
+								/*
+								console.log("프로필이미지: "+post.user.profileImage)							
+								console.log("postNo: "+post.postNo)
+								console.log("아이디: "+post.user.userId)
+								console.log("닉네임: "+post.user.nickName)
+								console.log("사진유무: "+post.attachments)
+								console.log("사진이름: "+post.attachments[0].attachmentName)
+								console.log("제목: "+post.title)
+								console.log("내용: "+post.content)
+								console.log("조회수: "+post.views)
+								console.log("댓글수: "+post.commentCount)
+								console.log("좋아요수: "+post.likeCount)
+								console.log("등록일자: "+post.regDate)
+								*/
+								
+								
+								//$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
+								$(postCard).find(".profile-img").attr("src","/resources/attachments/profile_image/"+post.user.profileImage);
+								$(postCard).find(".profile-link").attr("href","/community/getProfile/"+post.user.userId)
+								$(postCard).find(".profile-link2").attr("href","/community/getProfile/"+post.user.userId)
+								$(postCard).find(".profile-link2").text(post.user.nickName);
+								
+								$(postCard).find("i.bi.bi-heart.icon").attr("data-value",post.postNo);
+								$(postCard).find("i.bi.bi-eye.icon").text(post.views);
+								$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
+								$(postCard).find(".like-cnt").text(post.likeCount);
+								$(postCard).find(".description").text(post.shortContent);
+								$(postCard).find(".post-time").text(post.regDate);
+								
+								console.log(post.attachments == null)
+								
+								if(post.attachments != null){
+									for(var j = 0; j < post.attachments.length; j++){
+										$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
+										$(postCard).find(".post-image").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
+									}
+								}else{
+									$(postCard).find(".post-list-title").text(post.title);
+									$(postCard).find(".post-shortContent").attr("href","/community/getPost/"+post.postNo).text(post.shortContent);
+								}
+								
+															
+								console.log(postCard);
+								
+								$(".left-col").append(postCard);
+								
+							}
+	
+						}, error: function(status, jqXHR){
+							console.log("error status: "+ status);
+							console.log("jqXHR: "+ jqXHR);
+							alert("페이지 로드 실패");
+						}
+						
+					})//jQuery.ajax()
+					currentPage ++;		
+				}//getListPost
 		})
 	});
 	
