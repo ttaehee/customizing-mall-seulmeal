@@ -33,15 +33,15 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 	public int insertAttachments(MultipartFile[] uploadFile, Attachments attachments) throws IllegalStateException, IOException {
 		// TODO Auto-generated method stub
 		List<Attachments> list = new ArrayList<>();
-		String origin = null;
+		String origin = "";
 		
 		for (MultipartFile file : uploadFile) {
 			System.out.println("file.getOriginalFilename() : "+file.getOriginalFilename());
-			origin = file.getOriginalFilename();
-			if(file.getOriginalFilename() == null || file.getOriginalFilename() =="") {
-				origin = file.getOriginalFilename();
+			if(file.getOriginalFilename() == null ||(file.getOriginalFilename()).equals("")) {
+				//origin = file.getOriginalFilename();
 				break;
 			}
+			origin = file.getOriginalFilename();
 			System.out.println(file.getOriginalFilename());
 			if(!file.isEmpty()) {
 				Attachments attachment = new Attachments();

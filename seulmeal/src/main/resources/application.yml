@@ -18,7 +18,7 @@ spring:
         timeout: 5000
         starttls:
           enable: true 
-    password: spldhctwcwpvubmm
+    password: dlvuopafnxbrteel
     username: ijhghji
     port: 587
     host: smtp.gmail.com
@@ -27,7 +27,7 @@ spring:
       static-locations: /resources/
   servlet:
     multipart:
-      max-file-size: 10MB
+      max-file-size: 20MB
       max-request-size: 50MB
       #location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/
       #location: C:/Users/GHM/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/

@@ -52,7 +52,7 @@
 		        </div>				
 			</div>
 			<div class="row" style="min-height:700px;">
-				<div class="col-md-10" style="margin-left:2.5%;">
+				<div class="col-md-10" style="margin-left:2.5%; margin-top: 20px;">
 						${post.content}
 				</div>
 			</div>
@@ -85,7 +85,12 @@
 					<div class="col-md-12" style="background-color:#ff4500; color:#fff;">
 						<div class="row">
 							<div class="col-md-1">이전글</div>
-							<div><a class="closetPost" href="/operation/getOperation/1/${post.bpost.postNo}">${post.bpost.title}</a></div>
+								<c:if test="${post.bpost !=null}">
+									<a class="closetPost" href="/operation/getOperation/1/${post.bpost.postNo}">${post.bpost.title}</a>
+								</c:if>
+								<c:if test="${post.bpost ==null}">
+									<div class="closetPost" >마지막 글 입니다.</div>
+								</c:if>
 						</div>
 					</div>
 				</div>
