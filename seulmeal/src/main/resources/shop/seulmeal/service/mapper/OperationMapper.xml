@@ -82,7 +82,7 @@
 						LEAD(title) OVER (ORDER BY post_no) n_title
 					FROM post
 					<where>
-						post_status = '1'
+						post_status = '1' AND status ='0'
 					</where>
 			ORDER BY post_no
 			)
@@ -97,13 +97,13 @@
 			</where>
 		</if>
 		<if test="postStatus == 3">
-			SELECT p.*,c.comment_no, c.content content_c, c.user_id user_id_c, c.reg_date reg_date_c FROM post p, comments c
+			SELECT p.*,c.comment_no, c.content content_c, c.user_id user_id_c, c.reg_date reg_date_c FROM 
+			post p, comments c
 			<where>
-				p.post_no=c.post_no(+)
-				AND post_status = 3 AND p.status=0 AND c.status=0
+			p.post_no=c.post_no(+)
+			AND ((p.answer_status ='1' AND c.status=0) OR (p.answer_status ='0'))  AND p.status=0 AND p.post_no = #{postNo}
 			</where>
-				AND p.post_no = #{postNo}
-				ORDER BY c.reg_date desc
+			ORDER BY c.reg_date desc
 		</if>
 	</select>
 	
@@ -114,6 +114,8 @@
 			content = #{content:VARCHAR},
 			short_content = #{shortContent:VARCHAR},
 			thumnail = #{thumnail:VARCHAR},
+			public_status = #{publicStatus:VARCHAR},
+			password = #{password:VARCHAR},
 			update_date = SYSDATE,
 			end_date = #{endDate:DATE}
 		</set>
@@ -197,7 +199,7 @@
 					AND (title LIKE '%'||#{search.searchKeyword}||'%' OR content LIKE '%'||#{search.searchKeyword}||'%')
 				</if>
 			</where>
-			ORDER BY reg_date desc
+			ORDER BY end_date desc, reg_date desc, status
 		</if>
 	</select>
 	

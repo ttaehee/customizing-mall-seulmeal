@@ -1,5 +1,6 @@
 package shop.seulmeal.service.product;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.Review;
 
 public interface ProductService {
@@ -47,10 +49,19 @@ public interface ProductService {
 	public Review getReview(int reviewNo) throws Exception;
 
 	public Map<String, Object> getListReview(Search search) throws Exception;
+	
+	public Map<String, Object> getListReviewAsAdmin(Search search) throws Exception;
 
 	public void deleteReview(int reviewNo) throws Exception;
 	
 	public void restoreReview(int reviewNo) throws Exception;
+	
+	public int insertReviewReport(Report report) throws Exception;
+
+	public Map<String, Object> getListReviewReport(Search search) throws Exception;
+
+	public int deleteReviewReport(int reviewNo) throws Exception;
+	
 
 	// Parts 넣기
 	public int insertParts(Parts parts) throws Exception;
@@ -65,19 +76,20 @@ public interface ProductService {
 
 	public Map<String, Object> getListParts(Search search) throws Exception;
 
-	// ProductParts 관련
-	public int insertProudctParts(List<Parts> list) throws Exception;
+	// ProductParts
+	public int insertProductParts(List<Parts> list) throws Exception;
 
 	public List<Parts> getProductParts(int productNo) throws Exception;
 
 	public int deleteProductParts(int productPartsNo) throws Exception;
 	
-	// ProductLike 관련
-	public void insertProductLike(Like like) throws Exception;
+	// LikeProduct 관련
+	public String checkOutLike(Map<String, Object> map)throws Exception;
 	
-	public Map<String, Object> getListProductLike(Search search, String userId) throws Exception;
+	public Map<String, Object> getListLikeProduct(Map<String,Object> map) throws Exception;
+
+	public String updateLikeProduct(Map<String, Object> map) throws Exception;
 	
-	public void deleteProductLike(Like like) throws Exception;
 
 }
 

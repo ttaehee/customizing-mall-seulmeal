@@ -144,12 +144,12 @@
 		
 		  $(".btn-delete").click(function(){
 			  const no =$(this).data("value");
-			window.location.href = '/product/deleteProduct/1/'+no;
+			window.location.href = '/product/deleteProduct/'+no;
 		  });
 		  
 		  $(".btn-restore").click(function(){
 			  const no =$(this).data("value");
-			window.location.href = '/product/restoreProduct/1/'+no;
+			window.location.href = '/product/restoreProduct/'+no;
 		  });
 		  
 		});

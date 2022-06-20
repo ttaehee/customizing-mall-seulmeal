@@ -90,8 +90,7 @@ public class OperationController {
 		User user = (User)session.getAttribute("user");
 		System.out.println(user);
 		post.setUser(user);
-		
-		System.out.println("TST  :   "+summerImg);		
+			
 		List<String> imgList = new ArrayList<String>();
 		
 		if(summerImg != null) {
@@ -103,8 +102,10 @@ public class OperationController {
 			}
 			attachmentsService.summerCopy(imgList);
 		}
+		if(post.getPublicStatus() == null) {
+			post.setPublicStatus("0");
+		}
 		
-		System.out.println("POST 1번  :"+post);
 		// 이벤트 썸내일
 		if(thumnailFile != null) {
 			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
@@ -134,7 +135,7 @@ public class OperationController {
 		Post post = new Post();
 		post.setPostNo(postNo);
 		post.setPostStatus(postStatus);
-		// �옄猷� 媛��졇�삤湲�
+		
 		post = operationService.getOperation(post);
 		System.out.println(post.getComments());
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -191,18 +192,32 @@ public class OperationController {
 	}
 	
 	@PostMapping("updateOperation")
-	public String updateOperation(Post post, Model model, Attachments attachments,
+	@Transactional(rollbackFor = Exception.class)
+	public String updateOperation(Post post, Model model, Attachments attachments, MultipartFile thumnailFile,
 							MultipartFile[] uploadfile, String deleteAttachmentNo, String deleteAttachmentName) throws IllegalStateException, IOException {
 		System.out.println("수정사항 : "+post);
 		
 		// 삭제
 		attachmentsService.deleteAttachments(deleteAttachmentNo,deleteAttachmentName);
 		// 등록
-		System.out.println(uploadfile);
-		if(uploadfile != null) {
+		System.out.println(uploadfile.length);
+		if(uploadfile.length > 1) {
 			attachments.setPostNo(Integer.toString(post.getPostNo()));
 			
 			attachmentsService.insertAttachments(uploadfile, attachments);
+		}
+		
+		// 이벤트 썸내일
+		if(thumnailFile != null) {
+			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
+			post.setThumnail(name);
+			
+			File newFileName = new File(path,name);
+			thumnailFile.transferTo(newFileName);
+		}
+		
+		if(post.getPublicStatus() == null) {
+			post.setPublicStatus("0");
 		}
 		
 		operationService.updateOperation(post);
@@ -230,7 +245,7 @@ public class OperationController {
 				
 		Map<String,Object> map = operationService.getListOperation(search, postStatus);
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);		
-		
+		System.out.println("RESULTPAGE : "+resultPage);
 		model.addAttribute("list",(List<Post>)map.get("list"));
 		model.addAttribute("page",resultPage);
 		model.addAttribute("search",search);

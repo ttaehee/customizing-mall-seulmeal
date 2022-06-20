@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +57,7 @@ public class OperationRestController {
 	}
 	
 	@PostMapping(value ="insertAnswer", consumes = {"multipart/form-data"})
+	@Transactional(rollbackFor = Exception.class)
 	public Comment insertAnswer(@RequestParam(value="uploadfile", required = false) MultipartFile[] uploadfile,
 								@RequestParam(value="content") String content, HttpSession session,
 								@RequestParam(value="postNo") int postNo, Comment comment, Attachments attachments) throws IllegalStateException, IOException {
@@ -96,7 +98,7 @@ public class OperationRestController {
 		
 		Post sPost = operationService.getOperation(post);
 		
-		if(sPost.getPassword() == post.getPassword()) {
+		if(sPost !=null && sPost.getPassword() == post.getPassword()) {
 			json.put("result","true");
 		} else {
 			json.put("result","false");

@@ -91,6 +91,24 @@
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
+
+
+<!-- 
+<div aria-live="polite" aria-atomic="true" style="position: relative;">
+  <div id="test" class="toast" style="position: absolute; top: 800px; right: 0; z-index: 999;">
+    <div class="toast-header">
+      <img src="..." class="rounded mr-2" alt="...">
+      <strong class="mr-auto">Bootstrap</strong>
+      <small>11 mins ago</small>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+</div> -->
 	<div class="container">
 		<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
@@ -109,13 +127,16 @@
 					</div>
 				</div>
 				
-				
-				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" placeholder="내용 혹은 제목을 입력" />
-				</div>		  
-					<button type="button" class="btn btn-primary">
-					<i class="bi bi-search"></i>
-				</button>
+				<form id="searchNotice" action="/operation/getListOperation/3" method="get">
+					<div style="display:flex;">
+						<div class="form-outline">
+							<input type="search" name="searchKeyword" id="searchKeyword" class="form-control" placeholder="내용 혹은 제목을 입력" />
+						</div>		  
+							<button type="button" class="btn btn-primary">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
 		</div>
@@ -132,12 +153,20 @@
 				</tr>
 			</thead>
 			<tbody>
+				<c:if test="${list.size() == 0}">
+					<tr>
+						<td colspan="5" style="font-size: 100px;">							
+							<i class="bi bi-chat-left-dots"></i>
+							<div>글이 없습니다</div>						
+						</td>
+					</tr>					
+				</c:if>
 				<c:forEach var="post" items="${list}">
 				<tr>
 					<th>${post.postNo}</th>
 					<th>
 						<c:if test="${post.publicStatus ==0}">
-							<a href="/operation/getOperation/3/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
+							<a href="/operation/getOperation/${post.postStatus}/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
 						</c:if>
 						<c:if test="${post.publicStatus ==1}">
 							<div class="psBtn" data-value="${post.postNo}" data-toggle="modal" data-target="#exampleModalCenter">${post.title }<i class="bi bi-lock-fill"></i></div>						
@@ -149,12 +178,11 @@
 				</tr>
 				</c:forEach>
 			</tbody>
-		</table>
+		</table>	
 		
 		<c:if test="${user !=null }">
 			<button class="btn btn-primary float-right" onclick="insertQuery()">문의 작성</button>
-		</c:if>		
-		
+		</c:if>
 		<div class="row">
 			<div class="col-md-5"></div>
 			<div class="col-md-4">
@@ -164,7 +192,14 @@
 				      <span class="page-link" data-value="1">Previous</span>
 				    </li>
 				  	<c:forEach var="i" begin="${page.beginUnitPage}" end="${page.endUnitPage}">
-				  		<li class="page-item"><a class="page-link" href="/operation/getListOperation/3/${i}">${i}</a></li>
+				  		<li class="page-item">
+				  			<c:if test="${search.searchKeyword ==null }">
+				  				<a class="page-link" href="/operation/getListOperation/3/${i}">${i}</a>
+				  			</c:if>
+				  			<c:if test="${search.searchKeyword !=null }">
+				  				<a class="page-link" href="/operation/getListOperation/3/${i}?searchKeyword=${search.searchKeyword}">${i}</a>
+				  			</c:if>
+				  		</li>
 				  	</c:forEach>
 				  	<li class="page-item">
 				      <a class="page-link" href="#">Next</a>
@@ -213,11 +248,12 @@
 		</div>
       </div>
     </div>
-  </div>
+  </div>  
 </div>
-
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
+
+
 	function PwCheck(pw) {
 	    const _this = this;	    
 	    _this.pwStr = pw.toString(); // 문자, 숫자열을 모두 허용하기 위해 무조건 한가지 타입으로 맞춤
@@ -309,9 +345,11 @@
 		        	if(data.result === 'true') {
 		        		window.location.href = '/operation/getOperation/3/'+$(".pNo").val();
 		        		$(".pNo").val("");
-		        	} else {		        		
+		        	} else {
 		        		_this.message.textContent = _this.msg[0];
+		        		toastr.error("test","비밀번호 틀렸습니다",{timeOut:10000})
 		        		$("#exampleModalCenter").modal("hide");
+		        		$(".pNo").val("");
 		        	}
 		        }
 			})
@@ -346,6 +384,14 @@
 	
 	PwCheck(1231231232134);
 	
+	function searchNotice(){
+		const searchKeyword = $("#searchKeyword").val();
+		if(searchKeyword == ""){
+			alret("검색내용을 입력하세요")
+			return;
+		}
+		$("#searchNotice").submit();
+	}	
 	
 	
 
