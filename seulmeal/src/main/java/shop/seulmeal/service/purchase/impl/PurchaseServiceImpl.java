@@ -232,7 +232,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 	@Override
 	public int updatePurchaseCode(Purchase purchase) {
 		// TODO Auto-generated method stub
-		return updatePurchaseCode(purchase);
+		return purchaseMapper.updatePurchaseCode(purchase);
 	}
 
 	@Override

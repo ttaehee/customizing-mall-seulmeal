@@ -21,11 +21,11 @@
 		<form class="form-inline" name="detailForm">
 		
 		<div class="form-group">
-			 <button class="btn btn-primary status" style="margin-right:10px;" onclick="location.href='/purchase/getListSale'">전체</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="1">상품준비중</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="2">배송중</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="3">배송완료</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="purchaseStatus" value="3">구매확정</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1'">전체</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/1'">상품준비중</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/2'">배송중</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/3'">배송완료</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/4'">구매확정</button>
 		  </div>
 		  
 		 <table class="table table-hover" style="width: 1000px;">
@@ -65,10 +65,12 @@
 						  <td>
 						  
 						  	<c:choose>
-								<c:when test="${sale.purchaseStatus eq '1'}"><button type="button" class="btn btn-outline-primary btn-sm" data-value="${sale.purchaseNo}" onClick="fncPurchaseStatus(this)">배송하기</button></c:when>
-								<c:when test="${sale.purchaseStatus eq '2'}">&ensp;배송중</c:when>
-								<c:when test="${sale.purchaseStatus eq '3'}">&ensp;배송완료</c:when>
-								<c:when test="${sale.purchaseStatus eq '4'}">&ensp;구매확정</c:when>
+								<c:when test="${sale.purchaseStatus eq '1'}">
+								<button type="button" class="btn btn-outline-primary btn-sm" data-value="${sale.purchaseNo}" onClick="fncPurchaseStatus(this)">배송하기</button>
+								</c:when>
+								<c:when test="${sale.purchaseStatus eq '2'}">배송중</c:when>
+								<c:when test="${sale.purchaseStatus eq '3'}">배송완료</c:when>
+								<c:when test="${sale.purchaseStatus eq '4'}">구매확정</c:when>
 							</c:choose><br/>
 						  </td>
 					  </tr>  
@@ -97,7 +99,6 @@
 	function fncPurchaseStatus(ths){
 		
 		const purchaseNo=$(ths).data('value');	
-		console.log(purchaseNo);
 		
 		$.ajax({
 			url:"/purchase/api/updatePurchaseCode",
@@ -112,24 +113,12 @@
 	        },
 	        dataType : "json",
 	        success : function(data){	
-	        	
+	        	$(ths).closest('td').text('배송중');
 	        }
     	});	
 	}
 	
-	function fncGetListSale(currentPage) {
 
-  		$("form").attr("method" , "POST").attr("action" , "/purchase/getListSale/1").submit();
-  	  }
-  	
-
-  	 $(function() {
-  		  
-  		 $(".status").on("click" , function() {
-
-  			fncGetListSale(1);
-  			});
-  	 });
 	
 </script>
 

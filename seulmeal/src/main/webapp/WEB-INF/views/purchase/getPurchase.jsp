@@ -18,8 +18,8 @@
 	<style>
 
 		img{
-			width: 200px;
-			height: 200px;
+			width: 250px;
+			height: 250px;
 		}
 		
 		.card{
@@ -31,13 +31,21 @@
 		    margin:20px 0px;
 		}
 		
+		h2:after {
+			content: "";
+			display: block;
+			width: 220px;
+			border-bottom: 2px solid #FF4500;
+			margin: 10px 0px;
+			padding:0px 10px 0px 10px;
+		}
+		
 		h5:after {
 	       content: "";
 			display: block;
-			width: 70px;
-			border-bottom: 1px solid #bcbcbc;
-			margin-top: 10px;
-			margin: 20px 0px;
+			width: 80px;
+			border-bottom: 2px solid #FF4500;
+			margin: 10px 0px;
 			padding:0px 10px 0px 10px;
 		}
 		 
@@ -50,13 +58,14 @@
 		        <c:set var="price" value="0" />
 				<c:forEach var="cpd" items="${purchase.customProduct}">
 		          <p></p>
-		          <div class="card">
+		          <div class="card" style="float:left; margin:20px; min-height: 600px;">
 		            <div class="card-header" style="background-color: #FF4500; color: #FFF;">
 		              ${cpd.product.name}
-		            </div>
+		            </div><br/>
 		            <div>
 		            <img src='/resources/attachments/${cpd.product.thumbnail}'>
 		              <p class="card-text">
+		              	  ${cpd.price*cpd.count}원<br/>
 			              <c:forEach var="pp" items="${cpd.plusParts}">
 						  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
 						  </c:forEach>
@@ -64,66 +73,17 @@
 						  	- ${mp.minusName} <br/>
 						  </c:forEach> 
 					  </p>
-		              <span class="btn btn-primary">${cpd.price*cpd.count}</span>원
+		              <a href="/product/getProduct/${cpd.product.productNo}" class="btn btn-primary">상품보기</a>
 		              <c:set var="price" value="${price+cpd.price*cpd.count}" />
 		            </div>
 		          </div>
 		        </c:forEach>
 		    </div>
 	</div>
-	
-	<div class="container">
-
-	 <table class="table table-hover" style="width: 1000px;">
- 
-        <thead>
-          <tr>
-            <th align="center">구매일자[구매번호]</th>
-            <th align="center">이미지</th>
-            <th align="center">수량</th>
-            <th align="center" >상품명</th>
-            <th align="center" >옵션</th>
-            <th align="center">상품구매금액</th>
-            <th align="center">구매처리상태</th>
-          </tr>
-        </thead>
-
-		<tbody>
-			<c:set var="price" value="0" />
-			<c:forEach var="cpd" items="${purchase.customProduct}">
-			<tr class="ct_list_pop">
-			      <td align="left">${purchase.regDate}[${purchase.purchaseNo}]</td>
-				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
-				  <td align="left">${cpd.count}</td>
-				  <td align="left">${cpd.product.name}</td>
-				  <td align="left">
-				  <c:forEach var="pp" items="${cpd.plusParts}">
-				  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
-				  	</c:forEach>
-				  <c:forEach var="mp" items="${cpd.minusParts}">
-				  	- ${mp.minusName} <br/>
-				  	</c:forEach> 
-				  	 </td>
-				  <td align="left">${cpd.price*cpd.count}</td>
-				  <c:set var="price" value="${price+cpd.price*cpd.count}" />
-		 	  
-		 	  <td align="left">
-				<c:choose>
-					<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
-					<c:when test="${purchase.purchaseStatus eq '2'}">배송중</c:when>
-					<c:when test="${purchase.purchaseStatus eq '3'}">배송완료</c:when>
-					<c:when test="${purchase.purchaseStatus eq '4'}">구매확정</c:when>
-				</c:choose><br/>
-				</td>
-		
-			  </tr>  
-			  </c:forEach> 
-        </tbody>
-      </table>
-    </div>
      
-    <div class="container">
+    <div class="container" style="clear:both;">
     
+    <br/><br/>
 	<h5>구매정보</h5>
 	<div>구매번호 : ${purchase.purchaseNo} </div>
 	<div>구매일자 : ${purchase.regDate} </div>
@@ -166,7 +126,7 @@
 	휴대전화 : ${purchase.phone} <br/>
 	배송메시지 : ${purchase.message} <br/><br/>
 	
-	<button type="button" style="background-color:#FFF; border-radius:5px; background-color:#FFF; font-size:16px; width: 80px" onClick="history.back(-1)">확인</button>
+	<button type="button" style="border-color:#FF4500; border-radius:5px; background-color:#FFF; font-size:16px; width: 100px" onClick="history.back(-1)">뒤로</button>
 	</div>
 	</div>
 

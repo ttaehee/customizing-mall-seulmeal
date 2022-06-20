@@ -166,12 +166,13 @@ public class PurchaseRestController {
 	}	
 	
 	@PostMapping("updatePurchaseCode")
-	public Purchase updatePurchaseCode(@RequestBody Purchase purchase) throws Exception {
+	public Purchase updatePurchaseCode(@RequestBody Purchase purchase, HttpSession session){
 
 	      System.out.println("/purchase/api/updatePurchaseCode : POST"+purchase);
 	      
 	      purchaseService.updatePurchaseCode(purchase);
 	      purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
+		  purchase.setUser((User)(session.getAttribute("user")));
 	      
 	      return purchase;
 	   }   
