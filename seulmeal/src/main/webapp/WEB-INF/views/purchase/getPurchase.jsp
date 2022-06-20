@@ -22,9 +22,9 @@
 		}
 	</style>
 	 
-	 <br/>
+	 <div class="container">
 	 <h2>구매상품 정보</h2>
-	 <table class="table table-hover table-striped" >
+	 <table class="table table-hover" style="width: 1000px;">
  
         <thead>
           <tr>
@@ -114,6 +114,7 @@
 	배송메시지 : ${purchase.message} <br/><br/>
 	
 	<button id="ok">확인</button>
+	</div>
 
 <jsp:include page="../layer/footer.jsp"></jsp:include>	
 </body>

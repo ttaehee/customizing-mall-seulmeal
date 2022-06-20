@@ -139,6 +139,7 @@
 	const minusNo = [];
 	const minusName = [];
 
+	//form insertCustomProduct
 	function fncInsertCustomProduct(ths) {
 		
 		alert("제외한 재료 : "+minusName)
@@ -146,15 +147,15 @@
 		const customprice= $("#total").text();
 		const cartStatus = $(ths).val();
 		
-		$(".cc").append(`<input name ="count" value="\${count}">`);
-		$(".cc").append(`<input name ="minusNoA" value="\${minusNo}">`);
-		$(".cc").append(`<input name ="minusNameA" value="\${minusName}">`);
-		$(".cc").append(`<input name ="price" value="\${customprice}">`);
-		$(".cc").append(`<input name ="cartStatus" value="\${cartStatus}">`);
+		$(".cc").append(`<input type="hidden" name ="count" value="\${count}">`);
+		$(".cc").append(`<input type="hidden" name ="minusNoA" value="\${minusNo}">`);
+		$(".cc").append(`<input type="hidden" name ="minusNameA" value="\${minusName}">`);
+		$(".cc").append(`<input type="hidden" name ="price" value="\${customprice}">`);
+		$(".cc").append(`<input type="hidden" name ="cartStatus" value="\${cartStatus}">`);
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
 	 }
 
-	
+	//상품구성재료 제외하기버튼 클릭
 	$(function() {
 	    $('.execpt').on('click', function() {
 	        const partsNo = $(this).attr('data-partsNo');	        
@@ -170,16 +171,16 @@
 	    })
 	});
 	
+	//추가재료 검색
 	function search(){
 		var word = $(".search").val();
-		console.log(word);
 		
 		if(word == null || word.length<1){
 			alert("추가할 재료이름을 입력하세요.");
 		}
 	}
 	
-	
+	//추가재료 g변경
 	function fnCalGram(type, ths){
 		var stat = $(ths).closest("div").find("span[name='gram']").text();
 		var num = parseInt(stat,10);		
@@ -210,26 +211,7 @@
 
 	}
 	
-	
-	function fnCalCount(type, ths){
-		var statcount = $(ths).parents("div").find("span[name='count']").text();
-		var number = parseInt(statcount,10);
-		let calprice = parseInt($("#total").text());
-
-		if(type=='minus'){
-			number--;
-			if(number<1){
-				alert('더이상 줄일수 없습니다.');
-				return;
-			}
-			$(ths).parents("div").find("span[name='count']").text(number);
-
-		}else{
-			number++;
-			$(ths).parents("div").find("span[name='count']").text(number);
-		}
-	}
-	
+	//추가재료 검색
 	function fncGetParts(){
 		const inputTag = $(".partSearch").parent('div').find("input[name='searchKeyword']");
 		
@@ -273,7 +255,7 @@
 		}
 	 }
 	
-	
+	//추가재료 검색 + autocomplete
 	 $(function(){ 
 		 $(".search").autocomplete({ 
 			 source : function(request, response) { //source: 입력시 보일 목록
@@ -313,25 +295,46 @@
 			
 			fncGetParts();
 		})
+		
+		//추가재료 검색 엔터적용
+		$(".search").keydown(function(key){
+			        if(key.keyCode==13) {
+				           fncGetParts();
+				    }     
+		});
+		
 	})
-	
-	
-	 $(".search").keydown(function(key){
-		        if(key.keyCode==13) {
-			           fncGetParts();
-			    }     
-	});
-	
 
+	//엔터 시 submit 방지
 	document.insertCustom.addEventListener("keydown", evt => {
 		  if (evt.code === "Enter") 
 		  evt.preventDefault();
 		});
 	
-	
+	//추가재료 삭제
 	function fncClose(ths){
 		 $(ths).closest("div").parent().remove();
 		
+	}
+	
+	//커스터마이징 한 상품 수량변경
+	function fnCalCount(type, ths){
+		var statcount = $(ths).parents("div").find("span[name='count']").text();
+		var number = parseInt(statcount,10);
+		let calprice = parseInt($("#total").text());
+
+		if(type=='minus'){
+			number--;
+			if(number<1){
+				alert('더이상 줄일수 없습니다.');
+				return;
+			}
+			$(ths).parents("div").find("span[name='count']").text(number);
+
+		}else{
+			number++;
+			$(ths).parents("div").find("span[name='count']").text(number);
+		}
 	}
 	
 </script>

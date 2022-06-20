@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
+import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.mapper.PurchaseMapper;
 import shop.seulmeal.service.purchase.PurchaseService;
@@ -69,14 +70,54 @@ public class PurchaseServiceImpl implements PurchaseService{
 	
 	//커스터마이징재료 
 	@Override
-	public int insertMinusParts(Map<String, Object> map) {
+	public int insertMinusParts(int customProductNo, String minusNo, String minusName) {
 		// TODO Auto-generated method stub
+		
+		String[] minusNoAA = minusNo.split(",");
+		String[] minusNameAA = minusName.split(",");
+		
+		List<CustomParts> minusParts = new ArrayList();
+		for(int i=0; i<minusNoAA.length; i++) {
+			CustomParts minus = new CustomParts();
+			minus.setMinusNo(Integer.parseInt(minusNoAA[i]));
+			minus.setMinusName(minusNameAA[i]);
+			minus.setCustomProductNo(customProductNo);
+			minusParts.add(minus);
+		}
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("customProductNo", customProductNo);
+		map.put("minusParts",minusParts);
+		
 		return purchaseMapper.insertMinusParts(map);
 	}
 	
 	@Override
-	public int insertPlusParts(Map<String, Object> map) {
+	public int insertPlusParts(int customProductNo, String plusPartsNo, String plusPrice, String plusGram) {
 		// TODO Auto-generated method stub
+		
+		String[] plusPartsNoA = plusPartsNo.split(",");
+		String[] plusPriceA = plusPrice.split(",");
+		String[] plusGramA = plusGram.split(",");
+		
+		List<CustomParts> plusParts = new ArrayList();
+		for(int i=0; i<plusPartsNoA.length; i++) {		
+			CustomParts plus = new CustomParts();
+			Parts p = new Parts();
+			System.out.println(Integer.parseInt(plusPartsNoA[i]));
+			p.setPartsNo(Integer.parseInt(plusPartsNoA[i]));
+			p.setPrice(Integer.parseInt(plusPriceA[i]));
+			
+			plus.setParts(p);
+			plus.setGram(Integer.parseInt(plusGramA[i]));
+			plus.setCustomProductNo(customProductNo);
+			plusParts.add(plus);
+		}
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("customProductNo", customProductNo);
+		map.put("plusParts",plusParts);
+		
 		return purchaseMapper.insertPlusParts(map);
 	}
 
@@ -298,7 +339,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 		map.put("purchaseStatus", purchaseStatus);
 		
 		List<Purchase> list=purchaseMapper.getListSale(map);
-		int totalCount=purchaseMapper.getPurchaseTotalCount(map);
+		int totalCount=purchaseMapper.getSaleTotalCount(map);
 		
 		map.put("saleList", list);
 		map.put("totalCount", totalCount);

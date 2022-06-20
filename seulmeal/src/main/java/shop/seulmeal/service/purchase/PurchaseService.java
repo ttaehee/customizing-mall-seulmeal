@@ -16,8 +16,8 @@ public interface PurchaseService {
 	public List<Map>autocomplete(Map<String, Object> paramMap) throws Exception;
 	
 	//커스터마이징재료 추가 
-	public int insertMinusParts(Map<String, Object> map);
-	public int insertPlusParts(Map<String, Object> map);
+	public int insertMinusParts(int customProductNo, String minusNo, String minusName);
+	public int insertPlusParts(int customProductNo, String plusPartsNo, String plusPrice, String plusGram);
 	
 	//커스터마이징상재료 상세 
 	public CustomParts getCustomParts(int CustomPartsNo);
