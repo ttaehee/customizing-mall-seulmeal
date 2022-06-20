@@ -184,8 +184,10 @@ public class CommunityController {
 	@GetMapping("/getPost/{postNo}") // oo
 	public String getPost(@PathVariable int postNo, Model model, HttpSession session) {
 		
+		
 		// 해당 post
 		Post post = communityService.getPost(postNo);
+		System.out.println("//////"+post.getContent());
 		
 		// 타인 게시글 조회시에만, 조회수 증가 
 		if(!((User)session.getAttribute("user")).getUserId().equals(post.getUser().getUserId()) ) {

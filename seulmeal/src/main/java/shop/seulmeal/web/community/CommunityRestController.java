@@ -132,7 +132,9 @@ public class CommunityRestController {
 	@GetMapping("getListPost") // oo
 	public List<Post> getListPost(@RequestParam(required = false, defaultValue = "2") int currentPage,
 			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String searchOption ,@RequestParam(required = false) String userId) {
-
+		
+		System.out.println("RestC : CurrentP : "+ currentPage);
+		
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
 		search.setPageSize(pageSize);
