@@ -86,7 +86,13 @@
             </div>
             
             <c:if test="${user.userId == post.user.userId}">
-            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="삭제">
+            	<c:if test="${post.answerStatus ==0}">
+            		<input class="btn btn-primary float-right uploadAnswerBtn" type="button" onclick="updateQuery()" value="수정">
+            		<input class="btn btn-primary float-right uploadAnswerBtn" type="button" onclick="deleteQuery()" value="삭제">
+            	</c:if>
+            	<c:if test="${post.answerStatus ==1}">
+            		<input class="btn btn-primary float-right uploadAnswerBtn" type="button" onclick="deleteQuery()" value="삭제">
+            	</c:if>
             </c:if>            
         </div>
         </div>
@@ -345,6 +351,10 @@
 		})
 	}
 	
+	function updateQuery(){
+		window.location.href = "/operation/updateOperation/${post.postStatus}/${post.postNo}"
+	}
+	
 	function deleteAnswer(e){
 		const commentNo = $(e).data("value");
 		const commentBox = $(e).parent("div").parent("div").parent("div");
@@ -365,6 +375,23 @@
 		})
 	}
 	
+	function deleteQuery(){
+		
+		$.ajax({
+			url : "/operation/api/deleteOperation",
+			method : "POST",
+			data : JSON.stringify({
+				postNo : ${post.postNo},
+				postStatus : ${post.postStatus}
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	window.location.href = '/operation/getListOperation/${post.postStatus}';
+	        }
+		})
+		
+	}
 </script>
 </body>
 </html>
