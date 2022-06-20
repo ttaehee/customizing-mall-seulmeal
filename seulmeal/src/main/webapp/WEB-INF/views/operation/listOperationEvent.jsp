@@ -48,9 +48,6 @@
 			
 			<div class="float-right" style="display:flex;">
 				<div class="dropdown">
-					<c:if test="${user.role == 1}">
-						<button class="btn btn-primary" style="margin-right:10px;" onclick="insertEvent()">이벤트 등록</button>
-					</c:if>
 					<div class="dropdown show">
 						<button class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							이벤트 목록
@@ -58,7 +55,9 @@
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 							<a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a>
 							<a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a>
-							<a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a>
+							<c:if test="${user.role == 1}">
+								<a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a>
+							</c:if>
 						</div>
 					</div>			
 				</div>
@@ -72,7 +71,8 @@
     
     
 	<div class="container">
-		<div class="container px-4 py-5" id="custom-cards">
+		<div class="container px-4 py-5" id="custom-cards">	
+			
 			<c:forEach var="post" items="${list}">	
 				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3 cardComponet">
 					<div class="col">

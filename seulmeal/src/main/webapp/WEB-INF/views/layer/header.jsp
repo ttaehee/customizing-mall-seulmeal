@@ -24,6 +24,11 @@
 <!-- chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<!-- toastr -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ 
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 <!-- bootStrap -->
@@ -36,10 +41,15 @@
 <!-- slick -->
 <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick.css" />
 <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
-	
-
 
 <style>
+	.toast-title {
+		color:crimson;
+	}
+	.toast-message {		
+		color:crimson;	
+		font-size: 100%;
+	}  
 	.header{
 		transition: background 0.6s;
 		text-align: center;	
@@ -68,19 +78,8 @@
 		</div>
 	</c:if> -->
 	<div class="header" style="background:#fff; padding-top:10px; ">
-	<div style="display:flex; justify-content:space-between; margin-left:10px; margin-right:10px;">
-		<div id="google_translate_element" class="hd_lang" style="padding-top:10px;"></div>
-	    <script>
-	      function googleTranslateElementInit() {
-	        new google.translate.TranslateElement({
-	          pageLanguage: 'ko',
-	          includedLanguages: 'ko,zh-CN,zh-TW,ja,vi,th,tl,km,my,mn,ru,en,fr,ar',
-	          //layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-	          autoDisplay: false
-	        }, 'google_translate_element');
-	      }
-	    </script>
-	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+	<div style="display:flex; justify-content:right; margin-left:10px; margin-right:10px;">
+		
 	    <div class="float-right" style="margin-right: 30px; padding-top:10px;">
         	
         	<c:if test="${ empty user }">
@@ -180,6 +179,19 @@
 
 	
 <script type="text/javascript">	
+	window.onload = function(){
+		toastShow("t","1");
+	}
+
+	function toastShow(title, content){
+		toastr.options.escapeHtml = true; // [escapeHtml 허용여부]
+		toastr.options.closeButton = true; // [closeButton을 생성여부]
+		toastr.options.progressBar = true;
+		
+		
+	}
+	
+
 	$(".searchP").on("keypress",(e)=>{
 		if(e.keyCode === 13){
 			$(".searchProduct").attr("action","/product/listProduct").submit();

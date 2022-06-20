@@ -29,9 +29,7 @@
 				</div>
 			</form>
 		</div>
-		</div>
-		
-		
+		</div>			
 		<table class="table table-hover text-center">
 			<thead style="background-color: #ff4500; color: #fff;">
 				<tr>
@@ -43,6 +41,14 @@
 				</tr>
 			</thead>
 			<tbody>
+				<c:if test="${list.size() == 0}">
+					<tr>
+						<td colspan="5" style="font-size: 100px;">							
+							<i class="bi bi-chat-left-dots"></i>
+							<div>글이 없습니다</div>						
+						</td>
+					</tr>					
+				</c:if>
 				<c:forEach var="post" items="${list}">
 				<tr>
 					<th>${post.postNo}</th>

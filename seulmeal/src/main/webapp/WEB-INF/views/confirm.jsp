@@ -32,9 +32,9 @@ function a(){
 }
 	
 </script>
-<body>
-	이메일 : <input id="email" name="email" /><br/>
-	핸드폰 : <input id="phone" name="phone" /><br/>
-	<button onclick="a()">인증</button>
+<body style="color:#fff;">
+	
+	이메일 : <br/>
+	핸드폰 : <br/>
 </body>
 </html>
