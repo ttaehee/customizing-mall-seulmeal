@@ -17,7 +17,5 @@ public class Point {
 	private String pointStatus;
 	private int point;
 	private Date regDate;
-	private String imp_uid;
-	private int amount;
 
 }

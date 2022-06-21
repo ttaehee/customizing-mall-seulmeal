@@ -162,7 +162,7 @@
 		
 		<insert id="insertPoint">
 			INSERT INTO point (point_no, user_id, purchase_no, point_status, point, reg_date) 
-				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{point}, SYSDATE)
+				VALUES(seq_point_no.NEXTVAL, #{userId:VARCHAR}, #{purchaseNo:NUMERIC}, #{pointStatus:VARCHAR}, #{point:NUMERIC}, SYSDATE)
 		<selectKey keyProperty="pointNo" resultType="int" order="AFTER">
 			SELECT seq_point_no.CURRVAL FROM DUAL
 		</selectKey>

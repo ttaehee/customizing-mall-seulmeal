@@ -30,10 +30,12 @@ import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.naver.impl.KakaoAPI;
 import shop.seulmeal.service.naver.impl.LoginService;
 import shop.seulmeal.service.product.ProductService;
+import shop.seulmeal.service.purchase.PurchaseService;
 import shop.seulmeal.service.user.UserService;
 
 @Controller
@@ -50,7 +52,10 @@ public class UserController {
 	private LoginService loginService;
 	
 	@Autowired
-	KakaoAPI kakaoApi;
+	private KakaoAPI kakaoApi;
+	
+	@Autowired
+	private PurchaseService purchaseService;
 	
 	int pageUnit = 10;	
 	int pageSize = 10;
@@ -392,16 +397,50 @@ public class UserController {
 	
 	
 	@GetMapping("chargeUserPoint")
-	public String chargeUserPoint() throws Exception {
+	public String chargeUserPoint(Model model, HttpSession session) throws Exception {
+		
+		User user=(User)session.getAttribute("user");
+		model.addAttribute("user", user);
 		
 		return "user/insertPoint";
 	}
 	
-	@GetMapping("getChargeUserPoint")
-	public String getChargeUserPoint() throws Exception {
+	@GetMapping("getChargeUserPoint/{purchaseNo}")
+	public String getChargeUserPoint(@PathVariable int purchaseNo, Point point, Purchase purchase, Model model) throws Exception {
+		
+		System.out.println("/getListCustomProduct : "+ purchaseNo);
+		
+		purchase=purchaseService.getPurchase(purchaseNo);
+			
+		model.addAttribute(purchase);
+		
+		
+		purchase.setPurchaseStatus("0");
+		purchaseService.updatePurchaseCode(purchase);
+		
+		point.setUserId(purchase.getUser().getUserId());
+		point.setPointNo(purchaseNo);
+		point.setPointStatus("2");
+		point.setPoint(purchase.getPrice());
+		userService.insertPoint(point);
 		
 		return "user/getChargeUserPoint";
 	}
+	
+	/*
+	 * @GetMapping("getPurchase/{purchaseNo}") public String
+	 * getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {
+	 * 
+	 * System.out.println("/getListCustomProduct : "+ purchaseNo);
+	 * 
+	 * purchase=purchaseService.getPurchase(purchaseNo);
+	 * 
+	 * model.addAttribute(purchase);
+	 * 
+	 * return "purchase/getPurchase";
+	 * 
+	 * }
+	 */
 	
 	@GetMapping("listUserPoint/{currentPage}")
 	public String listUserPoint(Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition, HttpSession session) throws Exception {
