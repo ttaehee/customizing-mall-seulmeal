@@ -60,6 +60,10 @@ public interface UserService {
 	public int updatePassword(User user) throws Exception;
 	
 	public int updateUserTotalPoint(User user) throws Exception;
+	
+	public String getRecentPurchase(String userId) throws Exception;
+	
+	public int deletePoint(int pointNo) throws Exception;
 
 	
 }

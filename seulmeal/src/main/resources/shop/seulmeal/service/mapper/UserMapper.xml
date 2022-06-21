@@ -171,7 +171,9 @@
 		<select id="getPoint" resultType="shop.seulmeal.service.domain.Point">
 	        	SELECT * FROM point WHERE point_no = #{pointNo}
 	    </select>
-		
+		<delete id="deletePoint">
+			DELETE from point where point_no = #{pointNo}
+		</delete>
 		
 		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="map" >
 			SELECT *
@@ -238,5 +240,9 @@
 			</set>
 			WHERE user_id = #{userId}
 		</update>
+		
+		<select id="getRecentPurchase" resultType="string">
+			SELECT * FROM (SELECT NVL(purchase_no, 0) FROM purchase WHERE user_id = #{userId:VARCHAR} and purchase_status NOT IN ('0')  ORDER by reg_date DESC) WHERE ROWNUM =1	
+		</select>
 	
 	</mapper>     

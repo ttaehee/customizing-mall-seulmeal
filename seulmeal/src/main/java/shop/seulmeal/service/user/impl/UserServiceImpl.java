@@ -230,6 +230,20 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		return userMapper.updateUserTotalPoint(user);
 	}
 
+
+	@Override
+	public String getRecentPurchase(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getRecentPurchase(userId);
+	}
+
+
+	@Override
+	public int deletePoint(int pointNo) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.deletePoint(pointNo);
+	}
+
 	
 
 

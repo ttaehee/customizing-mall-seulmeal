@@ -388,7 +388,20 @@ public class UserController {
 		
 		User user = userService.getUser(userId);
 		
+		String recentPurchaseNo = userService.getRecentPurchase(userId);
+		
+		if(recentPurchaseNo != null) {
+			int recentPurchaseNo1 = Integer.parseInt(recentPurchaseNo);
+			Purchase purchase = purchaseService.getPurchase(recentPurchaseNo1);
+			model.addAttribute("purchase", purchase);
+			
+			
+		}
+		
+		
+	
 		model.addAttribute("user", user);
+		
 		
 		return "user/getUser";
 	}
