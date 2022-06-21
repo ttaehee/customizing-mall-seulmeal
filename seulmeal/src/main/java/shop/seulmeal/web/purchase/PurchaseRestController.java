@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
@@ -128,9 +129,9 @@ public class PurchaseRestController {
 	
 	//아임포트 결제 전 DB에 insertPurchase
 	@PostMapping("insertPurchase")
-	public Purchase insertPurchase(@RequestBody Map<String, Object> map, Purchase purchase, HttpSession session) throws Exception {
+	public Purchase insertPurchase(@RequestBody Map<String, Object> map, Purchase purchase, Point point, HttpSession session) throws Exception {
 		
-		System.out.println("________:"+map);
+		System.out.println("/purchase/api/insertPurchase :"+map);
 		
 		User user=(User)(session.getAttribute("user"));
 		
@@ -142,11 +143,12 @@ public class PurchaseRestController {
 		purchase.setMessage((String)map.get("message"));
 		purchase.setPrice(Integer.parseInt((String)map.get("price")));
 		purchase.setPaymentCondition(String.valueOf(map.get("paymentCondition")));
+		purchase.setUsePoint(Integer.parseInt((String)map.get("usePoint")));
 		
-		purchaseService.insertPurchase(purchase);
+		//insert
+		int result=purchaseService.insertPurchase(purchase);
 		
-		int usePoint=(Integer.parseInt((String)map.get("usePoint")));
-		
+		//커스터마이징상품에 구매번호추가 but 결제중 취소할 수 있으니 구매상태는 구매완료가 아닌 0
 		ArrayList customProductNo=(ArrayList) map.get("customProductNo");
 		
 		List<CustomProduct> cpList=new ArrayList<CustomProduct>();
@@ -158,6 +160,7 @@ public class PurchaseRestController {
 			cpList.add(cp);
 		}
 		
+		//get
 		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
 		purchase.setUser(user);
 
@@ -166,19 +169,47 @@ public class PurchaseRestController {
 	}	
 	
 	@PostMapping("updatePurchaseCode")
-	public Purchase updatePurchaseCode(@RequestBody Purchase purchase, HttpSession session){
+	public Purchase updatePurchaseCode(@RequestBody Purchase purchase, Point point, HttpSession session) throws Exception{
 
 	      System.out.println("/purchase/api/updatePurchaseCode : POST"+purchase);
 	      
 	      purchaseService.updatePurchaseCode(purchase);
 	      purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
-		  purchase.setUser((User)(session.getAttribute("user")));
+	      User user=(User)(session.getAttribute("user"));
+	      purchase.setUser(user);
+	      
+	      //구매확정 후 포인트적립
+	      List<CustomProduct> list=purchase.getCustomProduct();
+	      int total=0;
+	      for(CustomProduct cp : list) {
+	    	  total += cp.getPrice()*cp.getCount();
+	      }
+	      
+	      int plusPoint=0;
+	      if(user.getGrade().equals("0")) {
+	    	  plusPoint=(int) (total*0.005);
+	      }else if(user.getGrade().equals("1")) {
+	    	  plusPoint=(int) (total*0.01);
+	      }else if(user.getGrade().equals("2")) {
+	    	  plusPoint=(int) (total*0.03);
+	      }else if(user.getGrade().equals("3")) {
+	    	  plusPoint=(int) (total*0.05);
+	      }
+		  
+	      point.setUserId(user.getUserId());
+		  point.setPurchaseNo(purchase.getPurchaseNo());
+		  point.setPointStatus("1");
+		  point.setPoint(plusPoint);
+		  userService.insertPoint(point);
+		  //유저 총포인트
+		  user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+		  userService.updateUserTotalPoint(user);
 	      
 	      return purchase;
 	   }   
 	
 	@PostMapping("verifyIamport")
-	public JSONObject verifyIamport(@RequestBody Purchase purchase, HttpSession session) {
+	public JSONObject verifyIamport(@RequestBody Purchase purchase, Point point, HttpSession session) throws Exception {
 		
 		System.out.println("/purchase/api/verifyIamport : "+purchase);
 		
@@ -191,12 +222,6 @@ public class PurchaseRestController {
 		User user=(User)(session.getAttribute("user"));
 		purchase.setUser(user);		
 		
-		//커스터마이징상품은 장바구니리스트에서 삭제 
-		List<CustomProduct> cpList=purchase.getCustomProduct();
-		for(CustomProduct cp : cpList) {
-			purchaseService.updateCustomProductStatus(cp);
-		}
-		
 		String token=purchaseService.getImportToken();
 		System.out.println("/purchase/api/verifyIamport token : "+ token);
 		
@@ -205,6 +230,24 @@ public class PurchaseRestController {
 			String portAmount=purchaseService.getAmount(token, Integer.toString(purchase.getPurchaseNo()));
 			
 			if(purchase.getPrice() == Integer.parseInt(portAmount)) {
+				
+				//커스터마이징상품은 장바구니리스트에서 삭제 
+				List<CustomProduct> cpList=purchase.getCustomProduct();
+				for(CustomProduct cp : cpList) {
+					purchaseService.updateCustomProductStatus(cp);
+				}
+				
+				//사용포인트
+				point.setUserId(user.getUserId());
+				point.setPurchaseNo(purchase.getPurchaseNo());
+				point.setPointStatus("0");
+				point.setPoint(purchase.getUsePoint());
+				userService.insertPoint(point);
+				//총포인트에서 사용포인트 빼기
+				user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+				System.out.println("totalpointtttttttttttt:"+user.getTotalPoint());
+				userService.updateUserTotalPoint(user);
+				
 				json.put("purchase", purchase);
 				json.put("sucess", "true");
 				json.put("message", "성공!!!!!!");
@@ -219,7 +262,7 @@ public class PurchaseRestController {
 			}
 		}else {
 			purchaseService.cancelPayment(token, Integer.toString(purchase.getPurchaseNo()));
-			json.put("message", "결제실패ㅠㅠ");
+			json.put("message", "취소실패ㅠㅠ");
 		}
 		return json;
 	}

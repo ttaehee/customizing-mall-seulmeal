@@ -46,7 +46,7 @@ public interface UserMapper {
 	
 	public int resetPurchaseCount() throws Exception;
 	
-	public int updateUserTotalPoint(int no) throws Exception;
+	public int updateUserTotalPoint(User user) throws Exception;
 	
 	public int insertBlackList() throws Exception;
 	
@@ -73,6 +73,10 @@ public interface UserMapper {
 	public int updateBlockCount(String userId) throws Exception;
 	
 	public int updatePassword(User user) throws Exception;
+	
+	public String getRecentPurchase(String userId) throws Exception;
+	
+	public int deletePoint(int purchaseNo) throws Exception;
 	
 	
 	

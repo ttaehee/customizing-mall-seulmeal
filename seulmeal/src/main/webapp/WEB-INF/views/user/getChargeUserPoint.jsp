@@ -6,16 +6,16 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
-#wrap{
+ #wrap{
     width:100%;
     height:100%;
 }
   
 #wrap .box{ 
-    width:300px;
+    width:800px;
     height:300px;
     margin:0 auto;
-}
+} 
 </style>
 
 </head>
@@ -23,10 +23,11 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 <div id="wrap">
 <div class="box">
-<h1>포인트 충전</h1>
-<input name="point" >원
-
- <button type="button" class="btn btn-default">충전하기</button>
+<h1>포인트 충전 내역</h1>
+<div class="row">
+	  		<div class="col-xs-4 col-md-2"><strong>충전 포인트</strong></div>
+			<div class="col-xs-8 col-md-4">${purchase.price}p</div>
+		</div>
 </div>
 </div>
 

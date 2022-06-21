@@ -28,14 +28,9 @@
 	<div id="wrap">
 		<div class="box">
 			<h1>포인트 충전</h1>
-			<input name="price" class="price">원
-			<div>
-				<select id="paymentOption" name="paymentOption">
-					<option value="1" selected="selected">카드결제</option>
-					<option value="2">포인트결제</option>
-				</select>
-			</div>
-			<button type="button" class="btn btn-default" onClick="insertPoint()">충전하기</button>
+			<input type="hidden" id="userId" name="userId" value="${user.userId}"/>
+			<input name="price" id="price"/>원
+			<button type="button" class="btn btn-default" onClick="iamport()">충전하기</button>
 
 		</div>
 	</div>
@@ -44,7 +39,109 @@
 
 
 <script type="text/javascript">
-function insertPoint() {
+
+function iamport(){
+	
+	var form1 = $(".box").serialize();
+	
+	let customNo = [];
+	let ar = $(".customProductNo").get();
+	console.log(ar);
+	
+	for ( var i = 0; i < ar.length; i++) {
+		customNo.push(ar[i].value);
+	}
+	console.log(customNo);
+	console.log($('#price').val());
+	const userId = $('#userId').val();
+	const name = "0";
+	const address ="0";
+	const phone = "0";
+	const email = "0";
+	const message ="0";
+	const price = $('#price').val();
+	const usePoint = "0";
+	//const plusPoint = $('#pluspoint').val();
+
+/* 	 if(parseInt($('#price').val())==0){
+		
+		$(".cc").append(`<input type="hidden" name ="paymentCondition" value="1">`);
+				
+		$("form").attr("method" , "POST").attr("action" , "/purchase/insertPurchase").submit();
+	}else{
+		$(".cc").append(`<input type="hidden" id ="paymentCondition" value="0">`);  */
+		const paymentCondition = "0";
+
+		$.ajax({
+			url:"/purchase/api/insertPurchase",
+			method:"POST",
+			data:JSON.stringify({
+				name : name,
+				address : address,
+				phone : phone,
+				email : email,
+				message : message,
+				price : price,
+				paymentCondition : paymentCondition,
+				usePoint : usePoint,
+				customProductNo : customNo
+				//plusPoint : plusPoint
+			}),
+			headers : {
+				"Accept" : "application/json",
+				"Content-Type" : "application/json"
+			},
+			dataType : "json",
+			success : function(data){
+				console.log(data);
+				IMP.init('imp83644059'); 
+				IMP.request_pay(
+				    { 
+		 		  	pay_method: data.paymentCondition,
+		  		  	merchant_uid: data.purchaseNo,
+		  		  	name: "포인트 충전",
+		  		  	amount: data.price,
+		   		 	buyer_email: data.email,
+		   			buyer_name: data.name,
+		  			buyer_tel: data.phone,
+		  		  	buyer_addr: data.address,
+		   		 	buyer_postcode: "01181"
+					}, function(rsp) {
+						if(rsp.success){
+							var msg = '결제가 완료되었습니다.';
+			  		      	
+			  		      	 $.ajax({
+			  		  			url:"/purchase/api/verifyIamport",
+			  		  			method:"POST",
+			  		  			data:JSON.stringify({
+			  		  				imp_uid : rsp.imp_uid,
+			  		  				purchaseNo : rsp.merchant_uid,
+			  		  				amount : rsp.paid_amount
+			  		  			}),
+			  		  			headers : {
+			  		  				"Accept" : "application/json",
+			  		  				"Content-Type" : "application/json"
+			  		  			},
+			  		  			dataType : "json",
+			  		  			success : function(data){
+			  		  				console.log(data);
+			  		  				window.location.href='/user/getChargeUserPoint/' + data.purchase.purchaseNo;
+			  		  			}
+			  		      	 })
+						}else{
+							var msg = '결제에 실패하였습니다.';
+					         msg += '에러내용 : ' + rsp.error_msg;
+	
+						}
+					alert(msg);
+				})
+			}
+		})
+	}
+/* } */
+
+
+/* function insertPoint() {
     const price = document.querySelector(".price").value;
     
     $.ajax({
@@ -52,7 +149,7 @@ function insertPoint() {
         method:"POST",
         data:JSON.stringify({
             price :price,
-            status: 2
+            status: "2"
         }),
         headers : {
             "Accept" : "application/json",
@@ -74,7 +171,7 @@ function insertPoint() {
                 buyer_tel : data.member.phone,
                 buyer_addr : data.member.address,
                 buyer_postcode : '123-456' */
-            }, function(rsp) {
+                /*   }, function(rsp) {
                 console.log(rsp);
                 if ( rsp.success ) {
                     var msg = '결제가 완료되었습니다.';
@@ -140,8 +237,8 @@ function insertPoint() {
         
     })
 }
-
-function iamport(){
+ */
+/* function iamport(){
 	//가맹점 식별코드
 	IMP.init('imp31272612'); // 콘솔에서 확인
 	IMP.request_pay({
@@ -189,7 +286,7 @@ function iamport(){
 	    }
 	    alert(msg);
 	});
-}
+} */
 </script>
 </body>
 </html>

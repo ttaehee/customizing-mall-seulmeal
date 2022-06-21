@@ -25,12 +25,12 @@
 			margin: 20px auto;
 		}
 		
-		h6:after {
+		h5:after {
 	        content: "";
 	        display: block;
 	        width: 60px;
 	        border-bottom: 2px solid #FF4500;
-	        margin: 20px 0px;
+	        margin: 20px auto;
 	        margin-top: 10px;
 		}
 		
@@ -50,9 +50,20 @@
 		
 		.card {
 	        margin: 0 auto; 
-	        float: none;
 	        margin-bottom: 10px; 
+	        width: 50rem; 
+	        text-align: center !important;
+	        border: 1px solid #646464 !important; 
+	        border-radius: 10px !important;
 		}	
+		
+		
+		.thumbnail{
+			width: 250px;
+			height: 250px;
+			border-radius: 10px;
+			magin-left: 30px;
+		}
 
 	</style>
 
@@ -63,33 +74,44 @@
 		<input type="hidden" name="productNo" value="${product.productNo}"/>
 		<div class="container">
 		<h2>커스터마이징 : ${product.name}</h2> 
-		
-			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
+			<div class="card">
 			  <div class="card-body">
-			    <h6 class="card-title" id="price">${product.price}원</h6>
-			    <h8 class="card-subtitle mb-2 text-muted">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</h8>
+			  	<div class="row">
+			  		<div class="col-md-6">
+				  	<img class="thumbnail" src='/resources/attachments/${product.thumbnail}'>
+				  	</div>
+				  	<div class="col-md-6" align="justify" style="margin-top: 60px; font-size: 18px;">
+				    <div class="card-title" id="price">${product.price}원</div>
+				    <div class="card-subtitle mb-2 text-muted" style="font-size: 15px;">!! 재료 추가,제외를 원하지 않는 분은<br/> 설정을 그대로 진행해주세요 !!</div>
+				    </div>
+				</div>
 			  </div>
 			</div>
 		    
-			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
+			<div class="card">
 			  <div class="card-body">
-			    <h6 class="card-title">제품구성</h6>
+			    <h5 class="card-title">제품구성</h5>
 			    <p class="card-text"><c:forEach var="parts" items="${partsList}">
-					<div class="container productparts">${parts.name} &emsp;&emsp; 
-					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.productPartsNo}" data-partsName="${parts.name}">제외하기</button>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<div class="container productparts">${parts.name} &emsp;&emsp; </div>
 					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.productPartsNo}" data-partsName="${parts.name}">제외하기</button>
+					</div>
+				</div>
 					</c:forEach>
 				</p>
 			  </div>
 			</div>
 			
-			<div class="card" id="insertcard" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
+			<div class="card" id="insertcard">
 				<div class="card-body">
-				    <h6 class="card-title">추가재료</h6>
+				    <h5 class="card-title">추가재료</h5>
 				    <h8 class="card-subtitle mb-2 text-muted">*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</h8>
 				    <p class="card-text">
-						<div class="container">
-							재료 검색 : 
+						<div class="container" style="display:flex; justify-content: center">
+							재료 검색 : &emsp;
 								<div style="display:flex;">	
 									<div class="form-outline">
 										<input name="searchKeyword" type="search" class="form-control search" value="" style="border-color: #FF4500; border-width: 2px;"/>
@@ -106,9 +128,8 @@
 				  </div>
 			</div>	  
 
-		  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px; border-color: #787878; border-width: 1px;">
+		  		<div class="card">
 					<div class="card-body">
-					    <h8 class="card-subtitle mb-2 text-muted"></h8>
 					    <p class="card-text">
 							<div>커스터마이징상품 금액 :&ensp;<span id="total">${product.price}</span>원</div><br/>
 	

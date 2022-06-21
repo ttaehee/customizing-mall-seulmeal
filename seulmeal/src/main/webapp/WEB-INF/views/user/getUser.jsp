@@ -37,6 +37,17 @@
 		
 		<hr/>
 		
+		<div class="row">
+	  		<div class="col-xs-4 col-md-2 "><strong>최근 구매 상품</strong></div>
+				<div class="col-xs-8 col-md-4">
+				<c:forEach var="cpd" items="${purchase.customProduct}">
+			     	 ${cpd.product.name}        
+			    </c:forEach>  
+			   </div>
+		</div>
+		
+		<hr/>
+		
 		
 		<div class="row">
 	  		<div class="col-xs-4 col-md-2 "><strong>닉네임</strong></div>

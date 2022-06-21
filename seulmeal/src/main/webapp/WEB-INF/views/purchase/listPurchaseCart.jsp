@@ -86,7 +86,7 @@
 		 	<h2>장바구니</h2>
 		 </div>
 		 <div class="col-xs-4">
-		 	<div style="border:1px solid; padding:1px 0px 0px 12px; margin:20px; width:600px; margin-top:80px; border-radius: 3px; border-color: #969696;">
+		 	<div style="border:1px solid; padding:1px 0px 10px 12px; margin:20px; width:600px; margin-top:80px; border-radius: 3px; border-color: #969696;">
 		 			<div class="row">
 						 <div class="col-xs-4" style="padding: 7px 0px 0px 0px;">
 						 	<div style="border:1px solid; padding:10px; margin:20px; width:85px; border-radius: 4px; border-color: #969696;">
