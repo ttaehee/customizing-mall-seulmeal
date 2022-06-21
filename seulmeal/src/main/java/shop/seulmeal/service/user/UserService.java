@@ -63,7 +63,7 @@ public interface UserService {
 	
 	public String getRecentPurchase(String userId) throws Exception;
 	
-	public int deletePoint(int pointNo) throws Exception;
+	public int deletePoint(int purchaseNo) throws Exception;
 
 	
 }

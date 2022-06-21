@@ -239,9 +239,9 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
 
 	@Override
-	public int deletePoint(int pointNo) throws Exception {
+	public int deletePoint(int purchaseNo) throws Exception {
 		// TODO Auto-generated method stub
-		return userMapper.deletePoint(pointNo);
+		return userMapper.deletePoint(purchaseNo);
 	}
 
 	
