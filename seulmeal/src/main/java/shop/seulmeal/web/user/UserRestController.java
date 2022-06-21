@@ -36,17 +36,14 @@ public class UserRestController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private ProductService productService;
-	
+		
 	@Autowired
 	private ConfirmService confirmService;
 	
 	@Autowired
 	private LoginService loginService;
 	
-	private PurchaseService purchaseService;
+
 	
 
 	public UserRestController() {
@@ -93,6 +90,27 @@ public class UserRestController {
 		return json;
 	}
 	
+	
+	@GetMapping("api/confirmLogin/{userId}/{password}")
+	public JSONObject confirmlogin(@PathVariable String userId, @PathVariable String password, HttpSession session) throws Exception {
+		
+		User user=userService.getUser(userId);
+		String dbPassword = user.getPassword();
+		
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		JSONObject json = new JSONObject();
+		
+		
+		if(encoder.matches(password, dbPassword)) {
+			json.put("result", "success");
+		} else {
+			json.put("result", "fail");
+		}
+			
+		return json;
+	}
 	
 	@GetMapping("api/confirmUserNickname/{nickName}")
 	public JSONObject confirmUserNickname(@PathVariable String nickName) throws Exception {
@@ -234,6 +252,7 @@ public class UserRestController {
 		System.out.println(user);
 		return "code : ";
 	}
+	
 	@PostMapping("api/insertPoint")
 	public Point insertPoint(@RequestBody Map<String, Object> map, Point point, HttpSession session) throws Exception{
 		

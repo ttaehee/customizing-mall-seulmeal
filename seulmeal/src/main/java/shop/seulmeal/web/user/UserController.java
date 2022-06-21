@@ -337,14 +337,6 @@ public class UserController {
 	}
 	
 	
-	public String naverLogin() throws Exception {
-		return "main";
-	}
-	
-	public String kakaoLogin() throws Exception {
-		return "main";
-	}
-	
 	@GetMapping("findUserIdView")
 	public String findUserId() throws Exception {
 		
@@ -599,18 +591,6 @@ public class UserController {
 		return "redirect:/";
 	}
 	
-//	@RequestMapping(value = "api/logout")
-//	public String kakaoLogout(HttpSession session) {
-//		ModelAndView mav = new ModelAndView();
-//		
-//		kakaoApi.kakaoLogout((String)session.getAttribute("access_token"));
-//		session.removeAttribute("access_token");
-//		session.removeAttribute("userId");
-//		mav.setViewName("index");
-//		
-//		return "redirect:/";
-//		
-//	}
 	
 	@GetMapping("naver")
 	public String naver(@RequestParam Map<String, String> resValue, HttpSession session) throws Exception {

@@ -454,11 +454,11 @@ h3{
             <input id="input-id" name="userId" placeholder="아이디" type="text"></input>
          </div>
          <div class="login-pw-wrap">
-            <input id="input-pw" name="password" placeholder="비밀번호" type="password"></input>
-            <input type="password" class="form-control" id="password" name="password" placeholder="">
+            <input id="input-pw" name="password" placeholder="비밀번호" type="password"></input> 
          </div>
+         <div id="loginCheck" style="color:crimson;"></div>
          <div class="login-btn-wrap">
-            <button type="submit" id="login-btn">로그인</button>
+            <button type="submit" id="login-btn" onclick="login()">로그인</button>
          </div>
          <div>
             <span class="stay-check">
@@ -500,30 +500,6 @@ h3{
 					</div>
 				</div>
 			</div>
-
-		</section>
-
-		<!--class,PW 찾기 및 회원가입 부분-->
-		<section class="find-signup-wrap">
-
-			<div id="find-signup-wrap-en" style="display:none;">
-				
-				<span class="find-id-en">
-					<span>Forgot your</span> 
-					<a href="https://nid.naver.com/user2/help/idInquiry?lang=ko_KR" target="_blank" title="QR코드 로그인">Username</a>
-				</span>
-
-				<span class="find-pw">
-					<span>or</span> 
-					<a href="https://nid.naver.com/user2/help/pwInquiry?lang=ko_KR" target="_blank"
-						title="일회용번호 로그인">Password?</a>
-				</span>
-
-				<span class="sign-up">
-					<a href="https://nid.naver.com/user2/V2Join?m=agree&lang=ko_KR" target="_blank"
-						title="일회용번호 로그인">Sign up</a>
-				</span>
-			</div>
 		</section>
 	</div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
@@ -547,6 +523,88 @@ h3{
         // 사용자가 사용하기 편하게끔 팝업창으로 띄어준다.
         window.location.href=uri;
     }
+   
+   function login(){
+	   const login = {
+				userId: $("#userId").val(),
+				passowrd: $("#password").val(),
+				idSearch: "1"
+		}
+		
+		if($("#userId").val() !==''){
+			$.ajax({
+				url: "/user/api/confirmUserId/"+$("#userId").val(),
+				method: "GET",
+				headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){
+		        	console.log(data)
+		        	if(data.result ==="fail"){
+		        		$("#checkUserId").css("color","crimson").text("아이디가 일치하지 않습니다");
+		        	} else if(data.result ==="success") {
+		        		
+		        		if($("#password").val() !==''){
+		        			$.ajax({
+		        				url: "/user/api/confirmPassword/"+$("#password").val(),
+		        				method: "GET",
+		        				headers : {
+		        		            "Accept" : "application/json",
+		        		            "Content-Type" : "application/json"
+		        		        },
+		        		        dataType : "json",
+		        		        success : function(data){
+		        		        	console.log(data)
+		        		        	if(data.result ==="fail"){
+		        		        		$("#checkPassword").css("color","crimson").text("비밀번호가 일치하지 않습니다");
+		        		        		$("#save").attr("disabled","disabled");
+		        		        	} else if(data.result ==="success") {
+		        		        			$.ajax({
+		        		        				url: "/user/login
+		        		        				method: "POST",
+		        		        				data: 
+		        		        				headers : {
+		        		        		            "Accept" : "application/json",
+		        		        		            "Content-Type" : "application/json"
+		        		        		        },
+		        		        		        dataType : "json",
+		        		        		        success : function(data){
+		        		        		        	console.log(data)
+		        		        		        	if(data.result ==="fail"){
+		        		        		        		$("#checkUserId").css("color","crimson").text("중복된 아이디입니다.");
+		        		        		        	
+		        		        		        	} else {
+		        		        		        		alert(data);
+		        		        		        		alert("서버오류");
+		        		        		        	}
+		        		        		        }
+		        		        			})
+		        		        		
+		        		        		
+		        		        		
+		        		        		
+		        		        		$("#save").removeAttr("disabled");
+		        		        	} else {
+		        		        		alert(data);
+		        		        		alert("서버오류");
+		        		        	}
+		        		        }
+		        			})
+		        		}
+		        		
+		        	} else {
+		        		alert(data);
+		        		alert("서버오류");
+		        	}
+		        }
+			})
+		} 
+	}
+   
+   
+   
    
 	//아이디 중복체크
 	$("#userId").on("keyup",()=>{
