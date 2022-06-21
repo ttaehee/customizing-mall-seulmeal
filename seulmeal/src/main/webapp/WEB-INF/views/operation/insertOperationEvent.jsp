@@ -88,8 +88,27 @@
 			</div>
 		
 			<input type="hidden" name="postStatus" value="2" />
-		
-
+			
+			<div class="col-md-6 form-group">
+				<label for="Email3" class="col-sm-4 control-label h4" >상품명</label>
+					<div class="col-md-12">
+					<input type="text" class="form-control" id="productSearch" name="productSearch" />
+				</div>				
+			</div>
+			
+			<div class="col-md-6 form-group">
+				<label for="discount" class="col-sm-4 control-label h4" >할인율</label>
+					<div class="col-md-12">
+					<input type="text" class="form-control" id="discount" name="discount" placeholder="1~100" />
+				</div>
+			</div>
+			
+			<div id="productClass" class="col-md-12" style="margin-top:20px;">
+				<div>
+					<span style="margin-right: 10px;">상품명</span><span style="margin-right: 10px;">원가격</span><span>할인가격</span>
+				</div>
+			</div>
+			
 			<div class="col-md-12" style="margin-top:20px;" >
 				<input type="file" name="uploadfile" multiple="multiple" id="ex_uploadfile" />
 			</div>
@@ -153,12 +172,13 @@
 	});
 	
 	
-	const jsonArray = [];
+const jsonArray = [];
 	
 	$(document).ready(function () {
+		
 		$('#summernote').summernote({
-			height: 500,                // 에디터 높이
-			minHeight: 500,            // 최소 높이
+			height: 700,                // 에디터 높이
+			minHeight: 700,            // 최소 높이
 			maxHeight: null,            // 최대 높이
 			focus: true,                // 에디터 로딩후 포커스를 맞출지 여부
 			lang: "ko-KR",				// 한글 설정
@@ -187,10 +207,9 @@
 			}
 		});
 		
+		$('#summernote').summernote(setting);
 		
-	$('#summernote').summernote(setting);
-		
-		function uploadSummernoteImageFile(file, el){	    	
+		function uploadSummernoteImageFile(file, el){
 			const data = new FormData;
 			data.append("file",file);
 			$.ajax({
@@ -218,6 +237,109 @@
 				
     });
 	
+	// 할인
+	function discount(){
+		const pA = $(".iprice");
+		const dis = $("#discount").val();
+		
+		if(dis !== ""){
+			pA.each((i,el)=>{
+				$(el).parent().find(".price").text(el.value*(100-dis)/100);
+				$(el).parent().find(".tprice").val(el.value*(100-dis)/100);
+				console.log($(el).parent().find(".tprice").val())
+			})
+		}
+	
+	}
+	
+	function getProduct(){
+		const name = $("#productSearch").val();
+		console.log(name)
+		$.ajax({
+			type : "GET",
+			url : "/operation/api/getProduct/"+name,
+			datatype:"json",
+			success : function(data) {
+				if(data !== ''){
+					const productCard = `<div class="productCommponet">
+						<input type="hidden" name="productNo" value="\${data.productNo}" />
+						<input type="hidden" class="iprice" value="\${data.price}" />
+						<input type="hidden" name="tprice" class="tprice" value="\${data.price}" />
+						<span class='name'>\${data.name}</span>
+						<span class='oriPrice'>\${data.price}</span>
+						<span class='price'>\${data.price}</span>
+						<button type='button' class='btn btn-primary' onClick='deleteProduct(this)'>x</button>
+					</div>`
+					$("#productClass").append(productCard);
+					discount()
+				}
+			},
+			error : function(e){
+				console.log(e);
+			}
+		})
+	}
+	
+	function deleteProduct(e){
+		$(e).parent().remove();
+	}
+	
+	$(()=>{
+		
+		
+		$("#discount").on("focus keyup",(e)=>{
+			console.log(e.keyCode)
+			if( e.keyCode<96 || e.keyCode>106 || $("#discount").val() <0 || $("#discount").val() >100){
+				$("#discount").val("");
+				toastr.error("할인율을 올바르게 입력하세요","할인률 에러",{timeOut:10000})
+				return;			
+			}
+			
+			discount();
+		})
+		
+		$("#productSearch").keydown(function(key){
+		        if(key.keyCode==13) {
+			           getProduct();
+			    }     
+		});
+		$("#productSearch").autocomplete({			
+			 source : function(request, response) { //source: 입력시 보일 목록
+			     $.ajax({
+			           url : "/operation/api/autocomplete" 
+			         , type : "POST"
+			         , dataType: "JSON"
+		        	 , data : {value: request.term}
+			         , success : function(data){ 	// 성공
+			        	 response(
+			                 $.map(data.resultList, function(item) {
+			                     return {
+			                    	     label : item.NAME,    	// 목록에 표시되는 값
+			                             value : item.NAME 		// 선택 시 input창에 표시되는 값
+			                     };
+			                 })
+			             );    //response
+			         }
+			         ,error : function(){ //실패
+			             alert("오류가 발생했습니다.");
+			         }
+			     });
+			 }
+				,focus : function(event, ui) { // 방향키로 자동완성단어 선택 가능하게 만들어줌	
+					return false;
+				},
+				minLength: 1,// 최소 글자수
+				delay: 100	//autocomplete 딜레이 시간(ms),
+				, select : function(evt, ui) { 
+		      	// 아이템 선택시 실행 ui.item 이 선택된 항목을 나타내는 객체, lavel/value/idx를 가짐
+					console.log(ui.item.label);
+			 }
+		 });
+	})
+	 
+	
+	
+	// insert
 	function insertEvent(){
 		if(jsonArray.length != 0){
 			for(let i=0; i<jsonArray.length; i++){
@@ -227,6 +349,42 @@
 				$("#insertForm").append(tag);
 				console.log(result[3]);			
 			}
+		}
+		const discount = $("#discount").val();
+		const title = $("#title").val();
+		const content = $("#summernote").val();
+		const shortContent = $("#shortContent").val();
+		const endDate = $("#endDate").val();
+		const thumnail = $("#ex_filename").val();
+		
+		if(title === ""){
+			toastr.error("제목을 올바르게 입력하세요","제목 에러",{timeOut:10000})
+			return;
+		}
+		
+		if(content ===""){
+			toastr.error("내용을 올바르게 입력하세요","내용 에러",{timeOut:10000})
+			return;
+		}
+		
+		if(shortContent ===""){
+			toastr.error("짧은 내용을 올바르게 입력하세요","짧은 내용 에러",{timeOut:10000})
+			return;
+		}
+		
+		if(thumnail ===""){
+			toastr.error("썸내일을 등록해 주세요","썸네일 에러",{timeOut:10000})
+			return;
+		}
+		
+		if(endDate ===""){
+			toastr.error("종료일을 올바르게 입력하세요","종료 날짜 에러",{timeOut:10000})
+			return;
+		}
+		
+		if(discount >101 || discount <0 || discount ===""){
+			toastr.error("할인률을 올바르게 입력하세요","할인률 에러",{timeOut:10000})
+			return;
 		}
 		
 		$("#insertForm").submit();

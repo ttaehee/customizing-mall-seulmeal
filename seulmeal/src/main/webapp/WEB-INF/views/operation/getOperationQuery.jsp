@@ -108,7 +108,7 @@
         <div class="row" style="border-bottom: 2px solid; min-height: 400px;">
             <div class="col">${post.content}</div>            
         </div>
-        <c:if test="${user.role==0}">        
+        <c:if test="${user.role==1}">        
 	        <div class="row justify-content-end">
 	            <button id="answerInsert" style="margin-top:10px; margin-right:10px;" class="btn btn-primary float-right">답변등록</button>
 	        </div>

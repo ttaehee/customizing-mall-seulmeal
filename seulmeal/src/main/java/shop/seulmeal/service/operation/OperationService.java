@@ -6,6 +6,7 @@ import java.util.Map;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Product;
 
 public interface OperationService {
 	// 공지사항 + 이벤트 + 문의
@@ -24,4 +25,13 @@ public interface OperationService {
 	// admin
 	public List<Map<String,Object>> userCount(String table);
 	public List<Map<String,Object>> salePrice();
+	
+	// 오토컴플릿
+	public List<Map<String,Object>> getProductName(Map<String,Object> map);
+	public Product getProduct(String name);
+	
+	//이벤트 할인
+	public int updateDiscountProduct(Map<String,Object> map);
+	public int updateDiscountProductC(List<String> list);
+	
 }
