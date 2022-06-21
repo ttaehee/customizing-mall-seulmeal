@@ -325,9 +325,6 @@ section.main{
     margin: 0px 10px 40px 5px;
 }
 
-.sub-text{
-}
-
 .profile-card:first-child .profile-pic{
     width: 60px;
     height: 60px;
@@ -362,13 +359,13 @@ section.main{
 }
 
 
-
+/*
 .suggestion-text{
     font-size: 14px;
     color: rgba(0, 0, 0, 0.5);
     font-weight: 700;
     margin: 20px 0;
-}
+}*/
 
 /*
 @media (max-width: 1100px){
@@ -398,7 +395,8 @@ section.main{
 	height:30px;
 }
 
-.bi.bi-heart.icon{
+.bi.bi-heart.icon,
+.bi.bi-heart-fill.icon{
 	cursor:pointer;
 }
 
@@ -437,6 +435,13 @@ div.modal-content{
 #follower-list-card {
     width: 466px;
 }
+
+.postOption {
+	text-align:center;
+	cursor: pointer;
+}
+
+
 
 </style>
 
@@ -489,7 +494,7 @@ div.modal-content{
 		<div class="left-col">		
 		
 		<c:forEach var="post" items="${postList}">
-		
+			<c:set var= "i" value="${i+1}" />
                 <div class="post-card">
                     <div class="info">
                         <div class="user">
@@ -505,29 +510,109 @@ div.modal-content{
                             </p>
                         </div>
                         <!-- 게시글 옵션 아이콘 -->
-                        <i id = "option_icon" class="bi bi-three-dots"></i>
+                        <i id = "option_icon" class="bi bi-three-dots option_icon" data-toggle="modal" data-target=".fade${i}" data-value="${post.user.userId}"></i>
+						<!-- 게시글 수정 삭제 / 신고 모달 -->
+						<div id="postOptionModal" class="modal fade${i}" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalScrollableTitle"
+							aria-hidden="true">
+							<div class="modal-dialog modal-dialog-scrollable modal-md "
+								role="document">
+								<div class="modal-content">
+					
+									<!-- 헤더 -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalScrollableTitle"></h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+					
+					
+									<div class="modal-body">
+										<c:choose>
+											<c:when test="${sessionScope.user.userId == post.user.userId}">
+												<div>
+													<div class="postOption" onclick="location.href='/community/updatePost/${post.postNo}'">수정하기</div>
+												</div>
+												<hr>
+												<div>
+													<div class="postOption" onclick="deletePost(this)" data-value="${post.postNo}">삭제하기</div>
+												</div>					
+											</c:when>
+											<c:otherwise>
+												<div>
+													<div class="postOption" data-toggle= "modal" data-target="#reportModal${i}" 
+													data-dismiss="modal" >신고하기</div>
+												</div>
+											</c:otherwise>
+										</c:choose>	
+
+									</div>
+
+									<!-- 푸터 -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal">취소</button>
+									</div>
+					
+								</div>
+							</div>
+						</div>
+						<!-- 게시글 수정 삭제 / 신고 모달 끝 -->						
+
+					<!-- 게시글 신고 모달 -->
+					<div class="modal fade" id="reportModal${i}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="exampleModalLabel">게시글 신고 사유</h5>
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					      </div>
+					      <div class="modal-body">
+					        <form class="report-form" >
+					          <div class="report">
+					            <label for="message-text" class="col-form-label"></label>
+					            <textarea class="form-control" id = "reason" name="reason" rows="5" placeholder="신고사유를 적어주세요."></textarea>   <!-- 신고사유 -->
+					            <input type="hidden" name="reporterId" value="${sessionScope.user.userId}" />
+					            <input type="hidden" name="postNo" value="${post.postNo}" />
+					          </div>
+					        </form>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-primary" data-value="${post.postNo}" onclick="reportPost(this)">신고등록</button>
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+					<!-- 게시글 신고 모달 끝-->
+                        
                     </div>
                     <!-- 3. 게시글사진/제목+간략내용 -->
-                    <div class="your-class">
-                        <c:if test="${not empty post.attachments}">
-                            <c:forEach var="attach" items="${post.attachments}">
-                                <a class ="post-link" href="/community/getPost/${post.postNo}">
-                                    <img id = "post-img" class="post-image" src="/resources/attachments/${attach.attachmentName}"/>
-                                </a>
-                            </c:forEach>									
-                        </c:if>
-                    </div>
-                    <c:if test="${empty post.attachments}">
-                        <div class="post-list-title">${post.title}</div>
-                        <div id="post-list-content">
-                            <a class="post-shortContent" href="/community/getPost/${post.postNo}">${post.shortContent}</a>								
-                        </div>
-                    </c:if>
+                    <c:choose>
+                    	<c:when test="${not empty post.attachments}">
+                    		<div class="your-class">
+                    	 		<c:forEach var="attach" items="${post.attachments}">	
+                            	    <a class ="post-link" href="/community/getPost/${post.postNo}">
+                            	        <img id = "post-img" class="post-image" src="/resources/attachments/${attach.attachmentName}"/>
+                                	</a>
+                    			</c:forEach>
+                    		</div>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<div class="post-list-title">${post.title}</div>
+                        	<div id="post-list-content">
+                            	<a class="post-shortContent" href="/community/getPost/${post.postNo}">${post.shortContent}</a>								
+                        	</div>
+                    	</c:otherwise>
+                    </c:choose>
                     
                     <div class="post-content">
                         <div class="reaction-wrapper">
                             <i class="bi bi-heart icon" data-value="${post.postNo}"></i>
-                            <i class="bi bi-heart-fill" style="display:none;"></i>
                             <!-- 4.조회수, 댓글수 -->
                             <i class="bi bi-eye icon">${post.views}</i>
                             <i class="bi bi-chat-left icon">${post.commentCount}</i>
@@ -540,6 +625,7 @@ div.modal-content{
                         <!-- 6. 등록날짜-->
                         <div class="post-time">${post.regDate}</div>
                     </div>
+                    
                 </div>
                          	
          </c:forEach>   
@@ -589,7 +675,7 @@ div.modal-content{
 						<p class="sub-text">${sessionScope.user.foodCategoryName1}  ${sessionScope.user.foodCategoryName2}  ${sessionScope.user.foodCategoryName3}</p>
 					</div>	               
 					<div class="follow-info"><!-- 팔로우, 팔로워, 차단 모달창 클릭 -> 실행-->
-		                <p><a id = "follow-user-list"  data-toggle="modal" data-target="#followModal">팔로우 ${followMap.followTotalCount}</a></p> <!-- 팔로우 목록 모달창 -->
+		                <p><a id = "follow-user-list"  data-toggle="modal" data-target="#followModal" >팔로잉 <span class="followTotalCount">${followMap.followTotalCount}</span></a></p> <!-- 팔로우 목록 모달창 -->
 		                <p><a id = "follower-user-list"  data-toggle="modal" data-target="#followerModal">팔로워 ${followerMap.followerTotalCount}</a></p> <!-- 팔로워 목록 모달창 -->
 		                <a id="block-user-list" data-toggle="modal" data-target="#blockUserModal">차단유저목록</a>
 		            </div>
@@ -606,11 +692,13 @@ div.modal-content{
 		<jsp:include page="listCommunityFollowerUserModal.jsp"></jsp:include>
 		<jsp:include page="listCommunityBlockUserModal.jsp"></jsp:include>
 
+
 <script type="text/javascript">
 
-	// slick
-	$(document)
-	.ready(function() {$('.your-class').slick({
+
+
+	function slick2(e){		
+		$(e).slick({
 			dots : true,
 			infinite : true,
 			speed : 500,
@@ -620,13 +708,19 @@ div.modal-content{
 			//prevArrow : "<button type='button' class='slick-prev pull-left'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
 			//nextArrow : "<button type='button' class='slick-next pull-right'><i class='fa fa-angle-right' aria-hidden='true'></i></button>"
 					});
+	}
+
+	// slick
+	$(document)
+	.ready(function() {
+			slick2('.your-class');
 			});
 
 	
 
 	// 좋아요, 좋아요 취소
 	$("i.bi.bi-heart.icon").on("click", function() {
-				
+		const heart = $(this)		
 		const postNo = $(this).data("value");
 		//alert("postNo: " + postNo);
 		console.log("postNo: " + postNo);
@@ -652,9 +746,11 @@ div.modal-content{
             	console.log(value);
             	
             	if(first_key === '좋아요'){
-            		alert("좋아요");
+            		heart.attr("class", "bi bi-heart-fill icon");
+            		heart.css("color","red");
             	}else if(first_key === '좋아요 취소'){
-            		alert("좋아요 취소");
+            		heart.attr("class", "bi bi-heart icon");
+            		heart.css("color","black");
             	}
         
 				div_like_cnt.html(value); // 좋아요 개수 수정
@@ -815,7 +911,7 @@ div.modal-content{
 		let currentPage = 2;
 		let maxPage = ${resultPage.maxPage};
 		//alert(maxPage);
-		
+
 		$(window).scroll(function(){
 			
 			let $window = $(this);
@@ -828,7 +924,7 @@ div.modal-content{
 			}
 			
 				function getListPost(){
-					
+								
 					$.ajax({
 						url:"/community/api/getListPost?currentPage="+currentPage,
 						type:"GET",
@@ -839,29 +935,100 @@ div.modal-content{
 							console.log("data: " + data);
 							console.log("jqXHR: "+ jqXHR);
 							console.log("json/stringify: "+JSON.stringify(data));						
-							//const posts = JSON.stringify(data);					
+							//const posts = JSON.stringify(data);	
 							
+									
 							for(let i = 0; i<data.length; i++){
 								
-								let postCard = $(".post-card").clone()[0];
+								let postCardHtml = `
+									<div class="post-card">
+									    <div class="info">
+									        <div class="user">
+									            <div class="profile-pic">
+									                <a class ="profile-link">
+									                    <img class="profile-img"/>
+									                </a>
+									            </div>                  
+									            <p id = "post_nickname" class="username">
+									                <a id= "profile-nick" class ="profile-link2" ></a>
+									            </p>
+									        </div>
+									        <i id = "option_icon" class="bi bi-three-dots"></i>
+									    </div>
+									    <div class="your-class-m">
+									    <div class="your-class\${currentPage}">
+									    	
+									    </div>
+									    </div>
+									    <div class="post-content">
+									        <div class="reaction-wrapper">
+									            <i class="bi bi-heart icon" data-value=""></i>
+									            <i class="bi bi-heart-fill" style="display:none;"></i>
+									            <i class="bi bi-eye icon"></i>
+									            <i class="bi bi-chat-left icon"></i>
+									        </div>
+									        <p class="likes">좋아요 <span class="like-cnt"></span></p>	
+									        
+									        <div class="post-time"></div>
+									    </div>
+									</div>
+									`;
+								
+								let div1 = `
+											<a class ="post-link">
+												<img id = "post-img" class="post-image"/>
+											</a>
+											`;
+										
+								let div2 = `<div class="post-list-title"></div>
+							            <div id="post-list-content">
+							                <a class="post-shortContent"></a>								
+							            </div>`;
+								
+							    let div3 = `<div class="description"></div>`;
+								
+								
 								let post = data[i];
-								//console.log($(".post-card").clone()[0]);
+																
+								let postCard = $($.parseHTML(postCardHtml));
+								let div_1 = $($.parseHTML(div1));
+								let div_2 = $($.parseHTML(div2));
+								let div_3 = $($.parseHTML(div3));
 								
 								/*
-								console.log("프로필이미지: "+post.user.profileImage)							
-								console.log("postNo: "+post.postNo)
-								console.log("아이디: "+post.user.userId)
-								console.log("닉네임: "+post.user.nickName)
-								console.log("사진유무: "+post.attachments)
-								console.log("사진이름: "+post.attachments[0].attachmentName)
-								console.log("제목: "+post.title)
-								console.log("내용: "+post.content)
-								console.log("조회수: "+post.views)
-								console.log("댓글수: "+post.commentCount)
-								console.log("좋아요수: "+post.likeCount)
-								console.log("등록일자: "+post.regDate)
+								console.log(postCard)
+								console.log(div_1)
+								console.log(div_2)
+								console.log(div_3)
 								*/
+
+								console.log(post.attachments == "")
+								console.log(post.attachments != "")
 								
+								if(post.attachments == ""){
+									
+									$(postCard).find(".your-class-m").append(div_2);
+
+									$(postCard).find(".post-list-title").text(post.title);
+									$(postCard).find(".post-shortContent").attr("href","/community/getPost/"+post.postNo)
+									$(postCard).find(".post-shortContent").append(post.shortContent);
+								}else{
+									
+									$(postCard).find(".post-time").before(div_3);
+									
+									$(postCard).find(".description").html(post.shortContent);
+									
+									for(let j = 0; j < post.attachments.length; j++){	
+										$(postCard).find(".your-class"+currentPage).append(`
+											<a class ="post-link">
+												<img id = "post-img" class="post-image" src="/resources/attachments/\${post.attachments[j].attachmentName}"/>
+											</a>
+											`);
+										$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
+										//$(postCard).find(".post-image").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
+										console.log("/////"+post.attachments[j].attachmentName);
+									}
+								}
 								
 								//$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
 								$(postCard).find(".profile-img").attr("src","/resources/attachments/profile_image/"+post.user.profileImage);
@@ -869,46 +1036,84 @@ div.modal-content{
 								$(postCard).find(".profile-link2").attr("href","/community/getProfile/"+post.user.userId)
 								$(postCard).find(".profile-link2").text(post.user.nickName);
 								
-								$(postCard).find("i.bi.bi-heart.icon").attr("data-value",post.postNo);
+								$(postCard).find("i.bi.bi-heart.icon").attr("data-value", post.postNo);
 								$(postCard).find("i.bi.bi-eye.icon").text(post.views);
 								$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
 								$(postCard).find(".like-cnt").text(post.likeCount);
-								$(postCard).find(".description").text(post.shortContent);
 								$(postCard).find(".post-time").text(post.regDate);
 								
-								console.log(post.attachments == null)
-								
-								if(post.attachments != null){
-									for(var j = 0; j < post.attachments.length; j++){
-										$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
-										$(postCard).find(".post-image").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
-									}
-								}else{
-									$(postCard).find(".post-list-title").text(post.title);
-									$(postCard).find(".post-shortContent").attr("href","/community/getPost/"+post.postNo).text(post.shortContent);
-								}
-								
-															
-								console.log(postCard);
+								console.log("postC: "+postCard);
 								
 								$(".left-col").append(postCard);
 								
-							}
-	
-						}, error: function(status, jqXHR){
+
+								
+							}//for
+							
+							slick2('.your-class'+currentPage);								
+						}//success
+						, error: function(status, jqXHR){
 							console.log("error status: "+ status);
 							console.log("jqXHR: "+ jqXHR);
 							alert("페이지 로드 실패");
 						}
 						
 					})//jQuery.ajax()
-					currentPage ++;		
+					
+				currentPage ++;
 				}//getListPost
-		})
+				
+		})//window.scroll()
+		
+		
 	});
 	
-
+	function deletePost(e){
+		
+		let postNo = $(e).data("value");
+		
+		let result = confirm("정말 삭제하시겠습니까?")
+		if(result){
+			window.location.href= "/community/deletePost/"+postNo;
+		}
+	}
 	
+	function reportPost(e){
+		
+		let postNo = $(e).data("value");
+		
+		
+		$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
+	}
+	
+	// 팔로우 해제
+	function deleteFollow(e){
+		let relationUserId = $(e).data("value");
+		//alert("relationUserId: " + relationUserId);
+		
+		let result = confirm(relationUserId+"님의 팔로우를 취소하시겠어요?")
+		if(result){
+			$.ajax({
+				url : "/community/api/deleteFollow/"+relationUserId,
+				method : "POST",
+				success : function(data, status, jqXHR) {
+					
+					//alert(data.userFollowCnt)
+					//alert(data.relationUserFollowerCnt)
+					console.log("data : " + data);
+					console.log("status: " + status);
+					console.log("jqXHR: " + jqXHR);
+					
+					$(e).parent().parent().remove();
+					$(".followTotalCount").text(data.userFollowCnt);
+					
+				}, error : function(jqXHR, status){
+					console.log(jqXHR);	// 응답 메시지
+					console.log(status); // "errror"
+				}
+			});
+		}// confirm
+	};
 	
 	
 </script>

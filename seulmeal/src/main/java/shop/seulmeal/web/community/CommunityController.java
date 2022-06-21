@@ -78,7 +78,13 @@ public class CommunityController {
 		if(session.getAttribute("user") == null) {
 			return "user/login";
 		}
-		// relation 정보
+		
+		User loginUser = (User)session.getAttribute("user");
+		List<Relation> relationList = communityService.getAllRelation(loginUser.getUserId());
+		System.out.println("/////"+relationList);
+		loginUser.setRelation(relationList);
+		session.setAttribute("user", loginUser);
+
 		// 전체 post
 		Search search = new Search();
 		search.setCurrentPage(1);
@@ -184,8 +190,10 @@ public class CommunityController {
 	@GetMapping("/getPost/{postNo}") // oo
 	public String getPost(@PathVariable int postNo, Model model, HttpSession session) {
 		
+		
 		// 해당 post
 		Post post = communityService.getPost(postNo);
+		System.out.println("//////"+post.getContent());
 		
 		// 타인 게시글 조회시에만, 조회수 증가 
 		if(!((User)session.getAttribute("user")).getUserId().equals(post.getUser().getUserId()) ) {
@@ -267,6 +275,8 @@ public class CommunityController {
 	@PostMapping("/insertReportPost") // o
 	public String insertReportPost(@ModelAttribute Report report) {
 
+		System.out.println("//////: "+ report);
+		
 		communityService.insertReportPost(report);
 		return "redirect:/community/getPost/" + report.getPostNo();
 	}
@@ -305,36 +315,72 @@ public class CommunityController {
 	@GetMapping("getProfile/{userId}")
 	public String getProfile(@PathVariable String userId, Model model, HttpSession session) throws Exception {
 
-		User user = userService.getProfile(userId);
+		// default : 타인 게시글
+		boolean isMine = false;
+		
+		// 본인 게시글 
+		if(((User)session.getAttribute("user")).getUserId().equals(userId)){
+			isMine = true; 
+		}
+		
 		Search search = new Search();
 		search.setCurrentPage(1);
-		search.setPageSize(3);//
+		search.setPageSize(2);
 
+		Map<String,Object> postMap = communityService.getListPost(search, userId);
 		
-		Map map = null;
-		// 본인 게시글 목록
-		if(((User)session.getAttribute("user")).getUserId().equals(userId)){
-			map = communityService.getListPost(search, ((User)session.getAttribute("user")).getUserId());
-		}else {// 타인 게시글 목록
-			map = communityService.getListPost(search, userId);
-		}
-		model.addAttribute("postList", (List<Post>) map.get("postList"));
+		Page resultPage = new Page(1, (int) postMap.get("postTotalCount"), pageUnit, pageSize);
 		
-		// 팔로우, 팔로워 수
-		Map<String, Object> map02 = new HashMap<>();
-		map02.put("userId", userId);
-		map02.put("relationUserId", userId);
-		map02.put("relationStatus", "0");
-
-		int followCnt = communityMapper.getRelationTotalCount(map02);
-		int followerCnt = communityMapper.getFollowerTotalCount(map02);
-
-		model.addAttribute("followCnt", followCnt);
-		model.addAttribute("followerCnt", followerCnt);
+		// 팔로우, 팔로워 목록 및 count
+		Map<String, Object> followMap = communityService.getListFollow(null, userId, "0");
+		Map<String, Object> followerMap = communityService.getListFollower(null, userId);
 		
 		// 차단유저 목록
-		List<Relation> blockList = (List<Relation>)communityService.getListBlock(null, userId, "1").get("blockList");
-		model.addAttribute("blockList", blockList);
+		Map<String,Object> blockMap = communityService.getListBlock(null, userId, "1");
+		
+		Map<String, Object> attachMap = new HashMap<>();
+		List<Post> postList = (List<Post>) postMap.get("postList");
+		List<Attachments> attachmentList = new ArrayList<>();
+
+		for(Post post : postList) {
+			attachMap.put("postNo", post.getPostNo());
+			post.setAttachments(attachmentsService.getAttachments(attachMap));
+			
+			// 닉네임없는 유저, id를 닉네임으로 저장
+			if(post.getUser().getNickName() == null) {
+				post.getUser().setNickName(post.getUser().getUserId());
+			}
+			
+			// 프로필이미지 없는 유저, 기본이미지로 저장
+			if(post.getUser().getProfileImage()==null) {
+				post.getUser().setProfileImage("default_profile.jpg");
+			}
+			
+			if(post.getAttachments() == null) {
+				
+				if(post.getContent().length() > 200) {
+					post.setShortContent(post.getContent().substring(0, 201));					
+				}else {
+					post.setShortContent(post.getContent());
+				}
+			}else {
+				
+				if(post.getContent().length() > 50) {
+					post.setShortContent(post.getContent().substring(0, 51));					
+				}else {
+					post.setShortContent(post.getContent());
+				}
+			}			
+		}
+				
+		//model
+		model.addAttribute("isMine", isMine);
+		model.addAttribute("profileUser",userService.getProfile(userId));
+		model.addAttribute("postList", (List<Post>)postMap.get("postList"));
+		model.addAttribute("resultPage",resultPage);
+		model.addAttribute("followMap", followMap);
+		model.addAttribute("followerMap", followerMap);
+		model.addAttribute("blockMap", blockMap);
 
 		return "/community/getCommunityProfile";
 	}
@@ -370,5 +416,4 @@ public class CommunityController {
 		return "redirect:/community/getProfile/" + user.getUserId();
 	}
 
-	
 }

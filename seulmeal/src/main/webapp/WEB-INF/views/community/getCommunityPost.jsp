@@ -22,7 +22,8 @@
 	font-size: 30px;
 }
 
-img {
+
+.your-class-img {
 	display: block;
 	margin: auto;
 }
@@ -111,7 +112,7 @@ img.rounded-circle{
 		<div class="your-class" style="margin-bottom:30px">
 				<c:forEach var="attachment" items="${attachmentList}">
 					<div>
-						<img style="height: 60vh;"
+						<img class = "your-class-img" style="height: 60vh;"
 							src="/resources/attachments/${attachment.attachmentName}" alt="">
 					</div>
 				</c:forEach>
@@ -275,22 +276,15 @@ img.rounded-circle{
 													<span class="fw-bold">\${data.user.nickName}</span>
 													<span class="comment-con">\${data.content}</span>
 													<span class="comment-reg">\${data.regDate}</span>
-													
+													<button id="deleteCommentBtn" type="button"
+														class="btn btn-primary" data-value="\${data.commentNo}">삭제</button>
 												</div>
 											</div>`
 											
 											// 댓글 맨위에 추가
 											$("#comment_container").prepend(comment);
 											
-											/*
-											const deleteComment = ` 
-											<button id="deleteCommentBtn" type="button"
-											class="btn btn-primary" data-value="${comment.commentNo}">삭제</button>`
-											
-											// 로그인유저=댓글단유저
-											if('${sessionScope.user.userId}' == data.user.userId){
-												$("div.comment_div").append('#deleteCommentBtn');
-											}*/
+											deleteComment();
 
 										},error: function(status, jqXHR){
 											console.log("error status: "+ status);
@@ -300,41 +294,48 @@ img.rounded-circle{
 									
 							// 댓글 내용 비우기
 							$("#comment_content").val("");
+							
+							
 						});
 
-		$("#deleteCommentBtn").on("click", function() {
+		
+		
+		function deleteComment(){
 			
-			let commentNo = $(this).data("value");
-			//alert("commentNo: " + commentNo);
-			console.log("commentNo: " + commentNo);
-			
-			
-			let result = confirm("정말 삭제하시겠습니까?");
-			if(result){
-				$.ajax({
-					url : "/community/api/deleteComment/" + commentNo,
-					method : "POST",
-
-					success : function(data, status, jqXHR) {
-						console.log("data: " + data);
-						console.log("success status: " + status);
-						console.log("jqXHR: " + jqXHR);
-						
-					}, error: function(status, jqXHR){
-						console.log("error status: "+ status);
-						console.log("jqXHR: "+ jqXHR);
-					}
-				});
+			$(".btn.btn-primary:contains('삭제')").on("click", function() {
 				
-				// 댓글 삭제
-				$(this).parent().parent().remove();
-			}
-			
-		});
-		
-		
+				let commentNo = $(this).data("value");
+				//alert("commentNo: " + commentNo);
+				console.log("commentNo: " + commentNo);
+				
+				
+				let result = confirm("정말 삭제하시겠습니까?");
+				if(result){
+					$.ajax({
+						url : "/community/api/deleteComment/" + commentNo,
+						method : "POST",
 
+						success : function(data, status, jqXHR) {
+							console.log("data: " + data);
+							console.log("success status: " + status);
+							console.log("jqXHR: " + jqXHR);
+							
+						}, error: function(status, jqXHR){
+							console.log("error status: "+ status);
+							console.log("jqXHR: "+ jqXHR);
+						}
+					});
+					
+					// 댓글 삭제
+					$(this).parent().parent().remove();
+				}
+				
+			});
+			
+		}
 		
+		deleteComment();
+
 		
 		// 좋아요, 좋아요 취소
 		$("i.bi.bi-heart.icon").on("click", function() {
@@ -433,6 +434,9 @@ img.rounded-circle{
 								$(commentCard).find(".comment-reg").text(comment.regDate);
 								
 								$("#comment_container").append(commentCard);
+								
+								deleteComment();
+								
 								}
 						}
 						, error: function(status, jqXHR){
@@ -444,7 +448,7 @@ img.rounded-circle{
 					})//jQuery.ajax()
 					// 위치 중요(js 함수 안, jQuery 함수 밖)
 					currentPage ++;
-				}//getListComment
+				}//getListComment()
 				
 			})
 		});
