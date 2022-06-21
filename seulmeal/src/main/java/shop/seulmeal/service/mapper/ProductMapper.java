@@ -30,7 +30,7 @@ public interface ProductMapper {
 
 	public void deleteProduct(int productNo) throws Exception;
 
-	public void restoreProduct(int productNo) throws Exception;
+	public void restoreProduct(int productNo) throws Exception;	
 
 	// FOODCATEGORY
 	public void insertFoodCategory(String foodCategoryName) throws Exception;

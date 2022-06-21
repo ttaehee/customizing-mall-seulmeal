@@ -43,6 +43,7 @@ import shop.seulmeal.service.attachments.AttachmentsService;
 import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.operation.OperationService;
 
@@ -85,8 +86,9 @@ public class OperationController {
 	
 	@PostMapping("insertOperation")
 	@Transactional(rollbackFor = Exception.class)
-	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile,
+	public String insertOperation(Post post, String userId, Model model, MultipartFile[] uploadfile, String productNo, String tprice,
 					MultipartFile thumnailFile, Attachments attachments, String summerImg, HttpSession session) throws IllegalStateException, IOException {
+		
 		User user = (User)session.getAttribute("user");
 		System.out.println(user);
 		post.setUser(user);
@@ -104,7 +106,7 @@ public class OperationController {
 		}
 		if(post.getPublicStatus() == null) {
 			post.setPublicStatus("0");
-		}
+		}		
 		
 		// 이벤트 썸내일
 		if(thumnailFile != null) {
@@ -117,6 +119,27 @@ public class OperationController {
 		
 		System.out.println("POST  :"+post);
 		operationService.insertOperation(post);
+		
+		if(post.getPostStatus().equals("2")) {
+			System.out.println("===================이벤트=========================");
+			System.out.println("productNo : "+productNo);
+			System.out.println("tprice : "+tprice);
+			
+			String[] pNo = productNo.split(",");
+			String[] pPrice = tprice.split(",");
+			Map<String,Object> pMap = new HashMap<String,Object>();
+			List<Product> pList = new ArrayList<Product>();
+			for (int i=0; i<pNo.length; i++) {
+				Product prod = new Product();
+				prod.setProductNo(new Integer(pNo[i]));
+				prod.setPrice(new Integer(pPrice[i]));
+				prod.setDiscount(post.getDiscount());
+				pList.add(prod);
+			}
+			pMap.put("list",pList);
+			pMap.put("postNo",post.getPostNo());
+			operationService.updateDiscountProduct(pMap);
+		}		
 		
 		System.out.println(uploadfile.length);
 		if(uploadfile != null) {
@@ -193,9 +216,10 @@ public class OperationController {
 	
 	@PostMapping("updateOperation")
 	@Transactional(rollbackFor = Exception.class)
-	public String updateOperation(Post post, Model model, Attachments attachments, MultipartFile thumnailFile,
+	public String updateOperation(Post post, Model model, Attachments attachments, MultipartFile thumnailFile, String checkThumnail,
+							String deleteProductNo, String productNo, String tprice,
 							MultipartFile[] uploadfile, String deleteAttachmentNo, String deleteAttachmentName) throws IllegalStateException, IOException {
-		System.out.println("수정사항 : "+post);
+		
 		
 		// 삭제
 		attachmentsService.deleteAttachments(deleteAttachmentNo,deleteAttachmentName);
@@ -208,7 +232,10 @@ public class OperationController {
 		}
 		
 		// 이벤트 썸내일
-		if(thumnailFile != null) {
+		System.out.println(checkThumnail);
+		System.out.println();
+		System.out.println("============================="+checkThumnail.equals(post.getThumnail()));
+		if(thumnailFile != null && !checkThumnail.equals(post.getThumnail())) {
 			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
 			post.setThumnail(name);
 			
@@ -221,6 +248,40 @@ public class OperationController {
 		}
 		
 		operationService.updateOperation(post);
+		
+		System.out.println("deleteProductNo : "+deleteProductNo);
+		if(post.getPostStatus().equals("2")) {
+			System.out.println("===================이벤트=========================");
+			System.out.println("productNo : "+productNo);
+			System.out.println("tprice : "+tprice);
+			
+			if(deleteProductNo.length() != 0) {
+				List<String> dList = new ArrayList<String>();
+				String[] deletePNo = deleteProductNo.split(",");
+				
+				for(int i=0; i<deletePNo.length; i++) {
+					dList.add(deletePNo[i]);
+				}
+				operationService.updateDiscountProductC(dList);
+			}
+			
+			if(productNo != null) {
+				String[] pNo = productNo.split(",");
+				String[] pPrice = tprice.split(",");
+				Map<String,Object> pMap = new HashMap<String,Object>();
+				List<Product> pList = new ArrayList<Product>();
+				for (int i=0; i<pNo.length; i++) {
+					Product prod = new Product();
+					prod.setProductNo(new Integer(pNo[i]));
+					prod.setPrice(new Integer(pPrice[i]));
+					prod.setDiscount(post.getDiscount());
+					pList.add(prod);
+				}
+				pMap.put("list",pList);
+				pMap.put("postNo",post.getPostNo());
+				operationService.updateDiscountProduct(pMap);
+			}			
+		}
 		
 		model.addAttribute("post",post);
 		

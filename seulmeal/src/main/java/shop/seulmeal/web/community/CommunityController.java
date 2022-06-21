@@ -78,7 +78,7 @@ public class CommunityController {
 		if(session.getAttribute("user") == null) {
 			return "user/login";
 		}
-
+		// relation 정보
 		// 전체 post
 		Search search = new Search();
 		search.setCurrentPage(1);

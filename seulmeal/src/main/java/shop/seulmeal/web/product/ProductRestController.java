@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
 
@@ -58,7 +60,7 @@ public class ProductRestController {
 	
 	/* 상품 좋아요 / 좋아요 취소 */
 	@GetMapping("updateLikeProduct/{productNo}")
-	public String updateLikeProduct(@PathVariable int productNo, HttpSession session) throws Exception {
+	public JSONObject updateLikeProduct(@PathVariable int productNo, HttpSession session) throws Exception {
 		User user = (User) session.getAttribute("user");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -66,8 +68,12 @@ public class ProductRestController {
 		map.put("userId", user.getUserId());
 		
 		String result = productService.updateLikeProduct(map);
+		Product product =productService.getProduct(productNo);
 		
-		return result;
+		JSONObject json = new JSONObject();
+		json.put("result", result);
+		json.put("likeCount", product.getLikeCount());
+		return json;
 	}
 	
 }

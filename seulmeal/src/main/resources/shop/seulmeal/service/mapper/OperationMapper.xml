@@ -20,6 +20,7 @@
 		<result property="publicStatus" column="public_status" jdbcType="VARCHAR" />
 		<result property="password" column="password" jdbcType="NUMERIC" />
 		<result property="answerStatus" column="answer_status" jdbcType="VARCHAR" />
+		<result property="discount" column="discount" jdbcType="NUMERIC"/>
 		<result property="status" column="status" jdbcType="VARCHAR" />
 		<association property="user" javaType="user">
 			<result property="userId" column="user_id" jdbcType="VARCHAR" />
@@ -45,6 +46,24 @@
 				<result property="userId" column="user_id_c" jdbcType="VARCHAR" />
 			</association>
 		</collection>
+		<collection property="discountProduct" ofType="product">
+			<result property="productNo" column="product_no" jdbcType="NUMERIC" />
+			<result property="foodCategory.foodCategoryNo" column="foodcategory_no" jdbcType="NUMERIC" />
+			<result property="name" column="name" jdbcType="VARCHAR" />
+			<result property="subContent" column="sub_content" jdbcType="VARCHAR" />
+			<result property="price" column="price" jdbcType="NUMERIC" />
+			<result property="originPrice" column="origin_price" jdbcType="NUMERIC" />
+			<result property="discount" column="discount" jdbcType="NUMERIC" />
+			<result property="calorie" column="calorie" jdbcType="NUMERIC" />
+			<result property="content" column="content" jdbcType="VARCHAR" />
+			<result property="stock" column="stock" jdbcType="NUMERIC" />
+			<result property="averageRating" column="average_rating" jdbcType="NUMERIC" />
+			<result property="likeCount" column="like_count" jdbcType="NUMERIC" />
+			<result property="reviewCount" column="review_count" jdbcType="NUMERIC" />
+			<result property="regDate" column="reg_date" jdbcType="DATE" />
+			<result property="status" column="status" jdbcType="NUMERIC" />
+			<result property="thumbnail" column="thumbnail" jdbcType="VARCHAR" />
+		</collection>
 	</resultMap>
 	
 	<resultMap type="comment"	id="commentSelectMap">		
@@ -63,8 +82,9 @@
 	</resultMap>
 	
 	<insert id="insertOperation">
-		INSERT INTO post(post_no,user_id, title, content, short_content, thumnail, reg_date, update_date, end_date, post_status,public_status,password)
-		values((seq_post_no.NEXTVAL),#{user.userId},#{title},#{content},#{shortContent:VARCHAR},#{thumnail:VARCHAR},SYSDATE,SYSDATE,#{endDate:DATE},#{postStatus},#{publicStatus:VARCHAR},#{password:VARCHAR})
+		INSERT INTO post(post_no,user_id, title, content, short_content, thumnail, reg_date, update_date, end_date, post_status,public_status,password,discount)
+		values((seq_post_no.NEXTVAL),#{user.userId},#{title},#{content},#{shortContent:VARCHAR},#{thumnail:VARCHAR},SYSDATE,SYSDATE,
+		#{endDate:DATE},#{postStatus},#{publicStatus:VARCHAR},#{password:VARCHAR},#{discount:VARCHAR})
 		<selectKey keyProperty="postNo" resultType="int" order="AFTER">
 			SELECT seq_post_no.CURRVAL FROM DUAL
 		</selectKey>
@@ -91,9 +111,10 @@
 			</where>
 		</if>
 		<if test="postStatus == 2">
-			SELECT * FROM post
+			SELECT * FROM post p, product pd
 			<where>
-				post_no = #{postNo}
+				p.post_no=pd.post_no(+) AND
+				p.post_no = #{postNo}
 			</where>
 		</if>
 		<if test="postStatus == 3">
@@ -117,6 +138,7 @@
 			public_status = #{publicStatus:VARCHAR},
 			password = #{password:VARCHAR},
 			update_date = SYSDATE,
+			discount = #{discount:VARCHAR},
 			end_date = #{endDate:DATE}
 		</set>
 		<where>
@@ -237,8 +259,87 @@
 		set
 			status =1
 		where end_date &lt; SYSDATE
+		<selectKey keyProperty="post_no" order="AFTER">
+		</selectKey>
 	</update>
-		
+	
+	<!-- 오토 컴플릿 -->
+	<select id="getProductName" parameterType="map" resultType="map">
+		SELECT name
+		FROM product
+		<where>
+			name LIKE '%'|| #{value} || '%' AND status ='0' AND post_no is null
+		</where>
+	</select>
+	
+	<select id="getProduct" resultType="product">
+		SELECT * FROM product
+		<where>
+			name = #{value} AND status ='0' AND post_no is null
+		</where>
+	</select>
+	
+	<!-- 이벤트시 상품할인 -->
+	<update id="updateDiscountProduct">
+		<foreach collection="list" item="product" open="DECLARE BEGIN" close="; END;" separator=";">
+			UPDATE product
+			<set>
+				origin_price = price,
+				price = #{product.price},
+				post_no = #{postNo},
+				discount = #{product.discount}
+			</set>
+			<where>
+				product_no = #{product.productNo}
+			</where>
+		</foreach>		
+	</update>
+	
+	<!-- 이벤트 조기종료시 가격 원상복귀 -->
+	<update id="updateDiscountProductC">
+		<foreach collection="list" item="string" open="DECLARE BEGIN" close="; END;" separator=";">
+			UPDATE product
+			<set>
+				origin_price = null,
+				price = origin_price,
+				post_no = null,
+				discount = null
+			</set>
+			<where>
+				product_no = #{string}
+			</where>
+		</foreach>
+	</update>
+	
+	<!-- 이벤트 조기종료시 가격 원상복귀 -->
+	<update id="deleteDiscountProduct">
+		UPDATE product
+		<set>
+			origin_price = null,
+			price = origin_price,
+			post_no = null,
+			discount = null
+		</set>
+		<where>
+			post_no = #{postNo}
+		</where>
+	</update>
+	
+	<!-- 이벤트 종료시 상품가격 변경 -->
+	<update id="endDiscountProduct">
+		UPDATE product
+		<set>
+			origin_price = null,
+			price = origin_price,
+			post_no = null,
+			discount = null
+		</set>
+		<where>
+			post_no IN (
+			select post_no from post where end_date &lt; SYSDATE)
+		</where>
+	</update>
+	
 	<!-- 답변 -->
 	<insert id="insertAnswer">
 		INSERT INTO comments(comment_no,user_id,post_no,content,reg_date,update_date)

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.mapper.OperationMapper;
 import shop.seulmeal.service.operation.OperationService;
 
@@ -51,6 +52,12 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public int deleteOperation(Post post) {
 		// TODO Auto-generated method stub
+		if(post.getPostStatus().equals("2")) {
+			int r = operationMapper.deleteDiscountProduct(post.getPostNo());
+			System.out.println("========================="+r+"=========================");
+			
+		}
+		
 		return operationMapper.deleteOperation(post);
 	}
 
@@ -95,10 +102,11 @@ public class OperationServiceImpl implements OperationService {
 		return operationMapper.deleteAnswer(comment);
 	}
 
-	@Scheduled(cron = "0 49 17 * * ? ")
+	@Scheduled(cron = "0 12 17 * * ? ")
 	public void endEvent() throws Exception {
 		System.out.println("test");
 		operationMapper.endEvent();
+		operationMapper.endDiscountProduct();
 	}
 
 	@Override
@@ -112,6 +120,30 @@ public class OperationServiceImpl implements OperationService {
 	public List<Map<String, Object>> salePrice() {
 		// TODO Auto-generated method stub
 		return operationMapper.salePrice();
+	}
+
+	@Override
+	public List<Map<String, Object>> getProductName(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return operationMapper.getProductName(map);
+	}
+
+	@Override
+	public Product getProduct(String name) {
+		// TODO Auto-generated method stub
+		return operationMapper.getProduct(name);
+	}
+
+	@Override
+	public int updateDiscountProduct(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return operationMapper.updateDiscountProduct(map);
+	}
+
+	@Override
+	public int updateDiscountProductC(List<String> list) {
+		// TODO Auto-generated method stub
+		return operationMapper.updateDiscountProductC(list);
 	}
 
 }

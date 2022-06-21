@@ -26,6 +26,7 @@ import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
@@ -230,10 +231,10 @@ public class PurchaseController {
 	
 	//포인트만으로 결제시
 	@PostMapping("insertPurchase")
-	public String insertPurchase(Purchase purchase, Integer[] customProductNo, @AuthenticationPrincipal User user, Model model) throws Exception {
+	public String insertPurchase(Purchase purchase, Integer[] customProductNo, @AuthenticationPrincipal User user, Point point, Model model) throws Exception {
 		
 		System.out.println("/purchase/insertPurchase : "+purchase);
-		System.out.println("/purchase/insertPurchase : "+customProductNo[0]);
+		System.out.println("/purchase/insertPurchase : "+purchase.getUsePoint());
 
 		purchase.setUser(user);
 	      
@@ -257,6 +258,16 @@ public class PurchaseController {
 			purchaseService.updateCustomProductStatus(cp);
 		}
 		
+		//사용포인트
+		point.setUserId(user.getUserId());
+		point.setPurchaseNo(purchase.getPurchaseNo());
+		point.setPointStatus("0");
+		point.setPoint(purchase.getUsePoint());
+		userService.insertPoint(point);
+		//총포인트에서 사용포인트 빼기
+		user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+		userService.updateUserTotalPoint(user);
+
 		model.addAttribute(purchase);
 
 		return "redirect:/purchase/getPurchase/"+purchase.getPurchaseNo();	
@@ -302,23 +313,6 @@ public class PurchaseController {
 		return "purchase/listPurchase";
 	}
 	
-	@GetMapping("updatePurchaseCode/{purchaseNo}/{purchaseStatus}")
-	public String updatePurchaseCode(@PathVariable int purchaseNo, @PathVariable String purchaseStatus, Purchase purchase) throws Exception {
-
-	      System.out.println("/purchase/updatePurchaseCode : POST");
-	      
-	      purchase=purchaseService.getPurchase(purchaseNo);
-	      purchase.setPurchaseStatus(purchaseStatus);
-	      purchaseService.updatePurchaseCode(purchase);
-	      
-	      if(purchaseStatus.equals("2")) {
-	    	  return "redirect:/purchase/getListSale/1";
-	      }else {
-	    	  return "redirect:/purchase/getListPurchase";
-	      }
-	      
-	   }  
-	
 	//구매내역 삭제 
 	@PostMapping("/deletePurchase")
 	@Transactional(rollbackFor= {Exception.class})
@@ -331,6 +325,7 @@ public class PurchaseController {
 		return "redirect:getListPurchase/"+userId;
 	}	
 	
+	//판매내역목록
 	@RequestMapping(value= {"/getListSale/{currentPage}/{purchaseStatus}", "/getListSale/{currentPage}", "/getListSale"})
 	public String getListSale(@PathVariable int currentPage, @PathVariable(required = false) String purchaseStatus, Search search, Model model, HttpSession session)
 			throws Exception {

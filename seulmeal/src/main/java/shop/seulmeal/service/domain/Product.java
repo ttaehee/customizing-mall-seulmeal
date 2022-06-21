@@ -31,4 +31,8 @@ public class Product {
 
 	// 상품이 리뷰를 가지고 있다.
 	private List<Review> review;
+	
+	// 할인
+	private int discount;
+	private int originPrice;
 }

@@ -210,6 +210,9 @@
 						<div data-value="${product.productNo}" class="productHref">
 						<h2 class="display-6fw-bold productTarget">${product.name}</h2>
 						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
+						<c:if test="${product.originPrice != 0}">
+							<h5 class="productTarget" style="text-decoration: line-through;">${product.originPrice}원</h5>
+						</c:if>						
 						<h5 class="productTarget">${product.price}원</h5>
 						<h5 class="productTarget">${product.calorie}Cal</h5>
 						</div>
@@ -222,8 +225,8 @@
 								<small>&nbsp;${product.reviewCount}</small>
 							</li>
 							<li class="d-flex align-items-center">
-								<i style="font-size:1.5rem;" class="bi bi-heart-fill"></i>
-								<small>&nbsp;${product.likeCount}</small>
+								<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+								<small class="likeText">&nbsp;${product.likeCount}</small>
 							</li>
 						</ul>
 					</div>
@@ -291,7 +294,27 @@ $jq(document).ready(function() {
 		})
 	})
 		
-
+	function updateLikeProduct(e){
+		const no = $(e).parent().parent().parent().find(".productHref").data("value");
+		const cl = $(e).next("small");
+		///*
+		$.ajax({
+			url : "/product/api/updateLikeProduct/"+no,
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	cl.text(data.likeCount);
+	        	if(data.result === "Liked"){
+	        		$(e).attr("class","bi-heart-fill")
+	        	} else {
+	        		$(e).attr("class","bi-heart")
+	        	}
+	        	
+	        }
+		})
+		//*/
+	}
 </script>
 </body>
 </html>

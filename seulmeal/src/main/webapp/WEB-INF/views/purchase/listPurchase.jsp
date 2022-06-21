@@ -17,6 +17,11 @@
 
 	<style>
 	
+	.thumbnail{
+		width: 200px;
+		height: 200px;
+	}
+	
 	h2{
 		text-align: left; 
 	}
@@ -24,7 +29,7 @@
 	h2:after {
 		content: "";
 		display: block;
-		width: 220px;
+		width: 370px;
 		border-bottom: 2px solid #FF4500;
 		margin: 10px 0px;
 		padding:0px 10px 0px 10px;
@@ -33,19 +38,15 @@
 	 body { background: #fff; }
 		.table-hover {
 	  	width: 100%;
- 		border-top: 1px solid #444444;
+ 		border-top: 1px solid #bcbc;
  		border-collapse: collapse;
 	}  
 	
 	th, td {
-	  border-bottom: 1px solid #444444;
+	  border-bottom: 1px solid #bcbc;
 	  padding: 10px;
 	}
-	
-	img{
-			width: 150px;
-			height: 150px;
-		}
+		
 	
 	</style>
 
@@ -54,16 +55,17 @@
 	 <div class="container">
 	 
 	 <br/>
-	 <h2>구매내역 조회</h2><br/>
+	 <h2>${user.userName}님의 구매내역 조회
+	 </h2><br/>
 	 <div class="col-md-6 text-right">
 	    <form class="form-inline" name="detailForm">
 	     <input type="hidden" name="userId" value="${user.userId}"/>
 		 <div class="form-group">
-			 <button class="btn btn-primary status" style="margin-right:10px;" onclick="location.href='/purchase/getListPurchase'">전체</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="0">오늘</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="1">1주일</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="2">1개월</button>
-			 <button class="btn btn-primary status" style="margin-right:10px;" name="searchCondition" value="3">3개월</button>
+			 <button class="btn btn-outline-primary status" onclick="location.href='/purchase/getListPurchase'">전체</button>
+			 <button class="btn btn-outline-primary status" name="searchCondition" value="0">오늘</button>
+			 <button class="btn btn-outline-primary status" name="searchCondition" value="1">1주일</button>
+			 <button class="btn btn-outline-primary status" name="searchCondition" value="2">1개월</button>
+			 <button class="btn btn-outline-primary status" name="searchCondition" value="3">3개월</button>
 		  </div>
 		  
 		  <!-- PageNavigation 선택 페이지 값을 보내는 부분 -->
@@ -77,13 +79,13 @@
  
         <thead>
           <tr>
-            <th align="center">구매일자[구매번호]</th>
+            <th align="center">구매일자 [구매번호]</th>
             <th align="center">이미지</th>
             <th align="center">수량</th>
             <th align="center" >상품명</th>
             <th align="center" >옵션</th>
             <th align="center">상품구매금액</th>
-            <th align="center">구매처리상태</th>
+            <th align="center"></th>
           </tr>
         </thead>
 
@@ -92,14 +94,21 @@
 			<c:forEach var="purchase" items="${purchaseList}">
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">
-			      <td align="left">
-			      	<a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}[${purchase.purchaseNo}]</a><br/>
-			      		<c:if test="${purchase.purchaseStatus eq '3'}">
-			      			<button type="button" class="btn btn-outline-primary btn-sm" data-value="${purchase.purchaseNo}" onClick="fncPurchaseStatus(this)">구매확정하기</button>
-			      		</c:if>
+			      <td align="center"><br/><br/>
+			      	<a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}&ensp;[${purchase.purchaseNo}]</a><br/><br/>
+			      		<div>
+			      		<c:choose>
+							<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
+							<c:when test="${purchase.purchaseStatus eq '2'}">배송중</c:when>
+							<c:when test="${purchase.purchaseStatus eq '3'}">
+								배송완료<br/>
+								<button type="button" class="btn btn-outline-primary btn-sm" data-value="${purchase.purchaseNo}" onClick="fncPurchaseStatus(this)">구매확정하기</button></c:when>
+							<c:when test="${purchase.purchaseStatus eq '4'}">구매확정</c:when>
+						</c:choose>
+						</div>
 			      </td>
-				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
-				  <td align="left">${cpd.count}</td>
+				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
+				  <td align="center">${cpd.count}</td>
 				  <td align="left">${cpd.product.name}</td>
 				  <td align="left">
 				  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -109,17 +118,10 @@
 				  	- ${mp.minusName} <br/>
 				  	</c:forEach> 
 				  </td>
-				  <td align="left">${cpd.price*cpd.count}</td>
+				  <td align="center">${cpd.price}</td>
 				  <c:set var="price" value="${price+cpd.price*cpd.count}" />
 		 	  
 			 	  <td align="left">
-
-					<c:choose>
-						<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
-						<c:when test="${purchase.purchaseStatus eq '2'}">배송중</c:when>
-						<c:when test="${purchase.purchaseStatus eq '3'}">배송완료</c:when>
-						<c:when test="${purchase.purchaseStatus eq '4'}">구매확정</c:when>
-					</c:choose><br/>
 				   </td>
 			  </tr>  
 			  </c:forEach> 
@@ -150,23 +152,28 @@
 		
 		const purchaseNo=$(ths).data('value');	
 		
-		$.ajax({
-			url:"/purchase/api/updatePurchaseCode",
-			method:"POST",  
-			data:JSON.stringify({
-				purchaseNo : purchaseNo,
-				purchaseStatus: "4"
-			}),
-	        headers : {
-	            "Accept" : "application/json",
-	            "Content-Type" : "application/json"
-	        },
-	        dataType : "json",
-	        success : function(data){	
-	        	$(ths).closest('tr').find('td:eq(6)').text('구매확정');
-	        	$(ths).remove();
-	        }
-    	});	
+		var status = confirm("구매확정하시겠습니까?");
+		
+		if(status){
+		
+			$.ajax({
+				url:"/purchase/api/updatePurchaseCode",
+				method:"POST",  
+				data:JSON.stringify({
+					purchaseNo : purchaseNo,
+					purchaseStatus: "4"
+				}),
+		        headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){	
+		        	$(ths).closest('div').text('구매확정');
+		        	$(ths).remove();
+		        }
+	    	});	
+		}
 	}
   	
 	//테이블 셀병함

@@ -13,6 +13,8 @@
 		<result property="name" column="name" jdbcType="VARCHAR" />
 		<result property="subContent" column="sub_content" jdbcType="VARCHAR" />
 		<result property="price" column="price" jdbcType="NUMERIC" />
+		<result property="originPrice" column="origin_price" jdbcType="NUMERIC" />
+		<result property="discount" column="discount" jdbcType="NUMERIC" />
 		<result property="calorie" column="calorie" jdbcType="NUMERIC" />
 		<result property="content" column="content" jdbcType="VARCHAR" />
 		<result property="stock" column="stock" jdbcType="NUMERIC" />
@@ -43,7 +45,7 @@
 
 	<select id="getListProduct" resultMap="productSelectMap">
 		SELECT * FROM ( SELECT inner_table.* , ROWNUM AS row_seq FROM
-		( SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.like_count, p.review_count, p.stock, p.status, f.foodcategory_no, f.name AS foodName FROM product p, foodcategory f
+		( SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.origin_price, p.like_count, p.review_count, p.stock, p.status, f.foodcategory_no, f.name AS foodName FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
 			AND p.status = '0'
@@ -165,8 +167,7 @@
 		<set> status = 0	</set>
 		WHERE product_no = #{productNo}
 	</update>
-
-
+	
 	<!-- ========== FOOD CATEGORY ========== -->
 
 	<resultMap id="foodCategorySelectMap" type="Foodcategory">

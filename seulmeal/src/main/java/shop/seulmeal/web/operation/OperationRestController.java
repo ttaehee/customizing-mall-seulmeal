@@ -1,6 +1,9 @@
 package shop.seulmeal.web.operation;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +16,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +31,10 @@ import shop.seulmeal.service.confirm.ConfirmService;
 import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.operation.OperationService;
+import shop.seulmeal.service.product.ProductService;
 
 @RestController
 @RequestMapping("operation/api/*")
@@ -69,6 +74,14 @@ public class OperationRestController {
 		comment.setContent(content);
 		System.out.println(comment);
 		operationService.insertAnswer(comment);
+		// 현재 날짜 구하기
+		LocalDate now = LocalDate.now();
+		// 포맷 정의 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		System.out.println("formatter : "+formatter);
+		// 포맷 적용
+		String formatedNow = now.format(formatter);
+		comment.setRegDate(Date.valueOf(formatedNow));
 		
 		if(uploadfile != null) {
 			attachments.setCommentNo(Integer.toString(comment.getCommentNo()));			
@@ -90,6 +103,21 @@ public class OperationRestController {
 		int r = operationService.deleteAnswer(comment);		
 		
 		return r;
+	}
+	
+	@PostMapping("autocomplete")
+	public Map<String, Object> autocomplete(@RequestParam Map<String, Object> paramMap) throws Exception {
+		//Product product = productService.getProductName(productName);
+		System.out.println(paramMap);
+		paramMap.put("resultList",operationService.getProductName(paramMap));
+		
+		return paramMap;
+	}
+	
+	@GetMapping("getProduct/{productName}")
+	public Product getProduct(@PathVariable String productName) {
+		Product product = operationService.getProduct(productName);
+		return product;
 	}
 	
 	@PostMapping("confirmQueryPassword")

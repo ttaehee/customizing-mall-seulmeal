@@ -286,7 +286,7 @@ class OperationTest {
 		parts2.setProductNo(p.getProductNo());
 		list.add(parts);
 		list.add(parts2);
-		productService.insertProudctParts(list);
+		//productService.insertProudctParts(list);
 	}
 	
 	//@Test

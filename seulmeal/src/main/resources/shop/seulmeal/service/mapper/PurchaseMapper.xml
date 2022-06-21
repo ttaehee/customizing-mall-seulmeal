@@ -66,14 +66,13 @@
 		<result property="phone" 				column="phone" 				jdbcType="VARCHAR"/> 
 		<result property="message" 				column="message" 			jdbcType="VARCHAR"/> 
 		<result property="purchaseStatus" 		column="purchase_status" 	jdbcType="VARCHAR"/> 
-		<result property="reason" 				column="reason" 			jdbcType="VARCHAR"/> 
-		<result property="image" 				column="image" 				jdbcType="VARCHAR"/> 
 		<result property="status" 				column="status" 			jdbcType="VARCHAR"/> 
 		<result property="regDate" 				column="reg_date" 			jdbcType="DATE"/> 
 		<result property="paymentCondition" 	column="payment_condition" 	jdbcType="VARCHAR"/> 
 		<result property="imp_uid" 				column="imp_uid" 			jdbcType="VARCHAR"/> 
 		<result property="amount" 				column="amount" 			jdbcType="NUMERIC"/> 
 		<result property="email" 				column="email" 				jdbcType="VARCHAR"/>
+		<result property="usePoint" 			column="usepoint" 			jdbcType="VARCHAR"/>
 		<association property="user" javaType="user" >
 			<result property="userId" 			column="user_id" 			jdbcType="VARCHAR"/>
 			<result property="userName" 		column="user_name" 			jdbcType="VARCHAR"/>
@@ -243,10 +242,10 @@
 	<insert id="insertPurchase">
 		INSERT INTO purchase
 		(purchase_no, user_id, price, address, name, phone, 
-		message, status, reg_date, payment_condition, email)
+		message, status, reg_date, payment_condition, email, usepoint)
 		values((seq_purchase_no.NEXTVAL),#{user.userId:VARCHAR},#{price:NUMERIC}, 
 		#{address:VARCHAR}, #{name:VARCHAR}, #{phone:VARCHAR}, #{message:VARCHAR},
-		'0', SYSDATE, #{paymentCondition:CHAR}, #{email:VARCHAR})
+		'0', SYSDATE, #{paymentCondition:CHAR}, #{email:VARCHAR}, #{usePoint:NUMERIC})
 		<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
 			SELECT seq_purchase_no.CURRVAL FROM DUAL
 		</selectKey>

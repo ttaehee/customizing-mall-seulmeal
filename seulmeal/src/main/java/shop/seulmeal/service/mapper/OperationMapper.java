@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Post;
+import shop.seulmeal.service.domain.Product;
 
 @Mapper
 public interface OperationMapper {
@@ -36,6 +37,17 @@ public interface OperationMapper {
 	// admin
 	public List<Map<String,Object>> userCount(String table);
 	public List<Map<String,Object>> salePrice();
+	
+	// 오토컴플릿
+	public List<Map<String,Object>> getProductName(Map<String,Object> map);
+	
+	public Product getProduct(String name);	
+	
+	// 이벤트 할인
+	public int updateDiscountProduct(Map<String,Object> map);
+	public int updateDiscountProductC(List<String> list);
+	public void endDiscountProduct();
+	public int deleteDiscountProduct(int postNo);
 	
 	// 테스트
 	public CustomProduct selectCus(int no);
