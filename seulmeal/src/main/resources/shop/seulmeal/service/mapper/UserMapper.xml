@@ -138,7 +138,7 @@
 		
 		
 		<update id="updateUserTotalPoint">
-			UPDATE users SET total_point = total_point + #{value} WHERE user_id =#{userId}
+			UPDATE users SET total_point = #{totalPoint} WHERE user_id =#{userId}
 		</update>
 		
 		<insert id="insertBlackList">
@@ -162,8 +162,18 @@
 		
 		<insert id="insertPoint">
 			INSERT INTO point (point_no, user_id, purchase_no, point_status, point, reg_date) 
-				VALUES(seq_point_no.NEXTVAL, #{userId}, #{purchaseNo}, #{pointStatus}, #{point}, SYSDATE)
+				VALUES(seq_point_no.NEXTVAL, #{userId:VARCHAR}, #{purchaseNo:NUMERIC}, #{pointStatus:VARCHAR}, #{point:NUMERIC}, SYSDATE)
+		<selectKey keyProperty="pointNo" resultType="int" order="AFTER">
+			SELECT seq_point_no.CURRVAL FROM DUAL
+		</selectKey>
 		</insert>
+		
+		<select id="getPoint" resultType="shop.seulmeal.service.domain.Point">
+	        	SELECT * FROM point WHERE point_no = #{pointNo}
+	    </select>
+		<delete id="deletePoint">
+			DELETE from point where purchase_no = #{purchaseNo}
+		</delete>
 		
 		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="map" >
 			SELECT *
@@ -230,5 +240,9 @@
 			</set>
 			WHERE user_id = #{userId}
 		</update>
+		
+		<select id="getRecentPurchase" resultType="string">
+			SELECT * FROM (SELECT NVL(purchase_no, 0) FROM purchase WHERE user_id = #{userId:VARCHAR} and purchase_status NOT IN ('0')  ORDER by reg_date DESC) WHERE ROWNUM =1	
+		</select>
 	
 	</mapper>     

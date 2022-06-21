@@ -27,6 +27,8 @@
 	    background-position: center;
 	    background-size: cover;
 	}
+	
+	
 </style>
 </head>
 <body>
@@ -97,15 +99,63 @@
 		
 				<!-- 2번 -->
 				<div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+					
 					<div class="card-body">
-						${post.content }
+						<div class="row justify-content-end" style="margin-right: 10px;">
+				        	<div class="col-1">
+				        		<c:if test="${post.attachments.size() != 0}">
+					        		<div class="dropdown show">
+										<a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="d-none d-sm-inline mx-1" style="color:black;">첨부파일</span>					
+										</a>					
+										<div class="dropdown-menu dropdown-menu-right dropdown-menu-dark text-small shadow" aria-labelledby="dropdownMenuLink">
+											<c:forEach var="attachments" items="${post.attachments}">		          	
+								            	<a class="dropdown-item" href="/download/${attachments.attachmentName}">${attachments.attachmentName }</a>
+								            </c:forEach>
+										</div>
+									</div>
+								</c:if>
+				        	</div>		
+				        </div>
+						${post.content }						
 					</div>
 				</div>
 		
 				<!-- 3번 -->
 				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 					<div class="card-body">
-						Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+						<div class="row">
+						<c:forEach var="product" items="${post.discountProduct}">
+							<c:if test="${product.productNo !=0}">
+								<div class="col-md-4">
+									<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
+										<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
+											<div data-value="${product.productNo}" class="productHref">
+											<h2 class="display-6fw-bold productTarget">${product.name}</h2>
+											<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
+											<h5 class="productTarget" style="text-decoration: line-through;">${product.originPrice}원</h5>
+											<h5 class="productTarget">${product.price}원</h5>
+											<h5 class="productTarget">${product.calorie}Cal</h5>
+											</div>
+											<ul class="d-flex list-unstyled mt-auto">
+												<li class="me-auto">
+													<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
+												</li>
+												<li class="d-flex align-items-center me-3">
+													<i style="font-size:1.5rem; color:black;" class="bi bi-clipboard-heart-fill"></i>
+													<small>&nbsp;${product.reviewCount}</small>
+												</li>
+												<li class="d-flex align-items-center">
+													<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+													<small class="likeText">&nbsp;${product.likeCount}</small>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</c:if>							
+						</c:forEach>
+						</div>
 					</div>
 				</div>
 				
@@ -118,6 +168,7 @@
 			<span style="margin-bottom:10px; margin-top:10px;">
 				<c:if test="${user.role == 1}">
 					<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="수정" onclick="updateEvent()">
+					<input class="btn btn-primary" style="margin-right:10px; width: 60px;" value="삭제" onclick="deleteEvent()">
 				</c:if>
 				<input class="btn btn-primary" style="width: 60px;" value="목록" onclick="cancelEvent()">
 			</span>
@@ -132,6 +183,24 @@
 	
 	function cancelEvent(){
 		window.location.href = '/operation/getListOperation/2';
+	}
+	
+	function deleteEvent(){
+		
+		$.ajax({
+			url : "/operation/api/deleteOperation",
+			method : "POST",
+			data : JSON.stringify({
+				postNo : ${post.postNo},
+				postStatus : ${post.postStatus}
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	window.location.href = '/operation/getListOperation/2';
+	        }
+		})
+		
 	}
 </script>
 </body>

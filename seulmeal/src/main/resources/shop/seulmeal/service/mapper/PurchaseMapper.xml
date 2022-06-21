@@ -66,14 +66,13 @@
 		<result property="phone" 				column="phone" 				jdbcType="VARCHAR"/> 
 		<result property="message" 				column="message" 			jdbcType="VARCHAR"/> 
 		<result property="purchaseStatus" 		column="purchase_status" 	jdbcType="VARCHAR"/> 
-		<result property="reason" 				column="reason" 			jdbcType="VARCHAR"/> 
-		<result property="image" 				column="image" 				jdbcType="VARCHAR"/> 
 		<result property="status" 				column="status" 			jdbcType="VARCHAR"/> 
 		<result property="regDate" 				column="reg_date" 			jdbcType="DATE"/> 
 		<result property="paymentCondition" 	column="payment_condition" 	jdbcType="VARCHAR"/> 
 		<result property="imp_uid" 				column="imp_uid" 			jdbcType="VARCHAR"/> 
 		<result property="amount" 				column="amount" 			jdbcType="NUMERIC"/> 
 		<result property="email" 				column="email" 				jdbcType="VARCHAR"/>
+		<result property="usePoint" 			column="usepoint" 			jdbcType="VARCHAR"/>
 		<association property="user" javaType="user" >
 			<result property="userId" 			column="user_id" 			jdbcType="VARCHAR"/>
 			<result property="userName" 		column="user_name" 			jdbcType="VARCHAR"/>
@@ -216,11 +215,11 @@
 		</where>
 	</update>
 	
-	<!--장바구니에서 커스터마이징상품 수량 변경 -->
+	<!--장바구니에서 커스터마이징상품 수량 변경 / 옵션 취소하고 다시 선택-->
 	<update id="updateCustomProductCount">
 		UPDATE customproduct
 		<set>
-			count={count:NUMERIC}
+			count=#{count:NUMERIC}, price=#{price:NUMERIC}
 		</set>
 		<where>
 			customproduct_no = #{customProductNo}
@@ -243,10 +242,10 @@
 	<insert id="insertPurchase">
 		INSERT INTO purchase
 		(purchase_no, user_id, price, address, name, phone, 
-		message, status, reg_date, payment_condition, email)
+		message, status, reg_date, payment_condition, email, usepoint)
 		values((seq_purchase_no.NEXTVAL),#{user.userId:VARCHAR},#{price:NUMERIC}, 
 		#{address:VARCHAR}, #{name:VARCHAR}, #{phone:VARCHAR}, #{message:VARCHAR},
-		'0', SYSDATE, #{paymentCondition:CHAR}, #{email:VARCHAR})
+		'0', SYSDATE, #{paymentCondition:CHAR}, #{email:VARCHAR}, #{usePoint:NUMERIC})
 		<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
 			SELECT seq_purchase_no.CURRVAL FROM DUAL
 		</selectKey>
@@ -350,14 +349,25 @@
 				</if> </where>) countTable	
 	</select>
 	
-	<select id="getLisSale" resultMap="purchaseSelectMap" parameterType="map">
+	<select id="getSaleTotalCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+	  	FROM( SELECT *
+			FROM purchase
+			<where>
+				purchase_status!='0'
+				<if test="purchaseStatus != null">
+					AND purchase_status=#{purchaseStatus:VARCHAR}
+				</if> </where>) countTable	
+	</select>
+	
+	<select id="getListSale" resultMap="purchaseSelectMap" parameterType="map">
 		SELECT purchase_no, user_id, price, address, name, message, purchase_status, reg_date, payment_condition, amount
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
 			FROM (SELECT *
 				FROM purchase
-				status='0' AND purchase_status!='0'
+				where purchase_status!='0'
 				<if test="purchaseStatus != null">
-					AND purchase_status={purchaseStatus:VARCHAR}
+					AND purchase_status=#{purchaseStatus:VARCHAR}
 				</if>
 				ORDER BY purchase_no) inner_table
 			WHERE ROWNUM &lt; = #{search.endRowNum})

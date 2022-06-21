@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import shop.seulmeal.service.confirm.ConfirmService;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.naver.impl.KakaoAPI;
 import shop.seulmeal.service.naver.impl.LoginService;
 import shop.seulmeal.service.product.ProductService;
+import shop.seulmeal.service.purchase.PurchaseService;
 import shop.seulmeal.service.user.UserService;
 
 @RestController
@@ -39,6 +44,8 @@ public class UserRestController {
 	
 	@Autowired
 	private LoginService loginService;
+	
+	private PurchaseService purchaseService;
 	
 
 	public UserRestController() {
@@ -87,6 +94,8 @@ public class UserRestController {
 		if(user == null) {			
 			int num = confirmService.confirmNum();
 			String message = "인증번호는 ["+num+"] 입니다";
+			System.out.println("message : "+message);
+			
 			confirmService.sendSMS(phone, message);
 			session.setAttribute(phone, num);
 			json.put("result", "success");
@@ -203,5 +212,46 @@ public class UserRestController {
 		System.out.println(user);
 		return "code : ";
 	}
+	@PostMapping("api/insertPoint")
+	public Point insertPoint(@RequestBody Map<String, Object> map, Point point, HttpSession session) throws Exception{
+		
+		User user=(User)(session.getAttribute("user"));
+		System.out.println("::user : "+user);
+		
+		
+		point.setUserId(user.getUserId());
+		point.setPointStatus((String)map.get("status"));
+		point.setPoint(Integer.parseInt((String)map.get("price")));
+		
+		userService.insertPoint(point);
+		
+		point=userService.getPoint(point.getPointNo());
+		
+		return point;
+	}
+	
+	/*
+	 * @PostMapping("api/verifyIamport") public JSONObject
+	 * verifyIamport(@RequestBody Point point, HttpSession session) {
+	 * 
+	 * String token = purchaseService.getImportToken();
+	 * System.out.println("/purchase/api/verifyIamport token : " + token);
+	 * 
+	 * JSONObject json = new JSONObject();
+	 * 
+	 * String portAmount = purchaseService.getAmount(token,
+	 * Integer.toString(point.getPointNo()));
+	 * 
+	 * if (point.getPoint() == Integer.parseInt(portAmount)) { json.put("point",
+	 * point); json.put("sucess", "true"); json.put("message", "성공!!!!!!"); } else {
+	 * json.put("success", "false"); int cancel =
+	 * purchaseService.cancelPayment(token, Integer.toString(point.getPointNo()));
+	 * if (cancel == 1) { json.put("message", "성공!!!!!"); } else {
+	 * json.put("message", "실패"); } }
+	 * 
+	 * return json;
+	 * 
+	 * }
+	 */
 
 }

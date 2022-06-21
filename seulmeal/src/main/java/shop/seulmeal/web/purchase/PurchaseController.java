@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,6 +26,7 @@ import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomParts;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.Purchase;
 import shop.seulmeal.service.domain.User;
@@ -89,15 +91,6 @@ public class PurchaseController {
 			// 추가 상품
 			String plusPartsNo, String plusPrice, String plusGram) throws Exception {
 		
-		System.out.println("insertCustomProduct POST : "+customProduct);
-
-		System.out.println("========== minusNo : "+minusNoA);
-		System.out.println("========== minusName : "+minusNameA);
-
-		System.out.println("========== plusPartsNo : "+plusPartsNo);
-		System.out.println("========== plusPrice : "+plusPrice);
-		System.out.println("========== plusGram : "+plusGram);
-		
 		// setProduct
 		Product product = productService.getProduct(productNo);
 		customProduct.setProduct(product);
@@ -109,52 +102,14 @@ public class PurchaseController {
 		int result=purchaseService.insertCustomProduct(customProduct);
 		System.out.println("reusult : "+result);
 		
-		Map<String, Object> map=new HashMap<>();
-		map.put("customProductNo",customProduct.getCustomProductNo());
-		
 		// minus parts
-		List<CustomParts> minusParts = new ArrayList();
 		if(minusNoA.trim().length() > 0) {
-			String[] minusNoAA = minusNoA.split(",");
-			String[] minusNameAA = minusNameA.split(",");
-
-			for(int i=0; i<minusNoAA.length; i++) {
-				CustomParts minus = new CustomParts();
-				minus.setMinusNo(Integer.parseInt(minusNoAA[i]));
-				minus.setMinusName(minusNameAA[i]);
-				minus.setCustomProductNo(customProduct.getCustomProductNo());
-				minusParts.add(minus);
-			}
-			customProduct.setMinusParts(minusParts);
-			map.put("minusParts",minusParts);
-			int re=purchaseService.insertMinusParts(map);
-			System.out.println("minus result:"+re);
+			purchaseService.insertMinusParts(customProduct.getCustomProductNo(), minusNoA, minusNameA);
 		}
 		
 		// plus parts
-		List<CustomParts> plusParts = new ArrayList();
-		
 		if(plusPartsNo !=null) {
-			String[] plusPartsNoA = plusPartsNo.split(",");
-			String[] plusPriceA = plusPrice.split(",");
-			String[] plusGramA = plusGram.split(",");
-
-			for(int i=0; i<plusPartsNoA.length; i++) {		
-				CustomParts plus = new CustomParts();
-				Parts p = new Parts();
-				System.out.println(Integer.parseInt(plusPartsNoA[i]));
-				p.setPartsNo(Integer.parseInt(plusPartsNoA[i]));
-				p.setPrice(Integer.parseInt(plusPriceA[i]));
-				
-				plus.setParts(p);
-				plus.setGram(Integer.parseInt(plusGramA[i]));
-				plus.setCustomProductNo(customProduct.getCustomProductNo());
-				plusParts.add(plus);
-			}
-			customProduct.setPlusParts(plusParts);
-			map.put("plusParts",plusParts);
-			int sul=purchaseService.insertPlusParts(map);
-			System.out.println("plus result:"+sul);
+			purchaseService.insertPlusParts(customProduct.getCustomProductNo(), plusPartsNo, plusPrice, plusGram);
 		}
 		
 		System.out.println("ccccc:"+customProduct.getCartStatus());
@@ -172,13 +127,14 @@ public class PurchaseController {
 	
 	//장바구니 리스트 
 	@GetMapping("getListCustomProduct/{currentPage}")
-	public String getListCustomProduct(@PathVariable(required = false) String currentPage, Model model, HttpSession session) {
+	public String getListCustomProduct(@PathVariable(required = false) int currentPage, Model model, HttpSession session) {
 		System.out.println("/getListCustomProduct");
 		
 		User user=(User)session.getAttribute("user");
 		String userId=user.getUserId();
 		
 		Search search = new Search();
+		search.setCurrentPage(currentPage);
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
 		}
@@ -200,43 +156,40 @@ public class PurchaseController {
 		
 	}	
 	
-	//커스터마이징 상품 현재옵션정보 + 옵션수정 화면출력 
-	@GetMapping("updateCustomProduct/{customProductNo}")
-	@Transactional(rollbackFor= {Exception.class})
-	public String updateCustomProduct(@PathVariable int customProductNo, CustomProduct customProduct, Model model) throws Exception {
-		
-		System.out.println("/deletePurchase :Post");
-		
-		customProduct=purchaseService.getCustomProduct(customProductNo);
-		
-		List<Parts> partsList=productService.getProductParts(customProduct.getProduct().getProductNo());
-				
-		model.addAttribute("customProduct", customProduct);
-		model.addAttribute("partsList",partsList);
-		
-		return "purchase/updatePurchaseCustomProduct";
-	}	
-	
 	//커스터마이징 상품 옵션수정(커스터마이징재료 삭제 후 추가)
 	@PostMapping("updateCustomProduct")
 	@Transactional(rollbackFor= {Exception.class})
-	public String updateCustomProduct(int customProductNo, String userId, List<CustomParts> minus, List<CustomParts> plus, Model model) {
+	public String updateCustomProduct(CustomProduct customProduct, Model model, HttpSession session,
+			// 제외 상품
+			String minusNoA, String minusNameA,
+			// 추가 상품
+			String plusPartsNo, String plusPrice, String plusGram){
 		
-		System.out.println("/deletePurchase :Post");
+		System.out.println("/updateCustomProduct Post : "+customProduct);
 		
-		purchaseService.deleteCustomParts(customProductNo);
+		System.out.println("insertCustomProduct POST : "+customProduct);
+
+		System.out.println("========== minusNo : "+minusNoA);
+		System.out.println("========== minusName : "+minusNameA);
+
+		System.out.println("========== plusPartsNo : "+plusPartsNo);
+		System.out.println("========== plusPrice : "+plusPrice);
+		System.out.println("========== plusGram : "+plusGram);
 		
-        List<CustomParts> list=new ArrayList<CustomParts>();
+		purchaseService.updateCustomProductCount(customProduct);
+		purchaseService.deleteCustomParts(customProduct.getCustomProductNo());
 		
-        Map<String, Object> map=new HashMap<>();
-		map.put("customProductNo",customProductNo);
-		map.put("minusParts",minus);
-		map.put("plusParts",plus);
-			
-		purchaseService.insertMinusParts(map);
-		purchaseService.insertPlusParts(map);
+		// minus parts
+		if(minusNoA.trim().length() > 0) {
+			purchaseService.insertMinusParts(customProduct.getCustomProductNo(), minusNoA, minusNameA);
+		}
 		
-		return "redirect:/purchase/getListCustomProduct";
+		// plus parts
+		if(plusPartsNo !=null) {
+			purchaseService.insertPlusParts(customProduct.getCustomProductNo(), plusPartsNo, plusPrice, plusGram);
+		}
+		
+		return "redirect:/purchase/getListCustomProduct/1";
 	}	
 		
 	//커스터마이징 상품 장바구니에서 삭제 
@@ -249,7 +202,7 @@ public class PurchaseController {
 		int result = purchaseService.deleteCustomProduct(customProductNo);
 		System.out.println("delete : "+result);
 		
-		return "redirect:/purchase/getListCustomProduct";
+		return "redirect:/purchase/getListCustomProduct/1";
 	}	
 	
 	//장바구니 거쳐서 구매정보입력창
@@ -278,10 +231,10 @@ public class PurchaseController {
 	
 	//포인트만으로 결제시
 	@PostMapping("insertPurchase")
-	public String insertPurchase(Purchase purchase, Integer[] customProductNo, @AuthenticationPrincipal User user, Model model) throws Exception {
+	public String insertPurchase(Purchase purchase, Integer[] customProductNo, @AuthenticationPrincipal User user, Point point, Model model) throws Exception {
 		
 		System.out.println("/purchase/insertPurchase : "+purchase);
-		System.out.println("/purchase/insertPurchase : "+customProductNo[0]);
+		System.out.println("/purchase/insertPurchase : "+purchase.getUsePoint());
 
 		purchase.setUser(user);
 	      
@@ -305,6 +258,16 @@ public class PurchaseController {
 			purchaseService.updateCustomProductStatus(cp);
 		}
 		
+		//사용포인트
+		point.setUserId(user.getUserId());
+		point.setPurchaseNo(purchase.getPurchaseNo());
+		point.setPointStatus("0");
+		point.setPoint(purchase.getUsePoint());
+		userService.insertPoint(point);
+		//총포인트에서 사용포인트 빼기
+		user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+		userService.updateUserTotalPoint(user);
+
 		model.addAttribute(purchase);
 
 		return "redirect:/purchase/getPurchase/"+purchase.getPurchaseNo();	
@@ -362,10 +325,12 @@ public class PurchaseController {
 		return "redirect:getListPurchase/"+userId;
 	}	
 	
-	@RequestMapping(value="getListSale")
-	public String getListSale(Search search, String purchaseStatus, Model model, HttpSession session)
+	//판매내역목록
+	@RequestMapping(value= {"/getListSale/{currentPage}/{purchaseStatus}", "/getListSale/{currentPage}", "/getListSale"})
+	public String getListSale(@PathVariable int currentPage, @PathVariable(required = false) String purchaseStatus, Search search, Model model, HttpSession session)
 			throws Exception {
 		
+		search.setCurrentPage(currentPage);
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
 		}

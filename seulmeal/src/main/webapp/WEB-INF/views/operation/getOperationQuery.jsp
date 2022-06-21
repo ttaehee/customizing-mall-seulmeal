@@ -58,15 +58,8 @@
 <script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>	
 	<div class="container">
         <div class="row">
-            <div class="col" style="border-bottom: 2px solid; margin-top:20px; display:flex; ">            	
-            	<h1>${post.title}
-            		<c:if test="${post.regDate != post.updateDate}">
-            			<h5 style="margin: 15px 0px 10px 0px;"><span class="badge badge-primary">수정된내용</span></h5>
-            		</c:if>            	
-            		<c:if test="${post.publicStatus==1}">
-            			<i class="bi bi-lock-fill"></i>
-            		</c:if>
-            	</h1>
+            <div class="col" style="border-bottom: 2px solid; margin-top:20px; ">            	
+            	<h1>${post.title}<c:if test="${post.publicStatus==1}"><i class="bi bi-lock-fill"></i></c:if></h1>
             </div>            
         </div>
         <div class="row" style="text-align: center;">
@@ -86,7 +79,13 @@
             </div>
             
             <c:if test="${user.userId == post.user.userId}">
-            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="삭제">
+            	<c:if test="${post.answerStatus ==0}">
+            		<input class="btn btn-primary float-right uploadAnswerBtn" type="button" onclick="updateQuery()" value="수정">
+            		<input class="btn btn-primary float-right uploadAnswerBtn" type="button" onclick="deleteQuery()" value="삭제">
+            	</c:if>
+            	<c:if test="${post.answerStatus ==1}">
+            		<input class="btn btn-primary float-right uploadAnswerBtn" type="button" onclick="deleteQuery()" value="삭제">
+            	</c:if>
             </c:if>            
         </div>
         </div>
@@ -109,7 +108,7 @@
         <div class="row" style="border-bottom: 2px solid; min-height: 400px;">
             <div class="col">${post.content}</div>            
         </div>
-        <c:if test="${user.role==0}">        
+        <c:if test="${user.role==1}">        
 	        <div class="row justify-content-end">
 	            <button id="answerInsert" style="margin-top:10px; margin-right:10px;" class="btn btn-primary float-right">답변등록</button>
 	        </div>
@@ -339,10 +338,14 @@
 	        </div>	        
 	        </div>	        
 	        `
-	        	$(".commentArg").prepend(answer);
+	        	$(".commentArg").append(answer);
 	        	$(".answer").dialog("close");
 	        }
 		})
+	}
+	
+	function updateQuery(){
+		window.location.href = "/operation/updateOperation/${post.postStatus}/${post.postNo}"
 	}
 	
 	function deleteAnswer(e){
@@ -365,6 +368,23 @@
 		})
 	}
 	
+	function deleteQuery(){
+		
+		$.ajax({
+			url : "/operation/api/deleteOperation",
+			method : "POST",
+			data : JSON.stringify({
+				postNo : ${post.postNo},
+				postStatus : ${post.postStatus}
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	window.location.href = '/operation/getListOperation/${post.postStatus}';
+	        }
+		})
+		
+	}
 </script>
 </body>
 </html>

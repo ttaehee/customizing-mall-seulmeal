@@ -40,7 +40,7 @@
 					<th>재료명</th>
 					<th>재료 가격</th>
 					<th>재료 칼로리</th>
-					<th>상태</th>
+					<th colspan=2>상태</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -49,6 +49,8 @@
 					<th style="padding-left: 50px; text-align: left;">[${parts.partsNo}] ${parts.name}</th>
 					<th>${parts.price}</th>
 					<th>${parts.calorie}</th>
+					<th><div data-value="${parts.name}" class="btn-update" id="updateParts" style="cursor: pointer;">
+						수정</div></th>
 					<th>
 					<c:if test="${parts.status == 0 }">
 						<div data-value="${parts.partsNo}" class="btn-delete" id="deleteParts" style="cursor: pointer;">
@@ -83,7 +85,6 @@
 	
 <!-- 파츠 등록 모달창 -->
 <div class="modal">
-		
 		<div class="modal_content">
 			<form action="/product/insertParts" method="POST">
 				<h2 class="text-center" style="margin-bottom:25px;">재료 등록</h2>
@@ -114,7 +115,6 @@
 		</div>
 	</div>
 	
-	
 
 <!-- 파츠 등록 모달창 JS -->
 <script>
@@ -130,11 +130,23 @@ $(function(){
   
 });
 
+		
+
 </script>
 
 <!-- 파츠 등록 모달창 CSS -->
 <style>
 .modal {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+	top: 0;
+	left: 0;
+	display: none;
+}
+
+.updateModal {
 	position: absolute;
 	width: 100%;
 	height: 100%;

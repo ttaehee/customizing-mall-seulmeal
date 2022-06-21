@@ -73,7 +73,7 @@
 	                    <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Purchase</span> </a>
 	                    <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
 	                    <li class="w-100">
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">판매내역</span> 1</a>
+	                        <a href="/purchase/getListSale/1" class="nav-link px-0"> <span class="d-none d-sm-inline">판매내역</span> 1</a>
 	                    </li>
 	                    <li>
 	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">리뷰관리</span> 2</a>

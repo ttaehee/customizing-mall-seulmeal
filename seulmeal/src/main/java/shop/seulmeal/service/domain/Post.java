@@ -44,4 +44,10 @@ public class Post {
 	
 	// 이전글
 	private Post npost;
+	
+	// 할인
+	private int discount;
+	
+	// 할인상품
+	private List<Product> discountProduct;
 }

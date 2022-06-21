@@ -43,6 +43,8 @@ public interface UserService {
 	
 	public int insertPoint(Point point) throws Exception;
 	
+	public Point getPoint(int pointNo) throws Exception;
+	
 	public Map<String, Object> getListPoint(Search search, String userId) throws Exception;
 	
 	public User getProfile(String userId) throws Exception;
@@ -56,6 +58,12 @@ public interface UserService {
 	public void updateGrade() throws Exception;
 	
 	public int updatePassword(User user) throws Exception;
+	
+	public int updateUserTotalPoint(User user) throws Exception;
+	
+	public String getRecentPurchase(String userId) throws Exception;
+	
+	public int deletePoint(int purchaseNo) throws Exception;
 
 	
 }

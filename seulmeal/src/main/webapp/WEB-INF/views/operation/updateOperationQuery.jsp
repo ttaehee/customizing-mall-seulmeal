@@ -59,7 +59,7 @@
 									<h5>비밀번호</h5>
 								</div>
 								<div>
-									<input type="password" value="${post.password}" style="height: 70%;" />
+									<input type="password" name="password" value="${post.password}" style="height: 70%;" />
 								</div>
 							</div>
 						</c:if>
@@ -69,7 +69,7 @@
 									<h5>비밀번호</h5>
 								</div>
 								<div>
-									<input type="password" value="${post.password}" style="height: 70%;" />
+									<input type="password" name="password" value="${post.password}" style="height: 70%;" />
 								</div>
 							</div>
 						</c:if>						
@@ -77,7 +77,7 @@
 				</div>					
 				
 				<div class="col-md-12" style="margin-top:20px;">
-					<textarea id="summernote" name="content"></textarea>		
+					<textarea id="summernote" name="content">${post.content }</textarea>		
 				</div>
 				<input type="hidden" name="postStatus" value="3" />
 			</div>

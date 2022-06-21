@@ -21,16 +21,17 @@
 			content: "";
 			display: block;
 			width: 300px;
-			border-bottom: 1px solid #bcbcbc;
+			border-bottom: 2px solid #FF4500;
 			margin: 20px auto;
 		}
 		
 		h5:after {
 	        content: "";
 	        display: block;
-	        width: 100px;
-	        border-bottom: 1px solid #bcbcbc;
-	        margin: 20px 0px;
+	        width: 60px;
+	        border-bottom: 2px solid #FF4500;
+	        margin: 20px auto;
+	        margin-top: 10px;
 		}
 		
 		.close {
@@ -49,9 +50,20 @@
 		
 		.card {
 	        margin: 0 auto; 
-	        float: none;
 	        margin-bottom: 10px; 
+	        width: 50rem; 
+	        text-align: center !important;
+	        border: 1px solid #646464 !important; 
+	        border-radius: 10px !important;
 		}	
+		
+		
+		.thumbnail{
+			width: 250px;
+			height: 250px;
+			border-radius: 10px;
+			magin-left: 30px;
+		}
 
 	</style>
 
@@ -62,37 +74,47 @@
 		<input type="hidden" name="productNo" value="${product.productNo}"/>
 		<div class="container">
 		<h2>커스터마이징 : ${product.name}</h2> 
-		
-			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			<div class="card">
 			  <div class="card-body">
-			    <h6 class="card-title" id="price">${product.price}원</h6>
-			    <h8 class="card-subtitle mb-2 text-muted">!! 재료 추가,제외를 원하지 않는 분은 설정을 그대로 진행해주세요 !!</h8>
+			  	<div class="row">
+			  		<div class="col-md-6">
+				  	<img class="thumbnail" src='/resources/attachments/${product.thumbnail}'>
+				  	</div>
+				  	<div class="col-md-6" align="justify" style="margin-top: 60px; font-size: 18px;">
+				    <div class="card-title" id="price">${product.price}원</div>
+				    <div class="card-subtitle mb-2 text-muted" style="font-size: 15px;">!! 재료 추가,제외를 원하지 않는 분은<br/> 설정을 그대로 진행해주세요 !!</div>
+				    </div>
+				</div>
 			  </div>
 			</div>
 		    
-			<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			<div class="card">
 			  <div class="card-body">
-			    <h6 class="card-title">제품구성</h6>
-			    <h6 class="card-subtitle mb-2 text-muted"></h6>
+			    <h5 class="card-title">제품구성</h5>
 			    <p class="card-text"><c:forEach var="parts" items="${partsList}">
-					<div class="container productparts">${parts.name} &emsp;&emsp; 
-					<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.productPartsNo}" data-partsName="${parts.name}">제외하기</button>
+			    <div class="row">
+			    	<div class="col-md-6">
+						<div class="container productparts">${parts.name} &emsp;&emsp; </div>
 					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-outline-primary execpt" style="margin-right:10px;" data-partsNo="${parts.productPartsNo}" data-partsName="${parts.name}">제외하기</button>
+					</div>
+				</div>
 					</c:forEach>
 				</p>
 			  </div>
 			</div>
 			
-			<div class="card" id="insertcard" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+			<div class="card" id="insertcard">
 				<div class="card-body">
-				    <h6 class="card-title">추가재료</h6>
+				    <h5 class="card-title">추가재료</h5>
 				    <h8 class="card-subtitle mb-2 text-muted">*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</h8>
 				    <p class="card-text">
-						<div class="container">
-							재료 검색 : 
+						<div class="container" style="display:flex; justify-content: center">
+							재료 검색 : &emsp;
 								<div style="display:flex;">	
 									<div class="form-outline">
-										<input name="searchKeyword" type="search" class="form-control search" value="" />
+										<input name="searchKeyword" type="search" class="form-control search" value="" style="border-color: #FF4500; border-width: 2px;"/>
 									</div>		  
 									<button type="button" class="btn btn-primary partSearch" onclick="search()">
 										<i class="bi bi-search"></i>
@@ -106,10 +128,8 @@
 				  </div>
 			</div>	  
 
-		  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+		  		<div class="card">
 					<div class="card-body">
-					    <h6 class="card-title"></h6>
-					    <h8 class="card-subtitle mb-2 text-muted"></h8>
 					    <p class="card-text">
 							<div>커스터마이징상품 금액 :&ensp;<span id="total">${product.price}</span>원</div><br/>
 	
@@ -127,7 +147,7 @@
 				<div class="container" style="display: flex; justify-content: center;">
 					<button type="button" class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="0" onClick="fncInsertCustomProduct(this)">바로 구매하기</button>
 					<button type="button" class="btn btn-primary status" style="margin-right:10px;" name=cartStatus value="1" onClick="fncInsertCustomProduct(this)">장바구니 담기</button>
-					 <button type="button" class="btn btn-primary" onclick="history.back(-1)">취&nbsp;소</button>
+					 <button type="button" class="btn btn-primary" onClick="history.back(-1)">취&nbsp;소</button>
 				</div><br/><br/>	
 		</div>
 	</form>
@@ -139,6 +159,7 @@
 	const minusNo = [];
 	const minusName = [];
 
+	//form insertCustomProduct
 	function fncInsertCustomProduct(ths) {
 		
 		alert("제외한 재료 : "+minusName)
@@ -146,15 +167,15 @@
 		const customprice= $("#total").text();
 		const cartStatus = $(ths).val();
 		
-		$(".cc").append(`<input name ="count" value="\${count}">`);
-		$(".cc").append(`<input name ="minusNoA" value="\${minusNo}">`);
-		$(".cc").append(`<input name ="minusNameA" value="\${minusName}">`);
-		$(".cc").append(`<input name ="price" value="\${customprice}">`);
-		$(".cc").append(`<input name ="cartStatus" value="\${cartStatus}">`);
+		$(".cc").append(`<input type="hidden" name ="count" value="\${count}">`);
+		$(".cc").append(`<input type="hidden" name ="minusNoA" value="\${minusNo}">`);
+		$(".cc").append(`<input type="hidden" name ="minusNameA" value="\${minusName}">`);
+		$(".cc").append(`<input type="hidden" name ="price" value="\${customprice}">`);
+		$(".cc").append(`<input type="hidden" name ="cartStatus" value="\${cartStatus}">`);
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
 	 }
 
-	
+	//상품구성재료 제외하기버튼 클릭
 	$(function() {
 	    $('.execpt').on('click', function() {
 	        const partsNo = $(this).attr('data-partsNo');	        
@@ -170,16 +191,16 @@
 	    })
 	});
 	
+	//추가재료 검색
 	function search(){
 		var word = $(".search").val();
-		console.log(word);
 		
 		if(word == null || word.length<1){
 			alert("추가할 재료이름을 입력하세요.");
 		}
 	}
 	
-	
+	//추가재료 g변경
 	function fnCalGram(type, ths){
 		var stat = $(ths).closest("div").find("span[name='gram']").text();
 		var num = parseInt(stat,10);		
@@ -210,26 +231,7 @@
 
 	}
 	
-	
-	function fnCalCount(type, ths){
-		var statcount = $(ths).parents("div").find("span[name='count']").text();
-		var number = parseInt(statcount,10);
-		let calprice = parseInt($("#total").text());
-
-		if(type=='minus'){
-			number--;
-			if(number<1){
-				alert('더이상 줄일수 없습니다.');
-				return;
-			}
-			$(ths).parents("div").find("span[name='count']").text(number);
-
-		}else{
-			number++;
-			$(ths).parents("div").find("span[name='count']").text(number);
-		}
-	}
-	
+	//추가재료 검색
 	function fncGetParts(){
 		const inputTag = $(".partSearch").parent('div').find("input[name='searchKeyword']");
 		
@@ -273,7 +275,7 @@
 		}
 	 }
 	
-	
+	//추가재료 검색 + autocomplete
 	 $(function(){ 
 		 $(".search").autocomplete({ 
 			 source : function(request, response) { //source: 입력시 보일 목록
@@ -313,25 +315,46 @@
 			
 			fncGetParts();
 		})
+		
+		//추가재료 검색 엔터적용
+		$(".search").keydown(function(key){
+			        if(key.keyCode==13) {
+				           fncGetParts();
+				    }     
+		});
+		
 	})
-	
-	
-	 $(".search").keydown(function(key){
-		        if(key.keyCode==13) {
-			           fncGetParts();
-			    }     
-	});
-	
 
+	//엔터 시 submit 방지
 	document.insertCustom.addEventListener("keydown", evt => {
 		  if (evt.code === "Enter") 
 		  evt.preventDefault();
 		});
 	
-	
+	//추가재료 삭제
 	function fncClose(ths){
 		 $(ths).closest("div").parent().remove();
 		
+	}
+	
+	//커스터마이징 한 상품 수량변경
+	function fnCalCount(type, ths){
+		var statcount = $(ths).parents("div").find("span[name='count']").text();
+		var number = parseInt(statcount,10);
+		let calprice = parseInt($("#total").text());
+
+		if(type=='minus'){
+			number--;
+			if(number<1){
+				alert('더이상 줄일수 없습니다.');
+				return;
+			}
+			$(ths).parents("div").find("span[name='count']").text(number);
+
+		}else{
+			number++;
+			$(ths).parents("div").find("span[name='count']").text(number);
+		}
 	}
 	
 </script>

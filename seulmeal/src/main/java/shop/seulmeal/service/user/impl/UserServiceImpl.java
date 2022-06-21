@@ -216,6 +216,34 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		return userMapper.updatePassword(user);
 	}
 
+
+	@Override
+	public Point getPoint(int pointNo) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getPoint(pointNo);
+	}
+
+
+	@Override
+	public int updateUserTotalPoint(User user) throws Exception {
+		
+		return userMapper.updateUserTotalPoint(user);
+	}
+
+
+	@Override
+	public String getRecentPurchase(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getRecentPurchase(userId);
+	}
+
+
+	@Override
+	public int deletePoint(int purchaseNo) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.deletePoint(purchaseNo);
+	}
+
 	
 
 

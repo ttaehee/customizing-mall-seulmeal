@@ -29,6 +29,7 @@ public class Purchase {
 	private String paymentCondition;
 	private String imp_uid;
 	private int amount;
+	private int usePoint;
 	
 	private List<CustomProduct> customProduct;
 }

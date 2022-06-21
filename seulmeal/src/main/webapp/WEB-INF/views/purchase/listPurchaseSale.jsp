@@ -1,218 +1,126 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="EUC-KR"%>
-    
-<!--  ///////////////////////// JSTL  ////////////////////////// -->
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
-
 <html lang="ko">
-	
+
 <head>
-	<meta charset="EUC-KR">
-	
-	<!-- ÂüÁ¶ : http://getbootstrap.com/css/   ÂüÁ¶ -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
-	<!--  ///////////////////////// Bootstrap, jQuery CDN ////////////////////////// -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
-	
-	
-	<!-- Bootstrap Dropdown Hover CSS -->
-   <link href="/css/animate.min.css" rel="stylesheet">
-   <link href="/css/bootstrap-dropdownhover.min.css" rel="stylesheet">
-    <!-- Bootstrap Dropdown Hover JS -->
-   <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
-   
-   
-   <!-- jQuery UI toolTip »ç¿ë CSS-->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <!-- jQuery UI toolTip »ç¿ë JS-->
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	
-	<!--  ///////////////////////// CSS ////////////////////////// -->
-	<style>
-	  body {
-            padding-top : 50px;
-        }
-    </style>
-    
-     <!--  ///////////////////////// JavaScript ////////////////////////// -->
-	<script type="text/javascript">
+	<meta charset="UTF-8">
+	<title>íŒë§¤ ëª©ë¡</title>
 
-	function fncGetUserList(currentPage) {
-		$("#currentPage").val(currentPage)	
-		//alert(  "functionÈ£ÃâµÊ"  );
-		$("form").attr("method" , "POST").attr("action" , "/purchase/listPurchase").submit();
-	 }
-	
-	 $(function() {
-			
-			//==> DOM Object GET 3°¡Áö ¹æ¹ı ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
-			$( "td:nth-child(1)" ).on("click" , function() {
-				 self.location ="/purchase/getPurchase?tranNo="+$( this ).data("value");
-			});
-						
-			//==> userId LINK Event End User ¿¡°Ô º¸ÀÏ¼ö ÀÖµµ·Ï 
-			$( "td:nth-child(1)" ).css("color" , "red");
-			
-		});	
-	
-	$(function() {
-		 
-			 $( ".glyphicon.glyphicon-ok" ).on("click" , function() {
-					//Debug..
-					//alert(  $( this ).text().trim() );
-					 var tranNo = $(this).next().val();
-					
-						$.ajax( {
-									url : "/purchase/json/getPurchase/"+tranNo ,
-									method : "GET" ,
-									dataType : "json" ,
-									headers : {
-										"Accept" : "application/json",
-										"Content-Type" : "application/json"
-									},
-									success : function(JSONData , status) {
-										
-										//Debug...
-										//console.log("JSONData : \n" + JSONData);
-	
-										var displayValue = "<h7>"
-																	+"¹°Ç°¹øÈ£ : "+JSONData.purchaseProd.prodNo+"<br/>"
-																	+"±¸¸ÅÀÚ¾ÆÀÌµğ : "+JSONData.buyer.userId+"<br/>"
-																	+"±¸¸Å¹æ¹ı : "+JSONData.paymentOption+"<br/>"
-																	+"±¸¸ÅÀÚÀÌ¸§ : "+JSONData.receiverName+"<br/>"
-																	+"±¸¸ÅÀÚ¿¬¶ôÃ³ : "+JSONData.receiverPhone+"<br/>"
-																	+"±¸¸ÅÀÚÁÖ¼Ò : "+JSONData.divyAddr+"<br/>"
-																	+"±¸¸ÅÀÚ¿äÃ»»çÇ× : "+JSONData.divyRequest+"<br/>"
-																	+"¹è¼ÛÈñ¸ÁÀÏ : "+JSONData.divyDate+"<br/>"
-																	+"</h7>";
-	
-										$("h7").remove();
-										$( "#"+tranNo+"" ).append(displayValue);
-									}
-						});
-				 });
-		
-		$("h7").css("color" , "red");
-							
-		$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
-		
-	});		
-
-    </script>
 </head>
 
 <body>
-
-	<jsp:include page="../layer/header.jsp"></jsp:include>
+<jsp:include page="../layer/header.jsp"></jsp:include>
 	
 	<div class="container">
-
-		<div class="page-header text-info">
-			<h3>±¸¸Å ¸ñ·ÏÁ¶È¸</h3>
-		</div>
+		<h2>íŒë§¤ë‚´ì—­ ëª©ë¡</h2><br/>
 		
-		<!-- table À§ÂÊ °Ë»ö Start /////////////////////////////////////-->
-	    <div class="row">
-	    
-		    <div class="col-md-6 text-left">
-		    	<p class="text-primary">
-		    		ÀüÃ¼  ${resultPage.totalCount } °Ç¼ö, ÇöÀç ${resultPage.currentPage}  ÆäÀÌÁö
-		    	</p>
-		    </div>
-		    
-		    <div class="col-md-6 text-right">
-			    <form class="form-inline" name="detailForm"> 		  
-				  <!-- PageNavigation ¼±ÅÃ ÆäÀÌÁö °ªÀ» º¸³»´Â ºÎºĞ -->
-				  <input type="hidden" id="currentPage" name="currentPage" value=""/>
-				</form>
-	    	</div>
-	    	
-		</div>
-		<!-- table À§ÂÊ °Ë»ö Start /////////////////////////////////////-->
+		<form class="form-inline" name="detailForm">
 		
-		
-      <!--  table Start /////////////////////////////////////-->
-      <table class="table table-hover table-striped" >
-      
-        <thead>
-          <tr>
-	        <td class="ct_list_b" width="100">No</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b" width="150">È¸¿øID</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b" width="150">È¸¿ø¸í</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">ÀüÈ­¹øÈ£</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">¹è¼ÛÇöÈ²</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">°£·«Á¤º¸</td>
-		  </tr>
-        </thead>
-       
-		<tbody>
+		<div class="form-group">
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1'">ì „ì²´</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/1'">ìƒí’ˆì¤€ë¹„ì¤‘</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/2'">ë°°ì†¡ì¤‘</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/3'">ë°°ì†¡ì™„ë£Œ</button>
+			 <button type="button" class="btn btn-primary" style="margin-right:10px;" onclick="location.href='/purchase/getListSale/1/4'">êµ¬ë§¤í™•ì •</button>
+		  </div>
+		  
+		 <table class="table table-hover" style="width: 1000px;">
+	 
+	        <thead>
+	          <tr>
+	            <th align="center">NO</th>
+	            <th align="center">êµ¬ë§¤ë²ˆí˜¸</th>
+	            <th align="center">êµ¬ë§¤ì¼ì</th>
+	            <th align="center">ìœ ì €ID</th>
+	             <th align="center">ìƒí’ˆëª…</th>
+	            <th align="center">ìƒí’ˆê¸ˆì•¡</th>
+	            <th align="center">ê²°ì œê¸ˆì•¡</th>
+	            <th align="center">ë°°ì†¡ê´€ë¦¬</th>
+	          </tr>
+	        </thead>
 	
-			<c:set var="i" value="0" />
-			<c:forEach var="purchase" items="${list}">
-				<c:set var="i" value="${ i+1 }" />
-				<tr class="ct_list_pop">
-					<td align="center" data-value="${purchase.tranNo}">${ i }</td>
-					<td></td>
-					<td align="left">${user.userId}</td>
-					<td></td>
-					<td align="left">${user.userName}</td>
-					<td></td>
-					<td align="left">${purchase.receiverPhone}</td>		
-					<td></td>
-			
-					<td align="left" data-value="${purchase.tranNo}">ÇöÀç
-			
-						<c:choose>
-						    <c:when test="${empty purchase.tranCode}">
-						    <a>ÆÇ¸ÅÁß</a>
-						    </c:when>
-						    <c:when test="${purchase.tranCode eq '2'}">
-						    <a>±¸¸Å¿Ï·á</a>
-						    </c:when>
-						    <c:when test="${purchase.tranCode eq '3'}">
-						    <a>¹è¼ÛÁß</a>
-						    </c:when>
-						    <c:when test="${purchase.tranCode eq '4'}">
-						    <a>¹è¼Û¿Ï·á</a>
-						    </c:when>
-						    
-						</c:choose>
+			<tbody style="font-size:15px">
+				<c:set var="total" value="0" />
+				<c:set var="i" value="0" />
+				<c:forEach var="sale" items="${saleList}">
+					<c:set var="i" value="${i+1}" />
+					<tr class="ct_list_pop">
+						  <td align="left">${i}</td>
+						  <td align="left"><a href="/purchase/getPurchase/${sale.purchaseNo}">${sale.purchaseNo}</td>
+						  <td align="left">${sale.regDate}</td>
+						   <td align="left">${sale.user.userId}</td>
+						  <td align="left">
+						  <c:set var="cpdPrice" value="0" />
+						  <c:forEach var="cpd" items="${sale.customProduct}">
+						  		${cpd.product.name}<br/>
+						  <c:set var="cpdPrice" value="${cpdPrice+cpd.price}" />
+						  </c:forEach>
+						  </td> 
+						  <td align="left">${cpdPrice}</td>
+						  <td align="left">${sale.price}</td>
+						  <td>
+						  
+						  	<c:choose>
+								<c:when test="${sale.purchaseStatus eq '1'}">
+								<button type="button" class="btn btn-outline-primary btn-sm" data-value="${sale.purchaseNo}" onClick="fncPurchaseStatus(this)">ë°°ì†¡í•˜ê¸°</button>
+								</c:when>
+								<c:when test="${sale.purchaseStatus eq '2'}">ë°°ì†¡ì¤‘</c:when>
+								<c:when test="${sale.purchaseStatus eq '3'}">ë°°ì†¡ì™„ë£Œ</c:when>
+								<c:when test="${sale.purchaseStatus eq '4'}">êµ¬ë§¤í™•ì •</c:when>
+							</c:choose><br/>
+						  </td>
+					  </tr>  
+				  </c:forEach>
+	        </tbody>
+	      </table><br/>
+	      <form class="form-inline" name="detailForm">
+	 </div>
+	 
+	 <!-- í˜ì´ì§•ì²˜ë¦¬ -->
+	<div class="container">
+		<div class="row" style="justify-content : center;">
+			<nav aria-label="...">
+			  <ul class="pagination">
+			  	<c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage}">
+			  		<li class="page-item"><a class="page-link" href="/purchase/getListSale/${i}">${i}</a></li>
+			  	</c:forEach>
+			  </ul>
+			</nav>
+		</div>
+	</div>	
 
-					»óÅÂ ÀÔ´Ï´Ù.	
-						<c:if test="${purchase.tranCode eq '3'}">
-						    <a href="/purchase/updateTranCode?menu=search&tranCode=4&prodNo=${purchase.purchaseProd.prodNo}">¹°°ÇµµÂø</a>
-						</c:if>
-					</td>
 		
-					<td align="left">
-						
-					</td>
-					<td align="left">
-			  	       <i class="glyphicon glyphicon-ok" id="${purchase.tranNo}"></i>
-			  	       <input type="hidden" value="${purchase.tranNo}">
-			        </td>
-				</tr>
-			</c:forEach>
-        
-        </tbody>
-      
-      </table>
- 	</div>
- 	
- 	<!-- PageNavigation Start... -->
-	<jsp:include page="../common/pageNavigator_new.jsp"/>
-	<!-- PageNavigation End... -->
+<script type="text/javascript">
 	
+	function fncPurchaseStatus(ths){
+		
+		const purchaseNo=$(ths).data('value');	
+		
+		$.ajax({
+			url:"/purchase/api/updatePurchaseCode",
+			method:"POST",  
+			data:JSON.stringify({
+				purchaseNo : purchaseNo,
+				purchaseStatus: "2"
+			}),
+	        headers : {
+	            "Accept" : "application/json",
+	            "Content-Type" : "application/json"
+	        },
+	        dataType : "json",
+	        success : function(data){	
+	        	$(ths).closest('td').text('ë°°ì†¡ì¤‘');
+	        }
+    	});	
+	}
+	
+
+	
+</script>
+
 </body>
 </html>

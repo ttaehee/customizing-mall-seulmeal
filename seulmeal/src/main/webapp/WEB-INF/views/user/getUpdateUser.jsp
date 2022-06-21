@@ -10,6 +10,39 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <title>insertUser</title>
 </head>
+<style>  
+body { background: #fff; }
+
+  table {
+    width: 700px;
+     margin-left:auto; 
+    margin-right:auto;
+  }
+
+.modal-title{
+ display: flex; 
+ justify-content: center;
+}  
+  
+.bluetop {
+  border-collapse: collapse;
+  border-top: 3px solid #168;
+}  
+.bluetop th {
+  color: #168;
+  background: #f0f6f9;
+}
+.bluetop th, .bluetop td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+.bluetop th:first-child, .bluetop td:first-child {
+  border-left: 0;
+}
+.bluetop th:last-child, .bluetop td:last-child {
+  border-right: 0;
+}
+</style>
 <script type="text/javascript">
 	
 $(()=>{
@@ -83,13 +116,17 @@ $(()=>{
 				<label for="Email3" class="col-sm-2 control-label">회원등급</label>
 				<div class="col-sm-10" data-toggle="modal" data-target="#exampleModalCenter">
 				
-				<c:choose>
+				
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					 <c:choose>
 						<c:when test="${user.grade eq '0'}">슬밀프랜즈</c:when>
 						<c:when test="${user.grade eq '1'}">슬밀패밀리</c:when>
 						<c:when test="${user.grade eq '2'}">슬밀히어로</c:when>
 						<c:when test="${user.grade eq '3'}">슬밀마스터</c:when>
 					</c:choose>
 				
+					</button>
 					 
 				</div>
 			</div>
@@ -153,6 +190,54 @@ $(()=>{
 			</div>
 		</form>
 	</div>
+	
+	<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">회원등급 안내</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="bluetop">
+           <%--  <caption>표 제목</caption> --%>
+            <thead>
+                <tr align="center" bgcolor="white">
+                    <td></td>
+                    <th>슬밀프렌드</th>
+                    <th>슬밀패밀리</th>
+                    <th>슬밀히어로</th>
+                    <th>슬밀마스터</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr align="center" bgcolor="white">
+                    <td>조건</td>
+                    <td>회원가입</td>
+                    <td>월 3회 구매</td>
+                    <td>월 5회 구매</td>
+                    <td>월 10회 구매</td>
+                </tr>
+                <tr align="center" bgcolor="white">
+                  <td>혜택</td>
+                  <td>구매액 0.5% 적립</td>
+                  <td>구매액 1% 적립</td>
+                  <td>구매액 3% 적립</td>
+                  <td>구매액 5% 적립</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+	
+
+	
 
 </body>
 </html>
