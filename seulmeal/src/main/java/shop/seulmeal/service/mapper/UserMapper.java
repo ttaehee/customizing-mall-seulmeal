@@ -46,7 +46,7 @@ public interface UserMapper {
 	
 	public int resetPurchaseCount() throws Exception;
 	
-	public int updateUserTotalPoint(int no) throws Exception;
+	public int updateUserTotalPoint(User user) throws Exception;
 	
 	public int insertBlackList() throws Exception;
 	

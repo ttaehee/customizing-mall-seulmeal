@@ -406,7 +406,7 @@ public class UserController {
 	}
 	
 	@GetMapping("getChargeUserPoint/{purchaseNo}")
-	public String getChargeUserPoint(@PathVariable int purchaseNo, Point point, Purchase purchase, Model model) throws Exception {
+	public String getChargeUserPoint(@PathVariable int purchaseNo, User user, Point point, Purchase purchase, Model model) throws Exception {
 		
 		System.out.println("/getListCustomProduct : "+ purchaseNo);
 		
@@ -423,6 +423,12 @@ public class UserController {
 		point.setPointStatus("2");
 		point.setPoint(purchase.getPrice());
 		userService.insertPoint(point);
+		
+		user = userService.getUser(purchase.getUser().getUserId());
+		
+		user.setTotalPoint(purchase.getPrice());
+		
+		userService.updateUserTotalPoint(user);
 		
 		return "user/getChargeUserPoint";
 	}

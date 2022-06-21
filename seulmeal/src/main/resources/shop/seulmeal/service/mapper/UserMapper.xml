@@ -138,7 +138,7 @@
 		
 		
 		<update id="updateUserTotalPoint">
-			UPDATE users SET total_point = total_point + #{value} WHERE user_id =#{userId}
+			UPDATE users SET total_point = total_point + #{totalPoint} WHERE user_id =#{userId}
 		</update>
 		
 		<insert id="insertBlackList">
@@ -171,6 +171,7 @@
 		<select id="getPoint" resultType="shop.seulmeal.service.domain.Point">
 	        	SELECT * FROM point WHERE point_no = #{pointNo}
 	    </select>
+		
 		
 		<select id="getListPoint" resultType="shop.seulmeal.service.domain.Point" parameterType="map" >
 			SELECT *

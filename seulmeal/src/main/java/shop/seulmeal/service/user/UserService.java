@@ -58,6 +58,8 @@ public interface UserService {
 	public void updateGrade() throws Exception;
 	
 	public int updatePassword(User user) throws Exception;
+	
+	public int updateUserTotalPoint(User user) throws Exception;
 
 	
 }

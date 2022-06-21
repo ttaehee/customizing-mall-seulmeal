@@ -223,6 +223,13 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		return userMapper.getPoint(pointNo);
 	}
 
+
+	@Override
+	public int updateUserTotalPoint(User user) throws Exception {
+		
+		return userMapper.updateUserTotalPoint(user);
+	}
+
 	
 
 
