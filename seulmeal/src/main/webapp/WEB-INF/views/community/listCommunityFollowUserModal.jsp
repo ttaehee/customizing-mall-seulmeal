@@ -69,7 +69,7 @@
 										<div id="follow-list-profilemsg" class="sub-text" style="margin:0px; font-size: 10px;">${relation.relationUser.profileMessage}</div>
 									</div>
 									<div>
-										<button class="action-btn"
+										<button class="action-btn" onclick="deleteFollow(this)"
 											data-value="${relation.relationUser.userId}">팔로우 해제</button>
 									</div>
 								</div>

@@ -279,7 +279,7 @@ public class CommunityRestController {
 	}
 */
 	@PostMapping("insertFollow/{relationUserId}") // o
-	public int insertFollow(@PathVariable String relationUserId, HttpSession session) {
+	public Map<String,Object> insertFollow(@PathVariable String relationUserId, HttpSession session) {
 
 		Relation relation = new Relation();
 		relation.setRelationStatus("0");
@@ -290,14 +290,17 @@ public class CommunityRestController {
 		relationUser.setUserId(relationUserId);
 		relation.setRelationUser(relationUser);
 		
-		int followCnt = communityService.insertFollow(relation);
+		Map<String,Object> followerMap = communityService.insertFollow(relation);
 		
-		return followCnt;
+		// 1. msg(팔로우, 팔로우 취소), 2. followerTotalCount
+		return followerMap;
 	}
 	
 	@PostMapping("deleteFollow/{relationUserId}") // o
-	public int deleteFollow(@PathVariable String relationUserId, HttpSession session) {
+	public Map<String,Object> deleteFollow(@PathVariable String relationUserId, HttpSession session) {
 
+		System.out.println("relationUserId: "+ relationUserId);
+		
 		Relation relation = new Relation();
 		relation.setRelationStatus("0");
 		relation.setUserId(((User)session.getAttribute("user")).getUserId());
@@ -306,9 +309,11 @@ public class CommunityRestController {
 		user.setUserId(relationUserId);
 		relation.setRelationUser(user);
 
-		int followCnt = communityService.deleteFollow(relation);
-		
-		return followCnt;
+		Map<String,Object> resultMap = communityService.deleteFollow(relation);
+			
+		// 1.userFollowCnt
+		// 2.relationUserFollowerCnt
+		return resultMap;
 	}
 
 	@GetMapping("getListFollow") // oo
@@ -344,7 +349,7 @@ public class CommunityRestController {
 	}
 
 	@PostMapping("insertBlock/{relationUserId}") // oo
-	public void insertBlock(@PathVariable String relationUserId, HttpSession session) throws Exception {
+	public int insertBlock(@PathVariable String relationUserId, HttpSession session) throws Exception {
 
 		Relation relation = new Relation();
 		relation.setRelationStatus("1");
@@ -354,12 +359,16 @@ public class CommunityRestController {
 		user.setUserId(relationUserId);
 		relation.setRelationUser(user);
 
+		int result = communityService.insertBlock(relation);
+		System.out.println("/////////"+result);
+		
+		return result;
+		/*
 		if (communityService.insertBlock(relation) == 1) {
-			
 			userService.updateBlockCount(relationUserId);
 			List<Relation> list = ((User) session.getAttribute("user")).getRelation();
 			list.add(relation);
-		}
+		}*/
 	}
 
 	@PostMapping("deleteBlock/{relationUserId}")
@@ -373,7 +382,10 @@ public class CommunityRestController {
 		user.setUserId(relationUserId);
 		relation.setRelationUser(user);
 		
-		return communityService.deleteBlock(relation);
+		int result = communityService.deleteBlock(relation);
+		System.out.println("/////////"+result);
+		
+		return result;
 	}
 	
 	

@@ -22,7 +22,8 @@
 	font-size: 30px;
 }
 
-img {
+
+.your-class-img {
 	display: block;
 	margin: auto;
 }
@@ -111,7 +112,7 @@ img.rounded-circle{
 		<div class="your-class" style="margin-bottom:30px">
 				<c:forEach var="attachment" items="${attachmentList}">
 					<div>
-						<img style="height: 60vh;"
+						<img class = "your-class-img" style="height: 60vh;"
 							src="/resources/attachments/${attachment.attachmentName}" alt="">
 					</div>
 				</c:forEach>

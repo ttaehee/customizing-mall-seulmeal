@@ -325,9 +325,6 @@ section.main{
     margin: 0px 10px 40px 5px;
 }
 
-.sub-text{
-}
-
 .profile-card:first-child .profile-pic{
     width: 60px;
     height: 60px;
@@ -362,13 +359,13 @@ section.main{
 }
 
 
-
+/*
 .suggestion-text{
     font-size: 14px;
     color: rgba(0, 0, 0, 0.5);
     font-weight: 700;
     margin: 20px 0;
-}
+}*/
 
 /*
 @media (max-width: 1100px){
@@ -398,7 +395,8 @@ section.main{
 	height:30px;
 }
 
-.bi.bi-heart.icon{
+.bi.bi-heart.icon,
+.bi.bi-heart-fill.icon{
 	cursor:pointer;
 }
 
@@ -544,9 +542,8 @@ div.modal-content{
 											</c:when>
 											<c:otherwise>
 												<div>
-													<div class="postOption" data-toggle= "modal" data-target="#reportModal${i}"  data-dismiss="modal" >신고하기
-														<!-- input type="hidden" name="postNo" value="${post.postNo}"-->
-													</div>
+													<div class="postOption" data-toggle= "modal" data-target="#reportModal${i}" 
+													data-dismiss="modal" >신고하기</div>
 												</div>
 											</c:otherwise>
 										</c:choose>	
@@ -575,10 +572,12 @@ div.modal-content{
 					        </button>
 					      </div>
 					      <div class="modal-body">
-					        <form>
-					          <div class="report-form">
+					        <form class="report-form" >
+					          <div class="report">
 					            <label for="message-text" class="col-form-label"></label>
-					            <textarea class="form-control" id="reason"></textarea>   <!-- 신고사유 -->
+					            <textarea class="form-control" id = "reason" name="reason" rows="5" placeholder="신고사유를 적어주세요."></textarea>   <!-- 신고사유 -->
+					            <input type="hidden" name="reporterId" value="${sessionScope.user.userId}" />
+					            <input type="hidden" name="postNo" value="${post.postNo}" />
 					          </div>
 					        </form>
 					      </div>
@@ -614,7 +613,6 @@ div.modal-content{
                     <div class="post-content">
                         <div class="reaction-wrapper">
                             <i class="bi bi-heart icon" data-value="${post.postNo}"></i>
-                            <i class="bi bi-heart-fill" style="display:none;"></i>
                             <!-- 4.조회수, 댓글수 -->
                             <i class="bi bi-eye icon">${post.views}</i>
                             <i class="bi bi-chat-left icon">${post.commentCount}</i>
@@ -677,7 +675,7 @@ div.modal-content{
 						<p class="sub-text">${sessionScope.user.foodCategoryName1}  ${sessionScope.user.foodCategoryName2}  ${sessionScope.user.foodCategoryName3}</p>
 					</div>	               
 					<div class="follow-info"><!-- 팔로우, 팔로워, 차단 모달창 클릭 -> 실행-->
-		                <p><a id = "follow-user-list"  data-toggle="modal" data-target="#followModal">팔로우 ${followMap.followTotalCount}</a></p> <!-- 팔로우 목록 모달창 -->
+		                <p><a id = "follow-user-list"  data-toggle="modal" data-target="#followModal" >팔로잉 <span class="followTotalCount">${followMap.followTotalCount}</span></a></p> <!-- 팔로우 목록 모달창 -->
 		                <p><a id = "follower-user-list"  data-toggle="modal" data-target="#followerModal">팔로워 ${followerMap.followerTotalCount}</a></p> <!-- 팔로워 목록 모달창 -->
 		                <a id="block-user-list" data-toggle="modal" data-target="#blockUserModal">차단유저목록</a>
 		            </div>
@@ -699,9 +697,7 @@ div.modal-content{
 
 
 
-	function slick2(e){
-		
-		
+	function slick2(e){		
 		$(e).slick({
 			dots : true,
 			infinite : true,
@@ -724,7 +720,7 @@ div.modal-content{
 
 	// 좋아요, 좋아요 취소
 	$("i.bi.bi-heart.icon").on("click", function() {
-				
+		const heart = $(this)		
 		const postNo = $(this).data("value");
 		//alert("postNo: " + postNo);
 		console.log("postNo: " + postNo);
@@ -750,9 +746,11 @@ div.modal-content{
             	console.log(value);
             	
             	if(first_key === '좋아요'){
-            		alert("좋아요");
+            		heart.attr("class", "bi bi-heart-fill icon");
+            		heart.css("color","red");
             	}else if(first_key === '좋아요 취소'){
-            		alert("좋아요 취소");
+            		heart.attr("class", "bi bi-heart icon");
+            		heart.css("color","black");
             	}
         
 				div_like_cnt.html(value); // 좋아요 개수 수정
@@ -1084,8 +1082,38 @@ div.modal-content{
 		
 		let postNo = $(e).data("value");
 		
+		
 		$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
 	}
+	
+	// 팔로우 해제
+	function deleteFollow(e){
+		let relationUserId = $(e).data("value");
+		//alert("relationUserId: " + relationUserId);
+		
+		let result = confirm(relationUserId+"님의 팔로우를 취소하시겠어요?")
+		if(result){
+			$.ajax({
+				url : "/community/api/deleteFollow/"+relationUserId,
+				method : "POST",
+				success : function(data, status, jqXHR) {
+					
+					//alert(data.userFollowCnt)
+					//alert(data.relationUserFollowerCnt)
+					console.log("data : " + data);
+					console.log("status: " + status);
+					console.log("jqXHR: " + jqXHR);
+					
+					$(e).parent().parent().remove();
+					$(".followTotalCount").text(data.userFollowCnt);
+					
+				}, error : function(jqXHR, status){
+					console.log(jqXHR);	// 응답 메시지
+					console.log(status); // "errror"
+				}
+			});
+		}// confirm
+	};
 	
 	
 </script>

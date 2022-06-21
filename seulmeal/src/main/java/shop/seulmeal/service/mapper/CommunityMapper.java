@@ -60,6 +60,7 @@ public interface CommunityMapper {
 	public int updateRelation(Relation relation);//follow->block
 	public int deleteRelation(Relation relation);
 	public Relation getRelation(Relation relation);
+	public List<Relation> getAllRelation(String userId);
 	
 	public List<String> getListFollower(Map<String,Object> map);//
 	public int getFollowerTotalCount(Map<String,Object> map);//

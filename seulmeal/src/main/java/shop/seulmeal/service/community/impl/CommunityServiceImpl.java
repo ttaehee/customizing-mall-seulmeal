@@ -166,27 +166,33 @@ public class CommunityServiceImpl implements CommunityService {
 
 	// Relation
 	@Override
-	public int insertFollow(Relation relation) {
+	public Map<String,Object> insertFollow(Relation relation) {
 		
 		Relation dbRelation = communityMapper.getRelation(relation);
-		
+		Map<String,Object> map = new HashMap<>();
+		Map<String,Object> followerMap = new HashMap<>();
+
+		String msg = "팔로우";
 		if (dbRelation == null) {
-			System.out.println("db 존재 x, insert follow!");
 			communityMapper.insertRelation(relation);
+		}else{
+			msg = "팔로우취소";
+			communityMapper.deleteRelation(dbRelation);
 		}
 		
-		Map<String,Object> map = new HashMap<>();
-		map.put("userId", relation.getUserId());
-		map.put("relationStatus",relation.getRelationStatus());
-		
-		// 팔로워 수 구하기
-		int followCnt = communityMapper.getRelationTotalCount(map);
-		
-		return followCnt;
+		map.put("relationUserId", relation.getRelationUser().getUserId());
+		map.put("relationStatus", relation.getRelationStatus());
+
+		int followerTotalCount = communityMapper.getFollowerTotalCount(map);
+		followerMap.put("msg",msg);
+		followerMap.put("followerTotalCount",followerTotalCount);
+
+		return followerMap;
 	}
 	
 	@Override
-	public int deleteFollow(Relation relation) {	//o
+	public Map<String,Object> deleteFollow(Relation relation) {	//o
+		System.out.println("relation: "+ relation);
 		
 		Relation dbRelation = communityMapper.getRelation(relation);
 		
@@ -197,12 +203,22 @@ public class CommunityServiceImpl implements CommunityService {
 		
 		Map<String,Object> map = new HashMap<>();
 		map.put("userId", relation.getUserId());
+		map.put("relationUserId", relation.getRelationUser().getUserId());
 		map.put("relationStatus", relation.getRelationStatus());
 		
-		// 팔로워 수 구하기
-		int followCnt = communityMapper.getRelationTotalCount(map);
+		// 내 팔로우 개수 -1
+		int userFollowCnt = communityMapper.getRelationTotalCount(map);
+		// 상대 팔로워 개수 -1
+		int relationUserFollowerCnt = communityMapper.getFollowerTotalCount(map);
 		
-		return followCnt;
+		System.out.println("userFC:"+userFollowCnt);
+		System.out.println("relationUserFC:"+relationUserFollowerCnt);
+		
+		Map<String,Object> resultMap = new HashMap<>();
+		resultMap.put("userFollowCnt", userFollowCnt);
+		resultMap.put("relationUserFollowerCnt", relationUserFollowerCnt);
+		
+		return resultMap;
 	}
 
 	@Override
@@ -252,8 +268,7 @@ public class CommunityServiceImpl implements CommunityService {
 				return -1;
 			}
 		}
-		
-		
+
 		System.out.println("/////db 존재 x, insert block!");
 		return communityMapper.insertRelation(relation);
 	}
@@ -282,6 +297,11 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public int postViewsUp(int postNo) {
 		return communityMapper.postViewsUp(postNo);
+	}
+
+	@Override
+	public List<Relation> getAllRelation(String userId) {
+		return communityMapper.getAllRelation(userId);
 	}
 
 

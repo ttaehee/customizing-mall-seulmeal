@@ -643,7 +643,13 @@
 						</where>) countTable
 	</select>
 
-
+	<select id="getAllRelation" parameterType="string" resultMap="relationSelectMap2">
+		SELECT * FROM relation 
+			<where>
+				NOT relation_status IN ('2')
+				AND user_id = ${userId} 
+			</where>
+	</select>
 
 	
 

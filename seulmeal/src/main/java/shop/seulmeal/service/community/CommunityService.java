@@ -1,5 +1,6 @@
 package shop.seulmeal.service.community;
 
+import java.util.List;
 import java.util.Map;
 
 import shop.seulmeal.common.Search;
@@ -36,17 +37,20 @@ public interface CommunityService {
 	public Post getLikePost(int postNo);
 	
 	//Relation
-	public int insertFollow(Relation relation);
+	public Map<String,Object> insertFollow(Relation relation);
 	public Map<String,Object> getListFollow(Search search, String userId, String relationStatus);
 	public Map<String,Object> getListFollower(Search search, String relationUserId);
-	public int deleteFollow(Relation relation);
+	public Map<String,Object> deleteFollow(Relation relation);
 	public int updateRelation(Relation relation);//follow->block
-
+	public List<Relation> getAllRelation(String userId);
+	
 	public int insertBlock(Relation relation);
 	public Map<String,Object> getListBlock(Search search, String userId, String relationStatus);
 	public int deleteBlock(Relation relation);
 	
 	
 	public int postViewsUp(int postNo);
+	
+	
 	
 }
