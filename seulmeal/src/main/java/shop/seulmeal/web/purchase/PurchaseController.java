@@ -277,7 +277,7 @@ public class PurchaseController {
 	@GetMapping("getPurchase/{purchaseNo}")
 	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {
 		
-		System.out.println("/getListCustomProduct : "+ purchaseNo);
+		System.out.println("/getCustomProduct : "+ purchaseNo);
 		
 		purchase=purchaseService.getPurchase(purchaseNo);
 		
@@ -287,9 +287,11 @@ public class PurchaseController {
 		
 	}	
 	
+	//구매내역리스트 
 	@RequestMapping(value="getListPurchase")
-	public String getListPurchase(Search search, String purchaseStatus, Model model, HttpSession session)
-			throws Exception {
+	public String getListPurchase(Search search, Model model, HttpSession session) throws Exception {
+		
+		System.out.println("/getListCustomProduct : "+ search);
 		
 		User user=(User)session.getAttribute("user");
 		String userId=user.getUserId();
@@ -298,8 +300,8 @@ public class PurchaseController {
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
-
-		Map<String, Object> map = purchaseService.getListPurchase(search, userId, purchaseStatus);
+		
+		Map<String, Object> map = purchaseService.getListPurchase(search, userId);
 
 		Page resultPage 
 			= new Page(search.getCurrentPage(), 
@@ -314,15 +316,15 @@ public class PurchaseController {
 	}
 	
 	//구매내역 삭제 
-	@PostMapping("/deletePurchase")
+	@GetMapping("deletePurchase/{purchaseNo}")
 	@Transactional(rollbackFor= {Exception.class})
-	public String deletePurchase(int purchaseNo, String userId) {
+	public String deletePurchase(@PathVariable int purchaseNo) {
 		
-		System.out.println("/deletePurchase :Post");
+		System.out.println("/deletePurchase :Get");
 		
 		purchaseService.deletePurchase(purchaseNo);
 		
-		return "redirect:getListPurchase/"+userId;
+		return "redirect:/purchase/getListPurchase";
 	}	
 	
 	//판매내역목록

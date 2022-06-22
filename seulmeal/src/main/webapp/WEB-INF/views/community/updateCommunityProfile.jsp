@@ -33,15 +33,13 @@ function count_check(obj){
 
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
-	<br />
-
-
 	<div class="container">
 	
 		<form class="" action="/community/updateProfile" method="POST">
-			<input type="hidden" name="_method" value="patch">
+		
 		<!-- 프로필 이미지 -->
-		프로필 이미지 : <img name="profileImage" style="width: 80px; height: 80px"
+		<label for="profileImg" class="col-sm-2 control-label">프로필 이미지</label>
+		<img name="profileImage" style="width: 80px; height: 80px"
 			src="/resources/attachments/profile_image/${sessionScope.user.profileImage}" />
 			
 		
@@ -60,25 +58,30 @@ function count_check(obj){
 	
 		
 		<!-- 닉네임 -->	
+		
 		  <div class="form-group">
-		    <label for="inputNickName">닉네임</label>
-		    <input type="text" name="nickName" id="nickName" class="form-control mx-sm-3"  value="${sessionScope.user.nickName}">
+		  	<label for="inputNickName" class="col-sm-2 control-label">닉네임</label>
+		  	<div class="col-sm-7">
+		  	  <input type="text" name="nickName" id="nickName" class="form-control mx-sm-3"  value="${sessionScope.user.nickName}">
+		    </div>
 		  </div>
 			
 		<!-- 상태메시지 -->	 
 		  <div class="form-group">
-		    <label for="inputProfileMessage">상태메시지</label>
-		    <input type="text" name="profileMessage" id="profileMessage" class="form-control mx-sm-3" aria-describedby="nickNameHelpInline" value="${sessionScope.user.profileMessage}">
-		    <small id="nickNameHelpInline" class="text-muted">
-		      60자 이내로 입력해주세요.
+		    <label for="inputProfileMessage" class="col-sm-2 control-label">상태메시지</label>
+			<div class="col-sm-7">
+			    <input type="text" name="profileMessage" id="profileMessage" class="form-control mx-sm-3" aria-describedby="nickNameHelpInline" value="${sessionScope.user.profileMessage}">
+			    <small id="nickNameHelpInline" class="text-muted col-sm-7">
+			      60자 이내로 입력해주세요.
 		    </small>
+		    </div>
 		  </div>
 			
 		<!-- 선호음식 -->
-		선호음식 카테고리<br/>
+		<label for="inputProfileMessage" class="col-sm-2 control-label">선호음식 카테고리</label>
 		<div class="form-check form-check-inline">
+		
 		  <input class="form-check-input" name="foodCategoryName" onclick="count_check(this);" type="checkbox" id="inlineCheckbox1" value="한식">
-		 
 		  <label class="form-check-label" for="inlineCheckbox1">한식</label>
 		</div>
 		<div class="form-check form-check-inline">

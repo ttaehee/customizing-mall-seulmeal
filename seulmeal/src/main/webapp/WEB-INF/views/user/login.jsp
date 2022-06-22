@@ -454,10 +454,11 @@ h3{
             <input id="input-id" name="userId" placeholder="아이디" type="text"></input>
          </div>
          <div class="login-pw-wrap">
-            <input id="input-pw" name="password" placeholder="비밀번호" type="password"></input>
+            <input id="input-pw" name="password" placeholder="비밀번호" type="password"></input> 
          </div>
+         <div id="loginCheck" style="color:crimson;"></div>
          <div class="login-btn-wrap">
-            <button type="submit" id="login-btn">로그인</button>
+            <button type="submit" id="login-btn" onclick="login()">로그인</button>
          </div>
          <div>
             <span class="stay-check">
@@ -484,24 +485,6 @@ h3{
 		<!--간편한 로그인 부분-->
 		<section id="easy-login-wrap">
 
-			<!-- <div class="easy-login">
-				<p id="easy-login-text">더욱 간편한 로그인</p>
-			</div>
-
-			<div id="easy-login-wrap-ko">
-				<div class="easy-login-box">
-					<div class="qr-login">
-						<a href="https://nid.naver.com/nidlogin.login?mode=qrcode" target="_blank" title="QR코드 로그인">QR
-							코드 로그인</a>
-					</div>
-
-					<div class="onetime-login">
-						<a href="https://nid.naver.com/nidlogin.login?mode=number&url=https%3A%2F%2Fwww.naver.com&locale=ko_KR&svctype=1"
-							target="_blank" title="일회용번호 로그인">일회용 번호 로그인</a>
-					</div>
-				</div>
-			</div>
- -->
 			<div id="easy-login-wrap-en" >
 				<div class="easy-login-box-en">
 
@@ -515,52 +498,7 @@ h3{
 						<img src = "/resources/attachments/image/kakao_login_large_narrow.png" width="210px" height="50px">
 						</a>
 					</div>
-					<!-- <div class="line-login">
-						<img src="image/line.png">
-						<a href="https://line.me/ko/" target="_blank" title="일회용번호 로그인">line</a>
-					</div> -->
 				</div>
-			</div>
-
-		</section>
-
-		<!--class,PW 찾기 및 회원가입 부분-->
-		<section class="find-signup-wrap">
-
-			<!-- <div id="find-signup-wrap-ko">
-				<span class="find-id">
-					<a href="https://nid.naver.com/user2/help/idInquiry?lang=ko_KR" target="_blank" title="QR코드 로그인">아이디
-						찾기</a>
-				</span>
-
-				<span class="find-pw">
-					<a href="https://nid.naver.com/user2/help/pwInquiry?lang=ko_KR" target="_blank"
-						title="일회용번호 로그인">비밀번호 찾기</a>
-				</span>
-
-				<span class="sign-up">
-					<a href="./signup.html" target="_blank"
-						title="일회용번호 로그인">회원가입</a>
-				</span>
-			</div>
- -->
-			<div id="find-signup-wrap-en" style="display:none;">
-				
-				<span class="find-id-en">
-					<span>Forgot your</span> 
-					<a href="https://nid.naver.com/user2/help/idInquiry?lang=ko_KR" target="_blank" title="QR코드 로그인">Username</a>
-				</span>
-
-				<span class="find-pw">
-					<span>or</span> 
-					<a href="https://nid.naver.com/user2/help/pwInquiry?lang=ko_KR" target="_blank"
-						title="일회용번호 로그인">Password?</a>
-				</span>
-
-				<span class="sign-up">
-					<a href="https://nid.naver.com/user2/V2Join?m=agree&lang=ko_KR" target="_blank"
-						title="일회용번호 로그인">Sign up</a>
-				</span>
 			</div>
 		</section>
 	</div>
@@ -585,6 +523,151 @@ h3{
         // 사용자가 사용하기 편하게끔 팝업창으로 띄어준다.
         window.location.href=uri;
     }
+   
+   function login(){
+	   const login = {
+				userId: $("#userId").val(),
+				passowrd: $("#password").val(),
+				idSearch: "1"
+		}
+		
+		if($("#userId").val() !==''){
+			$.ajax({
+				url: "/user/api/confirmUserId/"+$("#userId").val(),
+				method: "GET",
+				headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){
+		        	console.log(data)
+		        	if(data.result ==="fail"){
+		        		$("#checkUserId").css("color","crimson").text("아이디가 일치하지 않습니다");
+		        	} else if(data.result ==="success") {
+		        		
+		        		if($("#password").val() !==''){
+		        			$.ajax({
+		        				url: "/user/api/confirmPassword/"+$("#password").val(),
+		        				method: "GET",
+		        				headers : {
+		        		            "Accept" : "application/json",
+		        		            "Content-Type" : "application/json"
+		        		        },
+		        		        dataType : "json",
+		        		        success : function(data){
+		        		        	console.log(data)
+		        		        	if(data.result ==="fail"){
+		        		        		$("#checkPassword").css("color","crimson").text("비밀번호가 일치하지 않습니다");
+		        		        		$("#save").attr("disabled","disabled");
+		        		        	} else if(data.result ==="success") {
+		        		        			$.ajax({
+		        		        				url: "/user/login
+		        		        				method: "POST",
+		        		        				data: 
+		        		        				headers : {
+		        		        		            "Accept" : "application/json",
+		        		        		            "Content-Type" : "application/json"
+		        		        		        },
+		        		        		        dataType : "json",
+		        		        		        success : function(data){
+		        		        		        	console.log(data)
+		        		        		        	if(data.result ==="fail"){
+		        		        		        		$("#checkUserId").css("color","crimson").text("중복된 아이디입니다.");
+		        		        		        	
+		        		        		        	} else {
+		        		        		        		alert(data);
+		        		        		        		alert("서버오류");
+		        		        		        	}
+		        		        		        }
+		        		        			})
+		        		        		
+		        		        		
+		        		        		
+		        		        		
+		        		        		$("#save").removeAttr("disabled");
+		        		        	} else {
+		        		        		alert(data);
+		        		        		alert("서버오류");
+		        		        	}
+		        		        }
+		        			})
+		        		}
+		        		
+		        	} else {
+		        		alert(data);
+		        		alert("서버오류");
+		        	}
+		        }
+			})
+		} 
+	}
+   
+   
+   
+   
+	//아이디 중복체크
+	$("#userId").on("keyup",()=>{
+
+		if($("#userId").val() !==''){
+			$.ajax({
+				url: "/user/api/confirmUserId/"+$("#userId").val(),
+				method: "GET",
+				headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){
+		        	console.log(data)
+		        	if(data.result ==="fail"){
+		        		$("#checkUserId").css("color","crimson").text("중복된 아이디입니다.");
+		        	} else if(data.result ==="success") {
+		        		$("#checkUserId").css("color","#ff4500").text("사용가능한 아이디입니다.");
+		        	} else {
+		        		alert(data);
+		        		alert("서버오류");
+		        	}
+		        }
+			})
+		} else {
+			$("#checkUserId").css("color","crimson").text("아이디를 입력하세요.");
+		}
+		
+	})
+	
+	//비밀번호 동일여부
+$("#password").on("keyup",()=>{
+	console.log($("#password").val())
+	if($("#password").val() !==''){
+		$.ajax({
+			url: "/user/api/confirmPassword/"+$("#password").val(),
+			method: "GET",
+			headers : {
+	            "Accept" : "application/json",
+	            "Content-Type" : "application/json"
+	        },
+	        dataType : "json",
+	        success : function(data){
+	        	console.log(data)
+	        	if(data.result ==="fail"){
+	        		$("#checkPassword").css("color","crimson").text("비밀번호가 일치하지 않습니다");
+	        		$("#save").attr("disabled","disabled");
+	        	} else if(data.result ==="success") {
+	        		$("#checkPassword").css("color","#ff4500").text("비밀번호가 일치합니다");
+	        		$("#save").removeAttr("disabled");
+	        	} else {
+	        		alert(data);
+	        		alert("서버오류");
+	        	}
+	        }
+		})
+	} else {
+		$("#checkPassword").css("color","crimson").text("내정보 수정을 원하시면 비밀번호를 입력해 주세요");
+		$("#save").attr("disabled","disabled");
+	}
+	
+})	
    
 </script>
 </body>

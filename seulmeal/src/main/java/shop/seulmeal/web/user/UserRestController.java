@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,17 +36,14 @@ public class UserRestController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private ProductService productService;
-	
+		
 	@Autowired
 	private ConfirmService confirmService;
 	
 	@Autowired
 	private LoginService loginService;
 	
-	private PurchaseService purchaseService;
+
 	
 
 	public UserRestController() {
@@ -64,6 +62,48 @@ public class UserRestController {
 		
 		int no = userService.confirmUserId(userId);
 		if(no == 0) {
+			json.put("result", "success");
+		} else {
+			json.put("result", "fail");
+		}
+			
+		return json;
+	}
+	
+	@GetMapping("api/confirmPassword/{password}")
+	public JSONObject confirmPassword(@PathVariable String password, HttpSession session) throws Exception {
+		
+		User user=(User)session.getAttribute("user");
+		String realPw=user.getPassword();
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		JSONObject json = new JSONObject();
+		
+		
+		if(encoder.matches(password, realPw)) {
+			json.put("result", "success");
+		} else {
+			json.put("result", "fail");
+		}
+			
+		return json;
+	}
+	
+	
+	@GetMapping("api/confirmLogin/{userId}/{password}")
+	public JSONObject confirmlogin(@PathVariable String userId, @PathVariable String password, HttpSession session) throws Exception {
+		
+		User user=userService.getUser(userId);
+		String dbPassword = user.getPassword();
+		
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		JSONObject json = new JSONObject();
+		
+		
+		if(encoder.matches(password, dbPassword)) {
 			json.put("result", "success");
 		} else {
 			json.put("result", "fail");
@@ -212,6 +252,7 @@ public class UserRestController {
 		System.out.println(user);
 		return "code : ";
 	}
+	
 	@PostMapping("api/insertPoint")
 	public Point insertPoint(@RequestBody Map<String, Object> map, Point point, HttpSession session) throws Exception{
 		
@@ -230,28 +271,6 @@ public class UserRestController {
 		return point;
 	}
 	
-	/*
-	 * @PostMapping("api/verifyIamport") public JSONObject
-	 * verifyIamport(@RequestBody Point point, HttpSession session) {
-	 * 
-	 * String token = purchaseService.getImportToken();
-	 * System.out.println("/purchase/api/verifyIamport token : " + token);
-	 * 
-	 * JSONObject json = new JSONObject();
-	 * 
-	 * String portAmount = purchaseService.getAmount(token,
-	 * Integer.toString(point.getPointNo()));
-	 * 
-	 * if (point.getPoint() == Integer.parseInt(portAmount)) { json.put("point",
-	 * point); json.put("sucess", "true"); json.put("message", "성공!!!!!!"); } else {
-	 * json.put("success", "false"); int cancel =
-	 * purchaseService.cancelPayment(token, Integer.toString(point.getPointNo()));
-	 * if (cancel == 1) { json.put("message", "성공!!!!!"); } else {
-	 * json.put("message", "실패"); } }
-	 * 
-	 * return json;
-	 * 
-	 * }
-	 */
+	
 
 }

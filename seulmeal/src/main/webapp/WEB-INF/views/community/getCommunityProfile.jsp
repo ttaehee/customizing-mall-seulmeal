@@ -390,7 +390,7 @@ div.modal-content{
 	<!--  div 1. 프로필 -->
 		<div class="profile" >
 				<div id="profile-link"> <img id="profile-img"
-					src="/resources/attachments/profile_image/${profileUser.profileImage}" />
+					src="/resources/attachments/profile_image/${profileUser.profileImage}" onerror="/resources/attachments/profile_image/default_profile.jpg"/>
 				</div>
 				<div id="profile-marg">
 					<span id="profile-name"> ${profileUser.nickName} </span>
@@ -604,26 +604,10 @@ div.modal-content{
 				console.log("status: " + status);
 				console.log("jqXHR: " + jqXHR);
 				
-				console.log(data.msg)
-				console.log(data.followerTotalCount)
-				
-				let msg = data.msg;
-				let followerTotalCount = data.followerTotalCount;
-				
-				if(data.msg === '팔로우'){
-					//alert(msg)
-					$("#insertFollowBtn").html('<i class="bi bi-person-check-fill"></i>');
-					
-				}else if (data.msg === '팔로우취소'){
-					//alert(msg)
-					/*
-					let result = confirm(relationUserId+"님의 팔로우를 취소하시겠어요?");
-					if(result){
-					}*/
-					$("#insertFollowBtn").text("팔로우");
-				}
-				
-				$(".followTotalCount").text(followerTotalCount);
+				console.log(data.relationUserFollowerCnt)
+							
+				$("#insertFollowBtn").html('<i class="bi bi-person-check-fill"></i>');
+				$(".followerTotalCount").text(data.relationUserFollowerCnt);
 				
 			}, error : function(jqXHR, status){
 				console.log(jqXHR);	// 응답 메시지

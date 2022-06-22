@@ -288,17 +288,17 @@ public class CommunityRestController {
 
 		Relation relation = new Relation();
 		relation.setRelationStatus("0");
-		User user = (User) session.getAttribute("user");
-		relation.setUserId(user.getUserId());
+		relation.setUserId(((User)session.getAttribute("user")).getUserId());
 
 		User relationUser = new User();
 		relationUser.setUserId(relationUserId);
 		relation.setRelationUser(relationUser);
 		
-		Map<String,Object> followerMap = communityService.insertFollow(relation);
+		Map<String,Object> resultMap = communityService.insertFollow(relation);
 		
-		// 1. msg(팔로우, 팔로우 취소), 2. followerTotalCount
-		return followerMap;
+		// 1.userFollowCnt
+		// 2.relationUserFollowerCnt
+		return resultMap;
 	}
 	
 	@PostMapping("deleteFollow/{relationUserId}") // o
@@ -310,9 +310,9 @@ public class CommunityRestController {
 		relation.setRelationStatus("0");
 		relation.setUserId(((User)session.getAttribute("user")).getUserId());
 		
-		User user = new User();
-		user.setUserId(relationUserId);
-		relation.setRelationUser(user);
+		User relationUser = new User();
+		relationUser.setUserId(relationUserId);
+		relation.setRelationUser(relationUser);
 
 		Map<String,Object> resultMap = communityService.deleteFollow(relation);
 			

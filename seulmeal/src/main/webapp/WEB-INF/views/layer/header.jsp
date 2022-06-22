@@ -46,6 +46,11 @@
 <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css" />
 
 <style>
+
+	.toast {
+		opacity: 1 !important;
+	}
+			
 	.toast-title {
 		color:crimson;
 	}
@@ -214,6 +219,7 @@
 		toastr.options.escapeHtml = true; // [escapeHtml 허용여부]
 		toastr.options.closeButton = true; // [closeButton을 생성여부]
 		toastr.options.progressBar = true;
+		toastr.options.positionClass = "toast-top-full-width";
 		
 		
 	}
