@@ -74,9 +74,9 @@ public interface PurchaseMapper {
 	//개수
 	public int getCustomProductTotalCount(Map<String, Object> map);
 	public int getPurchaseTotalCount(Map<String, Object> map);
-	public int getSaleTotalCount(Map<String, Object> map);
+	public int getSaleTotalCount(Search search);
 	
 	//판매내역리스트
-	public List<Purchase> getListSale(Map<String, Object> map);
+	public List<Purchase> getListSale(Search search);
 
 }

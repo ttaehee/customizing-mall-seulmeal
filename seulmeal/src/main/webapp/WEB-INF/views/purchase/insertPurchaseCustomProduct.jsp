@@ -152,17 +152,15 @@
 		</div>
 	</form>
 	
-
 		
-	<script type="text/javascript">
+<script type="text/javascript">
 	
 	const minusNo = [];
 	const minusName = [];
 
 	//form insertCustomProduct
 	function fncInsertCustomProduct(ths) {
-		
-		alert("제외한 재료 : "+minusName)
+
 		const count = $("#customProductCount").text();
 		const customprice= $("#total").text();
 		const cartStatus = $(ths).val();
@@ -173,21 +171,45 @@
 		$(".cc").append(`<input type="hidden" name ="price" value="\${customprice}">`);
 		$(".cc").append(`<input type="hidden" name ="cartStatus" value="\${cartStatus}">`);
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
-	 }
 
+	 }
+	
+	//상품구성재료 제외안되어있으면 제외하기
+	function fncExecpt(partsNo, partsName, ths){
+		minusNo.push(partsNo);
+
+        minusName.push(partsName);
+        
+        toastr.error(" 제외되었습니다.",`\${partsName}`,{timeOut:2000});
+        ths.text("제외취소하기");
+	}
 	//상품구성재료 제외하기버튼 클릭
 	$(function() {
 	    $('.execpt').on('click', function() {
-	        const partsNo = $(this).attr('data-partsNo');	        
-	        minusNo.push(partsNo);
-	        	       	        
-	        const partsName = $(this).attr('data-partsName'); 
-	        minusName.push(partsName);
-	        
-	        alert(partsName+" 제외되었습니다.");
-	        console.log("minusNo : "+minusNo);
-	        
-	        $(this).attr("disabled","disabled");
+	    	const partsNo = $(this).attr('data-partsNo');	
+	    	const partsName = $(this).attr('data-partsName'); 
+	    	partsName
+	    	if(minusNo.length == 0){
+	    		fncExecpt(partsNo, partsName, $(this));
+	    		return;
+	    	}
+	    	
+	    	for(let i=0; i<minusNo.length; i++){
+
+	    		if(minusNo[i] === partsNo){
+	    			toastr.error(" 제외 취소되었습니다.",`\${minusName[i]}`,{timeOut:2000});
+	    			minusNo.splice(i,1);
+	    			minusName.splice(i,1);
+	    			$(this).text("제외하기");
+	    			console.log("ddminusNo"+minusNo);
+	    			console.log("ddminusName"+minusName);
+	    			return;
+	    		}
+	    	}
+	    	fncExecpt(partsNo, partsName, $(this));
+	    	console.log("ggminusNo"+minusNo);
+	    	console.log("ggminusName"+minusName);
+	    	return;
 	    })
 	});
 	
@@ -196,7 +218,7 @@
 		var word = $(".search").val();
 		
 		if(word == null || word.length<1){
-			alert("추가할 재료이름을 입력하세요.");
+			toastr.error("추가할 재료이름을 입력하세요.","",{timeOut:2000});
 		}
 	}
 	
@@ -209,7 +231,7 @@
 		if(type=='minus'){
 			num-=10;
 			if(num<10){
-				alert('더이상 줄일수 없습니다.');
+				toastr.error("더이상 줄일수 없습니다.","",{timeOut:2000});
 				return;
 			}
 
@@ -236,7 +258,7 @@
 		const inputTag = $(".partSearch").parent('div').find("input[name='searchKeyword']");
 		
 		if(inputTag.val().trim() != null){
-			if(inputTag.val() != $('.name').text()){
+			if(!($('.name').text().includes(inputTag.val(),0))){
 				$.ajax({
 					url:"/product/api/getPartsName/"+$(".search").val(),
 					method:"GET",
@@ -269,7 +291,7 @@
 			        }
 				})
 			}else{
-				alert("이미 추가되어있는 재료입니다.");
+				toastr.error("이미 추가되어있는 재료입니다.","",{timeOut:2000});
 				inputTag.val('');
 			}
 		}
@@ -296,7 +318,7 @@
 			             );    //response
 			         }
 			         ,error : function(){ //실패
-			             alert("오류가 발생했습니다.");
+			        	 toastr.error("재료없음","",{timeOut:2000});
 			         }
 			     });
 			 }
@@ -346,7 +368,7 @@
 		if(type=='minus'){
 			number--;
 			if(number<1){
-				alert('더이상 줄일수 없습니다.');
+				toastr.error("더이상 줄일수 없습니다.","",{timeOut:2000});
 				return;
 			}
 			$(ths).parents("div").find("span[name='count']").text(number);

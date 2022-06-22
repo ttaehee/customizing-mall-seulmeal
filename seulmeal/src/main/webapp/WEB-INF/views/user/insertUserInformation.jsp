@@ -297,7 +297,7 @@ function fncClose(ths){
 			<br/>
 
 			<div>
-				<img src="/resources/attachments/image/default_profile.png" id="img_section" style="width: 300px; height: 300px;"> <br /> <br />
+				<img src="/resources/attachments/profile_image/default_profile.jpg" id="img_section" style="width: 300px; height: 300px;"> <br /> <br />
 				<div class="under-login" id="find-signup-wrap-ko">
 					<input type="text" id="file_route" disabled="disabled" value="파일 선택">
 					<label for="upload_file" style="border: solid 1px black;">업로드</label>

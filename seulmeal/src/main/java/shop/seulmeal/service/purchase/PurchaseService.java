@@ -57,7 +57,7 @@ public interface PurchaseService {
 	public Purchase getPurchase(int purchaseNo);
 	
 	//구매내역리스트
-	public Map<String, Object> getListPurchase(Search search, String userId, String purchaseStatus);
+	public Map<String, Object> getListPurchase(Search search, String userId);
 	
 	//결제정보 추가 
 	public int updatePurchase(Purchase purchase);
@@ -81,5 +81,5 @@ public interface PurchaseService {
 	public String getAmount(String token, String mId);
 	
 	//판매내역리스트 
-	public Map<String, Object> getListSale(Search search, String purchaseStatus);
+	public Map<String, Object> getListSale(Search search);
 }

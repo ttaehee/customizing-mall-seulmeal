@@ -206,13 +206,12 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 
 	@Override
-	public Map<String, Object> getListPurchase(Search search, String userId, String purchaseStatus) {
+	public Map<String, Object> getListPurchase(Search search, String userId) {
 		// TODO Auto-generated method stub
 		
 		Map<String, Object> map=new HashMap<>();
 		map.put("search", search);
 		map.put("userId", userId);
-		map.put("purchaseStatus", purchaseStatus);
 		
 		List<Purchase> list=purchaseMapper.getListPurchase(map);
 		int totalCount=purchaseMapper.getPurchaseTotalCount(map);
@@ -331,15 +330,13 @@ public class PurchaseServiceImpl implements PurchaseService{
 	
 	//판매내역리스트 
 	@Override
-	public Map<String, Object> getListSale(Search search, String purchaseStatus) {
+	public Map<String, Object> getListSale(Search search) {
 		// TODO Auto-generated method stub
 		
 		Map<String, Object> map=new HashMap<>();
-		map.put("search", search);
-		map.put("purchaseStatus", purchaseStatus);
 		
-		List<Purchase> list=purchaseMapper.getListSale(map);
-		int totalCount=purchaseMapper.getSaleTotalCount(map);
+		List<Purchase> list=purchaseMapper.getListSale(search);
+		int totalCount=purchaseMapper.getSaleTotalCount(search);
 		
 		map.put("saleList", list);
 		map.put("totalCount", totalCount);

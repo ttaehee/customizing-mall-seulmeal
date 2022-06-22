@@ -91,22 +91,29 @@ public class UserRestController {
 	}
 	
 	
-	@GetMapping("api/confirmLogin/{userId}/{password}")
-	public JSONObject confirmlogin(@PathVariable String userId, @PathVariable String password, HttpSession session) throws Exception {
+	@PostMapping("api/confirmLogin")
+	public JSONObject confirmlogin(@RequestBody Map temp) throws Exception {
+		System.out.println("::temp : "+temp);
 		
-		User user=userService.getUser(userId);
-		String dbPassword = user.getPassword();
-		
-		
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String userId = (String)temp.get("userId");
+		String password= (String)temp.get("password");
 		
 		JSONObject json = new JSONObject();
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		User user=userService.getUser(userId);
 		
-		
-		if(encoder.matches(password, dbPassword)) {
-			json.put("result", "success");
+		if(user == null) {
+			json.put("result", "failId");
+			
 		} else {
-			json.put("result", "fail");
+			String dbPassword = user.getPassword();
+			
+			if(encoder.matches(password, dbPassword)) {
+				json.put("result", "success");
+			} else {
+				json.put("result", "failPassword");
+			}
+			
 		}
 			
 		return json;
@@ -122,6 +129,174 @@ public class UserRestController {
 			json.put("result", "fail");
 		}
 		return json;
+	}
+	@GetMapping("api/findId")
+	public JSONObject findId(@RequestParam(required = false) Map<String, Object> idSearch, HttpSession session) throws Exception {
+		System.out.println("idSearch"+idSearch);
+		String userName = (String)idSearch.get("name");
+		System.out.println(":: userName : "+userName);
+		String email = (String)idSearch.get("email");
+		System.out.println(":: email : "+email);
+		String phone = (String)idSearch.get("phone");
+		System.out.println(":: phone : "+phone);
+		
+		JSONObject json = new JSONObject();
+		
+		if(!email.isEmpty()) {
+			
+			
+			User user = userService.confirmUserEmail(email);
+			if(user != null) {
+				System.out.println("username : "+user.getUserName());
+				if(user.getUserName().equals(userName)) {
+					
+					int num = confirmService.confirmNum();
+					String message = "인증번호는 ["+num+"] 입니다";
+					confirmService.sendMail(message, email);
+					session.setAttribute("num", num);
+					session.setAttribute("userId", user.getUserId());
+					json.put("result", "success");
+					
+					
+				} else {
+					json.put("result", "fail");
+				}	
+				return json;
+			} else {
+				json.put("result", "fail");
+				return json;
+			}
+			
+		} else {
+			
+			User user = userService.confirmUserPhone(phone);
+			if(user != null) {
+				
+				System.out.println("username : "+user.getUserName());
+				if(user.getUserName().equals(userName)) {
+					
+					int num = confirmService.confirmNum();
+					String message = "인증번호는 ["+num+"] 입니다";
+					System.out.println("message : "+message);
+					
+					confirmService.sendSMS(phone, message);
+					session.setAttribute("num", num);
+					session.setAttribute("userId", user.getUserId());
+					json.put("result", "success");
+					
+					
+				} else {
+					json.put("result", "fail");
+				}	
+				return json;
+			} else {
+				json.put("result", "fail");
+				return json;
+			}
+			
+		}
+		
+	}
+	
+	@GetMapping("api/findPassword")
+	public JSONObject findPassword(@RequestParam(required = false) Map<String, Object> passwordSearch, HttpSession session) throws Exception {
+		System.out.println("idSearch"+passwordSearch);
+		
+		JSONObject json = new JSONObject();
+		
+		String userId = (String)passwordSearch.get("id");
+		System.out.println(":: userId : "+userId);
+		String email = (String)passwordSearch.get("email");
+		System.out.println(":: email : "+email);
+		String phone = (String)passwordSearch.get("phone");
+		System.out.println(":: phone : "+phone);
+		
+		if(!email.isEmpty()) {
+			User user = userService.confirmUserEmail(email);
+			
+			if(user != null) {
+				System.out.println("userId : "+user.getUserId());
+				
+				
+				if(user.getUserId().equals(userId)) {
+					
+					int num = confirmService.confirmNum();
+					String message = "인증번호는 ["+num+"] 입니다";
+					confirmService.sendMail(message, email);
+					session.setAttribute("num", num);
+					session.setAttribute("userId", user.getUserId());
+					json.put("result", "success");
+					
+					
+				} else {
+					json.put("result", "fail");
+					
+				}	
+				return json;
+			} else {
+				json.put("result", "fail");
+				return json;
+			}
+			
+		} else {
+			User user = userService.confirmUserPhone(phone);
+			if(user != null) {
+				System.out.println("userId : "+user.getUserId());
+					if(user.getUserId().equals(userId)) {
+					
+					int num = confirmService.confirmNum();
+					String message = "인증번호는 ["+num+"] 입니다";
+					System.out.println("message : "+message);
+					
+					confirmService.sendSMS(phone, message);
+					session.setAttribute("num", num);
+					session.setAttribute("userId", user.getUserId());
+					json.put("result", "success");
+					
+					
+				} else {
+					json.put("result", "fail");
+					
+				}	
+				return json;
+			} else {
+				json.put("result", "fail");
+				return json;
+			}
+
+		}
+	}
+	
+	@GetMapping("api/findIdCode")
+	public JSONObject findIdCode(@RequestParam(required = false) Map<String, Object> idSearch, HttpSession session) throws Exception {
+		System.out.println();
+		System.out.println("idSearch"+idSearch);
+		int code = Integer.parseInt((String)idSearch.get("code")) ;
+		System.out.println(":: code : "+code);
+		/*
+		 * String email = (String)idSearch.get("email");
+		 * System.out.println(":: email : "+email); String phone =
+		 * (String)idSearch.get("phone"); System.out.println(":: phone : "+phone);
+		 */
+		
+		JSONObject json = new JSONObject();
+		
+		int num =(Integer)session.getAttribute("num");
+		String userId = (String)session.getAttribute("userId");
+		System.out.println("내가보낸 인증번호 : "+code);
+		System.out.println("들어있는 인증번호 : "+num);
+		if(code==num) {
+			json.put("result", "인증완료");
+			json.put("userId", userId);
+			session.removeAttribute("num");
+			//session.removeAttribute("userId");
+		} else {
+			json.put("result", "인증실패");
+		}
+		
+		return json;
+		
+		
 	}
 	
 	@GetMapping("api/confirmUserPhone/{phone}")
@@ -220,9 +395,9 @@ public class UserRestController {
 		
 		
 	
-	@GetMapping("api/confirmCode/{confirm}/{confrimNum}")
-	public JSONObject confirmCode(@PathVariable String confirm,
-							@PathVariable Integer confrimNum, HttpSession session) throws Exception {
+	@GetMapping(value ={"api/confirmCode/{confirm}/{confrimNum}","api/confirmCode/{confrimNum}"} )
+	public JSONObject confirmCode(@PathVariable(required = false) String confirm,
+							@PathVariable(required = false) Integer confrimNum, HttpSession session) throws Exception {
 		
 		JSONObject json = new JSONObject();
 		int num =(Integer)session.getAttribute(confirm);
@@ -231,7 +406,6 @@ public class UserRestController {
 		System.out.println("들어있는 인증번호 : "+num);
 		if(confrimNum == num) {
 			json.put("result", "인증완료");
-			json.put("userId", userId);
 			session.removeAttribute(confirm);
 		} else {
 			json.put("result", "인증실패");

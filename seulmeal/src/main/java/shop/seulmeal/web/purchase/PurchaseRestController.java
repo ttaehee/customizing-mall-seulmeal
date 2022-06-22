@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import shop.seulmeal.common.Page;
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.CustomProduct;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
@@ -58,6 +60,7 @@ public class PurchaseRestController {
 		System.out.println(this.getClass());
 	}
 	
+	//오토컴플릿
 	@PostMapping("autocomplete")
 	public @ResponseBody Map<String, Object> autocomplete(@RequestParam Map<String, Object> paramMap) throws Exception{
 		
@@ -168,6 +171,89 @@ public class PurchaseRestController {
 		
 	}	
 	
+	//아임포트 검증
+	@PostMapping("verifyIamport")
+	public JSONObject verifyIamport(@RequestBody Purchase purchase, Point point, HttpSession session) throws Exception {
+		
+		System.out.println("/purchase/api/verifyIamport : "+purchase);
+		
+		//결제완료 시 구매상태 상품준비중으로 변경
+		int success=purchaseService.updatePurchase(purchase);
+		System.out.println("/purchase/api/verifyIamport update : "+success);
+			
+		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
+		System.out.println("/purchase/api/verifyIamport purchaseNo : "+ purchase.getPurchaseNo());
+		User user=(User)(session.getAttribute("user"));
+		purchase.setUser(user);		
+		
+		String token=purchaseService.getImportToken();
+		System.out.println("/purchase/api/verifyIamport token : "+ token);
+		
+		JSONObject json=new JSONObject();
+		if(success ==1) {
+			String portAmount=purchaseService.getAmount(token, Integer.toString(purchase.getPurchaseNo()));
+			
+			if(purchase.getPrice() == Integer.parseInt(portAmount)) {
+				
+				//커스터마이징상품은 장바구니리스트에서 삭제 
+				List<CustomProduct> cpList=purchase.getCustomProduct();
+				for(CustomProduct cp : cpList) {
+					purchaseService.updateCustomProductStatus(cp);
+				}
+				
+				//사용포인트
+				point.setUserId(user.getUserId());
+				point.setPurchaseNo(purchase.getPurchaseNo());
+				point.setPointStatus("0");
+				point.setPoint(purchase.getUsePoint());
+				userService.insertPoint(point);
+				//총포인트에서 사용포인트 빼기
+				user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+				userService.updateUserTotalPoint(user);
+				
+				json.put("purchase", purchase);
+				json.put("sucess", "true");
+				json.put("message", "성공!!!!!!");
+			}else {
+				json.put("success", "false");
+				int cancel=purchaseService.cancelPayment(token, Integer.toString(purchase.getPurchaseNo()));
+				if(cancel==1) {
+					json.put("message", "성공!!!!!");
+				}else {
+					json.put("message", "실패");
+				}
+			}
+		}else {
+			purchaseService.cancelPayment(token, Integer.toString(purchase.getPurchaseNo()));
+			json.put("message", "취소실패ㅠㅠ");
+		}
+		return json;
+	}
+	
+	//구매내역리스트 무한스크롤
+	@RequestMapping(value={"/getListPurchase","/getListPurchase/{currentPage}", "/getListPurchase/{currentPage}/{searchCondition}"})
+	public List<Purchase> getListPurchase(@PathVariable int currentPage, @PathVariable(required = false) String searchCondition, Search search, HttpSession session)
+			throws Exception {
+		
+		System.out.println("/purchase/api/getListPurchase : "+currentPage);
+		
+		User user=(User)session.getAttribute("user");
+		String userId=user.getUserId();
+		
+		search.setCurrentPage(currentPage);
+		search.setPageSize(pageSize);
+		search.setSearchCondition(searchCondition);
+
+		Map<String, Object> map = purchaseService.getListPurchase(search, userId);
+		List<Purchase> purchaseList=(List<Purchase>)map.get("purchaseList");
+		
+		for(Purchase p:purchaseList) {
+			p.setUser(user);
+		}
+		return purchaseList;
+	}
+	
+	//배송하기, 구매확정 후 구매처리상태변경
 	@PostMapping("updatePurchaseCode")
 	public Purchase updatePurchaseCode(@RequestBody Purchase purchase, Point point, HttpSession session) throws Exception{
 
@@ -207,64 +293,5 @@ public class PurchaseRestController {
 	      
 	      return purchase;
 	   }   
-	
-	@PostMapping("verifyIamport")
-	public JSONObject verifyIamport(@RequestBody Purchase purchase, Point point, HttpSession session) throws Exception {
-		
-		System.out.println("/purchase/api/verifyIamport : "+purchase);
-		
-		//결제완료 시 구매상태 상품준비중으로 변경
-		int success=purchaseService.updatePurchase(purchase);
-		System.out.println("/purchase/api/verifyIamport update : "+success);
-			
-		purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
-		System.out.println("/purchase/api/verifyIamport purchaseNo : "+ purchase.getPurchaseNo());
-		User user=(User)(session.getAttribute("user"));
-		purchase.setUser(user);		
-		
-		String token=purchaseService.getImportToken();
-		System.out.println("/purchase/api/verifyIamport token : "+ token);
-		
-		JSONObject json=new JSONObject();
-		if(success ==1) {
-			String portAmount=purchaseService.getAmount(token, Integer.toString(purchase.getPurchaseNo()));
-			
-			if(purchase.getPrice() == Integer.parseInt(portAmount)) {
-				
-				//커스터마이징상품은 장바구니리스트에서 삭제 
-				List<CustomProduct> cpList=purchase.getCustomProduct();
-				for(CustomProduct cp : cpList) {
-					purchaseService.updateCustomProductStatus(cp);
-				}
-				
-				//사용포인트
-				point.setUserId(user.getUserId());
-				point.setPurchaseNo(purchase.getPurchaseNo());
-				point.setPointStatus("0");
-				point.setPoint(purchase.getUsePoint());
-				userService.insertPoint(point);
-				//총포인트에서 사용포인트 빼기
-				user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
-				System.out.println("totalpointtttttttttttt:"+user.getTotalPoint());
-				userService.updateUserTotalPoint(user);
-				
-				json.put("purchase", purchase);
-				json.put("sucess", "true");
-				json.put("message", "성공!!!!!!");
-			}else {
-				json.put("success", "false");
-				int cancel=purchaseService.cancelPayment(token, Integer.toString(purchase.getPurchaseNo()));
-				if(cancel==1) {
-					json.put("message", "성공!!!!!");
-				}else {
-					json.put("message", "실패");
-				}
-			}
-		}else {
-			purchaseService.cancelPayment(token, Integer.toString(purchase.getPurchaseNo()));
-			json.put("message", "취소실패ㅠㅠ");
-		}
-		return json;
-	}
 
 }

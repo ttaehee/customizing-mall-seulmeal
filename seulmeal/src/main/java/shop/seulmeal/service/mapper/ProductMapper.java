@@ -44,6 +44,8 @@ public interface ProductMapper {
 	public void restoreFoodCategory(int foodCategoryNo) throws Exception;
 
 	// REVIEW
+	public int validationReview(Map<String, Object> map) throws Exception;
+	
 	public void insertReview(Review review) throws Exception;
 
 	public void updateReview(Review review) throws Exception;
@@ -68,6 +70,8 @@ public interface ProductMapper {
 	public int insertParts(Parts parts) throws Exception;
 
 	public Parts getParts(Map<String, Object> map) throws Exception;
+
+	public List<Map> autoComplete(Map<String, Object> map) throws Exception;
 
 	public int updateParts(Parts parts) throws Exception;
 

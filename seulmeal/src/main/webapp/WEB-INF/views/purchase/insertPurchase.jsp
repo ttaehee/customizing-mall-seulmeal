@@ -314,34 +314,63 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="/resources/javascript/user/address.js"></script>	
 <script type="text/javascript">
+
+	let usepoint = 0;
+	if(!$('#usepoint').val()){
+		usepoint = 0;
+	}else{
+		usepoint = parseInt($('#usepoint').val());
+	}
+	
+	let sum = parseInt($('#price').text().replace(",",""));
+
+	//사용포인트>결제금액 시 keydown
+	$('#usepoint').keyup(function() {
+		usepoint = parseInt($('#usepoint').val());
+		
+		if(usepoint>sum){
+			toastr.error("결제금액보다 적은 포인트를 입력하세요.","",{timeOut:2000});
+			$('#usepoint').val('');
+			return;
+		}	
+		
+		if(usepoint>${user.totalPoint}){
+			toastr.error("보유포인트보다 적은 포인트를 입력하세요.","",{timeOut:2000});
+			$('#usepoint').val('');
+			return;
+		}
+	});
+	
+	//사용포인트를 적지않고 비밀번호를 작성하려고 할 때 or 100포인트단위가 아닐 때
+	$('#password').on('click', function() {
+		if(usepoint === 0 || isNaN(usepoint)){
+			toastr.error("사용할 포인트를 먼저 입력하세요.","",{timeOut:2000});
+		}else{
+			if(usepoint%100 != 0){
+				toastr.error("100 포인트단위로 입력하세요.","",{timeOut:2000});
+				$('#usepoint').val('');
+				return;
+			}
+		}
+	});
 	
 	//포인트사용 비밀번호체크 후 결제금액차감
 	function fnCalTotal(){
-		
-		let usepoint = 0;
-		if(!$('#usepoint').val()){
-			usepoint = 0;
-		}else{
-			usepoint = parseInt($('#usepoint').val());
-		}
-		
-		let sum = parseInt($('#price').text().replace(",",""));
-		
+		usepoint = parseInt($('#usepoint').val());
+		console.log(usepoint);
+
 		let total = sum-usepoint;
 		const password = $('#password').val();
 		
-		if(total<0){
-			alert("결제금액보다 적은 포인트를 입력하세요.");
-			$('#usepoint').val('');
+		if(usepoint == 0 || usepoint == "" || usepoint =="undefined" || usepoint == null || isNaN(usepoint)){
+			toastr.error("사용할 포인트를 먼저 입력하세요.","",{timeOut:2000});
 			return;
-		}
-		
-		if(usepoint/100 != 0){
-			alert("100 포인트단위로 입력하세요.");
-			$('#usepoint').val('');
-			return;
-		}
-		
+		}else{
+			if(password == "" || password == "undefined" || password == null){
+				toastr.error("비밀번호를 올바르게 입력하세요.","",{timeOut:2000});
+				$('#password').val('');
+				return;
+			}
 			$.ajax({
 				url: "/purchase/api/confirmPassword",
 				method : "POST",
@@ -357,7 +386,7 @@
 		        success : function(data){	
 		        	console.log(data);
 		        	if(data.success==='true'){
-		        		alert("포인트적용완료");
+		        		toastr.error("포인트적용완료","",{timeOut:2000});
 		        		$("#price").text(total.toLocaleString());
 		        		console.log(parseInt($('#price').text().replace(",","")));
 		        		
@@ -365,26 +394,20 @@
 		        		document.getElementById('usepoint').readOnly = true;
 		        		document.getElementById('password').readOnly = true;
 		        		
-		        	}else if(data.success==='pt'){
-		        		alert("보유포인트 내에서 입력하세요.");
-		        		$('#usepoint').val('');
-		        		$('#password').val('');
-		    			return;
-		    			
 		        	}else if(data.success==='pw'){
-		        		alert("비밀번호를 다시 입력하세요.");
-		        		$('#usepoint').val('');
+		        		toastr.error("비밀번호를 다시 입력하세요.","",{timeOut:2000});
 		        		$('#password').val('');
 		        		return;
 		        		
 		        	}else{
-		        		alert("다시 시도해주세요.");
+		        		toastr.error("다시 시도해주세요.","",{timeOut:2000});
 		        		$('#usepoint').val('');
 		        		$('#password').val('');
 		        		return;
 		        	}
 		        }
-	    	});		
+	    	});	
+		}
 	}
 	
 	//체크박스 하나만 선택
@@ -402,7 +425,7 @@
 		//배송지 입력여부 체크
 		var postcode = $('#sample3_postcode').val();
 		if(postcode == "undefined" || postcode == "" || postcode == null ){
-			alert("배송지는 필수입력사항입니다.");
+			toastr.error("배송지는 필수입력사항입니다.","",{timeOut:2000});
 			return;
 		}
 			
@@ -494,7 +517,7 @@
 						         msg += '에러내용 : ' + rsp.error_msg;
 
 							}
-						alert(msg);
+							toastr.error(msg,"",{timeOut:2000});
 					})
 				}
 			})
