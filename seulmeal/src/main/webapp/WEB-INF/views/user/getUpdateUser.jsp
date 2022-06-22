@@ -178,7 +178,7 @@ body { background: #fff; }
 			
 				<c:forEach var="foodcategory" items="${foodcategoryList}">
 					<label class="btn btn-primary active">
-						<input type="checkbox" name="foodcategory" value="${foodcategory.name }"> ${foodcategory.name }
+						<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);"> ${foodcategory.name }
 					</label> 
 					
 					
@@ -505,7 +505,22 @@ $("#newPassword").on("keyup",()=>{
 		}
 	})
 	
+	//카테고리 체크
+	function count_check(obj){
+	var chkBox = document.getElementsByName("foodcategory");
+	var chkCnt = 0;
 	
+	for(var i = 0; i<chkBox.length; i++){
+		if(chkBox[i].checked){
+			chkCnt++;
+		}
+	}
+	if(chkCnt > 3){
+		alert("3개까지 체크할 수 있습니다.");
+		obj.checked = false;
+		return false;
+	}
+}
 </script>
 </body>
 </html>

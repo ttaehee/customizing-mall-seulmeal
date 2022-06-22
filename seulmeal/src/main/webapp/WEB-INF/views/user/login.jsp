@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<title>슬밀 로그인</title>
 	<link rel="stylesheet" href="style.css">
-	<script src="login.js"></script>
+	<!-- <script src="login.js"></script> -->
 <style type="text/css">
 /* body{
     background-color: #f5f6f7;
@@ -437,6 +437,10 @@ h3{
     outline:none;
     cursor: pointer;
 }
+#loginCheck{
+	text-align: left;
+	margin: 0px 0px 0px 12px;
+}
 
 
 </style>
@@ -448,7 +452,7 @@ h3{
 		
 		<!--로그인 부분-->
 		<section class="login-wrap">
- 		<form action="/user/login" method="post">
+ 		<form action="/user/login" method="post" id="loginForm">
          <h1>슬밀</h1>
          <div class="login-id-wrap">
             <input id="input-id" name="userId" placeholder="아이디" type="text"></input>
@@ -458,7 +462,7 @@ h3{
          </div>
          <div id="loginCheck" style="color:crimson;"></div>
          <div class="login-btn-wrap">
-            <button type="submit" id="login-btn" onclick="login()">로그인</button>
+            <button type="button" id="login-btn" onclick="login()">로그인</button>
          </div>
          <div>
             <span class="stay-check">
@@ -522,152 +526,43 @@ h3{
 
         // 사용자가 사용하기 편하게끔 팝업창으로 띄어준다.
         window.location.href=uri;
-    }
+    } 
    
    function login(){
-	   const login = {
-				userId: $("#userId").val(),
-				passowrd: $("#password").val(),
-				idSearch: "1"
-		}
-		
-		if($("#userId").val() !==''){
-			$.ajax({
-				url: "/user/api/confirmUserId/"+$("#userId").val(),
-				method: "GET",
-				headers : {
-		            "Accept" : "application/json",
-		            "Content-Type" : "application/json"
-		        },
-		        dataType : "json",
-		        success : function(data){
-		        	console.log(data)
-		        	if(data.result ==="fail"){
-		        		$("#checkUserId").css("color","crimson").text("아이디가 일치하지 않습니다");
-		        	} else if(data.result ==="success") {
-		        		
-		        		if($("#password").val() !==''){
-		        			$.ajax({
-		        				url: "/user/api/confirmPassword/"+$("#password").val(),
-		        				method: "GET",
-		        				headers : {
-		        		            "Accept" : "application/json",
-		        		            "Content-Type" : "application/json"
-		        		        },
-		        		        dataType : "json",
-		        		        success : function(data){
-		        		        	console.log(data)
-		        		        	if(data.result ==="fail"){
-		        		        		$("#checkPassword").css("color","crimson").text("비밀번호가 일치하지 않습니다");
-		        		        		$("#save").attr("disabled","disabled");
-		        		        	} else if(data.result ==="success") {
-		        		        			$.ajax({
-		        		        				url: "/user/login
-		        		        				method: "POST",
-		        		        				data: 
-		        		        				headers : {
-		        		        		            "Accept" : "application/json",
-		        		        		            "Content-Type" : "application/json"
-		        		        		        },
-		        		        		        dataType : "json",
-		        		        		        success : function(data){
-		        		        		        	console.log(data)
-		        		        		        	if(data.result ==="fail"){
-		        		        		        		$("#checkUserId").css("color","crimson").text("중복된 아이디입니다.");
-		        		        		        	
-		        		        		        	} else {
-		        		        		        		alert(data);
-		        		        		        		alert("서버오류");
-		        		        		        	}
-		        		        		        }
-		        		        			})
-		        		        		
-		        		        		
-		        		        		
-		        		        		
-		        		        		$("#save").removeAttr("disabled");
-		        		        	} else {
-		        		        		alert(data);
-		        		        		alert("서버오류");
-		        		        	}
-		        		        }
-		        			})
-		        		}
-		        		
-		        	} else {
-		        		alert(data);
-		        		alert("서버오류");
-		        	}
-		        }
-			})
-		} 
-	}
-   
-   
-   
-   
-	//아이디 중복체크
-	$("#userId").on("keyup",()=>{
+	   
+	   const userId= $("#input-id").val();
+	   const password= $("#input-pw").val();
 
-		if($("#userId").val() !==''){
-			$.ajax({
-				url: "/user/api/confirmUserId/"+$("#userId").val(),
-				method: "GET",
-				headers : {
-		            "Accept" : "application/json",
-		            "Content-Type" : "application/json"
-		        },
-		        dataType : "json",
-		        success : function(data){
-		        	console.log(data)
-		        	if(data.result ==="fail"){
-		        		$("#checkUserId").css("color","crimson").text("중복된 아이디입니다.");
-		        	} else if(data.result ==="success") {
-		        		$("#checkUserId").css("color","#ff4500").text("사용가능한 아이디입니다.");
-		        	} else {
-		        		alert(data);
-		        		alert("서버오류");
-		        	}
-		        }
-			})
-		} else {
-			$("#checkUserId").css("color","crimson").text("아이디를 입력하세요.");
-		}
-		
-	})
-	
-	//비밀번호 동일여부
-$("#password").on("keyup",()=>{
-	console.log($("#password").val())
-	if($("#password").val() !==''){
-		$.ajax({
-			url: "/user/api/confirmPassword/"+$("#password").val(),
-			method: "GET",
+	   $.ajax({
+			url: "/user/api/confirmLogin",
+			method: "POST",
+			data:JSON.stringify({
+				 userId : userId,
+				 password : password
+			}),
 			headers : {
 	            "Accept" : "application/json",
 	            "Content-Type" : "application/json"
 	        },
 	        dataType : "json",
 	        success : function(data){
-	        	console.log(data)
-	        	if(data.result ==="fail"){
-	        		$("#checkPassword").css("color","crimson").text("비밀번호가 일치하지 않습니다");
-	        		$("#save").attr("disabled","disabled");
-	        	} else if(data.result ==="success") {
-	        		$("#checkPassword").css("color","#ff4500").text("비밀번호가 일치합니다");
-	        		$("#save").removeAttr("disabled");
-	        	} else {
-	        		alert(data);
-	        		alert("서버오류");
+	        	if(data.result === "success"){
+	        		$("#loginForm").submit();
+	        		
 	        	}
+	        	if(data.result === "failId"){
+	        		$("#loginCheck").css("color","crimson").text("등록되지 않은 아이디입니다.");
+	        		return;
+	        	}
+	        	if(data.result === "failPassword"){
+	        		$("#loginCheck").css("color","crimson").text("비밀번호가 일치하지 않습니다.");
+	        		return;
+	        	}
+	        	
 	        }
-		})
-	} else {
-		$("#checkPassword").css("color","crimson").text("내정보 수정을 원하시면 비밀번호를 입력해 주세요");
-		$("#save").attr("disabled","disabled");
+		})		 
+		
 	}
-	
-})	
    
 </script>
 </body>
