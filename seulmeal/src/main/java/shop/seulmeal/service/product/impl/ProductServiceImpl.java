@@ -124,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
 	// Review CRUD
 	public String validationReview(Map<String, Object> map) throws Exception{
 		System.out.println(map);
-		if(productMapper.validationReview(map) == 1) {
+		if(productMapper.validationReview(map) > 0) {
 			return "true";
 		} else {
 			return "false";

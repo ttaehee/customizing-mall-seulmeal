@@ -542,7 +542,8 @@ $(function(){
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
 	        success : function(data){
-	        	if(data == 'true'){
+	        	console.log(data);
+	        	if(data == true){
 	        		$(".modal").fadeIn();
 	        	}else{
 	        		alert('상품 구매 후 이용 가능한 서비스입니다.')
