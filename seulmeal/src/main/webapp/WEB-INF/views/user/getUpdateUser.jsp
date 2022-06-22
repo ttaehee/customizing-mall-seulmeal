@@ -43,31 +43,7 @@ body { background: #fff; }
   border-right: 0;
 }
 </style>
-<script type="text/javascript">
-	
-$(()=>{
-	$(".partSearch").on("click",()=>{
-		$.ajax({
-			url:"/product/api/getPartsName/"+$(".search").val(),
-			method:"GET",
-	        headers : {
-	            "Accept" : "application/json",
-	            "Content-Type" : "application/json"
-	        },
-	        dataType : "json",
-	        success : function(data){	        	
-	        	console.log(data);
-	        	const parts = "<div> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-	                +"<div class='part' data-parts='"+data.partsNo+"'>"+ data.name +"</div>"
-	                +"</div>"
-	        	$(".parts").append(parts);
-	        }
-		})
-	})
-})
-	
-	
-</script>
+
 <body>
 
 	<jsp:include page="../layer/header.jsp"></jsp:include>
@@ -75,29 +51,35 @@ $(()=>{
 	<div class="container">
 		<br /> <br /> <br /> <br />
 		<h2>내 정보</h2>
-		<form class="form-horizontal" method="post" action="/user/getUpdateUser" target="_self">
+		<form class="form-horizontal" method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-10">
-				<input type="text" class="form-control" id="userId" name="userId" value="${user.userId }" placeholder="중복확인하세요"  readonly>
+				<%-- <input type="text" class="form-control" id="userId" name="userId" value="${user.userId }" placeholder="중복확인하세요"  readonly> --%>
+				
+				 <input type='hidden'  name='userId' value='${user.userId }' />
+				${user.userId }
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="Password3" class="col-sm-2 control-label">Password</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="password" name="password" placeholder="">
+					 <div id="checkPassword"></div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="Password3" class="col-sm-2 control-label">새 비밀번호</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" id="NewPassword" placeholder="">
+					<input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="">
+					<div id="passResult" style="color:crimson;"></div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="Password3" class="col-sm-2 control-label">비밀번호 확인</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="confirmPassword" placeholder="">
+					<div id="passCheck" style="color:crimson;"></div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -151,45 +133,111 @@ $(()=>{
 			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">생년월일</label>
 				<div class="col-sm-10">
-					<%-- ${user.birth } --%>
+					 ${user.birth } 
 				</div>
 				
 				
 			</div>
 			
+			
+			<br/>
+
+			<div>
+				<img src="/resources/attachments/profile_image/${user.profileImage }" id="img_section" style="width: 300px; height: 300px;"> <br /> <br />
+				<div class="under-login" id="find-signup-wrap-ko">
+					<input type='hidden'  name='profileImage' value='${user.profileImage }' />
+					<input type="text" id="file_route" disabled="disabled" value="이미지 선택"><!-- accept="image/*" -->
+					<label for="upload_file" style="border: solid 1px black;">확인</label>
+					<input type="file" id="upload_file" name="imageFile" style="position: absolute; clip: rect(0, 0, 0, 0);">
+				 <script>
+			        const reader = new FileReader();
+			
+			        reader.onload = (readerEvent) => {
+			            document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
+			        };
+			
+			        document.querySelector("#upload_file").addEventListener("change", (changeEvent) => {
+			
+			            const imgFile = changeEvent.target.files[0];
+			            reader.readAsDataURL(imgFile);
+			        })
+			    </script>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<h4>상태메세지</h4>
+				<div class="">
+					<input type="text" class="form-control" id="profilemessage" name="profilemessage" value="${user.profileMessage }" placeholder="내용을 입력해 주세요">
+				</div>
+			</div>
+			
+			<div class="category">
+			<h4>좋아하는 음식 카테고리</h4>
 			<div class="btn-group" data-toggle="buttons">
+			
 				<c:forEach var="foodcategory" items="${foodcategoryList}">
 					<label class="btn btn-primary active">
 						<input type="checkbox" name="foodcategory" value="${foodcategory.name }"> ${foodcategory.name }
-					</label>
+					</label> 
+					
+					
 				</c:forEach>
 			</div>
+			</div>
+		<!-- 	<div>
+			<h4>비선호 재료</h4>
 			<div>
-				재료 검색 : <input class="search" />
+				<input class="search" />
 				<div class="partSearch">검색</div>
 				<div class="parts"></div>
 			</div>
+			</div> -->
+			
+				
+				<h4 class="card-title">비선호 재료</h4>
+				  
+				  
+						<div class="container"> 
+								<div class="hateParts"  style="display:flex;">	
+									<div class="form-outline">
+										<input name="searchKeyword" type="search" class="form-control search" value="" />
+									</div>		  
+									<button type="button" class="btn btn-primary partSearch" onclick="search()">
+										<i class="bi bi-search"></i>
+									</button>
+								</div>
+						</div>
+						<div class="container">
+							<div class="plusparts"></div>
+						</div>
+			
+			
+				    
+					
+				
+			  
+			
 
-			<div class="form-group">
+			<!-- <div class="form-group">
 				<label for="exampleInputFile"></label>
 				<input type="file" id="imageFile" name="imageFile" multiple="multiple">
 				<p class="help-block">프로필 이미지를 선택해주세요</p>
-			</div>
-			<div class="form-group">
-				<label for="" class="col-sm-2 control-label">상태메세지</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="profilemessage" name="profilemessage" placeholder="내용을 입력해 주세요">
-				</div>
-			</div>
+			</div> -->
+			
 
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default">저장</button>
-					<button type="button" onclick="location.href='/user/deleteUser'" class="btn btn-default">탈퇴</button>
+					<button type="submit" class="btn btn-default" id="save" disabled="disabled">저장</button>
+					<button id="cancelBtn" type="button" class="btn btn-default" onclick="history.back()">
+				취소</button>
 				</div>
 			</div>
+
 		</form>
 	</div>
+	
+	
 	
 	<!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -238,6 +286,226 @@ $(()=>{
 	
 
 	
+<script type="text/javascript">
+	
+function search(){
+	var word = $(".search").val();
+	console.log(word);
+	
+	if(word == null || word.length<1){
+		alert("추가할 재료이름을 입력하세요.");
+	}
+}
 
+function fnCalCount(type, ths){
+	var statcount = $(ths).parents("div").find("span[name='count']").text();
+	var number = parseInt(statcount,10);
+	let calprice = parseInt($("#total").text());
+
+	if(type=='minus'){
+		number--;
+		if(number<1){
+			alert('더이상 줄일수 없습니다.');
+			return;
+		}
+		$(ths).parents("div").find("span[name='count']").text(number);
+
+	}else{
+		number++;
+		$(ths).parents("div").find("span[name='count']").text(number);
+	}
+}
+
+function fncGetParts(){
+	const inputTag = $(".partSearch").parent('div').find("input[name='searchKeyword']");
+	
+	if(inputTag.val().trim() != null){
+		if(inputTag.val() != $('.name').text()){
+			$.ajax({
+				url:"/product/api/getPartsName/"+$(".search").val(),
+				method:"GET",
+		        headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){	        	
+		        	console.log(data);
+
+		        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
+		        	+"<input type='hidden' class='price' name='plusPrice' value='"+data.price+"' />"
+		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+"<span class='name'>" +data.name + "</span><button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
+		            +"<div class='partsprice' name=partsprice' data-parts='"+data.partsNo+"'>"
+		            /* +"<div name=partsPrice' data-parts='"+data.partsNo+"'><span name='partsprice'>"+ data.price +"</span>원<br/>"
+		            +"<input type='hidden' name='plusGram' value='10'/>"
+		            +`<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalGram('minus',this);">-</button>
+         			&ensp; <span class='gram' name='gram'>10</span> &ensp; 
+        			<button type='button' class="btn btn-outline-primary btn-sm plus" onclick="fnCalGram('plus',this);">+</button>` */
+	               + "</div></div></div></div>" 
+
+	               $(".search").val('');
+	               $(".plusparts").append(parts);
+	               
+	                
+	                const productprice = $("#total").text();
+	                const result = parseInt(productprice)+parseInt(data.price);
+	                $("#total").text(result);
+		        }
+			})
+		}else{
+			alert("이미 추가되어있는 재료입니다.");
+			inputTag.val('');
+		}
+	}
+ }
+
+
+ $(function(){ 
+	 $(".search").autocomplete({ 
+		 source : function(request, response) { //source: 입력시 보일 목록
+		     $.ajax({
+		           url : "/purchase/api/autocomplete"   
+		         , type : "POST"
+		         , dataType: "JSON"
+		         , data : {value: request.term}	// 검색 키워드
+		         , success : function(data){ 	// 성공
+		        	 response(
+		                 $.map(data.resultList, function(item) {
+		                     return {
+		                    	     label : item.NAME,    	// 목록에 표시되는 값
+		                             value : item.NAME 		// 선택 시 input창에 표시되는 값
+		                     };
+		                     console.log(data);
+		                 })
+		             );    //response
+		         }
+		         ,error : function(){ //실패
+		             alert("오류가 발생했습니다.");
+		         }
+		     });
+		 }
+			,focus : function(event, ui) { // 방향키로 자동완성단어 선택 가능하게 만들어줌	
+				return false;
+			},
+			minLength: 1,// 최소 글자수
+			delay: 100	//autocomplete 딜레이 시간(ms),
+			, select : function(evt, ui) { 
+	      	// 아이템 선택시 실행 ui.item 이 선택된 항목을 나타내는 객체, lavel/value/idx를 가짐
+				console.log(ui.item.label);
+		 }
+	 });
+	 
+	$(".partSearch").on("click",()=>{
+		
+		fncGetParts();
+	})
+})
+
+
+ $(".search").keydown(function(key){
+	        if(key.keyCode==13) {
+		           fncGetParts();
+		    }     
+});
+
+
+
+function fncClose(ths){
+	 $(ths).closest("div").parent().remove();
+	
+}
+
+//비밀번호 동일여부
+$("#password").on("keyup",()=>{
+	console.log($("#password").val())
+	if($("#password").val() !==''){
+		$.ajax({
+			url: "/user/api/confirmPassword/"+$("#password").val(),
+			method: "GET",
+			headers : {
+	            "Accept" : "application/json",
+	            "Content-Type" : "application/json"
+	        },
+	        dataType : "json",
+	        success : function(data){
+	        	console.log(data)
+	        	if(data.result ==="fail"){
+	        		$("#checkPassword").css("color","crimson").text("비밀번호가 일치하지 않습니다");
+	        		$("#save").attr("disabled","disabled");
+	        	} else if(data.result ==="success") {
+	        		$("#checkPassword").css("color","#ff4500").text("비밀번호가 일치합니다");
+	        		$("#save").removeAttr("disabled");
+	        	} else {
+	        		alert(data);
+	        		alert("서버오류");
+	        	}
+	        }
+		})
+	} else {
+		$("#checkPassword").css("color","crimson").text("내정보 수정을 원하시면 비밀번호를 입력해 주세요");
+		$("#save").attr("disabled","disabled");
+	}
+	
+})	
+
+//비밀번호 검증
+$("#newPassword").on("keyup",()=>{
+	const pw = $("#newPassword").val();
+	/* const id = $("#userId").val(); */
+		
+	const reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+	/* const hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;		 */
+	
+	/* if(id===''){
+		$("#passResult").css("color","crimson").text("아이디를 먼저 입력하세요.");
+		return
+	} */
+	
+	if(false === reg.test(pw)) {
+		$("#passResult").css("color","crimson").text("비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.");
+		
+		if(/(\w)\1\1\1/.test(pw)){
+			$("#passResult").css("color","crimson").text("같은 문자를 4번 이상 사용하실 수 없습니다.");
+		/* }else if(pw.search(id) > -1){			
+			$("#passResult").css("color","crimson").text("비밀번호에 아이디가 포함되었습니다."); */
+		}else if(pw.search(/\s/) != -1){
+			$("#passResult").css("color","crimson").text("비밀번호는 공백 없이 입력해주세요.");
+		}else if(hangulcheck.test(pw)){
+			$("#passResult").css("color","crimson").text("비밀번호에 한글을 사용 할 수 없습니다.");
+		}else if(pw === ''){
+			$("#passResult").css("color","crimson").text("비밀번호를 입력하세요.");
+		} 
+	} else {
+		$("#passResult").css("color","#ff4500").text("사용가능한 비밀번호 입니다.");
+		
+		if(/(\w)\1\1\1/.test(pw)){
+			$("#passResult").css("color","crimson").text("같은 문자를 4번 이상 사용하실 수 없습니다.");
+		}else if(pw.search(id) > -1){			
+			$("#passResult").css("color","crimson").text("비밀번호에 아이디가 포함되었습니다.");
+		}else if(pw.search(/\s/) != -1){
+			$("#passResult").css("color","crimson").text("비밀번호는 공백 없이 입력해주세요.");
+		}else if(hangulcheck.test(pw)){
+			$("#passResult").css("color","crimson").text("비밀번호에 한글을 사용 할 수 없습니다.");
+		}else if(pw === ''){
+			$("#passResult").css("color","crimson").text("비밀번호를 입력하세요.");
+		} 
+	}
+	
+})
+	
+	// 비밀번호 동일 체크
+	$("#confirmPassword").on("keyup",()=>{
+		const pw = $("#newPassword").val();
+		const pwC = $("#confirmPassword").val();
+		
+		if(pw === pwC){
+			$("#passCheck").css("color","#ff4500").text("비밀번호가 동일 합니다.");
+		} else {
+			$("#passCheck").css("color","crimson").text("비밀번호가 일치하지 않습니다.");
+		}
+	})
+	
+	
+</script>
 </body>
 </html>

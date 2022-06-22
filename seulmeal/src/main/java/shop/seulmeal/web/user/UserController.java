@@ -97,15 +97,15 @@ public class UserController {
 		
 		System.out.println(user);
 		
-		if(foodcategory != null) {
-			System.out.println(":: foodcategory : "+foodcategory[0]);
-			System.out.println(":: foodcategory : "+foodcategory[1]);
-			System.out.println(":: foodcategory : "+foodcategory[2]);
-			
+		if(foodcategory.length == 1) {
+			user.setFoodCategoryName1(foodcategory[0]);
+		}else if(foodcategory.length == 2) {
+			user.setFoodCategoryName1(foodcategory[0]);
+			user.setFoodCategoryName2(foodcategory[1]);
+		}else {
 			user.setFoodCategoryName1(foodcategory[0]);
 			user.setFoodCategoryName2(foodcategory[1]);
 			user.setFoodCategoryName3(foodcategory[2]);
-			
 		}
 		
 		String imageFilePath = null;
@@ -181,19 +181,106 @@ public class UserController {
 	}
 	
 	@GetMapping("getUpdateUser/{userId}")
-	public String getUpdateUser(@PathVariable("userId") String userId, Model model) throws Exception {
+	public String getUpdateUser(@PathVariable("userId") String userId,  Model model) throws Exception {
 		
 		User user = userService.getUser(userId);
+		List<Foodcategory> foodcategoryList = productService.getListFoodCategory();
 		
 		model.addAttribute("user", user);
+		model.addAttribute("foodcategoryList",foodcategoryList);
 		
 		return "user/getUpdateUser";
 	}
 	
 	@PostMapping("getUpdateUser")
-	public String getUpdateUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+	public String getUpdateUser(@ModelAttribute("user") User user, String[] foodcategory, MultipartFile imageFile, String profilemessage, String[] partsName, String newPassword, HttpSession session) throws Exception {
+		
+		if(!newPassword.isEmpty()) {
+			user.setPassword(newPassword);
+		}
+		
+		
+		if(foodcategory.length == 1) {
+			user.setFoodCategoryName1(foodcategory[0]);
+		}else if(foodcategory.length == 2) {
+			user.setFoodCategoryName1(foodcategory[0]);
+			user.setFoodCategoryName2(foodcategory[1]);
+		}else {
+			user.setFoodCategoryName1(foodcategory[0]);
+			user.setFoodCategoryName2(foodcategory[1]);
+			user.setFoodCategoryName3(foodcategory[2]);
+		}
+		
+
+		String imageFilePath = null;
+//		String absolutePath = new File("").getAbsolutePath()+"\\";
+		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		File file = new File(path);
+
+		
+
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+
+		if (!imageFile.isEmpty()) {
+			String contentType = imageFile.getContentType();
+			String originalFileExtension = null;
+
+			if (contentType.contains("image/jpeg")) {
+				originalFileExtension = ".jpg";
+			} else if (contentType.contains("image/png")) {
+				originalFileExtension = ".png";
+			}
+
+			imageFilePath = path + "/" + user.getUserId()+ "_profile" + originalFileExtension;
+			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
+			System.out.println("//////userId: " + user.getUserId());
+			System.out.println("//////imageFilePath: " + imageFilePath);
+			System.out.println("//////originalFileExtension: " + originalFileExtension);
+			System.out.println("//////getOriginalFilename(): " + imageFile.getOriginalFilename());
+
+			// 이미지 파일 로컬에 저장
+			file = new File(imageFilePath);
+			imageFile.transferTo(file);
+
+			// 저장한 이미지 파일을 User session 저장 또는 수정
+//			User user = (User)session.getAttribute("user");
+			user.setProfileImage(imageFileName);
+		}
+		
+		if(profilemessage != null ) {
+			user.setProfileMessage(profilemessage);
+		}
+		
+		
 		
 		userService.updateUser(user);
+		
+		if(partsName!=null) {
+			List<Parts> parts = new ArrayList<>();
+			
+			
+			for(int i=0;i<partsName.length;i++) {
+				//System.out.println("::partsName : "+partsName[i]);
+				
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("name", partsName[i]);
+				Parts hateParts =productService.getParts(map1);
+				System.out.println("::hateParts : "+hateParts);
+				parts.add(hateParts);
+				
+			}
+			
+			
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", parts);
+			map.put("userId", user.getUserId());
+			userService.insertHatesParts(map);
+		}
+		
+		
 		
 		String sessionId=((User)session.getAttribute("user")).getUserId();
 		if(sessionId.equals(user.getUserId())) {
@@ -249,14 +336,6 @@ public class UserController {
 		return "redirect:/";
 	}
 	
-	
-	public String naverLogin() throws Exception {
-		return "main";
-	}
-	
-	public String kakaoLogin() throws Exception {
-		return "main";
-	}
 	
 	@GetMapping("findUserIdView")
 	public String findUserId() throws Exception {
@@ -400,7 +479,7 @@ public class UserController {
 		
 		
 	
-		model.addAttribute("user", user);
+		model.addAttribute("user1", user);
 		
 		
 		return "user/getUser";
@@ -445,22 +524,7 @@ public class UserController {
 		
 		return "user/getChargeUserPoint";
 	}
-	
-	/*
-	 * @GetMapping("getPurchase/{purchaseNo}") public String
-	 * getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {
-	 * 
-	 * System.out.println("/getListCustomProduct : "+ purchaseNo);
-	 * 
-	 * purchase=purchaseService.getPurchase(purchaseNo);
-	 * 
-	 * model.addAttribute(purchase);
-	 * 
-	 * return "purchase/getPurchase";
-	 * 
-	 * }
-	 */
-	
+		
 	@GetMapping("listUserPoint/{currentPage}")
 	public String listUserPoint(Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition, HttpSession session) throws Exception {
 		
@@ -527,18 +591,6 @@ public class UserController {
 		return "redirect:/";
 	}
 	
-//	@RequestMapping(value = "api/logout")
-//	public String kakaoLogout(HttpSession session) {
-//		ModelAndView mav = new ModelAndView();
-//		
-//		kakaoApi.kakaoLogout((String)session.getAttribute("access_token"));
-//		session.removeAttribute("access_token");
-//		session.removeAttribute("userId");
-//		mav.setViewName("index");
-//		
-//		return "redirect:/";
-//		
-//	}
 	
 	@GetMapping("naver")
 	public String naver(@RequestParam Map<String, String> resValue, HttpSession session) throws Exception {

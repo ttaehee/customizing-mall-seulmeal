@@ -62,7 +62,7 @@ margin: 40px 0px 0px 0px;
 </head>
 <script type="text/javascript">
 	
- $(()=>{
+ /* $(()=>{
 	$(".partSearch").on("click",()=>{
 		$.ajax({
 			url:"/product/api/getPartsName/"+$(".search").val(),
@@ -82,10 +82,10 @@ margin: 40px 0px 0px 0px;
 		})
 	})
 })
+ */
 
 
-const minusNo = [];
-const minusName = [];
+/* const minusName = [];
 
 function fncInsertCustomProduct(ths) {
 	
@@ -117,7 +117,7 @@ $(function() {
         $(this).attr("disabled","disabled");
     })
 });
-
+ */
 function search(){
 	var word = $(".search").val();
 	console.log(word);
@@ -128,7 +128,7 @@ function search(){
 }
 
 
-function fnCalGram(type, ths){
+/* function fnCalGram(type, ths){
 	var stat = $(ths).closest("div").find("span[name='gram']").text();
 	var num = parseInt(stat,10);		
 	let calprice = parseInt($(ths).closest("div").find("span[name='partsprice']").text());
@@ -157,7 +157,7 @@ function fnCalGram(type, ths){
 	console.log($(ths).closest("div").find("input[name='plusGram']").val())
 
 }
-
+ */
 
 function fnCalCount(type, ths){
 	var statcount = $(ths).parents("div").find("span[name='count']").text();
@@ -297,11 +297,11 @@ function fncClose(ths){
 			<br/>
 
 			<div>
-				<img src="../../../resources/attachments/image/default_profile.png" id="img_section" style="width: 300px; height: 300px;"> <br /> <br />
+				<img src="/resources/attachments/image/default_profile.png" id="img_section" style="width: 300px; height: 300px;"> <br /> <br />
 				<div class="under-login" id="find-signup-wrap-ko">
 					<input type="text" id="file_route" disabled="disabled" value="파일 선택">
 					<label for="upload_file" style="border: solid 1px black;">업로드</label>
-					<input type="file" id="upload_file" name="imageFile" accept="image/*" required=true style="position: absolute; clip: rect(0, 0, 0, 0);">
+					<input type="file" id="upload_file" name="imageFile" accept="image/*" style="position: absolute; clip: rect(0, 0, 0, 0);">
 				 <script>
         const reader = new FileReader();
 
