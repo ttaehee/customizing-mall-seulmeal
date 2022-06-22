@@ -239,6 +239,9 @@ public class OperationController {
 			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
 			post.setThumnail(name);
 			
+			File file = new File(path+post.getThumnail());
+			file.delete();
+			
 			File newFileName = new File(path,name);
 			thumnailFile.transferTo(newFileName);
 		}

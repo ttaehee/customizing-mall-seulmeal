@@ -70,4 +70,7 @@ public interface CommunityMapper {
 	public int deletePostAll();
 	public void deleteReportPostAll();
 	public void deleteRelationAll();
+	
+	// 신고 체크
+	public int checkReport(Report report);
 }

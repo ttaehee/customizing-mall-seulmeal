@@ -647,13 +647,18 @@
 		SELECT * FROM relation 
 			<where>
 				NOT relation_status IN ('2')
-				AND user_id = ${userId} 
+				AND user_id = #{userId} 
 			</where>
 	</select>
 
-	
-
-
+	<select id="checkReport" resultType="int">
+		SELECT count(report_no)
+		FROM report
+		<where>
+			post_no = #{postNo}
+			AND reporter_id =#{reporterId}
+		</where>
+	</select>
 
 
 

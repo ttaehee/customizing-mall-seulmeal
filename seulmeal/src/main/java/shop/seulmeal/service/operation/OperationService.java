@@ -25,6 +25,7 @@ public interface OperationService {
 	// admin
 	public List<Map<String,Object>> userCount(String table);
 	public List<Map<String,Object>> salePrice();
+	public Map<String,Object> countAdmin();
 	
 	// 오토컴플릿
 	public List<Map<String,Object>> getProductName(Map<String,Object> map);

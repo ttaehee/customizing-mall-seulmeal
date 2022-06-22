@@ -136,7 +136,6 @@
 	$(function(){ 
 		const page = 
 		$(".btn-update").click(function(){
-			var page = getAttribute('')
 			const no =$(this).data("value");
 			  
 			window.location.href = '/product/updateProduct/'+no;

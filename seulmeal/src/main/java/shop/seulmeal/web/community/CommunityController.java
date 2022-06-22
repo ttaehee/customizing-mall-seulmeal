@@ -281,15 +281,18 @@ public class CommunityController {
 		return "redirect:/community/getPost/" + report.getPostNo();
 	}
 
-	@GetMapping("/getListReportPost") // o
+	@GetMapping("/getListReportPost/{currentPage}") // o
 	public String getListReportPost(
-			@RequestParam(value = "currentPage", required = false, defaultValue = "1") Integer currentPage,
+			@PathVariable(value = "currentPage", required = false) Integer currentPage,
 			Model model) {
 
 		System.out.println("type : " + currentPage.getClass().getTypeName());
 		System.out.println("값 : " + currentPage);
 
 		Search search = new Search();
+		if(currentPage==0) {
+			currentPage=1;
+		}
 		search.setCurrentPage(currentPage);
 		search.setPageSize(pageSize);
 		System.out.println("////////" + search);
@@ -415,5 +418,5 @@ public class CommunityController {
 
 		return "redirect:/community/getProfile/" + user.getUserId();
 	}
-
+	
 }

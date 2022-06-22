@@ -146,4 +146,10 @@ public class OperationServiceImpl implements OperationService {
 		return operationMapper.updateDiscountProductC(list);
 	}
 
+	@Override
+	public Map<String, Object> countAdmin() {
+		// TODO Auto-generated method stub
+		return operationMapper.countAdmin();
+	}
+
 }

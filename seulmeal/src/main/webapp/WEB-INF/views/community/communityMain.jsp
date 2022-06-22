@@ -542,8 +542,9 @@ div.modal-content{
 											</c:when>
 											<c:otherwise>
 												<div>
-													<div class="postOption" data-toggle= "modal" data-target="#reportModal${i}" 
-													data-dismiss="modal" >신고하기</div>
+													<div data-target="#reportModal${i}" class="postOption" onclick="reportCheck(this)" >신고하기</div>
+													<div style="dsiplay:none;" class="postOption reportTrue" data-toggle= "modal" data-target="#reportModal${i}" 
+													data-dismiss="modal"></div>													
 												</div>
 											</c:otherwise>
 										</c:choose>	
@@ -1078,12 +1079,57 @@ div.modal-content{
 		}
 	}
 	
-	function reportPost(e){
+	// 신고한 게시글인지 체크
+	function reportCheck(e){
+		const modal = $(e).data("target")
+		const modalpar = $(e).parent().parent().parent().parent().parent()
+		const btn = $(`\${modal}`).find(".btn-primary")
+		const next = $(e).next(".reportTrue");
 		
-		let postNo = $(e).data("value");
+		
+		$.ajax({
+			url : "/community/api/checkReport/"+btn.data("value"),
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data,status){
+	        	console.log(status)
+	        	if(status === 'nocontent'){
+	        		toastr.error("이미 신고된 게시글 입니다.","게시글 신고",{timeOut:10000})
+	        		modalpar.modal('hide')
+	        	}
+	        	if(status ==='success'){
+	        		modalpar.modal('hide')
+	        		$(`\${modal}`).modal('show');
+	        	}
+	        }
+		})
+	}
+	
+	// 게시글 신고 넣기
+	function reportPost(e){		
+		const postNo = $(e).data("value");
+		const reason = $(e).parent().parent().find("#reason").val();
+		
+		const modal = $(e).parent().parent().parent().parent()
 		
 		
-		$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
+		$.ajax({
+			url : "/community/api/insertReportPost",
+			method : "POST",
+			data : JSON.stringify({
+				postNo : postNo,
+				reason : reason
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data,status){
+	        	if(status === 'success'){
+	        		toastr.error("게시글 신고가 완료 되었습니다.","게시글 신고 완료",{timeOut:10000})
+	        		modal.modal('hide');
+	        	}
+	        }
+		})		
 	}
 	
 	// 팔로우 해제

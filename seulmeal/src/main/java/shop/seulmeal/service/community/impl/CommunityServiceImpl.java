@@ -304,5 +304,12 @@ public class CommunityServiceImpl implements CommunityService {
 		return communityMapper.getAllRelation(userId);
 	}
 
+	// 신고체크
+	@Override
+	public int checkReport(Report report) {
+		// TODO Auto-generated method stub
+		return communityMapper.checkReport(report);
+	}
+
 
 }

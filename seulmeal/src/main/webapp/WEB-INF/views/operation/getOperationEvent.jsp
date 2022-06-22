@@ -14,10 +14,18 @@
 	
 	.text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
 	
+	.cardP {
+		overflow: hidden;
+	}
+	
 	.card-cover {
 	  background-repeat: no-repeat;
 	  background-position: center center;
-	  background-size: cover;
+	  background-size: cover;	  
+	}
+	
+	.card-coverP:hover{
+		transform: scale(1.1);
 	}
 	
 	#tumbCard{
@@ -127,8 +135,8 @@
 						<div class="row">
 						<c:forEach var="product" items="${post.discountProduct}">
 							<c:if test="${product.productNo !=0}">
-								<div class="col-md-4">
-									<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
+								<div class="col-md-4 cardP">
+									<div class="card card-cover card-coverP h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="transaition : all 0.2s linear; background-image: url('/resources/attachments/${product.thumbnail}');">
 										<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
 											<div data-value="${product.productNo}" class="productHref">
 											<h2 class="display-6fw-bold productTarget">${product.name}</h2>

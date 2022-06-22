@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,7 @@ public class ProductController {
 	@Transactional
 	public String insertProduct(Product product, Foodcategory f, Model model, String partsNo, String partsName,MultipartFile thumbnailFile)
 			throws Exception {
+		System.out.println("f::::::::::::::::::::::::::::: "+f);
 		product.setFoodCategory(f);
 		
 		System.out.println(thumbnailFile);
@@ -108,11 +110,14 @@ public class ProductController {
 	}
 
 	@GetMapping("getProduct/{prodNo}")
-	public String getProduct(@PathVariable(required = false) String currentPage, @PathVariable int prodNo, Search search, Model model) throws Exception {
+	public String getProduct(@PathVariable(required = false) String currentPage, @PathVariable int prodNo, Search search, Model model, HttpServletRequest request) throws Exception {
 		Product product = productService.getProduct(prodNo);
 		List<Parts> list = productService.getProductParts(product.getProductNo());
 		product.setParts(list);
 		
+		String referer = request.getServletPath();
+		String[] refererA = referer.split("/");
+		model.addAttribute("url",refererA[1]+"/"+refererA[2]+"/"+refererA[3]);
 
 		if (currentPage != null) {
 			search.setCurrentPage(new Integer(currentPage));

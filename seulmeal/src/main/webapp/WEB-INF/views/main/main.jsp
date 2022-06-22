@@ -236,6 +236,11 @@
     </div>
 	</div>
 	</section>
+	
+	
+	<!-- pdf
+	<object type="application/pdf" data="/resources/attachments/769b4f3c-2996-4de5-9064-aecc40c9216f_StartUMLPdf.pdf" width="100%" height="100%"></object>
+	 -->
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 	</main>		
 	<jsp:include page="../confirm.jsp"></jsp:include>
