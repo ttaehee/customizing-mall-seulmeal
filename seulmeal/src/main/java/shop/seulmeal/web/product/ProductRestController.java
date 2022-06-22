@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
+import shop.seulmeal.service.domain.Review;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
 
@@ -69,5 +70,18 @@ public class ProductRestController {
 		
 		return result;
 	}
+	
+	@GetMapping("updateReview/{reviewNo}")
+	public Review updateReview(@PathVariable int reviewNo) throws Exception {
+		return productService.getReview(reviewNo);
+	}
+	
+	@PostMapping(value = { "updateReview/{reviewNo}" })
+	public String updateReview(@PathVariable int reviewNo, Review review) throws Exception {
+		productService.updateReview(review);
+		return "complete";
+	}
+	
+	
 	
 }

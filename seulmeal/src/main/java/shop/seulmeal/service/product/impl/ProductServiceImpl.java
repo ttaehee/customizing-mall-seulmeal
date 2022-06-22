@@ -1,7 +1,11 @@
 package shop.seulmeal.service.product.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,12 +257,19 @@ public class ProductServiceImpl implements ProductService {
 
 	public Map<String, Object> getListLikeProduct(Map<String, Object> map) throws Exception {
 		List<Like> list = productMapper.getListLikeProduct(map);
+
+		List<Product> product = new ArrayList<Product>();
+		
+		for( int i = 0; i < list.size(); i++ ) {
+			product.add(productMapper.getProduct(list.get(i).getProductNo()));
+		}
 		Map<String, Object> result = new HashMap<String,Object>();
 		
 		String userId = (String) map.get("userId");
 		int totalCount = productMapper.getLikeProductTotalCount(userId);
 		
 		result.put("list", list);
+		result.put("product", product);
 		result.put("totalCount", totalCount);
 
 		return result;
