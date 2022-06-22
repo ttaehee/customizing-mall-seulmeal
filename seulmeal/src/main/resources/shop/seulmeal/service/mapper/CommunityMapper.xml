@@ -647,7 +647,7 @@
 		SELECT * FROM relation 
 			<where>
 				NOT relation_status IN ('2')
-				AND user_id = ${userId} 
+				AND user_id = #{userId} 
 			</where>
 	</select>
 
