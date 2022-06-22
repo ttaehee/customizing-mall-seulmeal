@@ -224,8 +224,8 @@
 		<result property="status" column="status" jdbcType="NUMERIC" />
 	</resultMap>
 	
-	<select id="validationReview">
-	select purchase_status FROM customproduct cp, purchase p WHERE cp.user_id = #{userId} AND cp.product_no = #{productNo} AND cp.purchase_no == p.purchase_no
+	<select id="validationReview" resultType="int">
+	SELECT count(*) FROM customproduct cp, purchase p WHERE cp.user_id = #{userId} AND cp.product_no = #{productNo} AND cp.purchase_no = p.purchase_no
 	</select>
 
 

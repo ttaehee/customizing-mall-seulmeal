@@ -155,25 +155,21 @@ div{ -webkit-touch-callout: none;
 	<!-- ToolBar End /////////////////////////////////////-->
 	<div class="container" style="margin-top: 20px;">
 		<div class="row">
-			<div class="col-md-6" style="height: 700px">
+			<div class="col-md-6">
 				<c:if test="${!empty product.thumbnail}">
 					<img src="/resources/attachments/${product.thumbnail}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
 				</c:if>
 				<c:if test="${empty product.thumbnail}">
 					<img src="http://folo.co.kr/img/gm_noimage.png" alt="..." class="img-thumbnail">
 				</c:if>
-				<div class="card-bottom" style="position: absolute; bottom: 0;">
-					<h3>
 				
-					</h3>
-				</div>
 			</div>
-			<div class="col-md-6" style="height: 900px;">
+			<div class="col-md-6" style="min-height: 700px;">
 				<div style="text-align: center;">
 					<h1 style="font-size: 36px; padding-bottom: 30px;">${product.name}</h1>
 				</div>
 
-				<div class="box-line" style="height: auto;">
+				<div class="box-line" style="min-height: 500px;">
 
 					<c:if test="${!empty product.averageRating}">
 					<h3>
@@ -222,16 +218,22 @@ div{ -webkit-touch-callout: none;
 								<h5>${parts.name}</h5>
 							</c:forEach>
 						</div>
-						<div style="margin:20px; display: flex; justify-content: space-between;">
-						<h3>가격 : &nbsp;&nbsp; ${product.price } 원</h3>
+						<div style="padding: 20px">
+						<div style="display: flex; justify-content: space-between;">
+						　<h5>가격 : &nbsp;&nbsp; ${product.price } 원</h5>
+						</div>
 					</div>
 					</div>
 					<br />
 					
 				</div>
 				<!-- -->
+			
 
-				<div class="col-md-12" style="position: absolute;">
+			</div>
+				
+				<div class="col-md-6" style="color: white;">　</div>
+				<div class="col-md-6">
 					<div class="row">
 						<div style="margin-top: 10px; width: 100%;">
 							<c:if test="${user == null }">
@@ -254,13 +256,12 @@ div{ -webkit-touch-callout: none;
 							<div style="display: flex; justify-content: space-between; margin-top: 10px">
 								<c:if test="${user != null }">
 									<button class="btn btn-primary" style="width: 55%;">문의하기</button>
-									<button class="btn btn-primary" style="width: 43%;">리뷰등록</button>
+									<button class="btn btn-primary" data-value="${product.productNo }" style="width: 43%;">리뷰등록</button>
 								</c:if>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 		</div>
 
 		<!-- 아코디언 헤더 -->
@@ -494,7 +495,7 @@ div{ -webkit-touch-callout: none;
 		 
 		  //관련상품
 		 $(".btn-primary:contains('관련상품')").on("click", function(){
-			 self.location = "/product/getListProduct/${product.foodCategory.foodCategoryNo}";
+			 self.location = "/product/listProduct/${product.foodCategory.foodCategoryNo}";
 		 })
 	});
 </script>
@@ -534,7 +535,21 @@ div{ -webkit-touch-callout: none;
 $(function(){ 
 
   $(".btn-primary:contains('리뷰등록')").click(function(){
-    $(".modal").fadeIn();
+	  const no = $(this).data("value");
+	  $.ajax({
+			url : "/product/api/validationReview/"+no,
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	if(data == 'true'){
+	        		$(".modal").fadeIn();
+	        	}else{
+	        		alert('상품 구매 후 이용 가능한 서비스입니다.')
+	        	}
+	        }
+		})
+    		
   });
   
   $("#insertReviewCancel").click(function(){

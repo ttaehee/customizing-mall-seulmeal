@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.net.ssl.SSLPeerUnverifiedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -120,6 +122,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	// Review CRUD
+	public String validationReview(Map<String, Object> map) throws Exception{
+		System.out.println(map);
+		if(productMapper.validationReview(map) == 1) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+	
 	@Override
 	public void insertReview(Review review) throws Exception {
 		productMapper.insertReview(review);
@@ -227,7 +238,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	// ProductParts 관련
-	@Override
+	
 	public int insertProductParts(List<Parts> list) throws Exception {		
 		return productMapper.insertProductParts(list);
 	}

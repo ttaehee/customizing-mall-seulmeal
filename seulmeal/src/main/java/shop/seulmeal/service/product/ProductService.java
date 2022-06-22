@@ -42,6 +42,8 @@ public interface ProductService {
 	public void restoreFoodCategory(int foodCategoryNo) throws Exception;
 
 	// Review
+	public String validationReview(Map<String,Object> map) throws Exception;
+	
 	public void insertReview(Review review) throws Exception;
 
 	public void updateReview(Review review) throws Exception;

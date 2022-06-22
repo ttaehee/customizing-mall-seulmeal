@@ -50,6 +50,15 @@ public class ProductRestController {
 		
 		return parts;
 	}
+	@GetMapping("validationReview/{productNo}")
+	public String validationReview(@PathVariable int productNo, HttpSession session) throws Exception {
+		User user = (User) session.getAttribute("user");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("productNo", productNo);
+		map.put("userId", user.getUserId());
+		
+		return productService.validationReview(map);
+	}
 	
 	@GetMapping("getReview/{reviewNo}")
 	public Map<String, Object> getReview(@PathVariable int reviewNo) throws Exception {
