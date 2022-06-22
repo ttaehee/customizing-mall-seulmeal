@@ -95,7 +95,7 @@ public class ProductController {
 				System.out.println(parts);
 				list.add(parts);
 			}		
-
+			System.out.println(list);
 			int r = productService.insertProductParts(list);
 			
 			if (r == no.length) {
@@ -253,17 +253,12 @@ public class ProductController {
 	
 	
 	/* < PARTS > */
-	
-	@GetMapping(value = {"insertParts"} )
-	public String insertParts(Parts parts, Model model) throws Exception {
-		model.addAttribute(parts);
-		return "/product/insertParts";
-	}
-	
+		
 	@PostMapping(value = {"insertParts"})
-	public String insertParts(Parts parts) throws Exception {
+	public String insertParts(Parts parts, HttpSession session) throws Exception {
 		productService.insertParts(parts);
-		return "redirect:/product/listParts/1/0";
+		String currentPage = (String) session.getAttribute("currentPage");
+		return "redirect:/product/listParts/"+currentPage+"/0";
 	}
 	
 	@GetMapping(value = {"listParts/{currentPage}/{searchCondition}", "listParts"})
@@ -283,7 +278,7 @@ public class ProductController {
 		search.setPageSize(pageSize);
 		search.setSearchCondition(searchCondition);
 		System.out.println(search);
-		
+
 		session.setAttribute("currentPage", currentPage);
 
 		Map<String, Object> map = productService.getListParts(search);
@@ -304,9 +299,8 @@ public class ProductController {
 		return "/product/listParts";
 	}
 	
-	@PostMapping(value = {"updateParts/{partsNo}"})
-	public String updateParts(@PathVariable int partsNo, Parts parts, HttpSession session) throws Exception {
-		parts.setPartsNo(partsNo);
+	@PostMapping(value = {"updateParts"})
+	public String updateParts(Parts parts, HttpSession session) throws Exception {
 		productService.updateParts(parts);
 		String currentPage = (String) session.getAttribute("currentPage");
 		session.removeAttribute(currentPage);
@@ -389,7 +383,7 @@ public class ProductController {
 		productService.deleteReview(reviewNo);
 		String currentPage = (String) session.getAttribute("currentPage");
 		session.removeAttribute(currentPage);
-		return "redirect:/product/listReview/"+currentPage;
+		return "redirect: /product/listReview/"+currentPage;
 	}
 	
 	@GetMapping(value= {"restoreReview/{reviewNo}"})

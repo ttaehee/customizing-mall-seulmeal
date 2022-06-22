@@ -68,6 +68,8 @@ public interface ProductService {
 
 	public Parts getParts(Map<String, Object> map) throws Exception;
 
+	public List<Map> autoComplete(Map<String, Object> map) throws Exception;
+
 	public int updateParts(Parts parts) throws Exception;
 
 	public void deleteParts(int no) throws Exception;

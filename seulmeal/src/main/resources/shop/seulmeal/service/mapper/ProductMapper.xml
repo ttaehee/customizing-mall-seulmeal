@@ -223,6 +223,11 @@
 		<result property="regDate" column="reg_date" jdbcType="DATE" />
 		<result property="status" column="status" jdbcType="NUMERIC" />
 	</resultMap>
+	
+	<select id="validationReview">
+	select purchase_status FROM customproduct cp, purchase p WHERE cp.user_id = #{userId} AND cp.product_no = #{productNo} AND cp.purchase_no == p.purchase_no
+	</select>
+
 
 	<insert id="insertReview">
 		{ call
@@ -419,6 +424,10 @@
 			</choose>
 		</where>
 	</select>
+	
+	<select id="autoComplete" parameterType="map" resultType="map">
+		SELECT name	FROM parts	WHERE name LIKE  '%'|| #{value} || '%' AND status='0'
+	</select>
 
 	<select id="getPartsName" resultMap="partsSelectMap">
 		SELECT * FROM parts
@@ -479,7 +488,7 @@
 
 	<!-- PRODUCPARTS -->
 	<!-- 재료 넣기 -->
-	<insert id="insertProudctParts">
+	<insert id="insertProductParts">
 		INSERT INTO productparts(productparts_no, product_no, parts_no, parts_name)
 		SELECT seq_productparts_no.NEXTVAL, A.* FROM(
 		<foreach collection="list" item="parts" separator="UNION ALL">

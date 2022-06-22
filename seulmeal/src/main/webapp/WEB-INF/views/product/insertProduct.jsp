@@ -30,28 +30,28 @@
 			<div class="col-md-12 form-group">
 				<label for="Email3" class="col-sm-5 control-label h4" >상품명</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="name" name="name" placeholder="상품명">
+					<input type="text" class="form-control" id="name" name="name" required placeholder="상품명">
 				</div>
 			</div>
 			
 			<div class="col-md-12 form-group">
 				<label for="Email3" class="col-sm-5 control-label h4" >짧은 내용</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="subContent" name="subContent" placeholder="짧은내용" />
+					<input type="text" class="form-control" id="subContent" name="subContent" required placeholder="짧은내용" />
 				</div>
 			</div>
 			
 			<div class="col-md-5 form-group">
 				<label for="Email3" class="col-sm-6 control-label h4" >가격</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="price" name="price" />
+					<input type="number" class="form-control" id="price" name="price" required />
 				</div>				
 			</div>
 			
 			<div class="col-md-5 form-group">
 				<label for="Email3" class="col-sm-6 control-label h4" >칼로리</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="calorie" name="calorie" />
+					<input type="number" class="form-control" id="calorie" name="calorie" required />
 				</div>
 			</div>
 			
@@ -67,25 +67,33 @@
 			</div>
 			
 			<div>
-			
-				재료 검색 : <input class="search" />
-				<div class="partSearch">검색</div>
-				<div class="parts" style="height: 400px"></div>
+			<h4>상품 구성 재료</h4>
+			<div class="container">
+							재료 검색 : &emsp;
+								<div style="display:flex;">	
+									<div class="form-outline">
+										<input name="searchParts" type="search" class="form-control search" value="" style="border-color: #FF4500; border-width: 2px;"/>
+									</div>		  
+									<button type="button" class="btn btn-primary partSearch" onclick="search()">
+										<i class="bi bi-search"></i>
+									</button>
+								</div>
+						</div>
+						<div class="partsList" style="margin-top:5px; height: 335px; overflow: auto;"></div>
+					
 				
 				<div class="col-md-12 form-group">
-				<label for="Email3" class="col-sm-4 control-label h5" >재고</label>
+				<label for="Email3" class="col-sm-4 control-label h5" style="margin-top: 10px" >재고</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="stock" name="stock" />
+					<input type="number" class="form-control" id="stock" name="stock" required />
+				</div>
 				</div>
 			</div>
 			</div>	
 			
 			
 			<div class="col-md-12" style="margin-top: 40px;">
-				<textarea id="summernote" name="content"></textarea>
-			</div>
-			<div class="col-md-12" style="margin-top:20px;" >
-				<input type="file" name="uploadfile" multiple="multiple" id="ex_uploadfile" />
+				<textarea id="summernote" name="content""></textarea>
 			</div>
 		</div>
 		
@@ -96,21 +104,26 @@
 			<button type="button" onclick="cancelBtn()" class="btn btn-primary">
 				취소
 			</button>
-		</div>
-			
-		
-	<jsp:include page="../layer/footer.jsp"></jsp:include>
+		</div>		
 	</form>
+	
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
 </div>
 
-<script type="text/javascript">
-$(".btn-primary:contains('취소')").click(function(){
-	window.location.href = '/product/admin/listProduct';
-});
 
+<script> 
+function search(){
+	var word = $(".search").val();
+	
+	if(word == null || word.length<1){
+		alert("추가할 재료이름을 입력하세요.");
+	}}
 
-	$(()=>{
-		$(".partSearch").on("click",()=>{
+function fncGetParts(){
+	const inputTag = $(".partSearch").parent('div').find("input[name='searchParts']");
+	
+	if(inputTag.val().trim() != null){
+		if(inputTag.val() != $('.name').text()){
 			$.ajax({
 				url:"/product/api/getPartsName/"+$(".search").val(),
 				method:"GET",
@@ -121,26 +134,91 @@ $(".btn-primary:contains('취소')").click(function(){
 		        dataType : "json",
 		        success : function(data){	        	
 		        	console.log(data);
-		        	const parts = "<div> <input type='hidden' name='partsNo' value='"+data.partsNo+"' /> <input type='hidden' name='partsName' value='"+data.name+"' />"
-		                +"<div class='part' data-parts='"+data.partsNo+"'>"+ data.name +"</div>"
-		                +"</div>"
-		        	$(".parts").append(parts);
+
+		        	const parts = "<div class='searchparts' style='height:30px;'>"
+		        	+"<input type='hidden' class='partsNo' name='partsNo' value='"+data.partsNo+"' />"
+		        	+"<input type='hidden' class='partsName' name='partsName' value='"+data.name+"' />"
+		            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"
+		            +"<span class='name'>" +data.name 
+		            + "</span><button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
+
+	               $(".search").val('');
+	               $(".partsList").append(parts);
 		        }
 			})
-		})
+		}else{
+			alert("이미 추가되어있는 재료입니다.");
+			inputTag.val('');
+		}
+	}
+ }
+$(function(){ 
+	 $(".search").autocomplete({ 
+		 source : function(request, response) {
+		     $.ajax({
+		           url : "/product/api/autoComplete"   
+		         , type : "POST"
+		         , dataType: "JSON"
+		         , data : {value: request.term}
+		         , success : function(data){
+		        	 response(
+		                 $.map(data.resultList, function(item) {
+		                     return {
+		                    	     label : item.NAME,
+		                             value : item.NAME 
+		                     };
+		                     console.log(data);
+		                 })
+		             );    //response
+		         }
+		         ,error : function(){
+		             alert("오류가 발생했습니다.");
+		         }
+		     });
+		 }
+			,focus : function(event, ui) {
+				return false;
+			},
+			minLength: 1,
+			delay: 100
+			, select : function(evt, ui) { 
+				console.log(ui.item.label);
+		 }
+	 });
+	 
+	$(".partSearch").on("click",()=>{
+		
+		fncGetParts();
 	})
+	
+	$(".search").keydown(function(key){
+		        if(key.keyCode==13) {
+			           fncGetParts();
+			    }     
+	});
+	
+})
+$(document).keypress(function(e) {
+            if (e.keyCode == 13)
+                e.preventDefault();
+});
 
-	//fileUploadTag
+function fncClose(ths){
+	 $(ths).closest("div").parent().remove();
+	
+}	
+
+
+/* 파일 업로드 */
 	$(document).ready(function(){
 		const fileTarget = $('.upload-hidden');
 		let filename;	
-		fileTarget.on('change', function(){  // 값이 변경되면
-			if(window.FileReader){  // modern browser
+		fileTarget.on('change', function(){ 
+			if(window.FileReader){ 
 				filename = $(this)[0].files[0].name;
-			} else {  // old IE
-				filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
-			}		   
-			// 추출한 파일명 삽입
+			} else { 
+				filename = $(this).val().split('/').pop().split('\\').pop();
+			}
 			$(this).siblings('.upload-name').val(filename);
 		});
 	});
@@ -148,17 +226,18 @@ $(".btn-primary:contains('취소')").click(function(){
 	$(".filebox").on("click",()=>{
 		document.querySelector("#ex_filename").click();
 	})
-	//////
 	
+	
+/* 썸머노트 */
 	$(document).ready(function () {
 		
 		$('#summernote').summernote({
-			height: 700,                // 에디터 높이
-			minHeight: 700,            // 최소 높이
-			maxHeight: null,            // 최대 높이
-			focus: true,                // 에디터 로딩후 포커스를 맞출지 여부
-			lang: "ko-KR",				// 한글 설정
-			placeholder: '최대 2048자까지 쓸 수 있습니다',	//placeholder 설정
+			height: 700,
+			minHeight: 700,
+			maxHeight: null,
+			focus: true,
+			lang: "ko-KR",	
+			placeholder: '최대 2048자까지 쓸 수 있습니다',
 			toolbar: [				    
 			    ['fontname', ['fontname']],
 			    ['fontsize', ['fontsize']],
@@ -174,7 +253,6 @@ $(".btn-primary:contains('취소')").click(function(){
 			fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
 			callbacks : {
 				onImageUpload : function(files, editor, welEditable) {
-		            // 파일 업로드(다중업로드를 위해 반복문 사용)
 		            for (var i = files.length - 1; i >= 0; i--) {
 		            uploadSummernoteImageFile(files[i],
 		            this);
@@ -185,7 +263,7 @@ $(".btn-primary:contains('취소')").click(function(){
 		
 		$('#summernote').summernote(setting);
 		
-		function uploadSummernoteImageFile(file, el){	    	
+		function uploadSummernoteImageFile(file, el){
 			const data = new FormData;
 			data.append("file",file);
 			$.ajax({
@@ -196,7 +274,7 @@ $(".btn-primary:contains('취소')").click(function(){
 				enctype : 'multipart/form-data',
 				processData : false,
 				success : function(data) {
-					$(el).summernote('editor.insertImage', data.url);					
+					$(el).summernote('editor.insertImage', data.url);
 					jsonArray.push(data.url);
 					jsonFn(jsonArray);
 				},
@@ -212,6 +290,11 @@ $(".btn-primary:contains('취소')").click(function(){
 		}
 				
     });
+	
+	
+$(".btn-primary:contains('취소')").click(function(){
+	window.location.href = '/product/admin/listProduct';
+});
 </script>
 </body>
 </html>
