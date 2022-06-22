@@ -191,7 +191,7 @@
 						AND point_status='2'
 					</if>
 				</if>
-					ORDER BY point_no ) inner_table
+					ORDER BY point_no DESC ) inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum} )
 			WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 		</select>

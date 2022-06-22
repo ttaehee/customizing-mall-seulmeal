@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 	<title>슬밀 비밀번호 재설정</title>
 	<link rel="stylesheet" href="style.css">
-	<script src="login.js"></script>
+	<!-- <script src="login.js"></script> -->
 <style type="text/css">
 body{
     background-color: #f5f6f7;
@@ -37,6 +37,13 @@ input{
     margin: 0px 10px 8px 10px;
     padding:10px;
     border: solid 1px #dadada;
+    background: #fff;
+}
+.login-confirm-wrap{
+
+    margin: 10px 60px 20px 60px;
+    padding: 10px;
+    /* border: solid 1px #dadada; */
     background: #fff;
 }
 .message-wrap{
@@ -78,13 +85,13 @@ input{
     line-height: 55px;
     margin: 0px 10px 8px 10px;
     border: solid 1px rgba(0,0,0,.1);
-	background-color: #ff4500;
+	background-color: #fff;
     color: #fff;
     cursor: pointer; 
 }
 /*로그인버튼*/
 #login-btn{
-    width:200px;
+    width:440px;
     height: 50px;
     background-color: #ff4500;
     border: none;
@@ -236,6 +243,9 @@ input{
         margin: auto;
     }
 
+#login-btn:disabled {
+  background-color: #DCDCDC !important;
+ }
 
 
 }
@@ -271,7 +281,7 @@ input{
 
 			</section>
 		</form>
-
+</div>
 
 		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
@@ -281,7 +291,7 @@ $("#password").on("keyup",()=>{
 	/* const id = $("#userId").val(); */
 		
 	const reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-	/* const hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;		 */
+	const hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;		 
 	
 	/* if(id===''){
 		$("#passResult").css("color","crimson").text("아이디를 먼저 입력하세요.");
@@ -293,28 +303,37 @@ $("#password").on("keyup",()=>{
 		
 		if(/(\w)\1\1\1/.test(pw)){
 			$("#passResult").css("color","crimson").text("같은 문자를 4번 이상 사용하실 수 없습니다.");
+			$("#login-btn").attr("disabled","disabled");
 		/* }else if(pw.search(id) > -1){			
 			$("#passResult").css("color","crimson").text("비밀번호에 아이디가 포함되었습니다."); */
 		}else if(pw.search(/\s/) != -1){
 			$("#passResult").css("color","crimson").text("비밀번호는 공백 없이 입력해주세요.");
+			$("#login-btn").attr("disabled","disabled");
 		}else if(hangulcheck.test(pw)){
 			$("#passResult").css("color","crimson").text("비밀번호에 한글을 사용 할 수 없습니다.");
+			$("#login-btn").attr("disabled","disabled");
 		}else if(pw === ''){
 			$("#passResult").css("color","crimson").text("비밀번호를 입력하세요.");
+			$("#login-btn").attr("disabled","disabled");
 		} 
 	} else {
 		$("#passResult").css("color","#ff4500").text("사용가능한 비밀번호 입니다.");
 		
 		if(/(\w)\1\1\1/.test(pw)){
 			$("#passResult").css("color","crimson").text("같은 문자를 4번 이상 사용하실 수 없습니다.");
+			$("#login-btn").attr("disabled","disabled");
 		}else if(pw.search(id) > -1){			
 			$("#passResult").css("color","crimson").text("비밀번호에 아이디가 포함되었습니다.");
+			$("#login-btn").attr("disabled","disabled");
 		}else if(pw.search(/\s/) != -1){
 			$("#passResult").css("color","crimson").text("비밀번호는 공백 없이 입력해주세요.");
+			$("#login-btn").attr("disabled","disabled");
 		}else if(hangulcheck.test(pw)){
 			$("#passResult").css("color","crimson").text("비밀번호에 한글을 사용 할 수 없습니다.");
+			$("#login-btn").attr("disabled","disabled");
 		}else if(pw === ''){
 			$("#passResult").css("color","crimson").text("비밀번호를 입력하세요.");
+			$("#login-btn").attr("disabled","disabled");
 		} 
 	}
 	
@@ -324,13 +343,20 @@ $("#password").on("keyup",()=>{
 $("#confirmPassword").on("keyup",()=>{
 	const pw = $("#password").val();
 	const pwC = $("#confirmPassword").val();
-	
-	if(pw === pwC){
-		$("#passCheck").css("color","#ff4500").text("비밀번호가 동일 합니다.");
-		$("#login-btn").removeAttr("disabled");
-	} else {
-		$("#passCheck").css("color","crimson").text("비밀번호가 일치하지 않습니다.");
+	if($("#passResult").text()==="사용가능한 비밀번호 입니다."){
+		
+		if(pw === pwC){
+			$("#passCheck").css("color","#ff4500").text("비밀번호가 동일 합니다.");
+			$("#login-btn").removeAttr("disabled");
+		} else {
+			$("#passCheck").css("color","crimson").text("비밀번호가 일치하지 않습니다.");
+			$("#login-btn").attr("disabled","disabled");
+		}
+		
 	}
+	
+	
+	
 })
 </script>
 
