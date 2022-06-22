@@ -299,15 +299,38 @@
 	</select>
 
 	<update id="deleteReview">
+	{ call	declare	begin
 		UPDATE review
 		<set> status = '1'	</set>
-		WHERE review_no = #{reviewNo}
+		WHERE review_no = #{reviewNo};
+		
+		
+		UPDATE product
+		<set>
+			review_count = (SELECT count(*) FROM review WHERE review.product_no = #{review.product.productNo} AND review.status = '0' ),
+			average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product_no = #{review.product.productNo} AND review.status = '0') COUNT)
+		</set>
+		<where>
+			product_no = #{review.product.productNo}
+		</where>
+		;	end	}
 	</update>
 
 	<update id="restoreReview">
+	{	call	declare	begin
 		UPDATE review
 		<set> status = '0'	</set>
-		WHERE review_no = #{reviewNo}
+		WHERE review_no = #{reviewNo};
+		
+		UPDATE product
+		<set>
+			review_count = (SELECT count(*) FROM review WHERE review.product_no = #{review.product.productNo} AND review.status = '0' ),
+			average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product_no = #{review.product.productNo} AND review.status = '0') COUNT)
+		</set>
+		<where>
+			product_no = #{review.product.productNo}
+		</where>
+		;	end	}
 	</update>
 
 	<!-- 3. Report -->

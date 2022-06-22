@@ -14,7 +14,8 @@
 <div class="container">
 	<form action="/product/insertProduct" method="POST" enctype="multipart/form-data">
 		<div class="row">
-			<div class="col-md-6 form-group">
+			<div class="col-md-8">
+			<div class="col-md-12 form-group">
 				<label for="Email3" class="col-sm-6 control-label h4" >음식 카테고리</label>
 					<div class="col-md-12">
 					<select name="no" style="width: 160px">
@@ -26,7 +27,7 @@
 				</div>
 			</div>
 			
-			<div class="col-md-6 form-group">
+			<div class="col-md-12 form-group">
 				<label for="Email3" class="col-sm-5 control-label h4" >상품명</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="name" name="name" placeholder="상품명">
@@ -40,41 +41,47 @@
 				</div>
 			</div>
 			
-			<div class="col-md-4 form-group">
-				<label for="Email3" class="col-sm-4 control-label h4" >가격</label>
+			<div class="col-md-5 form-group">
+				<label for="Email3" class="col-sm-6 control-label h4" >가격</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="price" name="price" />
 				</div>				
 			</div>
 			
-			<div class="col-md-4 form-group">
-				<label for="Email3" class="col-sm-4 control-label h4" >칼로리</label>
+			<div class="col-md-5 form-group">
+				<label for="Email3" class="col-sm-6 control-label h4" >칼로리</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="calorie" name="calorie" />
 				</div>
 			</div>
 			
-			<div class="col-md-4 form-group">
-				<label for="Email3" class="col-sm-4 control-label h4" >재고</label>
+			
+			
+			<div class="col-md-12" style="margin-top:20px;" >
+				<label for="Email3" class="col-sm-6 control-label h4" >썸네일</label>
+				<div class="filebox" style="display: flex; justify-content:space-around;">
+					<input class="upload-name" value="파일선택" disabled="disabled" style="width:96%;">
+					<input type="file" accept="image/*" name="thumbnailFile" id="ex_filename" class="upload-hidden" onchange="readURL(event);" />  
+				</div>
+			</div>
+			</div>
+			
+			<div>
+			
+				재료 검색 : <input class="search" />
+				<div class="partSearch">검색</div>
+				<div class="parts" style="height: 400px"></div>
+				
+				<div class="col-md-12 form-group">
+				<label for="Email3" class="col-sm-4 control-label h5" >재고</label>
 					<div class="col-md-12">
 					<input type="text" class="form-control" id="stock" name="stock" />
 				</div>
 			</div>
+			</div>	
 			
-			<div class="col-md-12" style="margin-top:20px;" >
-				<div class="filebox" style="display: flex; justify-content:space-around;">
-					<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
-					<label class="btn btn-primary" for="ex_filename">썸네일</label> 
-					<input type="file" accept="image/*" name="thumbnailFile" id="ex_filename" class="upload-hidden" onchange="readURL(event);" />  
-				</div>
-			</div>
 			
-			<div>
-				재료 검색 : <input class="search" />
-				<div class="partSearch">검색</div><div class="parts"></div>
-			</div>
-			
-			<div class="col-md-12">
+			<div class="col-md-12" style="margin-top: 40px;">
 				<textarea id="summernote" name="content"></textarea>
 			</div>
 			<div class="col-md-12" style="margin-top:20px;" >
@@ -125,7 +132,7 @@ $(".btn-primary:contains('취소')").click(function(){
 
 	//fileUploadTag
 	$(document).ready(function(){
-		const fileTarget = $('.filebox .upload-hidden');
+		const fileTarget = $('.upload-hidden');
 		let filename;	
 		fileTarget.on('change', function(){  // 값이 변경되면
 			if(window.FileReader){  // modern browser
