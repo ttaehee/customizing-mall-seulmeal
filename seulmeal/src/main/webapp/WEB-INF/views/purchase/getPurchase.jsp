@@ -25,7 +25,8 @@
 		.getcard{
 			width: 300px;
 			text-align: center;
-			border : 2px solid #FF4500;
+			border : 1px solid #FF4500;
+			border-radius: 5px;
 		}
 		
 		p {
@@ -36,7 +37,7 @@
 			content: "";
 			display: block;
 			width: 290px;
-			border-bottom: 2px solid #FF4500;
+			border-bottom: 2px solid #FFF;
 			margin: 10px 0px;
 			padding:0px 10px 0px 10px;
 		}

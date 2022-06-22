@@ -35,7 +35,7 @@
 		padding:0px 10px 0px 10px;
 	}
 	
-	 body { background: #fff; }
+	 tbody { background: #fff; }
 		.table-hover {
 	  	width: 100%;
  		border-top: 1px solid #bcbc;
@@ -66,11 +66,7 @@
 			 <button class="btn btn-outline-primary status" name="searchCondition" value="1">1주일</button>
 			 <button class="btn btn-outline-primary status" name="searchCondition" value="2">1개월</button>
 			 <button class="btn btn-outline-primary status" name="searchCondition" value="3">3개월</button>
-		  </div>
-		  
-		  <!-- PageNavigation 선택 페이지 값을 보내는 부분 -->
-		  <input type="hidden" id="currentPage" name="currentPage" value=""/>
-		  
+		  </div> 
 		</form>
    	</div><br/>
 			
@@ -93,7 +89,7 @@
 			<c:set var="price" value="0" />
 			<c:forEach var="purchase" items="${purchaseList}">
 			<c:forEach var="cpd" items="${purchase.customProduct}">
-			<tr class="ct_list_pop">
+			<tr class="ct_list_pop">	
 			      <td align="center"><br/><br/>
 			      	<a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}&ensp;[${purchase.purchaseNo}]</a><br/><br/>
 			      		<div>
@@ -107,7 +103,7 @@
 						</c:choose>
 						</div>
 			      </td>
-				  <td align="left" data-value="${cpd.product.productNo}" title="Click : 상품확인" ><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
+				  <td align="left"><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
 				  <td align="center">${cpd.count}</td>
 				  <td align="left">${cpd.product.name}</td>
 				  <td align="left">
@@ -118,14 +114,14 @@
 				  	- ${mp.minusName} <br/>
 				  	</c:forEach> 
 				  </td>
-				  <td align="center">${cpd.price}</td>
+				  <td align="center"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${cpd.price}"/>원</td>
 				  <c:set var="price" value="${price+cpd.price*cpd.count}" />
-		 	  
-			 	  <td align="left">
-				   </td>
+			 	  <td>	
+		          	<a type="button" class="delete" data-value="${purchase.purchaseNo}">&ensp;x</a>
+				  </td>		 
 			  </tr>  
 			  </c:forEach> 
-			  </c:forEach>
+			  </c:forEach>			  
         </tbody>
       </table>
       </div>
@@ -134,11 +130,11 @@
     
 	//getListPurchase submit
       function fncGetListPurchase(currentPage) {
-  		$("#currentPage").val(currentPage)
+
   		$("form").attr("method" , "POST").attr("action" , "/purchase/getListPurchase").submit();
   	  }
   	
-	//기간별 구매내역리스트
+	//기간별 구매내역리스트 버튼
   	 $(function() {
   		  
   		 $(".status").on("click" , function() {
@@ -205,6 +201,115 @@
 	}; 
 	
 	$('#list').rowspan(0);
+	$('#list').rowspan(6);
+	
+	//구매내역리스트에서 삭제
+	$(".delete").on("click",function(){
+		var del = confirm("구매내역에서 삭제할까요?");	
+		const purchaseNo = $(this).data('value');
+		if(del){
+			window.location.href="/purchase/deletePurchase/"+purchaseNo;
+		}
+	});
+	
+	//무한스크롤
+	$(function(){
+		
+		let currentPage = 1;
+		let maxPage = ${resultPage.maxPage};
+
+		$(window).scroll(function(){
+			
+			let $window = $(this);
+			let scrollTop = $window.scrollTop(); //스크롤의 top이 위치하고 있는 높이
+			let windowHeight = $window.height(); //화면의 높이
+			let documentHeight = $(document).height(); //문서 전체의 높이
+	
+			if(scrollTop + windowHeight + 1 >= documentHeight && currentPage <= maxPage){ //scrollbar의 thumb가 바닥 전 10px 까지 도달하면 리스트 가져옴
+				currentPage++;
+				setTimeout(getListPurchase,200);//0.2초
+			}
+			
+				function getListPurchase(){
+								
+					$.ajax({
+						url:"/purchase/api/getListPurchase/"+currentPage+"/${search.searchCondition}",
+						type:"GET",
+						datatype:"json",
+						success: function(data, status, jqXHR){
+
+							//console.log("success status: "+ status);
+							//console.log("data: " + data);
+							//console.log("jqXHR: "+ jqXHR);
+							//console.log("json/stringify: "+JSON.stringify(data));													
+							
+							//purchaseList
+							for(let i = 0; i<data.length; i++){
+								let purchaseOne = data[i];
+								let cpd = "";
+								
+								let purchaseListHtml = "";
+								let ppartsHTML = "";
+								let mpartsHTML = "";
+								
+								let status = "";
+								if(purchaseOne.purchaseStatus==="1"){
+									status="상품준비중"
+								}else if(purchaseOne.purchaseStatus==="2"){
+									status="배송중"
+								}else if(purchaseOne.purchaseStatus==="3"){
+									status="배송완료<br/><button type='button' class='btn btn-outline-primary btn-sm' data-value='"+purchaseOne.purchaseNo+"' onClick='fncPurchaseStatus(this)'>구매확정하기</button>"
+								}else if(purchaseOne.purchaseStatus==="4"){
+									status="구매확정"
+								}
+								
+								//customproductList
+								for(let k = 0; k<purchaseOne.customProduct.length; k++){
+									cpd = purchaseOne.customProduct[k];	
+									
+									//custompartsList
+									for(let n = 0; n<cpd.plusParts.length; n++){
+										let pp = cpd.plusParts[n];
+										
+										ppartsHTML+= ("+" + pp.parts.name+","+ pp.gram +"g, "+ (pp.parts.price*pp.gram/10).toLocaleString()+ "원 <br/>");
+									}
+
+									for(let m = 0; m<cpd.minusParts.length; m++){
+										let mp = cpd.minusParts[m];
+										
+										mpartsHTML+=("-"+ mp.minusName+ "<br/>");
+									}
+								
+								purchaseListHtml = 
+
+									"<tr class='ct_list_pop'><td align='center'><br/><br/><a href='/purchase/getPurchase/"+purchaseOne.purchaseNo+"'>"+purchaseOne.regDate+"&ensp;["+purchaseOne.purchaseNo+"]</a><br/><br/><div>"
+									+status+"</div></td><td align='left'><img class='thumbnail' src='/resources/attachments/"+cpd.product.thumbnail+"'></td>"
+									+"<td align='center'>"+cpd.count +"</td><td align='left'>" + cpd.product.name +"</td><td align='left'>"
+									+ ppartsHTML + mpartsHTML
+									+"</td><td align='center'>"+cpd.price.toLocaleString() + "원</td>"
+									+"<td><a type='button' class='delete' data-value='"+purchaseOne.purchaseNo+"'>&ensp;x</a></td></tr>";							
+
+								$("table tbody:last-child").append(purchaseListHtml);
+								}
+							}//for
+							
+							$('#list').rowspan(0);
+							$('#list').rowspan(6);
+							
+						}//success
+						, error: function(status, jqXHR){
+							console.log("error status: "+ status);
+							console.log("jqXHR: "+ jqXHR);
+							toastr.error("페이지 로드 실패","",{timeOut:2000});
+						}
+						
+					})//jQuery.ajax()
+					
+				}//getListPurchase
+				
+		})//window.scroll()
+			
+	});
   	 
 
       
