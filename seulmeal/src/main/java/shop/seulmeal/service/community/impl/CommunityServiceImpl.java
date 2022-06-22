@@ -169,26 +169,25 @@ public class CommunityServiceImpl implements CommunityService {
 	public Map<String,Object> insertFollow(Relation relation) {
 		
 		Relation dbRelation = communityMapper.getRelation(relation);
+		Map<String,Object> map = new HashMap<>();
+		Map<String,Object> followerMap = new HashMap<>();
 
+		String msg = "팔로우";
 		if (dbRelation == null) {
 			communityMapper.insertRelation(relation);
+		}else{
+			msg = "팔로우취소";
+			communityMapper.deleteRelation(dbRelation);
 		}
 		
-		Map<String,Object> map = new HashMap<>();
-		map.put("userId", relation.getUserId());
 		map.put("relationUserId", relation.getRelationUser().getUserId());
 		map.put("relationStatus", relation.getRelationStatus());
 
-		// 내 팔로우 개수 +1
-		int userFollowCnt = communityMapper.getRelationTotalCount(map);
-		// 상대 팔로워 개수 +1
-		int relationUserFollowerCnt = communityMapper.getFollowerTotalCount(map);
+		int followerTotalCount = communityMapper.getFollowerTotalCount(map);
+		followerMap.put("msg",msg);
+		followerMap.put("followerTotalCount",followerTotalCount);
 
-		Map<String,Object> resultMap = new HashMap<>();
-		resultMap.put("userFollowCnt", userFollowCnt);
-		resultMap.put("relationUserFollowerCnt", relationUserFollowerCnt);
-
-		return resultMap;
+		return followerMap;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package shop.seulmeal.web.community;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,7 +147,7 @@ public class CommunityController {
 		Map<String, Object> followerMap = communityService.getListFollower(null, userId);
 		
 		// 차단유저 목록
-		List<Relation> blockList = (List<Relation>)communityService.getListBlock(null, userId, "1").get("blockList");
+		Map<String, Object> blockMap = communityService.getListBlock(null, userId, "1");
 		
 		//model
 		model.addAttribute("postList", postList);
@@ -154,7 +155,7 @@ public class CommunityController {
 		//model.addAttribute("productList", (List<Product>) productMap.get("list"));
 		model.addAttribute("followMap", followMap);
 		model.addAttribute("followerMap", followerMap);
-		model.addAttribute("blockList", blockList);
+		model.addAttribute("blockMap", blockMap);
 
 		return "community/communityMain";
 	}
@@ -179,7 +180,7 @@ public class CommunityController {
 		communityService.insertPost(post);
 		
 		// 첨부파일 없을 경우, 유효성 체크
-		if(uploadfile.length > 1) {
+		if(uploadfile.length > 0) {
 			attachments.setPostNo(Integer.toString(post.getPostNo()));
 			attachmentsService.insertAttachments(uploadfile, attachments);
 		}
@@ -325,7 +326,7 @@ public class CommunityController {
 		
 		Search search = new Search();
 		search.setCurrentPage(1);
-		search.setPageSize(2);
+		search.setPageSize(pageSize);
 
 		Map<String,Object> postMap = communityService.getListPost(search, userId);
 		
@@ -340,7 +341,7 @@ public class CommunityController {
 		
 		Map<String, Object> attachMap = new HashMap<>();
 		List<Post> postList = (List<Post>) postMap.get("postList");
-		List<Attachments> attachmentList = new ArrayList<>();
+//		List<Attachments> attachmentList = new ArrayList<>();
 
 		for(Post post : postList) {
 			attachMap.put("postNo", post.getPostNo());
@@ -373,6 +374,9 @@ public class CommunityController {
 			}			
 		}
 				
+		
+		System.out.println("///////////"+userService.getProfile(userId));
+		
 		//model
 		model.addAttribute("isMine", isMine);
 		model.addAttribute("profileUser",userService.getProfile(userId));
@@ -388,32 +392,66 @@ public class CommunityController {
 	@GetMapping("updateProfile") // oo
 	public String updateProfile(HttpSession session, Model model) throws Exception {
 
+		model.addAttribute("foodcategoryList",productService.getListFoodCategory());
 		return "/community/updateCommunityProfile";
 	}
 
+	
 	@PostMapping("updateProfile") // oo
-	public String updateProfile(@ModelAttribute User user, String[] foodCategoryName, HttpSession session, Model model)
+	public String updateProfile(MultipartFile imageFile, @ModelAttribute User user, String[] foodcategory,  HttpSession session, Model model)
 			throws Exception {
 
-		System.out.println("////////" + foodCategoryName.length);
-		
-		if(foodCategoryName.length == 1) {
-			user.setFoodCategoryName1(foodCategoryName[0]);
-		}else if(foodCategoryName.length == 2) {
-			user.setFoodCategoryName1(foodCategoryName[0]);
-			user.setFoodCategoryName2(foodCategoryName[1]);
-		}else {
-			user.setFoodCategoryName1(foodCategoryName[0]);
-			user.setFoodCategoryName2(foodCategoryName[1]);
-			user.setFoodCategoryName3(foodCategoryName[2]);
+		// 프로필 사진
+		String imageFilePath = null;
+		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		File file = new File(path);
+
+		if (!file.exists()) {
+			file.mkdirs();
 		}
-
-
-		user.setUserId(((User) session.getAttribute("user")).getUserId());
+		
+		if(imageFile.isEmpty()) {
+			user.setProfileImage("default_profile.jpg");
+		}else {
+			String contentType = imageFile.getContentType();
+			String originalFileExtension = null;
+			
+			if (contentType.contains("image/jpeg")) {
+				originalFileExtension = ".jpg";
+			} else if (contentType.contains("image/png")) {
+				originalFileExtension = ".png";
+			}
+			
+			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
+			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
+			
+			// 이미지 파일 로컬에 저장
+			file = new File(imageFilePath);
+			imageFile.transferTo(file);
+			
+			// 저장한 이미지 파일을 user에 저장
+			user.setProfileImage(imageFileName);
+		}
+		
+			
+		// 선호 음식 카테고리
+		if(foodcategory != null && foodcategory.length > 0) {
+			if(foodcategory.length == 1) {
+				user.setFoodCategoryName1(foodcategory[0]);
+			}else if(foodcategory.length == 2) {
+				user.setFoodCategoryName1(foodcategory[0]);
+				user.setFoodCategoryName2(foodcategory[1]);
+			}else {
+				user.setFoodCategoryName1(foodcategory[0]);
+				user.setFoodCategoryName2(foodcategory[1]);
+				user.setFoodCategoryName3(foodcategory[2]);
+			}
+		}
+		
 		userService.updateProfile(user);
 		session.setAttribute("user", user);
 
 		return "redirect:/community/getProfile/" + user.getUserId();
 	}
-
+	
 }

@@ -16,7 +16,7 @@
 		aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-scrollable modal-md "
 			role="document">
-			<div class="modal-content">
+			<div class="modal-content" >
 
 				<!-- 헤더 -->
 				<div class="modal-header">
