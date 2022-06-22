@@ -18,6 +18,7 @@
 	<style>
 		
 		h2{
+		
 			text-align: left; 
 		}
 
@@ -42,9 +43,9 @@
 			color: #FF607F;
 		}
 		
-		img{
-			width: 70px;
-			height: 70px;
+		.thumbnail{
+			width: 100px;
+			height: 100px;
 		}	
 		
 		h6:after {
@@ -139,7 +140,7 @@
 					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
 						  <td align="left">${i}</td>
-						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img src='/resources/attachments/${cpd.product.thumbnail}'></td>
+						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -381,7 +382,7 @@
 		
 	})
 	
-	//모달자바스크립트시작
+	////모달
 	//제외재료번호, 이름 배열
 	const minusNo = [];
 	const minusName = [];

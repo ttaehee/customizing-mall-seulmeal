@@ -35,17 +35,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="like" items="${list}" varStatus="status">
+				<c:forEach var="product" items="${product}" varStatus="status">
 				<tr>
-					<th style="padding-left: 50px; text-align: left;"><a href="/product/getProduct/${like.productNo }">[${like.product.Foodcategory.name}] ${like.product.name}</a></th>
-					<th>${like.product.price}</th>
-					<th>${like.regDate}</th>
-					<th>	<div data-value="${like.product.productNo}" class="btn-delete" id="deleteLike" style="cursor: pointer;">
+					<th style="padding-left: 50px; text-align: left;"><a href="/product/getProduct/${product.productNo }">${product.name}</a></th>
+					<th>${product.price}</th>
+					<th>${product.stock}</th>
+					<th>	<div data-value="${product.productNo}" class="btn-delete" id="deleteLike" style="cursor: pointer;">
 						좋아요 취소</div>
 					</th>
 				</tr>
 				</c:forEach>
-			</tbody>
+ 		</tbody>
 		</table>
 		
 	<div class="container">
@@ -68,7 +68,7 @@ $(function(){
 
 	  $(".btn-delete").click(function(){
 		  const no =$(this).data("value");
-		window.location.href = '/product/updateLikeProduct/'+no;
+		window.location.href = '/product/api/updateLikeProduct/'+no;
 	  });
 	  
 	});
