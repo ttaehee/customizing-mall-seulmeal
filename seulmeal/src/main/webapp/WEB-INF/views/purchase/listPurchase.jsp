@@ -227,7 +227,7 @@
 	
 			if(scrollTop + windowHeight + 1 >= documentHeight && currentPage <= maxPage){ //scrollbar의 thumb가 바닥 전 10px 까지 도달하면 리스트 가져옴
 				currentPage++;
-				setTimeout(getListPurchase,200);//0.2초
+				setTimeout(getListPurchase,100);//0.1초
 			}
 			
 				function getListPurchase(){

@@ -343,7 +343,7 @@
 	
 	//사용포인트를 적지않고 비밀번호를 작성하려고 할 때 or 100포인트단위가 아닐 때
 	$('#password').on('click', function() {
-		if(usepoint === 0){
+		if(usepoint === 0 || isNaN(usepoint)){
 			toastr.error("사용할 포인트를 먼저 입력하세요.","",{timeOut:2000});
 		}else{
 			if(usepoint%100 != 0){
@@ -356,15 +356,21 @@
 	
 	//포인트사용 비밀번호체크 후 결제금액차감
 	function fnCalTotal(){
+		usepoint = parseInt($('#usepoint').val());
+		console.log(usepoint);
 
 		let total = sum-usepoint;
 		const password = $('#password').val();
 		
-		if(password == "" || password == "undefined" || password == null){
-			toastr.error("비밀번호를 올바르게 입력하세요.","",{timeOut:2000});
-			$('#password').val('');
+		if(usepoint == 0 || usepoint == "" || usepoint =="undefined" || usepoint == null || isNaN(usepoint)){
+			toastr.error("사용할 포인트를 먼저 입력하세요.","",{timeOut:2000});
 			return;
-		}
+		}else{
+			if(password == "" || password == "undefined" || password == null){
+				toastr.error("비밀번호를 올바르게 입력하세요.","",{timeOut:2000});
+				$('#password').val('');
+				return;
+			}
 			$.ajax({
 				url: "/purchase/api/confirmPassword",
 				method : "POST",
@@ -400,7 +406,8 @@
 		        		return;
 		        	}
 		        }
-	    	});		
+	    	});	
+		}
 	}
 	
 	//체크박스 하나만 선택
@@ -510,7 +517,7 @@
 						         msg += '에러내용 : ' + rsp.error_msg;
 
 							}
-						alert(msg);
+							toastr.error(msg,"",{timeOut:2000});
 					})
 				}
 			})

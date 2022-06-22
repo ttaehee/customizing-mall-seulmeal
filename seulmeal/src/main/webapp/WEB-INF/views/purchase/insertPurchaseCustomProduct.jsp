@@ -152,17 +152,15 @@
 		</div>
 	</form>
 	
-
 		
-	<script type="text/javascript">
+<script type="text/javascript">
 	
 	const minusNo = [];
 	const minusName = [];
 
 	//form insertCustomProduct
 	function fncInsertCustomProduct(ths) {
-		
-		toastr.error(minusName,"제외한 재료 :",{timeOut:2000});
+
 		const count = $("#customProductCount").text();
 		const customprice= $("#total").text();
 		const cartStatus = $(ths).val();
@@ -173,21 +171,45 @@
 		$(".cc").append(`<input type="hidden" name ="price" value="\${customprice}">`);
 		$(".cc").append(`<input type="hidden" name ="cartStatus" value="\${cartStatus}">`);
 		$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
-	 }
 
+	 }
+	
+	//상품구성재료 제외안되어있으면 제외하기
+	function fncExecpt(partsNo, partsName, ths){
+		minusNo.push(partsNo);
+
+        minusName.push(partsName);
+        
+        toastr.error(" 제외되었습니다.",`\${partsName}`,{timeOut:2000});
+        ths.text("제외취소하기");
+	}
 	//상품구성재료 제외하기버튼 클릭
 	$(function() {
 	    $('.execpt').on('click', function() {
-	        const partsNo = $(this).attr('data-partsNo');	        
-	        minusNo.push(partsNo);
-	        	       	        
-	        const partsName = $(this).attr('data-partsName'); 
-	        minusName.push(partsName);
-	        
-	        toastr.error(" 제외되었습니다.",partsName,{timeOut:2000});
-	        console.log("minusNo : "+minusNo);
-	        
-	        $(this).attr("disabled","disabled");
+	    	const partsNo = $(this).attr('data-partsNo');	
+	    	const partsName = $(this).attr('data-partsName'); 
+	    	partsName
+	    	if(minusNo.length == 0){
+	    		fncExecpt(partsNo, partsName, $(this));
+	    		return;
+	    	}
+	    	
+	    	for(let i=0; i<minusNo.length; i++){
+
+	    		if(minusNo[i] === partsNo){
+	    			toastr.error(" 제외 취소되었습니다.",`\${minusName[i]}`,{timeOut:2000});
+	    			minusNo.splice(i,1);
+	    			minusName.splice(i,1);
+	    			$(this).text("제외하기");
+	    			console.log("ddminusNo"+minusNo);
+	    			console.log("ddminusName"+minusName);
+	    			return;
+	    		}
+	    	}
+	    	fncExecpt(partsNo, partsName, $(this));
+	    	console.log("ggminusNo"+minusNo);
+	    	console.log("ggminusName"+minusName);
+	    	return;
 	    })
 	});
 	
@@ -236,7 +258,7 @@
 		const inputTag = $(".partSearch").parent('div').find("input[name='searchKeyword']");
 		
 		if(inputTag.val().trim() != null){
-			if(inputTag.val() != $('.name').text()){
+			if(!($('.name').text().includes(inputTag.val(),0))){
 				$.ajax({
 					url:"/product/api/getPartsName/"+$(".search").val(),
 					method:"GET",

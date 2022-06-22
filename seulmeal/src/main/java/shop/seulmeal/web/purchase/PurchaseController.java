@@ -337,8 +337,9 @@ public class PurchaseController {
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
+		search.setSearchCondition(purchaseStatus);
 
-		Map<String, Object> map = purchaseService.getListSale(search, purchaseStatus);
+		Map<String, Object> map = purchaseService.getListSale(search);
 
 		Page resultPage 
 			= new Page(search.getCurrentPage(), 
