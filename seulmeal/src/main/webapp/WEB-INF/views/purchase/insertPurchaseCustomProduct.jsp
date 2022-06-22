@@ -162,7 +162,7 @@
 	//form insertCustomProduct
 	function fncInsertCustomProduct(ths) {
 		
-		alert("제외한 재료 : "+minusName)
+		toastr.error(minusName,"제외한 재료 :",{timeOut:2000});
 		const count = $("#customProductCount").text();
 		const customprice= $("#total").text();
 		const cartStatus = $(ths).val();
@@ -184,7 +184,7 @@
 	        const partsName = $(this).attr('data-partsName'); 
 	        minusName.push(partsName);
 	        
-	        alert(partsName+" 제외되었습니다.");
+	        toastr.error(" 제외되었습니다.",partsName,{timeOut:2000});
 	        console.log("minusNo : "+minusNo);
 	        
 	        $(this).attr("disabled","disabled");
@@ -196,7 +196,7 @@
 		var word = $(".search").val();
 		
 		if(word == null || word.length<1){
-			alert("추가할 재료이름을 입력하세요.");
+			toastr.error("추가할 재료이름을 입력하세요.","",{timeOut:2000});
 		}
 	}
 	
@@ -209,7 +209,7 @@
 		if(type=='minus'){
 			num-=10;
 			if(num<10){
-				alert('더이상 줄일수 없습니다.');
+				toastr.error("더이상 줄일수 없습니다.","",{timeOut:2000});
 				return;
 			}
 
@@ -269,7 +269,7 @@
 			        }
 				})
 			}else{
-				alert("이미 추가되어있는 재료입니다.");
+				toastr.error("이미 추가되어있는 재료입니다.","",{timeOut:2000});
 				inputTag.val('');
 			}
 		}
@@ -296,7 +296,7 @@
 			             );    //response
 			         }
 			         ,error : function(){ //실패
-			             alert("오류가 발생했습니다.");
+			        	 toastr.error("재료없음","",{timeOut:2000});
 			         }
 			     });
 			 }
@@ -346,7 +346,7 @@
 		if(type=='minus'){
 			number--;
 			if(number<1){
-				alert('더이상 줄일수 없습니다.');
+				toastr.error("더이상 줄일수 없습니다.","",{timeOut:2000});
 				return;
 			}
 			$(ths).parents("div").find("span[name='count']").text(number);
