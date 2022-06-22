@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.Review;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.product.ProductService;
 
@@ -49,6 +51,23 @@ public class ProductRestController {
 		return parts;
 	}
 	
+	@GetMapping("getReview/{reviewNo}")
+	public Map<String, Object> getReview(@PathVariable int reviewNo) throws Exception {
+		Review review = productService.getReview(reviewNo);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("reviewNo", review.getReviewNo());
+		map.put("title",review.getTitle());
+		map.put("content", review.getContent());
+		map.put("rating", review.getRating());
+		return map;
+	}
+	
+	@GetMapping("deleteReview/{reviewNo}")
+	public String deleteReview(@PathVariable int reviewNo) throws Exception {
+		productService.deleteReview(reviewNo);
+		return "Deleted";
+	}
+	
 	@GetMapping("getPartsName/{name}")
 	public Parts getPartsName(@PathVariable String name, Map<String, Object> map) throws Exception {
 		map.put("name", name);
@@ -57,6 +76,14 @@ public class ProductRestController {
 		return parts;
 	}
 	
+	@PostMapping("autoComplete")
+	public @ResponseBody Map<String, Object> autocomplete(@RequestParam Map<String, Object> Map) throws Exception{
+		
+		List<Map> resultList = productService.autoComplete(Map);
+		Map.put("resultList", resultList);
+
+		return Map;
+	}
 	
 	/* 상품 좋아요 / 좋아요 취소 */
 	@GetMapping("updateLikeProduct/{productNo}")

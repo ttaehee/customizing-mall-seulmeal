@@ -197,7 +197,9 @@ public class ProductServiceImpl implements ProductService {
 
 		return productMapper.getParts(map);
 	}
-
+	public List<Map> autoComplete(Map<String, Object> map) throws Exception{
+		return productMapper.autoComplete(map);
+	}
 	@Override
 	public int updateParts(Parts parts) throws Exception {
 
