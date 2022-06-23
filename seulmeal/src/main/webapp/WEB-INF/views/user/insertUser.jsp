@@ -19,9 +19,9 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
  <div class="container" style="margin-top:20px;">
-	<h2>회원가입</h2>
+	<h2 style="text-align: center;">회원가입</h2>
 	<form class="form-horizontal" method="post" action="/user/insertUser" target="_self">
-	  <div class="form-group">
+	  <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">아이디</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="userId" name="userId"  placeholder="아이디는 8글자 이상 공백,특수문자,한글이 불가능 합니다">
@@ -29,7 +29,7 @@
 	      <div style="font-size: 15px;">아이디는 8글자 이상 공백,특수문자,한글이 불가능 합니다.</div>
 	    </div>
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group row">
 	    <label for="Password3" class="col-sm-2 control-label">비밀번호</label>
 	    <div class="col-sm-10">
 	      <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
@@ -37,20 +37,20 @@
 	      <div style="font-size: 15px;">비밀번호는 8글자 이상 특수문자1개, 알파벳 대문자 1개를 포함하고 공백과 아이디가 포함되지 않아야 합니다.</div>
 	    </div>
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group row">
 	    <label for="Password3" class="col-sm-2 control-label">비밀번호 확인</label>
 	    <div class="col-sm-10">
 	      <input type="password" class="form-control" id="confirmPassword"  placeholder="비밀번호 확인">
 	      <div id="passCheck" style="color:crimson;"></div>
 	    </div>	    
 	  </div>
-	   <div class="form-group">
+	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">이름</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력해 주세요">
 	    </div>
 	  </div>
-	   <div class="form-group">
+	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">닉네임</label>
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="nickName" name="nickName" placeholder="닉네임은 5글자 이상 입력해 주세요">
@@ -58,7 +58,7 @@
 	      <div style="font-size: 15px;">닉네임은 5글자 이상 입력해 주세요.</div>
 	    </div>
 	  </div>
-	   <div class="form-group">
+	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">이메일</label>
 	    <div class="col-sm-10">	    	
 		    <div class="inputBar">
@@ -75,7 +75,7 @@
 	    </div>
 	    
 	  </div>
-	   <div class="form-group">
+	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">휴대폰</label>	    
 	    <div class="col-sm-10">
 	   		<div class="inputBar">
@@ -92,7 +92,7 @@
 	    </div>
 	    
 	  </div>
-	   <div class="form-group">
+	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">주소</label>
 	    <div class="col-sm-10">
 	    	<!-- 주소 -->
@@ -109,14 +109,14 @@
 			
 	    </div>
 	  </div>
-	   <div class="form-group">
+	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">생년월일</label>
 	    <div class="col-sm-10">
 	      <input type="date" class="form-control" id="birth" name="birth" placeholder="Email">
 	    </div>
 	  </div>
 	  
-	  <div class="form-group">
+	  <div class="form-group row">
 	    <div class="col-sm-offset-2 col-sm-10" style="display: flex; justify-content: flex-end;">
 	      <button id="insertUserIdBtn" disabled="disabled" type="submit" class="btn btn-default">가입하기</button>
 	    </div>

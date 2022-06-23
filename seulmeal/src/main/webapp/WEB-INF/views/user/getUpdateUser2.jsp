@@ -51,49 +51,50 @@ body { background: #fff; }
 	<div class="container">
 		<br /> <br /> <br /> <br />
 		<h2>내 정보</h2>
-		<form method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
-			
-			<div class="form-group row">
-				<label for="Email3" class="col-sm-2 col-form-label">아이디</label>
+		<form class="form-horizontal" method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
+			<div class="form-group">
+				<label for="Email3" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-10">
+				
+				
 				 <input type='hidden'  name='userId' value='${user.userId }' />
 				${user.userId }
 				</div>
 			</div>
-			<div class="form-group row">
-				<label for="Password3" class="col-sm-2 control-label">비밀번호</label>
+			<div class="form-group">
+				<label for="Password3" class="col-sm-2 control-label">Password</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="password" name="password" placeholder="">
 					 <div id="checkPassword"></div>
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Password3" class="col-sm-2 control-label">새 비밀번호</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="">
 					<div id="passResult" style="color:crimson;"></div>
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Password3" class="col-sm-2 control-label">비밀번호 확인</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="confirmPassword" placeholder="">
 					<div id="passCheck" style="color:crimson;"></div>
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">이름</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="userName" name="userName" value="${user.userName }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">닉네임</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="nickName" name="nickName" value="${user.nickName }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">회원등급</label>
 				<div class="col-sm-10" data-toggle="modal" data-target="#exampleModalCenter">
 				
@@ -111,25 +112,25 @@ body { background: #fff; }
 					 
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">이메일</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="email" name="email" value="${user.email }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">휴대폰</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="phone" name="phone" value="${user.phone }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">주소</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="address" name="address" value="${user.address }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">생년월일</label>
 				<div class="col-sm-10">
 					 ${user.birth } 
@@ -164,7 +165,7 @@ body { background: #fff; }
 				</div>
 			</div>
 			
-			<div class="fform-group row">
+			<div class="form-group">
 				<h4>상태메세지</h4>
 				<div class="">
 					<input type="text" class="form-control" id="profilemessage" name="profilemessage" value="${user.profileMessage }" placeholder="내용을 입력해 주세요">

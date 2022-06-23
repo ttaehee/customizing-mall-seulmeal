@@ -13,14 +13,20 @@
 	}
 	#blackList:hover{
 	color: #ff4500 !important;
-}
+	}
+	
+	.float-right{
+	margin: 50px 10px 0px 10px;
+	
+	} 
+	
 </style>
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
 	<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
-			<div class="col-6">
+			<div class="col-8">
 				<h1 class="pt-5 mb-4 fw-bold">회원목록</h1>
 			</div>
 			<form method="get" action="/user/listUser/0/0">
@@ -50,7 +56,14 @@
 				<tr>
 					<th><a href="/user/getUser/${user.userId}" class="link-dark text-decoration-none">${user.userId}</a></th>
 					<th>${user.userName}</th>
-					<th>${user.blackListStatus}</th>
+					<th>
+					<c:choose>
+						<c:when test="${user.blackListStatus eq '0'}"><div ></div></c:when>
+						<c:when test="${user.blackListStatus eq '1'}"><div >블랙리스트</div></c:when>
+					
+					</c:choose>
+					
+					</th>
 				</tr>
 				</c:forEach>
 			</tbody>
