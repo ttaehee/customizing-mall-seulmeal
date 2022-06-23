@@ -28,7 +28,6 @@
 				<tr>
 					<th>리뷰제목</th>
 					<th>리뷰내용</th>
-					<th>작성자</th>
 					<th>생성일자</th>
 					<th>상태</th>
 				</tr>
@@ -36,11 +35,11 @@
 			<tbody>
 				<c:forEach var="review" items="${review}" varStatus="status">
 				<tr>
-					<th style="padding-left: 50px; text-align: left;">[${review.product.name}] ${review.title}</th>
-					<th>${review.content}</th>
-					<th>${review.user.userId}</th>
-					<th>${review.regDate }</th>
-					<th>
+					<th style="width:260px; padding-left: 30px; text-align: left;">[${review.product.name}] ${review.title}
+					<hr/>${review.user.userId}</th>
+					<th style="max-width:590px; word-wrap:break-word; text-align:left;">${review.content }</th>
+					<th style="width:180px;">${review.regDate }</th>
+					<th  style="width:80px;">
 					<c:if test="${review.status == 0 }">
 						<div data-value="${review.reviewNo}" class="btn-delete" id="deleteReview" style="cursor: pointer;">
 						끄기</div>

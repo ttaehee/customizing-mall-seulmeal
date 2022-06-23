@@ -164,17 +164,6 @@ public class PurchaseController {
 			// 추가 상품
 			String plusPartsNo, String plusPrice, String plusGram){
 		
-		System.out.println("/updateCustomProduct Post : "+customProduct);
-		
-		System.out.println("insertCustomProduct POST : "+customProduct);
-
-		System.out.println("========== minusNo : "+minusNoA);
-		System.out.println("========== minusName : "+minusNameA);
-
-		System.out.println("========== plusPartsNo : "+plusPartsNo);
-		System.out.println("========== plusPrice : "+plusPrice);
-		System.out.println("========== plusGram : "+plusGram);
-		
 		purchaseService.updateCustomProductCount(customProduct);
 		purchaseService.deleteCustomParts(customProduct.getCustomProductNo());
 		
@@ -191,15 +180,31 @@ public class PurchaseController {
 		return "redirect:/purchase/getListCustomProduct/1";
 	}	
 		
-	//커스터마이징 상품 장바구니에서 삭제 
+	//커스터마이징 상품 장바구니에서 낱개삭제 
 	@GetMapping("deleteCustomProduct/{customProductNo}")
 	@Transactional(rollbackFor= {Exception.class})
 	public String deleteCustomProduct(@PathVariable int customProductNo) {
 		
-		System.out.println("/deletePurchase");
+		System.out.println("/deletePurchase : Get");
 
 		int result = purchaseService.deleteCustomProduct(customProductNo);
 		System.out.println("delete : "+result);
+		
+		return "redirect:/purchase/getListCustomProduct/1";
+	}	
+	
+	//커스터마이징 상품 장바구니에서 선택다중삭제 
+	@PostMapping("deleteCustomProduct")
+	@Transactional(rollbackFor= {Exception.class})
+	public String deleteCustomProduct(String checkBoxArr) {
+		
+		System.out.println("/deletePurchase Post : " + checkBoxArr);
+		
+		String[] check = checkBoxArr.split(",");
+
+		for(String customProductNo : check ) {
+			purchaseService.deleteCustomProduct(Integer.parseInt(customProductNo));
+		}
 		
 		return "redirect:/purchase/getListCustomProduct/1";
 	}	
