@@ -239,28 +239,6 @@ section.main{
     margin: 0px;
 }
 
-/*
-.comment-wrapper{
-    width: 100%;
-    height: 50px;
-    border-radius: 1px solid #dfdfdf;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.comment-wrapper .icon{
-    height: 30px;
-}
-
-.comment-box{
-    width: 80%;
-    height: 100%;
-    border: none;
-    outline: none;
-    font-size: 14px;
-}
-*/
 .comment-btn,
 .action-btn{
     width: 70px;
@@ -358,39 +336,6 @@ section.main{
     font-size: 12px;
 }
 
-
-/*
-.suggestion-text{
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.5);
-    font-weight: 700;
-    margin: 20px 0;
-}*/
-
-/*
-@media (max-width: 1100px){
-    .right-col, .search-box{
-        display: none;
-    }
-    .nav-wrapper,
-    .wrapper{
-        width: 90%;
-    }
-    .wrapper{
-        display: block;
-    }
-}
-
-@media (max-width: 500px){
-    .nav-items .icon{
-        margin: 0 5px;
-    }
-    .post-image{
-        height: 300px;
-    }
-}
-*/
-
 .slick-dots{
 	height:30px;
 }
@@ -442,14 +387,12 @@ div.modal-content{
 	cursor: pointer;
 }
 
-
-
 </style>
 
 </head>
 <body>
-	<jsp:include page="../layer/header.jsp"></jsp:include>
-
+	<jsp:include page="../layer/header.jsp"/>
+		
 	<!-- 검색, 정렬, 게시글 작성버튼 작성 -->
 	<div class="search-order-post">	
 	
