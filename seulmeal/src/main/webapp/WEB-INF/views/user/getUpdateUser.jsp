@@ -26,11 +26,11 @@ body { background: #fff; }
   
 .bluetop {
   border-collapse: collapse;
-  border-top: 3px solid #168;
+  border-top: 3px solid #ff4500;
 }  
 .bluetop th {
-  color: #168;
-  background: #f0f6f9;
+  color: #ff4500;
+  background: #FBF8EF;
 }
 .bluetop th, .bluetop td {
   padding: 10px;
@@ -123,22 +123,29 @@ body { background: #fff; }
 					<input type="text" class="form-control" id="phone" name="phone" value="${user.phone }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
-				<label for="Email3" class="col-sm-2 control-label">주소</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="address" name="address" value="${user.address }" placeholder="">
+		   <div class="form-group row">
+		    <label for="Email3" class="col-sm-2 control-label">주소</label>
+		    <div class="col-sm-10">
+		    	<!-- 주소 -->
+		    	<div style="display: flex; justify-content: space-between;">
+		    	<input type="text" class="form-control" id="sample3_postcode" name="address"  placeholder="우편번호" style="width: 100%;" readonly>
+				<input class="btn btn-default" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
 				</div>
-			</div>
+				<input type="text" class="form-control" id="sample3_address" name="address" value="${user.address }"  placeholder="주소" ><br>
+				<input type="text" class="form-control" id="address" name="address" placeholder="상세주소">
+				
+				<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
+					<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
+				</div>
+				
+		    </div>
+		  </div>
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">생년월일</label>
 				<div class="col-sm-10">
 					 ${user.birth } 
 				</div>
-				
-				
 			</div>
-			
-			
 			<br/>
 
 			<div>
@@ -283,8 +290,9 @@ body { background: #fff; }
 </div>
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
-	
-<script type="text/javascript">
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="/resources/javascript/user/address.js"></script>
+<script type="text/javascript">	
 	
 function search(){
 	var word = $(".search").val();

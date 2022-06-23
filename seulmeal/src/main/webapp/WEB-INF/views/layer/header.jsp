@@ -149,7 +149,14 @@
 	          <a class="nav-link active headerNav" aria-current="page" href="/product/listProduct/1">신상품</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link headerNav" href="/community/communityMain">게시판</a>
+	        <c:if test="${user.blackListStatus==1 }">
+	        <a class="nav-link headerNav" href="#" id="blackUser">게시판</a>
+	       </c:if>
+	       <c:if test="${user.blackListStatus==0 }">
+	        <a class="nav-link headerNav" href="/community/communityMain">게시판</a>
+	       </c:if>
+	       
+	          
 	        </li>
 	        <li class="nav-item">
 	          <a class="nav-link headerNav" href="#">베스트</a>
@@ -251,6 +258,12 @@
 		}
 		
 	}
+	
+	$(()=>{
+		$("#blackUser").on("click",()=>{
+			alert("당신은 블랙유저 입니다.");
+		})
+	})
 	
 	function join(){
 		window.location.href = '/user/insertUser';

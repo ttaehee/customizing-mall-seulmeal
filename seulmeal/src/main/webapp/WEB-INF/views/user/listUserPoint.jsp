@@ -178,16 +178,13 @@ input{
       </div>
       <div class="modal-body">
         
-        <div class="login-id-wrap" style="text-align: center;">
-        <input id="input-id" type="hidden" id="userId" name="userId" value="${user.userId}"/>
-		<input name="price" id="price"/> 원
-		<div>총 포인트 : ${user.totalPoint}</div>
-        </div>
+       <div id="insertPoint" style="text-align: center;"></div>
+        <div id="totalPoint" style="text-align: center;"></div>
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onClick="iamport()">충전하기</button>
-         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">확인</button>
       </div>
     </div>
   </div>
@@ -216,16 +213,7 @@ function iamport(){
 	const message ="0";
 	const price = $('#price').val();
 	const usePoint = "0";
-	//const plusPoint = $('#pluspoint').val();
-
-/* 	 if(parseInt($('#price').val())==0){
-		
-		$(".cc").append(`<input type="hidden" name ="paymentCondition" value="1">`);
-				
-		$("form").attr("method" , "POST").attr("action" , "/purchase/insertPurchase").submit();
-	}else{
-		$(".cc").append(`<input type="hidden" id ="paymentCondition" value="0">`);  */
-		const paymentCondition = "0";
+	const paymentCondition = "0";
 
 		$.ajax({
 			url:"/purchase/api/insertPurchase",
@@ -280,31 +268,40 @@ function iamport(){
 			  		  			dataType : "json",
 			  		  			success : function(data){
 			  		  				console.log(data);
-			  		  				 window.location.href='/user/getChargeUserPoint/' + data.purchase.purchaseNo; 
-			  		  				/* $("#getCharge").modal(); */
-					  		  				
-					  		  			$.ajax({
-					  		  			url:"/user/api/insertPoint",
-					  		  			method:"POST",
-					  		  			data:JSON.stringify({
-					  		  				imp_uid : rsp.imp_uid,
-					  		  				purchaseNo : rsp.merchant_uid,
-					  		  				amount : rsp.paid_amount
-					  		  			}),
-					  		  			headers : {
-					  		  				"Accept" : "application/json",
-					  		  				"Content-Type" : "application/json"
-					  		  			},
-					  		  			dataType : "json",
-					  		  			success :
-					  		  			}
-			  		      	 })
+			  		  				/*  window.location.href='/user/getChargeUserPoint/' + data.purchase.purchaseNo;  */
+			  		  				
+					  		  		
+			  		  				
+			  		  			$.ajax({
+				  		  			url:"/user/api/insertPoint",
+				  		  			method:"POST",
+				  		  			data:JSON.stringify({
+				  		  				purchaseNo : data.purchase.purchaseNo
+				  		  			}),
+				  		  			headers : {
+				  		  				"Accept" : "application/json",
+				  		  				"Content-Type" : "application/json"
+				  		  			},
+				  		  			dataType : "json",
+				  		  			success : function(data){
+				  		  			$("#insertPoint").text('충전 포인트 : '+data.chargePoint);
+				  		  			$("#totalPoint").text('가용 포인트 : '+data.totalPoint);
+				  		  			$("#staticBackdrop").modal('hide');
+			  		  				$("#getCharge").modal('show');
+			  		  				
+				  		  			} 
+				  		  		})
+			  		  			}			
+			  		  	
+			  		      	 })	
+			  		  			
+			  		      	
 						}else{
 							var msg = '결제에 실패하였습니다.';
 					         msg += '에러내용 : ' + rsp.error_msg;
 	
 						}
-					alert(msg);
+					/* alert(msg); */
 				})
 			}
 		})
