@@ -21,7 +21,12 @@
 	  background-size: cover;
 	  color:none !important;
 	  cursor: pointer;
-	}	
+	  transaition : all 0.2s linear;
+	}
+	
+	.card-cover:hover{
+		transform: scale(1.1);
+	}
 	
 	.cardComponet{
 		opacity:1;
@@ -55,6 +60,7 @@
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 							<a class="dropdown-item" href="/operation/getListOperation/2/0/0">진행중인 이벤트</a>
 							<a class="dropdown-item" href="/operation/getListOperation/2/0/1">종료된 이벤트</a>
+							<a class="dropdown-item" href="/operation/getListOperation/2">모든 이벤트</a>
 							<c:if test="${user.role == 1}">
 								<a class="dropdown-item" href="/operation/insertOperation/2">이벤트 등록</a>
 							</c:if>
@@ -75,7 +81,7 @@
 			
 			<c:forEach var="post" items="${list}">	
 				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3 cardComponet">
-					<div class="col">
+					<div class="col" style="overflow: hidden;">
 						<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${post.thumnail}');">						
 							<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
 								<h2 class="display-6 fw-bold title">${post.title}</h2>

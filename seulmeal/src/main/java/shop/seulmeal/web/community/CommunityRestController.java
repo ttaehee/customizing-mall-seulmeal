@@ -10,14 +10,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +37,7 @@ import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Relation;
+import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.CommunityMapper;
 import shop.seulmeal.service.user.UserService;
@@ -452,6 +457,40 @@ public class CommunityRestController {
 		
 		return imageFilePath;
 	}
-
 	
+	@PostMapping("insertReportPost") // o
+	public ResponseEntity<Report> insertReportPost(@RequestBody Report report, @AuthenticationPrincipal User user) {
+		//JSONObject json = new JSONObject();
+		System.out.println("//////: "+ report);
+		report.setReporterId(user.getUserId());
+		communityService.insertReportPost(report);
+		
+		return new ResponseEntity<Report>(report, HttpStatus.OK);
+	}
+	
+	@GetMapping("checkReport/{postNo}")
+	public ResponseEntity<JSONObject> checkReport(@PathVariable String postNo, @AuthenticationPrincipal User user, Report report){
+		JSONObject json = new JSONObject();
+		
+		report.setPostNo(new Integer(postNo));
+		report.setReporterId(user.getUserId());
+		int r = communityService.checkReport(report);
+		json.put("count", r);
+		if(r != 0) {
+			return new ResponseEntity<JSONObject>(json, HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+	}
+	
+	@GetMapping("deleteReportPost/{postNo}")
+	public ResponseEntity<Integer> deleteReportPost(@PathVariable String postNo) {
+
+		int r = communityService.deleteReportPost(new Integer(postNo));
+		if(r != 0) {
+			return new ResponseEntity<Integer>(r, HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<Integer>(r, HttpStatus.OK);
+	}
 }

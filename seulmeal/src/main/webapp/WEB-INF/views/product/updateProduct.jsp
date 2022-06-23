@@ -17,7 +17,7 @@
 			<div class="col-md-12 form-group">
 			<label for="Email3" class="col-sm-6 control-label h4">음식 카테고리 설정
 				<h6 style="margin-top: 16px">
-				<select name="no">
+				<select name="foodCategoryNo">
 					<c:forEach var="foodcategory" items="${list}">
 						<c:set var="i" value="${product.foodCategory}" />
 						<option value="${foodcategory.foodCategoryNo}">${foodcategory.name}</option>

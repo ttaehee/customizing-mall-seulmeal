@@ -32,6 +32,7 @@ spring:
       #location: C:/Users/bitcamp/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/
       #location: C:/Users/GHM/git/seulmeal/seulmeal/src/main/webapp/resources/attachments/
       location: ./src/main/webapp/resources/attachments/
+      #location: /home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/
 
   datasource:
     #url: jdbc:log4jdbc:oracle:thin:@db202204092247_medium?TNS_ADMIN=/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/oracleWallet/Wallet_DB202204092247

@@ -112,4 +112,12 @@ public class ProductRestController {
 		return json;
 	}
 	
+	@PostMapping("insertFoodCategory")
+	public Foodcategory insertFoodcategory(@RequestBody Foodcategory foodcategory) throws Exception {
+		
+		productService.insertFoodCategory(foodcategory.getName());
+		System.out.println(foodcategory);
+		return foodcategory;
+	}
+	
 }

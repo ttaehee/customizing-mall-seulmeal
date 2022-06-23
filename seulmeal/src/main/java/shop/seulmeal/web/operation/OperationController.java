@@ -64,6 +64,7 @@ public class OperationController {
 	int pageSize;
 		
 	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
+	//private String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
 	
 	public OperationController() {
 		// TODO Auto-generated constructor stub
@@ -238,6 +239,9 @@ public class OperationController {
 		if(thumnailFile != null && !checkThumnail.equals(post.getThumnail())) {
 			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
 			post.setThumnail(name);
+			
+			File file = new File(path+post.getThumnail());
+			file.delete();
 			
 			File newFileName = new File(path,name);
 			thumnailFile.transferTo(newFileName);

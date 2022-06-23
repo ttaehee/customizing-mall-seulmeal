@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -46,8 +48,8 @@ public class MainController {
 	@Value("${operation.query.pageSize}")
 	int pageSize;
 	
-	@GetMapping("/")
-	public String main(HttpSession session, Model model, HttpServletRequest request,@AuthenticationPrincipal User userC) throws Exception {
+	@GetMapping(value ={"/{admin}","/"})
+	public String main(HttpSession session, Model model, HttpServletRequest request,@AuthenticationPrincipal User userC, @PathVariable(required = false) String admin) throws Exception {
 		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 		String ip = req.getHeader("X-FORWARDED-FOR");
 		if (ip == null) {
@@ -55,6 +57,11 @@ public class MainController {
 		}
 		System.out.println("ip : : : : : "+ip);
 		model.addAttribute("clientIP", ip);
+		System.out.println("admin : "+admin);
+		if(admin !=null && admin.equals(" admin")) {
+			System.out.println(admin);
+			session.setAttribute("prevPage","");
+		}
 		
 		// 자동로그인
 		Cookie[] cookies = request.getCookies();		
@@ -120,13 +127,18 @@ public class MainController {
 	}
 	
 	@GetMapping("/admin")
-	public String adminPage(HttpSession session, Model model) throws Exception {
+	public String adminPage(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+		
 		User user = (User)session.getAttribute("user");
+		model.addAttribute("count",operationService.countAdmin());
 		model.addAttribute("userCount",operationService.userCount("users"));
 		model.addAttribute("purchaseCount",operationService.userCount("purchase"));
 		model.addAttribute("salePrice",operationService.salePrice());
 		
 		if(user != null) {
+			String referer = request.getServletPath();
+			String[] refererA = referer.split("/");
+			session.setAttribute("prevPage", refererA[1]);
 			if(user.getRole().equals("1")) {
 				return "admin/admin";
 			}

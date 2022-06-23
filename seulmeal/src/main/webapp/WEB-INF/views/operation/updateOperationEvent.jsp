@@ -100,7 +100,7 @@
 			<div class="col-md-6 form-group" style="margin-top: 10px;">
 				<label for="discount" class="col-sm-4 control-label h4" >할인율</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="discount" value="${post.discount }" name="discount" placeholder="1~100" readonly />
+					<input type="text" class="form-control" id="discount" value="${post.discount }" name="discount" placeholder="1~100" disabled="disabled"/>
 					<div style="color:crimson">수정시에는 할인율은 수정 할 수 없습니다.</div>
 				</div>
 			</div>
@@ -306,6 +306,9 @@
 		
 		
 		$("#discount").on("focus keyup",(e)=>{
+			if(e.keyCode === 27){
+				return;
+			}
 			console.log(e.keyCode)
 			if( e.keyCode<96 || e.keyCode>106 || $("#discount").val() <0 || $("#discount").val() >100){
 				$("#discount").val("");
@@ -405,6 +408,7 @@
 			return;
 		}
 		
+		$("#insertForm").append(`<input name="discount" value="\${discount}" />`);
 		$("#insertForm").append(`<input name="deleteProductNo" value="\${deleteProductNo}" />`);
 		$("#insertForm").submit();
 	}

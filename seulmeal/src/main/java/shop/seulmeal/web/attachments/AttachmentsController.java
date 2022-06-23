@@ -36,6 +36,7 @@ public class AttachmentsController {
 	private ResourceLoader resourceLoader;
 	
 	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
+	//private String path ="/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
 	
 	public AttachmentsController() {
 		// TODO Auto-generated constructor stub

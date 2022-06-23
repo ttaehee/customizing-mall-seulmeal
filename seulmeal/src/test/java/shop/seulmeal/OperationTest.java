@@ -71,8 +71,10 @@ class OperationTest {
 	
 	@Test
 	void userCount() {
-		List<Map<String,Object>> map =operationMapper.userCount("users");
-		System.out.println(map);
+		Map<String,Object> map =operationMapper.countAdmin();
+		List<Map<String,Object>> list = operationMapper.salePrice();
+		//System.out.println(map);
+		System.out.println(list);
 	}
 	
 	//@Test

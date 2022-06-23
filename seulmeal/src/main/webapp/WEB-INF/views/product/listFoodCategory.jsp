@@ -32,7 +32,7 @@ function check() {
 				<hr style="padding:-5%; border: solid 2px #ff4500; width:520px">
 				<tr>
 					<th><input type="text" class="form-control" id="insertText" placeholder="카테고리명을 입력하세요" style="border: none; background-color: #fff;"/></th>
-					<th><button type="submit" class="btn btn-primary" style="width:100%; height:100%;  border: none; background-color: #fff;">등록</button></th>
+					<th><button type="button" onclick="insertFoodCategory()" class="btn btn-primary" style="width:100%; height:100%;  border: none; background-color: #fff;">등록</button></th>
 				</tr>
 			</form>
 			</thead>
@@ -42,7 +42,7 @@ function check() {
 					<th>상태</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="foodTable">
 				<c:forEach var="foodCategory" items="${list}" varStatus="status">
 				<tr>
 					<th style="text-align: center;">[${foodCategory.foodCategoryNo}] ${foodCategory.name}</th>
@@ -63,6 +63,30 @@ function check() {
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 
 <script type="text/javascript"> 
+	function insertFoodCategory(){		
+		
+		$.ajax({
+			url : "/product/api/insertFoodCategory",
+			method : "POST",
+			data : JSON.stringify({
+				name : $("#insertText").val()
+			}),
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data,status){
+	        	const card = `<tr>
+					<th style="text-align: center;">[] ${data.name}</th>
+					<th>
+						<div data-value="${foodCategory.foodCategoryNo}" class="btn-delete" id="delete" style="cursor: pointer;">
+						끄기</div>
+					</th>
+				</tr>`
+				
+	        	$(".foodTable").append(card);
+	        }
+		})
+	}
+
 $(function() {
 	
 	  $(".btn-delete").click(function(){

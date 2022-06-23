@@ -51,6 +51,7 @@ public interface CommunityService {
 	
 	public int postViewsUp(int postNo);
 	
-	
+	// 신고체크
+	public int checkReport(Report report);
 	
 }
