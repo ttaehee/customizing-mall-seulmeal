@@ -124,7 +124,7 @@
 								 </c:choose> 
 								 ]입니다.</div>
 		 					<hr style="border:1px solid #FF4500; width:400px; bottom:15px"/>
-		 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : ${user.totalPoint} P</div>
+		 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : <fmt:formatNumber type="number" maxFractionDigits="0" value="${user.totalPoint}"/> P</div>
 		 				</div>				
 		 			</div>
 		 	</div>
@@ -156,17 +156,19 @@
 	
 			<tbody class="table_body" style="font-size:15px">
 				<c:set var="total" value="0" />
-				<c:set var="customprice" value="0" />
 				<c:set var="i" value="0" />
 				<c:forEach var="cpd" items="${customProductList}">
 					<c:set var="i" value="${i+1}" />
-					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
 						  <td align="left">
 						  	<input type="checkbox" id="cart_delete${i}" name="check" data-customProductNo="${cpd.customProductNo}"/>&emsp;
 							<label for="cart_delete${i}"></label>&emsp;&ensp;&ensp;<br/>
 						  </td>
-						  <td align="left"><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
+						  <td align="left">
+						  	<a href="/product/getProduct/${cpd.product.productNo}">
+						  		<img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'>
+						  	</a>
+						  </td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -182,7 +184,7 @@
 						  	<button type='button' class="btn btn-outline-primary btn-sm plus" data-no="${cpd.customProductNo}" onclick="fnCalCartCount('plus',this);">+</button> 
 						  </td>
 						  <td align="left">
-						  <span id="customcartprice" name="price">${cpd.price*cpd.count}</span>원</td>
+						  <span id="customcartprice" name="price"><fmt:formatNumber type="number" maxFractionDigits="0" value="${cpd.price*cpd.count}"/></span>원</td>
 						  <td>
 						  	<div>
 				                <p><a type="button" class="change" data-value="${cpd.customProductNo}"  data-toggle="modal" data-target="#changeModal">옵션선택다시하기</a>
@@ -204,7 +206,7 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<h4>결제예정 금액 :  <span id="total">${total}</span>원</h4><br/><br/>
+				<h4>결제예정 금액 :  <span id="totalSum"><fmt:formatNumber type="number" maxFractionDigits="0" value="${total}"/></span>원</h4><br/><br/>
 			</div>
 			<div class="col-md-3">
 				<div style="border:none; float:right">
@@ -326,8 +328,10 @@
 	
 	//insertPurchase submit
 	function fncInsertPurchase() {
+		
+		let totalSum = $('#totalSum').text().replace(",","");
 
-		if($('#total').text()==='0' || isNaN($('#total').text())){
+		if(totalSum==='0' || isNaN(totalSum)){
 			toastr.error("구매할 상품이 없습니다.","",{timeOut:2000});
 			return;
 		}
@@ -339,7 +343,7 @@
 	function fnCalCartCount(type, ths){
 		var stat = $(ths).parents("td").find("span[name='count']").text();
 		var num = parseInt(stat,10);
-		var price = parseInt($(ths).parents("tr").find("span[name='price']").text());
+		var price = parseInt($(ths).parents("tr").find("span[name='price']").text().replace(",",""));
 		var oneprice = parseInt(price,10)/num;
 		
 		if(type=='minus'){
@@ -351,24 +355,21 @@
 			$(ths).parents("td").find("span[name='count']").text(num);
 			
 			const minus = price - oneprice;
-			$(ths).parents("tr").find("span[name='price']").text(minus);
-			const minustotal = parseInt($("#total").text()) - oneprice;
-			$("#total").text(minustotal);
+			$(ths).parents("tr").find("span[name='price']").text(minus.toLocaleString());
+			const minustotal = parseInt($("#totalSum").text().replace(",","")) - oneprice;
+			$("#totalSum").text(minustotal.toLocaleString());
 
 		}else{
 			num++;
 			$(ths).parents("td").find("span[name='count']").text(num);
-			
             const plus = price + oneprice;
-            $(ths).parents("tr").find("span[name='price']").text(plus);
-            const plustotal = parseInt($("#total").text()) + oneprice;
-			$("#total").text(plustotal);
+            $(ths).parents("tr").find("span[name='price']").text(plus.toLocaleString());
+            const plustotal = parseInt($("#totalSum").text().replace(",","")) + oneprice;
+			$("#totalSum").text(plustotal.toLocaleString());
 		}
 		
 		const customProductNo = $(ths).attr('data-no');
-		console.log(customProductNo);
 		const count = $(ths).parents("td").find("span[name='count']").text();
-		console.log(count);
 		
 		$.ajax({
 			url:"/purchase/api/updateCustomProduct/"+customProductNo+"/"+count,
@@ -412,7 +413,7 @@
 					
 	               $("#customProductNo").val(data.customProduct.customProductNo);
 	               $("#productName").text(data.customProduct.product.name);
-	               $("#customPrice").text(data.customProduct.product.price);
+	               $("#customPrice").text((data.customProduct.product.price).toLocaleString());
 		        }
 	    	});	
 			
@@ -539,13 +540,13 @@
 	
 			$(ths).closest("div").find("span[name='gram']").text(num);
 			
-	        const minus = parseInt($("#customPrice").text()) - calprice;
+	        const minus = parseInt($("#customPrice").text().replace(",","")) - calprice;
 	        $("#customPrice").text(minus);
 		}else{
 			num+=10;
 			$(ths).closest("div").find("span[name='gram']").text(num);
 	
-	        const plus = parseInt($("#customPrice").text()) + calprice;
+	        const plus = parseInt($("#customPrice").text().replace(",","")) + calprice;
 	        $("#customPrice").text(plus);
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text(num));
@@ -584,9 +585,10 @@
 		               $(".search").val('');
 		               $(".plusparts").append(parts); 
 		                              
-		                const productprice = $("#customPrice").text();
+		                const productprice = $("#customPrice").text().replace(",","");
+		                console.log("productprice"+productprice);
 		                const result = parseInt(productprice)+parseInt(data.price);
-		                $("#customPrice").text(result);
+		                $("#customPrice").text(result.toLocaleString());
 			        }
 				})
 			}else{
@@ -662,8 +664,13 @@
 	
 	//추가재료 삭제
 	function fncClose(ths){
-		 $(ths).closest("div").parent().remove();
+		let partsPrice = parseInt($(ths).closest("div").parent().find("span[name='partsprice']").text());
+		let count = parseInt($(ths).closest("div").parent().find("span[name='gram']").text())/10;
+		let customPrice = $('#customPrice').text().replace(",","");
+		let total = customPrice - (partsPrice*count);
+		$('#customPrice').text(total.toLocaleString());
 		
+		$(ths).closest("div").parent().remove();		
 	}
 	
 	//커스터마이징 한 상품 수량변경

@@ -172,7 +172,7 @@
 						  	<span id ="count" name="count"> ${cpd.count} </span> 
 						  </td>
 						  <td align="left">
-						  <span id="customprice" name="customPrice">${cpd.price*cpd.count}</span>원</td>
+						  <span id="customprice" name="customPrice"><fmt:formatNumber type="number" maxFractionDigits="0" value="${cpd.price*cpd.count}"/></span>원</td>
 						  <c:set var="sum" value="${sum+cpd.price*cpd.count}" />
 						  
 					  </tr>  

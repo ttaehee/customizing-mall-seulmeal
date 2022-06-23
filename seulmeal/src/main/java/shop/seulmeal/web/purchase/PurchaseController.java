@@ -164,17 +164,6 @@ public class PurchaseController {
 			// 추가 상품
 			String plusPartsNo, String plusPrice, String plusGram){
 		
-		System.out.println("/updateCustomProduct Post : "+customProduct);
-		
-		System.out.println("insertCustomProduct POST : "+customProduct);
-
-		System.out.println("========== minusNo : "+minusNoA);
-		System.out.println("========== minusName : "+minusNameA);
-
-		System.out.println("========== plusPartsNo : "+plusPartsNo);
-		System.out.println("========== plusPrice : "+plusPrice);
-		System.out.println("========== plusGram : "+plusGram);
-		
 		purchaseService.updateCustomProductCount(customProduct);
 		purchaseService.deleteCustomParts(customProduct.getCustomProductNo());
 		

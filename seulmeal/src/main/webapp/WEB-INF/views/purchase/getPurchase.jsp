@@ -91,7 +91,7 @@
 	           		 <img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'>
 	           	</a>
 	              <p class="card-text">
-	              	  ${cpd.price}원<br/>
+	              	  <fmt:formatNumber type="number" maxFractionDigits="0" value="${cpd.price}"/>원<br/>
 	              	  ${cpd.count}개<br/><br/>
 		              <c:forEach var="pp" items="${cpd.plusParts}">
 					  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
@@ -136,9 +136,9 @@
 										(${user.userName}님은 슬밀프랜드 등급으로<br/> 구매금액의 0.5%가 적립됩니다)</c:when>
 										<c:when test="${user.grade eq '1'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.01}" />P<br/>
 										(${user.userName}님은 슬밀패밀리 등급으로<br/> 구매금액의 1%가 적립됩니다)</c:when>
-										<c:when test="${user.grade eq '2'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.03}" />P<br/>
+										<c:when test="${user.grade eq '2'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.03}" />P<br/>
 										(${user.userName}님은 슬밀히어로 등급으로<br/> 구매금액의 3%가 적립됩니다)</c:when>
-										<c:when test="${user.grade eq '3'}"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${price*0.05}" />P<br/>
+										<c:when test="${user.grade eq '3'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.05}" />P<br/>
 										(${user.userName}님은 슬밀마스터 등급으로<br/> 구매금액의 5%가 적립됩니다)</c:when>
 									</c:choose><br/>
 							</div>
@@ -152,9 +152,9 @@
 					<div class="card-body">
 					    <h5 class="card-title">결제정보</h5>
 					    <p class="card-text">
-							<div> <c:out value="총 구매금액 : ${price}원"></c:out> </div>
-							<div>포인트사용 :  ${purchase.usePoint}P </div>
-							<div>총 결제금액 : ${purchase.amount}원 </div>
+							<div> 총 구매금액 : <fmt:formatNumber type="number" maxFractionDigits="0" value="${price}"/>원</div>
+							<div>포인트사용 :  <fmt:formatNumber type="number" maxFractionDigits="0" value="${purchase.usePoint}"/>P </div>
+							<div>총 결제금액 : <fmt:formatNumber type="number" maxFractionDigits="0" value="${purchase.amount}"/>원 </div>
 						</p>
 					</div>
 				</div>
@@ -178,7 +178,7 @@
 
 		</div>
 		<div class="container" style="display: flex; justify-content: center;">
-			<button type="button" class="bt" onClick="window.location.href='/purchase/getListPurchase'">확인</button>
+			<button type="button" class="bt" onClick="window.location.href='/purchase/getListCustomProduct/1'">확인</button>
 		</div>
 		</div>
 	</div>
