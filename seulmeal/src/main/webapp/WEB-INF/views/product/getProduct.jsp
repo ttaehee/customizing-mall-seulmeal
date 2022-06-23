@@ -153,6 +153,7 @@ div{ -webkit-touch-callout: none;
 	<!-- ToolBar Start /////////////////////////////////////-->
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 	<!-- ToolBar End /////////////////////////////////////-->
+	${url }
 	<div class="container" style="margin-top: 20px;">
 		<div class="row">
 			<div class="col-md-6">

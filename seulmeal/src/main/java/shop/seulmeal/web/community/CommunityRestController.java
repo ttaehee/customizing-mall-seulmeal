@@ -10,14 +10,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +37,7 @@ import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Relation;
+import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.CommunityMapper;
 import shop.seulmeal.service.user.UserService;
@@ -405,53 +410,7 @@ public class CommunityRestController {
 		return (List<Relation>) map.get("blockList");
 	}
 
-	// 프로필 이미지 저장 및 변경	// oo
-	@PostMapping("updateProfileImage")
-	public User updateProfileImage(MultipartFile imageFile, HttpSession session) throws Exception {
-
-		String imageFilePath = null;
-//		String absolutePath = new File("").getAbsolutePath()+"\\";
-		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
-		File file = new File(path);
-
-		User user = (User)session.getAttribute("user");
-
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		if (!imageFile.isEmpty()) {
-			String contentType = imageFile.getContentType();
-			String originalFileExtension = null;
-
-			if (contentType.contains("image/jpeg")) {
-				originalFileExtension = ".jpg";
-			} else if (contentType.contains("image/png")) {
-				originalFileExtension = ".png";
-			}
-
-			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
-			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
-			System.out.println("//////userId: " + user.getUserId());
-			System.out.println("//////imageFilePath: " + imageFilePath);
-			System.out.println("//////originalFileExtension: " + originalFileExtension);
-			System.out.println("//////getOriginalFilename(): " + imageFile.getOriginalFilename());
-
-			// 이미지 파일 로컬에 저장
-			file = new File(imageFilePath);
-			imageFile.transferTo(file);
-
-			// 저장한 이미지 파일을 User session 저장 또는 수정
-			user.setProfileImage(imageFileName);
-
-			// 변경된 session의 유저정보를 db에 반영
-			userService.updateProfile(user);
-
-		}
-		return user;
-
-	}
-	
+	/*
 	// 프로필 이미지 삭제		// oo
 	@PostMapping("deleteProfileImage")
 	public ResponseEntity<User> deleteProfileImage(HttpSession session) throws Exception {
@@ -485,6 +444,53 @@ public class CommunityRestController {
 		userService.updateProfile(user);
 
 		return new ResponseEntity<User>(user, HttpStatus.OK);
-	}
+	}*/
 
+	
+	// 프로필 이미지 삭제		// oo
+	@PostMapping("deleteProfileImage")
+	public String deleteProfileImage(HttpSession session) throws Exception {
+
+		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		String imageFileName = "default_profile.jpg";
+		String imageFilePath = path + "/" + imageFileName; 
+		
+		return imageFilePath;
+	}
+	
+	@PostMapping("insertReportPost") // o
+	public ResponseEntity<Report> insertReportPost(@RequestBody Report report, @AuthenticationPrincipal User user) {
+		//JSONObject json = new JSONObject();
+		System.out.println("//////: "+ report);
+		report.setReporterId(user.getUserId());
+		communityService.insertReportPost(report);
+		
+		return new ResponseEntity<Report>(report, HttpStatus.OK);
+	}
+	
+	@GetMapping("checkReport/{postNo}")
+	public ResponseEntity<JSONObject> checkReport(@PathVariable String postNo, @AuthenticationPrincipal User user, Report report){
+		JSONObject json = new JSONObject();
+		
+		report.setPostNo(new Integer(postNo));
+		report.setReporterId(user.getUserId());
+		int r = communityService.checkReport(report);
+		json.put("count", r);
+		if(r != 0) {
+			return new ResponseEntity<JSONObject>(json, HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+	}
+	
+	@GetMapping("deleteReportPost/{postNo}")
+	public ResponseEntity<Integer> deleteReportPost(@PathVariable String postNo) {
+
+		int r = communityService.deleteReportPost(new Integer(postNo));
+		if(r != 0) {
+			return new ResponseEntity<Integer>(r, HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<Integer>(r, HttpStatus.OK);
+	}
 }

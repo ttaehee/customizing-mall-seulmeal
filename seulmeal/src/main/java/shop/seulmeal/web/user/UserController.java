@@ -110,7 +110,8 @@ public class UserController {
 		
 		String imageFilePath = null;
 //		String absolutePath = new File("").getAbsolutePath()+"\\";
-		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		//String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/"; 
 		File file = new File(path);
 
 		

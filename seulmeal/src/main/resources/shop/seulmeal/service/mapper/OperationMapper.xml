@@ -384,7 +384,7 @@
 		TO_CHAR(TO_DATE(reg_date), 'YYYY-MM') as MONTHLYDATA
 		FROM ${table}
 		<where>
-			reg_date &gt;= '22/01/01' AND reg_date &lt; '23/01/01'
+			reg_date &gt;= '2022-01' AND reg_date &lt; '2023-01'
 		</where>
 		GROUP BY TO_CHAR(TO_DATE(reg_date), 'YYYY-MM')
 		ORDER BY MONTHLYDATA
@@ -394,9 +394,19 @@
 		SELECT sum(price) as count,
 		TO_CHAR(TO_DATE(reg_date), 'YYYY-MM') as MONTHLYDATA
 		FROM purchase
-		WHERE reg_date &gt;= '22/01/01' AND reg_date &lt; '23/01/01'
+		WHERE reg_date &gt;= '2022-01' AND reg_date &lt; '2023-01'
 		GROUP BY TO_CHAR(TO_DATE(reg_date), 'YYYY-MM')
 		ORDER BY MONTHLYDATA
+	</select>
+	
+	<select id="countAdmin" resultType="map">
+		SELECT prod.productCount, pur.purchaseCount, event.eventCount, query.answerWaitCount, report.reportCount
+		FROM
+		(SELECT COUNT(product_no) productCount FROM product WHERE stock = 0 AND status = 0) prod,
+		(SELECT COUNT(purchase_no) purchaseCount FROM purchase WHERE purchase_status = 1) pur,
+		(SELECT COUNT(post_no) eventCount FROM post WHERE post_status=2 AND end_date &gt; SYSDATE AND status = '0') event,
+		(SELECT COUNT(post_no) answerWaitCount FROM post WHERE post_status =3 AND status=0 AND answer_status=0) query,
+		(SELECT COUNT(report_no) reportCount FROM report WHERE status=0) report
 	</select>
 	
 </mapper>

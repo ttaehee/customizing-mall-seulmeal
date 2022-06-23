@@ -651,9 +651,14 @@
 			</where>
 	</select>
 
-	
-
-
+	<select id="checkReport" resultType="int">
+		SELECT count(report_no)
+		FROM report
+		<where>
+			post_no = #{postNo}
+			AND reporter_id =#{reporterId}
+		</where>
+	</select>
 
 
 

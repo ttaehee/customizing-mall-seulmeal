@@ -29,7 +29,7 @@
                       <div class="modal-body">
                           
                               <!-- 차단 유저 리스트 -->
-                                  <c:forEach var="relation" items="${blockList}">
+                                  <c:forEach var="relation" items="${blockMap.blockList}">
                                       <div class ="block-li">
                                           <div class="blockUser_section" >
                                           

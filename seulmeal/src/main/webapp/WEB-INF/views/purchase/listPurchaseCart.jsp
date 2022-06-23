@@ -25,8 +25,8 @@
 		h2:after {
 			content: "";
 			display: block;
-			width: 170px;
-			border-bottom: 1px solid #bcbcbc;
+			width: 140px;
+			border-bottom: 2px solid #FF4500;
 			margin: 20px 0px;
 			padding:0px 10px 0px 10px;
 		}
@@ -35,27 +35,18 @@
 	        content: "";
 	        display: block;
 	        width: 250px;
-	        border-bottom: 1px solid #bcbcbc;
+	        border-bottom: 2px solid #FF4500;
 	        margin: 20px auto;
 		}
 		
 		button:hover{
-			color: #FF607F;
+			color: #FF4500;
 		}
 		
 		.thumbnail{
 			width: 100px;
 			height: 100px;
 		}	
-		
-		h6:after {
-	        content: "";
-	        display: block;
-	        width: 80px;
-	        border-bottom: 2px solid #000000;
-	        margin: 20px 0px;
-	        margin-top: 10px;
-		}
 		
 		.close {
 		  display:inline-block;
@@ -87,7 +78,7 @@
 		 	<h2>장바구니</h2>
 		 </div>
 		 <div class="col-xs-4">
-		 	<div style="border:1px solid; padding:1px 0px 10px 12px; margin:20px; width:600px; margin-top:80px; border-radius: 3px; border-color: #969696;">
+		 	<div style="border:1px solid; padding:1px 0px 10px 12px; margin-left:60px; margin-right:40px; width:600px; margin-top:80px; border-radius: 3px; border-color: #969696;">
 		 			<div class="row">
 						 <div class="col-xs-4" style="padding: 7px 0px 0px 0px;">
 						 	<div style="border:1px solid; padding:10px; margin:20px; width:85px; border-radius: 4px; border-color: #969696;">
@@ -103,7 +94,7 @@
 									<c:when test="${user.grade eq '3'}">슬밀마스터</c:when>
 								 </c:choose> 
 								 ]입니다.</div>
-		 					<hr style="border:1px solid; width:400px; bottom:15px"/>
+		 					<hr style="border:1px solid #FF4500; width:400px; bottom:15px"/>
 		 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : ${user.totalPoint} P</div>
 		 				</div>				
 		 			</div>
@@ -122,7 +113,7 @@
 	        <thead>
 	          <tr>
 	            <th align="center">NO</th>
-	            <th align="center">이미지</th>
+	            <th align="right">Image</th>
 	            <th align="center">상품명</th>
 	            <th align="center">옵션</th>
 	             <th align="center">수량</th>
@@ -173,7 +164,7 @@
 	      <div class="container" style="justify-content: center; display:flex;">
 				<h5>결제예정 금액 :  <span id="total">${total}</span>원</h5>
 				<div style="border:none; float:right">
-				<button class="button" id="order" style="margin-left:200px; padding: 5px; font-size:20px; border:1px #FF4500; background-color:white;" onclick="fncInsertPurchase()">전체상품주문</button>
+				<button class="button" id="order" style="margin-left:200px; background-color:#FFF; border-radius:5px; border:2px solid #FF4500; font-size:22px; width: 240px" onclick="fncInsertPurchase()">전체상품 주문</button>
 				</div>
 		</div>
 		

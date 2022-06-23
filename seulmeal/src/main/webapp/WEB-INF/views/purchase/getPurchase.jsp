@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -73,7 +74,7 @@
 	</style>
 	 
 	 <div class="container">
-	 <h2>${user.userName}님의 구매정보 
+	 <h2>${purchase.user.userName}님의 구매정보 
 	</h2>
 	 <div style="font-size: 19px;">&ensp;${purchase.regDate} [${purchase.purchaseNo}]</div>
 
@@ -86,7 +87,9 @@
 	              ${cpd.product.name}
 	            </div><br/>
 	            <div>
-	            <img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'>
+	            <a href="/product/getProduct/${cpd.product.productNo}" class="btn btn-primary">
+	           		 <img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'>
+	           	</a>
 	              <p class="card-text">
 	              	  ${cpd.price}원<br/>
 	              	  ${cpd.count}개<br/><br/>
@@ -163,7 +166,9 @@
 					    <h5 class="card-title">배송정보</h5>
 					    <p class="card-text">
 							<div>받으시는분 : ${purchase.name} </div>
-							<div>주소 : ${purchase.address} </div>
+							<div>주소 : 
+							${fn:replace(purchase.address, '/', '<br/>')}
+							</div>
 							<div>휴대전화 : ${purchase.phone} </div>
 							<div>배송메시지 : ${purchase.message} </div>
 						</p>

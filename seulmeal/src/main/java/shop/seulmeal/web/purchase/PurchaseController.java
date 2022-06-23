@@ -122,7 +122,6 @@ public class PurchaseController {
 			
 			return "purchase/insertPurchase";
 		}
-		
 	}
 	
 	//장바구니 리스트 
@@ -274,12 +273,15 @@ public class PurchaseController {
 		
 	}	
 	
+	//구매상세
 	@GetMapping("getPurchase/{purchaseNo}")
-	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) {
+	public String getPurchase(@PathVariable int purchaseNo, Purchase purchase, Model model) throws Exception {
 		
 		System.out.println("/getCustomProduct : "+ purchaseNo);
 		
 		purchase=purchaseService.getPurchase(purchaseNo);
+		User user=userService.getUser(purchase.getUser().getUserId());
+		purchase.setUser(user);
 		
 		model.addAttribute(purchase);
 		

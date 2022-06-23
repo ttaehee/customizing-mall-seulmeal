@@ -30,53 +30,106 @@
 		content: "";
 		display: block;
 		width: 370px;
-		border-bottom: 2px solid #FF4500;
+		border-bottom: 2px solid #FFF;
 		margin: 10px 0px;
 		padding:0px 10px 0px 10px;
 	}
 	
-	 tbody { background: #fff; }
-		.table-hover {
-	  	width: 100%;
- 		border-top: 1px solid #bcbc;
- 		border-collapse: collapse;
-	}  
-	
+	 tbody { 
+	 	background: #fff; 
+	 }
+
 	th, td {
 	  border-bottom: 1px solid #bcbc;
 	  padding: 10px;
 	}
-		
+	
+	/*테이블 로우 글자색 호버*/
+	.link:hover{
+		color: #FF4500;
+	}
+	
+	/*구매내역 검색조건 버튼*/
+	.status{
+		border: 2px solid #FF4500;
+		border-radius: 7px;
+		background-color: #FFF;
+		padding: 4px;
+	}
+	
+	
+	.status:hover{
+		color: #FF4500;
+		background-color:none;
+	}
+	
+	/*테이블 x버튼*/
+	.delete{
+		font-size: 22px;
+		padding: 10px;
+	}
+
+	.delete:hover{
+		color: #FF4500;
+	}
+	
+
 	
 	</style>
 
 
-	 <br/>
 	 <div class="container">
 	 
-	 <br/>
-	 <h2>${user.userName}님의 구매내역 조회
-	 </h2><br/>
-	 <div class="col-md-6 text-right">
-	    <form class="form-inline" name="detailForm">
-	     <input type="hidden" name="userId" value="${user.userId}"/>
-		 <div class="form-group">
-			 <button class="btn btn-outline-primary status" onclick="location.href='/purchase/getListPurchase'">전체</button>
-			 <button class="btn btn-outline-primary status" name="searchCondition" value="0">오늘</button>
-			 <button class="btn btn-outline-primary status" name="searchCondition" value="1">1주일</button>
-			 <button class="btn btn-outline-primary status" name="searchCondition" value="2">1개월</button>
-			 <button class="btn btn-outline-primary status" name="searchCondition" value="3">3개월</button>
-		  </div> 
-		</form>
-   	</div><br/>
+	 <div class="row">
+		 <div class="col-xs-6" style="padding: 100px 0px 0px 40px;">
+	 
+		 <h2>${user.userName}님의 구매내역 조회</h2>
+		    <form class="form-inline" name="detailForm">
+		     <input type="hidden" name="userId" value="${user.userId}"/>
+			 <div class="form-group text-right">
+				 <button class="status" onclick="location.href='/purchase/getListPurchase'">전체</button>&emsp;
+				 <button class="status" name="searchCondition" value="0">오늘</button>&emsp;
+				 <button class="status" name="searchCondition" value="1">1주일</button>&emsp;
+				 <button class="status" name="searchCondition" value="2">1개월</button>&emsp;
+				 <button class="status" name="searchCondition" value="3">3개월</button>
+			  </div> 
+			</form>
+	   	</div>
+
+		 <div class="col-md-3">
+		 	<div style="border:1px solid; padding:1px 0px 10px 12px; width:550px; margin-top:80px; margin-left:15px; border-radius: 10px; border-color: #969696;">
+		 		<div class="row">
+					<div class="col-xs-3" style="padding: 7px 0px 0px 0px;">
+					 	<div style="border:1px solid; padding:10px; margin:20px; width:85px; border-radius: 4px; border-color: #969696;">
+	 						<div text-align="center">혜택정보</div>
+	 					</div>
+	 				</div>
+	 				<div class="col-xs-6" style="padding: 15px 0px 0px 0px;">
+	 					<div align="center">${user.userName}님의 회원등급은 [
+	 						<c:choose>
+								<c:when test="${user.grade eq '0'}">슬밀프랜드</c:when>
+								<c:when test="${user.grade eq '1'}">슬밀패밀리</c:when>
+								<c:when test="${user.grade eq '2'}">슬밀히어로</c:when>
+								<c:when test="${user.grade eq '3'}">슬밀마스터</c:when>
+							 </c:choose> 
+							 ]입니다.</div>
+	 					<hr style="border:1px solid #FF4500; width:370px; bottom:15px"/>
+	 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : ${user.totalPoint} P</div>
+	 				</div>			
+		 		</div>
+		 	</div>
+		 </div>
+		 
+		</div><br/>
+	</div>
 			
-	
+	<div class="container">
 	 <table class="table table-hover" id="list" style="width: 1000px;">
  
         <thead>
           <tr>
             <th align="center">구매일자 [구매번호]</th>
-            <th align="center">이미지</th>
+            <th align="right"></th>
             <th align="center">수량</th>
             <th align="center" >상품명</th>
             <th align="center" >옵션</th>
@@ -90,8 +143,8 @@
 			<c:forEach var="purchase" items="${purchaseList}">
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">	
-			      <td align="center"><br/><br/>
-			      	<a href="/purchase/getPurchase/${purchase.purchaseNo}">${purchase.regDate}&ensp;[${purchase.purchaseNo}]</a><br/><br/>
+			      <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''"><br/><br/>
+			      	${purchase.regDate}&ensp;[${purchase.purchaseNo}]<br/><br/>
 			      		<div>
 			      		<c:choose>
 							<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
@@ -103,18 +156,22 @@
 						</c:choose>
 						</div>
 			      </td>
-				  <td align="left"><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
-				  <td align="center">${cpd.count}</td>
-				  <td align="left">${cpd.product.name}</td>
 				  <td align="left">
+				  	<a href="/product/getProduct/${cpd.product.productNo}" class="btn btn-primary">
+				  		<img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'>
+				  	</a>
+				  </td>
+				  <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''">${cpd.count}</td>
+				  <td class="link" align="left" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''">${cpd.product.name}</td>
+				  <td class="link" align="left" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''">
 				  <c:forEach var="pp" items="${cpd.plusParts}">
 				  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
 				  	</c:forEach>
 				  <c:forEach var="mp" items="${cpd.minusParts}">
 				  	- ${mp.minusName} <br/>
-				  	</c:forEach> 
+				  	</c:forEach>
 				  </td>
-				  <td align="center"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${cpd.price}"/>원</td>
+				  <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${cpd.price}"/>원</td>
 				  <c:set var="price" value="${price+cpd.price*cpd.count}" />
 			 	  <td>	
 		          	<a type="button" class="delete" data-value="${purchase.purchaseNo}">&ensp;x</a>
@@ -309,8 +366,7 @@
 				
 		})//window.scroll()
 			
-	});
-  	 
+	});	
 
       
 </script>

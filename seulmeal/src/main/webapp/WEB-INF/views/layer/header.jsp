@@ -28,6 +28,9 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- kakao -->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
  
 <!-- jquery -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
@@ -82,6 +85,8 @@
 			<h4>문의 답변대기</h4>
 		</div>
 	</c:if> -->
+	<c:if test="${prevPage !='admin'}">
+
 	<div class="header" style="background:#fff; padding-top:10px; ">
 	<div style="display:flex; justify-content:right; margin-left:10px; margin-right:10px;">
 		
@@ -150,7 +155,7 @@
 	          <a class="nav-link headerNav" href="#">베스트</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link headerNav" href="/operation/getListOperation/2">특가/이벤트</a>
+	          <a class="nav-link headerNav" href="/operation/getListOperation/2/0/0">특가/이벤트</a>
 	        </li>
 	        <li class="nav-item dropdown">
 	          <a class="nav-link dropdown-toggle headerNav" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -164,15 +169,24 @@
 	        </li>
 	      </ul>
 	      
+	
 	      <!-- 검색창 -->
 		<form class="searchProduct" id="searchProduct">
 			<div style="display:flex;">	
-				<div class="form-outline">
+				<div class="form-outline" style="margin-top: 5px;">
 					<input name="searchKeyword" type="search" class="form-control searchP" placeholder="원하는 상품 검색" />
 				</div>		  
-				<button onclick="searchProduct()" type="submit" class="btn btn-primary">
+				<button style="font-size: 20px;" onclick="searchProduct()" type="submit" class="btn btn-primary">
 					<i class="bi bi-search"></i>
 				</button>
+				<c:if test="${ !empty user }">
+					<button style="font-size: 25px;" onclick="window.location.href='/purchase/getListCustomProduct/1'" type="button" class="btn btn-primary">
+						<i style="" class="bi bi-cart3"></i>
+					</button>
+				</c:if>				
+				<button style="font-size: 20px;" onclick="sendLink()" type="button" class="btn btn-primary">
+					<img style="width: 30px; height: 30px;" src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" />
+				</button>				
 			</div>
 		</form> 
 	    </div>
@@ -181,8 +195,29 @@
 	</nav> 
 	
 
-
-	
+</c:if>
+<script>
+    Kakao.init("5a91dcc078a5d95d570495f33c363abb");   // 아까 복사해둔 JavaScript 키
+    function sendLink() {
+    	console.log("${url}")
+      Kakao.Link.sendCustom({
+        templateId: 78625,   // 복사해둔 템플릿 ID
+        templateArgs: {
+        	<c:if test="${empty product}">
+        		title: "SeulMeal MealKit",
+        	</c:if>
+        	<c:if test="${!empty product}">
+	    		title: "${product.name}",
+	    	</c:if>   
+          description: "커스텀이 가능한 슬밀 밀키트 몰입니다.",
+			<c:if test="${!empty product}">
+				imageUrl: "http:www.seulmeal.shop/resources/attachments/${product.thumbnail}",
+			</c:if> 
+          url : "${url}",
+        },
+      });
+    }
+</script>
 <script type="text/javascript">	
 	window.onload = function(){
 		toastShow("t","1");

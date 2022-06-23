@@ -16,6 +16,15 @@
 	    <div class="row flex-nowrap">
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
+				${prevPage }
+				<div style="margin-bottom: 20px;">
+					<span>블랙리스트 유저 : 0</span>			
+					<span>주문한 상품 : ${count.PURCHASECOUNT}</span>
+					<span>재고없는 상품 : ${count.PRODUCTCOUNT}</span>					
+					<span>진행중인 이벤트 : ${count.EVENTCOUNT}</span>
+					<span>답변대기중인 문의 : ${count.ANSWERWAITCOUNT}</span>
+					<span>신고된 게시글 : ${count.REPORTCOUNT}</span>
+				</div>
 	            <iframe class="frame" style="height:100vh; width:100%; display:none;" src="/product/admin/listProduct"></iframe>
 	            <!-- user -->
 	            <iframe id="userListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/user/listUser/1"></iframe>
@@ -27,7 +36,10 @@
 	            <iframe id="foodCategoryListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/listFoodCategory"></iframe>
 	            
 	            <!-- community -->
-	            <iframe id="reportPostFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/community/getListReportPost"></iframe>
+	            <iframe id="reportPostFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/community/getListReportPost/0"></iframe>
+	            
+	            <!-- purchase -->
+	            <iframe id="saleFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/purchase/getListSale/1"></iframe>
 	            
 	            <!-- operation -->
 	            <iframe id="noticeFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/1"></iframe>
@@ -97,6 +109,11 @@
 			$("#foodCategoryListFrame").css("display","block");
 		})
 		
+		// purchase
+		$("#sale").on("click",()=>{
+			$(".frame").css("display","none");
+			$("#saleFrame").css("display","block");
+		})
 		
 		// 커뮤니티
 		$("#reportPost").on("click",()=>{

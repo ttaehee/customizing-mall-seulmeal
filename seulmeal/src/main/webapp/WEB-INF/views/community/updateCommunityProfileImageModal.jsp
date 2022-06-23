@@ -4,45 +4,42 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>프로필 정보 수정/삭제 모달창</title>
+<title>프로필 이미지 수정/삭제 모달창</title>
 </head>
 <body>
 
-			<!-- 헤더 -->
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">프로필 이미지 바꾸기</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
+		<!-- Modal -->
+		<div id="updateProfileImageModal" class="modal fade"  aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static" tabindex="-1" role="dialog">
+			<div class="modal-dialog" >
+				<div class="modal-content" style="width:460px; border-radius: 15px;">
 
-			<!-- 바디 -->
-				<div class="modal-body">
-					<p>					
-						<form action="/community/api/updateProfileImage" method="POST" enctype="multipart/form-data">
-								<div>
-									<input type="file" name="imageFile" />
-									<button type="submit" class="btn btn-primary">
-										사진 업로드
-									</button>
-								</div>
-						</form>
-					</p>
-					
-					<hr>
-					
-					<p>
-						<a href="#" role="button" id="deleteProfileImageBtn"
-							class="btn btn-secondary popover-test" title="Popover title" >현재 사진 삭제</a>
-					</p>
-				</div>
-
-			<!-- 푸터 -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-				</div>
+					<!-- 헤더 -->
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+	
+					<!-- 바디 -->
+					<div class="modal-body" style="padding:0;"><br>
+						<div class="filebox" style="text-align: center">					
+							<label for="upload_file" style="margin:0px;">사진 업로드</label>
+							<input id = "upload_file" type="file" name="imageFile" style="position: absolute;" />
+						</div>
+						<hr>
+						<div style="text-align: center; height:24px; margin-bottom: 20px;" >
+							<a href="#" role="button" id="deleteProfileImageBtn"
+								class="btn btn-secondary popover-test" title="Popover title" >현재 사진 삭제</a>
+						</div>
+						<hr>
+						<div style="margin:10px; text-align: center;">
+							<button type="button"  class="btn btn-secondary" data-dismiss="modal">취소</button>
+						</div>
+					</div>	
 			
-
+				</div>
+			</div>
+		</div>
 </body>
 </html>

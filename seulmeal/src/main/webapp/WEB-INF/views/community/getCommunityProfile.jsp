@@ -266,11 +266,6 @@ ul#profile-Arrange {
 	cursor:pointer;
 }
 
-div.modal-content{
-	width:120%;
-}
-
-
 .profile-card{
     width: 400px;
     display:flex;
@@ -322,6 +317,10 @@ div.modal-content{
     opacity: 1;
     font-weight: 700;
     font-size: 12px;
+}
+
+div.modal-content{
+	border-radius: 17px;
 }
 
 
@@ -390,7 +389,7 @@ div.modal-content{
 	<!--  div 1. 프로필 -->
 		<div class="profile" >
 				<div id="profile-link"> <img id="profile-img"
-					src="/resources/attachments/profile_image/${profileUser.profileImage}" onerror="/resources/attachments/profile_image/default_profile.jpg"/>
+					src="/resources/attachments/profile_image/${profileUser.profileImage}" />
 				</div>
 				<div id="profile-marg">
 					<span id="profile-name"> ${profileUser.nickName} </span>
@@ -551,44 +550,11 @@ div.modal-content{
 			<!-- 무한스크롤 / RestController postList가 붙는 곳 -->
 
 		</div>
-
-
-
 	</section>
+	
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
 
 	<script type="text/javascript">
-
-	/*
-	$("#insertFollowBtn").on("click",
-			function() {
-
-				let relationUserId = $("#followUserId").data("value");
-
-				alert("relationUserId: " + relationUserId);
-				console.log("relationUserId: " + relationUserId);
-
-				$.ajax({
-					url : "/community/api/insertFollow/"+relationUserId,
-					method : "POST",
-					success : function(followCnt, status) {
-
-						//(status : sucess or err)
-						alert("status: " + status);
-						console.log("status: " + status);
-
-						// 응답받은 strData
-						alert("followCnt : " + followCnt);
-						console.log("followCnt : " + followCnt);
-						
-						$(".followTotalCount").text(followCnt);
-						
-					}, error : function(jqXHR, status){
-						console.log(jqXHR);	// 응답 메시지
-						console.log(status); // "errror"
-					}
-				});
-
-			});*/	
 
 	// 팔로우
 	function insertFollowBtn(e){
@@ -601,6 +567,8 @@ div.modal-content{
 			success : function(data, status, jqXHR) {
 
 				console.log("data : " + data);
+				console.log(data.userFollowCnt);
+				console.log(data.relationUserFollowerCnt);
 				console.log("status: " + status);
 				console.log("jqXHR: " + jqXHR);
 				
@@ -717,8 +685,6 @@ div.modal-content{
 			fade : true,
 			cssEase : 'linear',
 			arrows : true
-			//prevArrow : "<button type='button' class='slick-prev pull-left'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
-			//nextArrow : "<button type='button' class='slick-next pull-right'><i class='fa fa-angle-right' aria-hidden='true'></i></button>"
 					});
 	}
 
@@ -729,6 +695,171 @@ div.modal-content{
 			});
 
 
+	// 게시글 무한스크롤
+	$(function(){
+		
+		let currentPage = 2;
+		
+		let maxPage = ${resultPage.maxPage};
+		let userId = '${profileUser.userId}';
+		
+		$(window).scroll(function(){
+			
+			let $window = $(this);
+			let scrollTop = $window.scrollTop();
+			let windowHeight = $window.height();
+			let documentHeight = $(document).height();		
+			
+			if(scrollTop + windowHeight + 1 >= documentHeight && currentPage <= maxPage){
+				setTimeout(getListPost,200);//0.2초
+			}
+			
+				function getListPost(){
+								
+					$.ajax({
+						url:"/community/api/getListPost?currentPage="+currentPage+"&userId="+userId,
+						type:"GET",
+						datatype:"json",
+						success: function(data, status, jqXHR){
+
+							console.log("success status: "+ status);
+							console.log("data: " + data);
+							console.log("jqXHR: "+ jqXHR);
+							console.log("json/stringify: "+JSON.stringify(data));						
+							//const posts = JSON.stringify(data);	
+							
+									
+							for(let i = 0; i<data.length; i++){
+								
+								let postCardHtml = `
+									<div class="post-card">
+									    <div class="info">
+									        <div class="user">
+									            <div class="profile-pic">
+									                <a class ="profile-link">
+									                    <img class="profile-img"/>
+									                </a>
+									            </div>                  
+									            <p id = "post_nickname" class="username">
+									                <a id= "profile-nick" class ="profile-link2" ></a>
+									            </p>
+									        </div>
+									        <i id = "option_icon" class="bi bi-three-dots"></i>
+									    </div>
+									    <div class="your-class-m">
+									    <div class="your-class\${currentPage}">
+									    	
+									    </div>
+									    </div>
+									    <div class="post-content">
+									        <div class="reaction-wrapper">
+									            <i class="bi bi-heart icon" data-value=""></i>
+									            <i class="bi bi-heart-fill" style="display:none;"></i>
+									            <i class="bi bi-eye icon"></i>
+									            <i class="bi bi-chat-left icon"></i>
+									        </div>
+									        <p class="likes">좋아요 <span class="like-cnt"></span></p>	
+									        
+									        <div class="post-time"></div>
+									    </div>
+									</div>
+									`;
+								
+								let div1 = `
+											<a class ="post-link">
+												<img id = "post-img" class="post-image"/>
+											</a>
+											`;
+										
+								let div2 = `<div class="post-list-title"></div>
+							            <div id="post-list-content">
+							                <a class="post-shortContent"></a>								
+							            </div>`;
+								
+							    let div3 = `<div class="description"></div>`;
+								
+								
+								let post = data[i];
+																
+								let postCard = $($.parseHTML(postCardHtml));
+								let div_1 = $($.parseHTML(div1));
+								let div_2 = $($.parseHTML(div2));
+								let div_3 = $($.parseHTML(div3));
+								
+								/*
+								console.log(postCard)
+								console.log(div_1)
+								console.log(div_2)
+								console.log(div_3)
+								*/
+
+								console.log(post.attachments == "")
+								console.log(post.attachments != "")
+								
+								if(post.attachments == ""){
+									
+									$(postCard).find(".your-class-m").append(div_2);
+
+									$(postCard).find(".post-list-title").text(post.title);
+									$(postCard).find(".post-shortContent").attr("href","/community/getPost/"+post.postNo)
+									$(postCard).find(".post-shortContent").append(post.shortContent);
+								}else{
+									
+									$(postCard).find(".post-time").before(div_3);
+									
+									$(postCard).find(".description").html(post.shortContent);
+									
+									for(let j = 0; j < post.attachments.length; j++){	
+										$(postCard).find(".your-class"+currentPage).append(`
+											<a class ="post-link">
+												<img id = "post-img" class="post-image" src="/resources/attachments/\${post.attachments[j].attachmentName}"/>
+											</a>
+											`);
+										$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
+										//$(postCard).find(".post-image").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
+										console.log("/////"+post.attachments[j].attachmentName);
+									}
+								}
+								
+								//$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
+								$(postCard).find(".profile-img").attr("src","/resources/attachments/profile_image/"+post.user.profileImage);
+								$(postCard).find(".profile-link").attr("href","/community/getProfile/"+post.user.userId)
+								$(postCard).find(".profile-link2").attr("href","/community/getProfile/"+post.user.userId)
+								$(postCard).find(".profile-link2").text(post.user.nickName);
+								
+								$(postCard).find("i.bi.bi-heart.icon").attr("data-value", post.postNo);
+								$(postCard).find("i.bi.bi-eye.icon").text(post.views);
+								$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
+								$(postCard).find(".like-cnt").text(post.likeCount);
+								$(postCard).find(".post-time").text(post.regDate);
+								
+								console.log("postC: "+postCard);
+								
+								$(".left-col").append(postCard);
+								
+
+								
+							}//for
+							
+							slick2('.your-class'+currentPage);								
+						}//success
+						, error: function(status, jqXHR){
+							console.log("error status: "+ status);
+							console.log("jqXHR: "+ jqXHR);
+							alert("페이지 로드 실패");
+						}
+						
+					})//jQuery.ajax()
+					
+				currentPage ++;
+				}//getListPost
+				
+		})//window.scroll()
+		
+		
+	});
+
+	
 	</script>
 
 </body>
