@@ -41,11 +41,12 @@ span.a {
 	padding: 5px;
 }
 
+/*
 img.rounded-circle{
 	width:60px;
 	height:60px;
 	
-}
+}*/
 
 .info{
 	display: flex;
@@ -156,7 +157,7 @@ img.rounded-circle{
 					</div>
 					
 					<div id="post-content" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
-						<div id="post-content-body" class="card-body"  style="font-size: 18px; padding:30px; margin-top:20px">
+						<div id="post-content-body" class="card-body"  style="font-size: 18px; padding:30px; margin-bottom:0px">
 							 ${post.content}
 						</div>
 					</div>
@@ -164,8 +165,7 @@ img.rounded-circle{
 					<div class="post-content">
 	                    <div class="reaction-wrapper">
 	                    	<!-- 좋아요수, 조회수, 댓글수 -->
-	                    	<i class="bi bi-heart icon" data-value="${post.postNo}">${post.likeCount}</i>
-	                    	<i class="bi bi-heart-fill" style="display:none;"></i>
+	                    	<i class="bi bi-heart icon" data-value="${post.postNo}"></i><span id="heart-cnt">${post.likeCount}</span>
 	                    	<i class="bi bi-eye icon">${post.views}</i>
 	                    	<i class="bi bi-chat-left icon">${post.commentCount}</i>
 	                    </div>
@@ -238,6 +238,7 @@ img.rounded-circle{
 
 	<br />
 
+<jsp:include page="../layer/footer.jsp"></jsp:include>
 
 	<script>
 		$("#insertCommentBtn")
@@ -339,12 +340,12 @@ img.rounded-circle{
 		
 		// 좋아요, 좋아요 취소
 		$("i.bi.bi-heart.icon").on("click", function() {
-					
+			const heart = $(this)		
 			const postNo = $(this).data("value");
 			//alert("postNo: " + postNo);
 			console.log("postNo: " + postNo);
 
-			const div_like_cnt = $("i.bi.bi-heart.icon");
+			const div_like_cnt = $("#heart-cnt");
 			
 			$.ajax({
 				url : "/community/api/insertLike/" + postNo,
@@ -363,9 +364,11 @@ img.rounded-circle{
 	            	console.log(value);
 	            	
 	            	if(first_key === '좋아요'){
-	            		alert("좋아요");
+	            		heart.attr("class", "bi bi-heart-fill icon");
+	            		heart.css("color","red");
 	            	}else if(first_key === '좋아요 취소'){
-	            		alert("좋아요 취소");
+	            		heart.attr("class", "bi bi-heart icon");
+	            		heart.css("color","black");
 	            	}
 	        		
 	            	// 좋아요 개수 수정

@@ -86,7 +86,7 @@
 			<nav aria-label="...">
 			  <ul class="pagination">
 			  	<c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage}">
-			  		<li class="page-item"><a class="page-link" href="/purchase/getListSale/${i}">${i}</a></li>
+			  		<li class="page-item"><a class="page-link" href="/purchase/getListSale/${i}/${search.searchCondition}">${i}</a></li>
 			  	</c:forEach>
 			  </ul>
 			</nav>

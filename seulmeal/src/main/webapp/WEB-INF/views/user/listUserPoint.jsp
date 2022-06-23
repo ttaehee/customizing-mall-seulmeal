@@ -46,7 +46,7 @@ a.button {
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<th>포인트 상태</th>
+					<th>구분</th>
 					<th>포인트</th>
 					<th>날짜</th>
 				</tr>
@@ -54,7 +54,12 @@ a.button {
 			<tbody>
 				<c:forEach var="point" items="${pointList}">
 				<tr>
-					<th>${point.pointStatus}</th>
+					<th><c:choose>
+						<c:when test="${point.pointStatus eq '0'}">사용</c:when>
+						<c:when test="${point.pointStatus eq '1'}">적립</c:when>
+						<c:when test="${point.pointStatus eq '2'}">충전</c:when>
+						
+					</c:choose></th>
 					<th>${point.point}</th>
 					<th>${point.regDate}</th>
 				</tr>

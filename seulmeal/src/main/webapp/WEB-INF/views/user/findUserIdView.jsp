@@ -39,6 +39,13 @@ input{
     border: solid 1px #dadada;
     background: #fff;
 }
+.login-confirm-wrap{
+
+    margin: 10px 60px 20px 60px;
+    padding: 10px;
+    /* border: solid 1px #dadada; */
+    background: #fff;
+}
 /*input 아이디 form*/
 #input-id{
     border: none;
@@ -230,6 +237,9 @@ input{
         margin: auto;
     }
 
+.findId{
+	text-align: center;
+}
 
 
 }
@@ -244,12 +254,16 @@ input{
 		<form class="form-signin" method="post" action="/user/findUserId" target="_self">
 			<section class="login-wrap">
 				<h2>아이디 찾기</h2>
-				
+				<div class="login-confirm-wrap">
+					<div id="phoneCheck" style="float:left; border-bottom: 2px solid blue;"><a style="float:left;" onclick="phone()" >핸드폰</a></div>
+					<div id="emailCheck" style="float:right; border-bottom: 2px solid blue;"><a  style="float:right;" onclick="email()" >이메일</a></div>			
+				</div>
 				<div class="login-id-wrap">
 					<input id="input-id" name="name" placeholder="이름" type="text"></input>
 				</div>
 				<div class="login-pw-wrap">
-					<input id="email" name="email" placeholder="이메일" type="text"></input>
+					<input class="phone" id="email" name="phone" placeholder="핸드폰 숫자만 입력" type="text"></input>
+					<input class="email" id="email" name="email" placeholder="이메일" type="text" style="display: none;"></input>
 				</div>
 				<div class="login-pw-wrap" id="emailCheckForm" style="display: none;">
 					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
@@ -258,28 +272,70 @@ input{
 					<button id="login-btn" type="button" onclick="idSearch()">인증 번호 받기</button>
 				</div>
 				<div class="login-btn-wrap" id="findId" style="display: none;">
-					<button id="login-btn" type="button" onclick="confirmEmail()">아이디 찾기</button>
+					<button id="login-btn" type="button" onclick="confirmEmail()" data-toggle="modal" data-target="#exampleModal">아이디 찾기</button>
 				</div>
 
 			</section>
 		</form>
 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <h5 class="modal-title" id="exampleModalLabel" style="display: none;">회원님의 아이디</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="findId">
+        <div id="success" style="display: none;"></div>
+        <div id="fail" style="display: none;">인증번호가 일치하지 않습니다</div>
+        <div id="noneDb" style="display: none;">가입시 등록한 정보가 맞는지 다시 확인해주세요</div>
+        </div>
+      </div>
+      <div class="modal-footer" >
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">비밀번호 찾기</button> -->
+        <div id="resetPw" style="display: none;"><a href="/user/findUserPasswordView">비밀번호 찾기</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 		<jsp:include page="../layer/footer.jsp"></jsp:include>
 <script type="text/javascript">
 
-//이메일 중복체크
+function email(){
+	$(".phone").css("display","none");
+	$(".email").css("display","block");
+}
+
+function phone(){
+	$(".email").css("display","none");
+	$(".phone").css("display","block");
+}
+
+
+
+
+// 계정 유뮤 체크
 function idSearch(){
+
 	const idSearch = {
 			name: $("#input-id").val(),
-			email: $("#email").val(),
-			idSearch: "1"
+			email: $(".email").val(),
+			phone: $(".phone").val()
+			
 	}
 	
 	console.log(idSearch)
 	
 	 $.ajax({
-		url: "/user/api/confirmUserEmail",
+		url: "/user/api/findId",
 		method: "GET", 
 		data: idSearch,
 		headers : {
@@ -296,8 +352,11 @@ function idSearch(){
         		return;
         	}
         	if(data.result === "fail"){
-        		alert("가입시 등록한 정보가 맞는지 다시 확인해주세요");
-        		return;
+        		/* alert("가입시 등록한 정보가 맞는지 다시 확인해주세요");
+        		return; */
+        		
+        		$("#noneDb").css("display","block");
+        		$("#exampleModal").modal();
         	}
         }
 	})		 
@@ -307,10 +366,13 @@ function idSearch(){
 
 //이메일인증 확인
 function confirmEmail(){
-	const confrimNum = $("#emailCode").val();
-	const emailNum = $("#email").val();
+
+	const confirmCode = {
+			code: $("#emailCode").val(),
+			idSearch: "1"
+	}
 	
-	let url = "/user/api/confirmCode/"+emailNum+"/"+confrimNum;
+	let url = "/user/api/findIdCode";
 	$.ajax({
 		url: url,
 		method: "GET",
@@ -318,16 +380,35 @@ function confirmEmail(){
             "Accept" : "application/json",
             "Content-Type" : "application/json"
         },
+        data: confirmCode,
         dataType : "json",
         success : function(data){
-        	alert(data.userId);
-        	/* $("#email").attr("disabled","disabled");
-        	$("#emailBtn").attr("disabled","disabled"); */
-        	/* $("#login-btn").css("display","none");
-        	$("#findId").css("display","block"); */
+        	if(data.result === "인증완료"){
+        		/* alert(data.userId); */
+            	$("#success").css("display","block");
+            	$("#fail").css("display","none");
+            	$("#exampleModalLabel").css("display","block");
+            	$("#resetPw").css("display","block");
+            	$("#success").text(data.userId);
+            	
+        	}
+        	if(data.result === "인증실패"){
+        		/* alert("인증코드가 일치하지 않습니다"); */
+        		$("#noneDb").css("display","block");
+        		$("#success").css("display","none");
+        		$("#fail").css("display","block");	
+        		$("#exampleModalLabel").css("display","none");
+            	$("#resetPw").css("display","none");
+            	
+        	}
+        	
+        	
+       
         }
 	})
 }
+
+
 
 </script>
 

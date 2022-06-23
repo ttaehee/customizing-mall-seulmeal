@@ -40,7 +40,7 @@
 					<th>재료명</th>
 					<th>재료 가격</th>
 					<th>재료 칼로리</th>
-					<th colspan=2>상태</th>
+					<th colspan="2">상태변경</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -49,8 +49,7 @@
 					<th style="padding-left: 50px; text-align: left;">[${parts.partsNo}] ${parts.name}</th>
 					<th>${parts.price}</th>
 					<th>${parts.calorie}</th>
-					<th><div data-value="${parts.name}" class="btn-update" id="updateParts" style="cursor: pointer;">
-						수정</div></th>
+					<th><div class="btn-update" style="cursor: pointer;" data-value="${parts.name }" onclick="fncUpdateParts(this)">수정</div></th>
 					<th>
 					<c:if test="${parts.status == 0 }">
 						<div data-value="${parts.partsNo}" class="btn-delete" id="deleteParts" style="cursor: pointer;">
@@ -84,7 +83,7 @@
 	
 	
 <!-- 파츠 등록 모달창 -->
-<div class="modal">
+<div class="insertModal">
 		<div class="modal_content">
 			<form action="/product/insertParts" method="POST">
 				<h2 class="text-center" style="margin-bottom:25px;">재료 등록</h2>
@@ -111,43 +110,75 @@
 					<button type="submit" class="btn btn-primary" id="insertPartsDone">등록</button>
 					<button type="button" onclick="cancelBtn()" class="btn btn-primary" id="insertPartsCancel">취소</button>
 				</div>
+				</div>
 			</form>
 		</div>
 	</div>
-	
 
-<!-- 파츠 등록 모달창 JS -->
+<div class="updateModal">
+		<div class="modal_content">
+			<form action="/product/updateParts" method="POST">
+				<h2 class="text-center" style="margin-bottom: 25px;">재료 수정</h2>
+				<div class="col-md-12 form-group" style="padding-left: 20px;">
+					<div class="col-md-12 form-group">
+						<input type="text" class="form-control" name="partsNo" id="updateNo" value="" placeholder="" style="border: none; display:none;">
+						
+						<p class="text-left" style="padding-left: 13px;">재료명</p>
+						<div class="col-md-12">
+							<input type="text" class="form-control" name="name" id="updateName" value="" placeholder="재료명을 입력하세요" style="border: none;">
+						</div>
+					</div>
+					<div class="col-md-12 form-group">
+						<p class="text-left" style="padding-left: 13px;">재료 가격</p>
+						<div class="col-md-12">
+							<input type="text" class="form-control" name="price" id="updatePrice" value="" placeholder="가격을 입력하세요" style="border: none;">
+						</div>
+					</div>
+					<div class="col-md-12 form-group">
+						<p class="text-left" style="padding-left: 13px;">재료 칼로리</p>
+						<div class="col-md-12">
+							<input type="text" class="form-control" name="calorie" id="updateCalorie" value="" placeholder="칼로리를 입력하세요" style="border: none;">
+						</div>
+					</div>
+					<div class="text-right" style="margin-top: 20px; padding-right: 10px;">
+						<button type="submit" class="btn btn-primary" id="updatePartsDone">수정</button>
+						<button type="button" onclick="cancelBtn()" class="btn btn-primary" id="updatePartsCancel">취소</button>
+					</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 파츠 등록 모달창 JS -->
 <script>
 $(function(){ 
 
   $(".btn-primary:contains('재료 등록')").click(function(){
-    $(".modal").fadeIn();
+    $(".insertModal").fadeIn();
   });
   
   $("#insertPartsCancel").click(function(){
-    $(".modal").fadeOut();
+    $(".insertModal").fadeOut();
   });
   
 });
 
+$(function(){ 
+	
+$(".btn-update").click(function(){
+    $(".updateModal").fadeIn();
+  });
+	  $("#updatePartsCancel").click(function(){
+    $(".updateModal").fadeOut();
+  });
+});
 		
 
 </script>
 
 <!-- 파츠 등록 모달창 CSS -->
 <style>
-.modal {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.8);
-	top: 0;
-	left: 0;
-	display: none;
-}
-
-.updateModal {
-	position: absolute;
+.insertModal, .updateModal {
+	overflow: hidden; position: fixed;
 	width: 100%;
 	height: 100%;
 	background: rgba(0, 0, 0, 0.8);
@@ -175,6 +206,24 @@ $(function(){
 
 <!-- 파츠 활성화/비활성화 JS -->
 <script> 
+
+function fncUpdateParts(e){
+	const no = $(e).data("value");
+	
+	$.ajax({
+		url : "/product/api/getPartsName/"+no,
+		method : "GET",
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+        success : function(data){
+        	$('#updateNo').val(data["partsNo"]);
+        	$('#updateName').val(data["name"]);
+        	$('#updatePrice').val(data["price"]);
+        	$('#updateCalorie').val(data["calorie"]);
+        }
+	})
+}
+	
 $(function(){ 
 
 	  $(".btn-delete").click(function(){

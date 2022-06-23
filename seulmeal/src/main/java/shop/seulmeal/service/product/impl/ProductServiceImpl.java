@@ -1,8 +1,14 @@
 package shop.seulmeal.service.product.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,6 +122,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	// Review CRUD
+	public String validationReview(Map<String, Object> map) throws Exception{
+		System.out.println(map);
+		if(productMapper.validationReview(map) > 0) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
+	
 	@Override
 	public void insertReview(Review review) throws Exception {
 		productMapper.insertReview(review);
@@ -193,7 +208,9 @@ public class ProductServiceImpl implements ProductService {
 
 		return productMapper.getParts(map);
 	}
-
+	public List<Map> autoComplete(Map<String, Object> map) throws Exception{
+		return productMapper.autoComplete(map);
+	}
 	@Override
 	public int updateParts(Parts parts) throws Exception {
 
@@ -221,7 +238,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	// ProductParts 관련
-	@Override
+	
 	public int insertProductParts(List<Parts> list) throws Exception {		
 		return productMapper.insertProductParts(list);
 	}
@@ -253,12 +270,19 @@ public class ProductServiceImpl implements ProductService {
 
 	public Map<String, Object> getListLikeProduct(Map<String, Object> map) throws Exception {
 		List<Like> list = productMapper.getListLikeProduct(map);
+
+		List<Product> product = new ArrayList<Product>();
+		
+		for( int i = 0; i < list.size(); i++ ) {
+			product.add(productMapper.getProduct(list.get(i).getProductNo()));
+		}
 		Map<String, Object> result = new HashMap<String,Object>();
 		
 		String userId = (String) map.get("userId");
 		int totalCount = productMapper.getLikeProductTotalCount(userId);
 		
 		result.put("list", list);
+		result.put("product", product);
 		result.put("totalCount", totalCount);
 
 		return result;

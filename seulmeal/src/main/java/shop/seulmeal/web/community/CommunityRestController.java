@@ -410,53 +410,7 @@ public class CommunityRestController {
 		return (List<Relation>) map.get("blockList");
 	}
 
-	// 프로필 이미지 저장 및 변경	// oo
-	@PostMapping("updateProfileImage")
-	public User updateProfileImage(MultipartFile imageFile, HttpSession session) throws Exception {
-
-		String imageFilePath = null;
-//		String absolutePath = new File("").getAbsolutePath()+"\\";
-		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
-		File file = new File(path);
-
-		User user = (User)session.getAttribute("user");
-
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		if (!imageFile.isEmpty()) {
-			String contentType = imageFile.getContentType();
-			String originalFileExtension = null;
-
-			if (contentType.contains("image/jpeg")) {
-				originalFileExtension = ".jpg";
-			} else if (contentType.contains("image/png")) {
-				originalFileExtension = ".png";
-			}
-
-			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
-			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
-			System.out.println("//////userId: " + user.getUserId());
-			System.out.println("//////imageFilePath: " + imageFilePath);
-			System.out.println("//////originalFileExtension: " + originalFileExtension);
-			System.out.println("//////getOriginalFilename(): " + imageFile.getOriginalFilename());
-
-			// 이미지 파일 로컬에 저장
-			file = new File(imageFilePath);
-			imageFile.transferTo(file);
-
-			// 저장한 이미지 파일을 User session 저장 또는 수정
-			user.setProfileImage(imageFileName);
-
-			// 변경된 session의 유저정보를 db에 반영
-			userService.updateProfile(user);
-
-		}
-		return user;
-
-	}
-	
+	/*
 	// 프로필 이미지 삭제		// oo
 	@PostMapping("deleteProfileImage")
 	public ResponseEntity<User> deleteProfileImage(HttpSession session) throws Exception {
@@ -490,6 +444,18 @@ public class CommunityRestController {
 		userService.updateProfile(user);
 
 		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}*/
+
+	
+	// 프로필 이미지 삭제		// oo
+	@PostMapping("deleteProfileImage")
+	public String deleteProfileImage(HttpSession session) throws Exception {
+
+		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		String imageFileName = "default_profile.jpg";
+		String imageFilePath = path + "/" + imageFileName; 
+		
+		return imageFilePath;
 	}
 	
 	@PostMapping("insertReportPost") // o

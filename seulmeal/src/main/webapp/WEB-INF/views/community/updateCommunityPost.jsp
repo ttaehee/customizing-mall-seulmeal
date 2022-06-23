@@ -10,14 +10,6 @@
 <link rel="stylesheet" href="../../../resources/css/summernote/summernote-lite.css">
 <title>게시글 수정</title>
 
-<style type="text/css">
-h1{
-	position: absolute;
-	left: 160px;
-	color: black;
-}
-</style>
-
 </head>
 <body>
 	<jsp:include page="../layer/header.jsp"></jsp:include>
@@ -26,16 +18,20 @@ h1{
 	<script src="/resources/javascript/summernote/summernote-lite.js"></script>
 	<script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>
 
-	<br/>
-	<h1>게시글 수정</h1>
-	<br/><br/><br/>
 
-	<div class="container">
-	<!-- enctype="multipart/form-data" -->
-		<form id="updateForm" action="/community/updatePost/${post.postNo}" method="POST" >
+	<div class="container" style="margin-top:20px;">
+		
+		<div style="color:#ff4500; border-bottom: 2px solid #ff4500; margin-bottom: 30px;">
+			<h1>게시글 수정</h1>
+		</div>
+		
+		<form id="updateForm" action="/community/updatePost/${post.postNo}" method="POST" enctype="multipart/form-data">
 			<div class="row">
-				<div class="col-md-12">
-					제목 : <input id="title" name="title"  value = "${post.title}"/>
+				<div class="col-md-12 form-group">
+					<label for="Email3" class="col-sm-2 control-label h4" >제목</label>
+						<div class="col-md-12">
+						<input type="text" class="form-control" id="title" name="title" value="${post.title}">
+					</div>
 				</div>
 				<div class="col-md-12">
 					<textarea id="summernote" name="content">${post.content}</textarea>		
@@ -57,11 +53,15 @@ h1{
 					<button onclick="updateBtn()" type="button" class="btn btn-primary">
                		수정
             		</button>
+            		<button type="button" onclick="history.back()" class="btn btn-primary">
+						취소
+					</button>
 				</div>
 			</div>	
 		</form>
+		
 	</div>
-
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
 
 
 <script>
@@ -80,6 +80,22 @@ function deleteAttachment(e){
 function updateBtn(){
    $("#updateForm").append(`<input name="deleteAttachmentNo" value="\${deleteAttachmentNo}" />`);
    $("#updateForm").append(`<input name="deleteAttachmentName" value="\${deleteAttachmentName}" />`);
+   
+		
+	const title = $("#title").val();
+	const content = $("#summernote").val();
+	
+	if(title === ""){
+		toastr.error("제목을 올바르게 입력하세요","제목 에러",{timeOut:10000})
+		return;
+	}
+	
+	if(content === ""){
+		toastr.error("내용을 올바르게 입력하세요","내용 에러",{timeOut:10000})
+		return;
+	}
+		
+   
    $("#updateForm").submit();
 }
 

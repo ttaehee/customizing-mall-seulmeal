@@ -81,5 +81,5 @@ public interface PurchaseService {
 	public String getAmount(String token, String mId);
 	
 	//판매내역리스트 
-	public Map<String, Object> getListSale(Search search, String purchaseStatus);
+	public Map<String, Object> getListSale(Search search);
 }

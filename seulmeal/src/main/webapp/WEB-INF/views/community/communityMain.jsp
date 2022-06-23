@@ -400,8 +400,9 @@ section.main{
 	cursor:pointer;
 }
 
+
 div.modal-content{
-	width:120%;
+	border-radius: 17px;
 }
 
 #block-list-card,
@@ -695,9 +696,6 @@ div.modal-content{
 
 
 <script type="text/javascript">
-
-
-
 	function slick2(e){		
 		$(e).slick({
 			dots : true,
@@ -706,8 +704,6 @@ div.modal-content{
 			fade : true,
 			cssEase : 'linear',
 			arrows : true
-			//prevArrow : "<button type='button' class='slick-prev pull-left'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
-			//nextArrow : "<button type='button' class='slick-next pull-right'><i class='fa fa-angle-right' aria-hidden='true'></i></button>"
 					});
 	}
 
@@ -764,20 +760,6 @@ div.modal-content{
 
 	});
 	
-	/*
-	function red_heart_show() {  // 함수 선언 : 빈 하트 클릭 시
-	    $(".red_heart").show() // 빨간 하트 보여주기
-	    $(".empty_heart").hide() // 빈 하트 숨기기
-	    $(".heart_count").show() // 좋아요 텍스트 보여주기
-	  }
-
-	  function empty_heart_show() {  // 함수 선언 : 빨간 하트 클릭 시
-	    $(".empty_heart").show()
-	    $(".red_heart").hide()
-	    $(".heart_count").hide()
-	  }*/
-	
-	
 	// 차단해제
 	$("button.action-btn:contains('차단해제')").on("click", function() {
 		
@@ -803,115 +785,14 @@ div.modal-content{
 		});
 
 	});
-	
-	  
-	/* 팔로우 해제
-	$("button.action-btn:contains('팔로우 해제')").on("click", function() {
-			
-			const relationUserId = $(this).data("value");
-			//alert(relationUserId);
-			console.log(relationUserId);
-			
-			const line = $(this).parent().parent(); 
-			console.log(line);
-			
-			$.ajax({
-				url : "/community/api/deleteBlock/" + relationUserId,
-				method : "POST",
-				success : function(status) {
-					
-					if(status === 1){
-						alert("차단해제 완료!");
-						line.remove();
-					}else{
-						alert("차단해제 실패..");
-					}
-				}
-			});
 
-		});
-	*/  
-	
-/*
-	// 무한 스크롤
-	let page = 2;
-	$(window).on("scroll", function() {
-
-	     const scrollHeight = $(document).height();
-	     const scrollPosition = $(window).height() + $(window).scrollTop();
-	     if (scrollHeight <= scrollPosition) {         
-	         //console.log(${resultPage.endUnitPage})
-	         if(page <=${resultPage.maxPage}){
-	         $.getJSON("/community/api/getListPost",
-	                     {
-	                         currentPage : page,
-	                         //searchCondition : ${search.searchCondition},
-	                   		 searchKeyword : "${search.searchKeyword}"         
-	                     },
-	                     (data,status)=>{
-	                        if(status ==='success'){
-	                           for(let i=0; i<data.list.length; i++){
-	                              
-	                              let card = $(".productComponet").clone()[0];
-	                              //let card = $(".product").clone();
-	                              const prod = data.list[i];
-	                              $(card).find(".title").attr("data-value",prod.prodNo).text(prod.prodName)
-	                              $(card).find(".date").text(prod.regDate)
-	                              $(card).find(".price").text(prod.price)
-	                              $(card).find(".image").attr("src","../images/uploadFiles/"+prod.fileName);
-	                              $(card).find(".float-end").text(prod.stock)
-	                              
-	                              if(prod.stock===0){
-	                                 $(card).find(".status").text("재고없음")
-	                              } else {
-	                                 $(card).find(".status").text("판매중")
-	                              }
-	                              
-	                              
-	                              $("#scroll_test").append(card);
-	                              
-	                              
-	                              //
-	                              $( "#send:contains('배송하기')" ).on("click" , function() {
-	                                 const prodNo = $(this).data("value");
-	                                 self.location = "/updateTranCode?prodNo="+prodNo+"&tranCode=2&menu=${param.menu}&con=''";
-	                              });
-	                              
-	                              if('${user.role}' !== 'admin'){
-	                                 $(".title").on("click",function (){         
-	                                    const prodNo = $(this).data("value");
-	                                    self.location = "/product/getProduct?prodNo="+prodNo;
-	                                 })
-	                              } else {
-	                                 $(".title").on("click",function (){         
-	                                    const prodNo = $(this).data("value");
-	                                    self.location = "/product/updateProduct?prodNo="+prodNo;
-	                                 })
-	                              }
-	                            //
-	                              
-	                           }
-	                           
-	                        }
-	                     })
-	         //$("#test").append('<div id="content">123122332</div>');
-	         //console.log(page)
-	         //page++
-	         }
-	         //console.log($(".container").clone())
-	         //$("#test").append($(".container").clone()[0])
-	         page++
-	     }        
-	 });
-	*/
-	
 
 	// 게시글 무한스크롤
 	$(function(){
 		
 		let currentPage = 2;
 		let maxPage = ${resultPage.maxPage};
-		//alert(maxPage);
+		let index = ${resultPage.pageUnit};
 
 		$(window).scroll(function(){
 			
@@ -954,7 +835,7 @@ div.modal-content{
 									                <a id= "profile-nick" class ="profile-link2" ></a>
 									            </p>
 									        </div>
-									        <i id = "option_icon" class="bi bi-three-dots"></i>
+									        <i id = "option_icon" class="bi bi-three-dots option_icon" data-toggle="modal" ></i>
 									    </div>
 									    <div class="your-class-m">
 									    <div class="your-class\${currentPage}">
@@ -995,13 +876,6 @@ div.modal-content{
 								let div_1 = $($.parseHTML(div1));
 								let div_2 = $($.parseHTML(div2));
 								let div_3 = $($.parseHTML(div3));
-								
-								/*
-								console.log(postCard)
-								console.log(div_1)
-								console.log(div_2)
-								console.log(div_3)
-								*/
 
 								console.log(post.attachments == "")
 								console.log(post.attachments != "")
@@ -1047,8 +921,6 @@ div.modal-content{
 								
 								$(".left-col").append(postCard);
 								
-
-								
 							}//for
 							
 							slick2('.your-class'+currentPage);								
@@ -1086,6 +958,7 @@ div.modal-content{
 		const btn = $(`\${modal}`).find(".btn-primary")
 		const next = $(e).next(".reportTrue");
 		
+<<<<<<< HEAD
 		
 		$.ajax({
 			url : "/community/api/checkReport/"+btn.data("value"),
@@ -1130,6 +1003,8 @@ div.modal-content{
 	        	}
 	        }
 		})		
+
+		$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
 	}
 	
 	// 팔로우 해제

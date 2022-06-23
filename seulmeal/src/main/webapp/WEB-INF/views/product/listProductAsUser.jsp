@@ -34,12 +34,18 @@
     	<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-5 py-3">
 			<c:forEach var="product" items="${list}">		
 				<div class="col" style="margin-top:20px;">
-					<div data-value="${product.productNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-10 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
+				
+					<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-10 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
 						<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+							<div data-value="${product.productNo}" class="productHref">
 							<h2 class="display-6fw-bold">${product.name}</h2>
 							<h4 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${product.subContent}</h4>
+							<c:if test="${product.originPrice != 0}">
+							<h5 class="productTarget" style="text-decoration: line-through;">${product.originPrice}원</h5>
+							</c:if>		
 							<h5>${product.price}원</h5>
 							<h5>${product.calorie}Cal</h5>
+							</div>
 							<div style="display:flex; justify-content:space-between;">
 								<ul class="d-flex list-unstyled mt-auto">
 									<li class="d-flex align-items-center me-3">
@@ -47,7 +53,7 @@
 										<small>&nbsp;${product.reviewCount}</small>
 									</li>
 									<li class="d-flex align-items-center">
-										<i style="margin-left:15px; font-size:1.5rem;" class="bi bi-heart-fill"></i>
+										<i style="margin-left:15px; font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
 										<small>&nbsp;${product.likeCount}</small>
 									</li>
 								</ul>
@@ -76,12 +82,36 @@
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 
 <script type="text/javascript">
-	$(function(){
-		$(".card-cover").on("click",function(){
-			const no =$(this).data("value");
-			window.location.href = '/product/getProduct/'+no;
-		})
-	});	
+$(function(){
+	$(".productHref").on("click",function(){
+		const no =$(this).data("value");
+		window.location.href = '/product/getProduct/'+no;
+	})
+});
+
+function updateLikeProduct(e){
+	const no = $(e).parent().parent().parent().parent().find(".productHref").data("value");
+	const cl = $(e).next("small");
+	///*
+	$.ajax({
+		url : "/product/api/updateLikeProduct/"+no,
+		method : "GET",
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+        success : function(data){
+        	cl.text(data.likeCount);
+        	if(data.result === "Liked"){
+        		$(e).attr("class","bi-heart-fill")
+        	} else {
+        		$(e).attr("class","bi-heart")
+        	}
+        	
+        }
+	})
+	//*/
+}
+
+
 </script>
 </body>
 </html>

@@ -87,7 +87,7 @@
 					
 					</th>
 					
-					<th style="padding-left: 50px; text-align: left;">[${product.productNo}] ${product.name}<hr/>${product.subContent }</th>
+					<th style="padding-left: 50px; text-align: left;"><div data-value="${product.productNo}" class="btn-getProduct" id="getProduct" style="cursor: pointer;">[${product.productNo}] ${product.name}</div><hr/>${product.subContent }</th>
 					<th style="width: 96px;">${product.reviewCount }</th>
 					<th style="width: 96px;">${product.price}</th>
 					<th style="width: 96px;">${product.stock}</th>
@@ -120,13 +120,10 @@
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 
 	</div>
+
 <script type="text/javascript">
-	$(function(){
-		$(".card-cover").on("click",function(){
-			const no =$(this).data("value");
-			window.location.href = '/product/updateProduct/'+no;
-		})
-	})
+
+
 	
 	function insertProduct(){
 		window.location.href = '/product/insertProduct';
@@ -134,10 +131,13 @@
 	
 	
 	$(function(){ 
-		const page = 
+		$(".btn-getProduct").on("click",function(){
+			const no =$(this).data("value");
+			window.location.href = '/product/getProduct/'+no;
+		})
+		
 		$(".btn-update").click(function(){
 			const no =$(this).data("value");
-			  
 			window.location.href = '/product/updateProduct/'+no;
 		  });
 		
@@ -152,6 +152,8 @@
 		  });
 		  
 		});
+	
+	
 	</script>
 	
 </body>

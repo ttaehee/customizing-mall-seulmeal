@@ -15,8 +15,8 @@
 
 
 <style> /* 리뷰등록 모달창 CSS */
-.modal {
-	position: absolute;
+.modal, .updateReviewModal	 {
+	overflow: hidden; position: fixed;
 	width: 100%;
 	height: 100%;
 	background: rgba(0, 0, 0, 0.8);
@@ -156,30 +156,26 @@ div{ -webkit-touch-callout: none;
 	${url }
 	<div class="container" style="margin-top: 20px;">
 		<div class="row">
-			<div class="col-md-6" style="height: 700px">
+			<div class="col-md-6">
 				<c:if test="${!empty product.thumbnail}">
 					<img src="/resources/attachments/${product.thumbnail}" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
 				</c:if>
 				<c:if test="${empty product.thumbnail}">
 					<img src="http://folo.co.kr/img/gm_noimage.png" alt="..." class="img-thumbnail">
 				</c:if>
-				<div class="card-bottom" style="position: absolute; bottom: 0;">
-					<h3>
 				
-					</h3>
-				</div>
 			</div>
-			<div class="col-md-6" style="height: 700px;">
+			<div class="col-md-6" style="min-height: 700px;">
 				<div style="text-align: center;">
 					<h1 style="font-size: 36px; padding-bottom: 30px;">${product.name}</h1>
 				</div>
 
-				<div class="box-line" style="height: auto;">
+				<div class="box-line" style="min-height: 500px;">
 
 					<c:if test="${!empty product.averageRating}">
 					<h3>
 					<div style="display: flex; justify-content: space-between;">
-					<h5>평점</h5>
+					<h5 style="margin-bottom: 20px;">평점</h5>
 							
 					<div class="star-ratings">
 					<div class="star-ratings-fill space-x-2 text-lg" style="width: ${product.averageRating*10}%;">
@@ -195,7 +191,13 @@ div{ -webkit-touch-callout: none;
 						<c:if test="${empty product.averageRating}">
 							평가 없음
 						</c:if>
-						
+						<div style="display: flex; justify-content: space-between;">
+						<h5>좋아요 수</h5>
+						<div class="d-flex align-items-center" style="font-size: 28px;"> 
+								<i class="bi bi-heart" data-value="${product.productNo }" onclick="updateLikeProduct(this)"></i>
+								<small class="likeText" style="margin-left:5px;">${product.likeCount}</small>
+						</div>
+						</div>
 					<hr />
 					<div>
 						<div style="display: flex; justify-content: space-between;">
@@ -207,7 +209,7 @@ div{ -webkit-touch-callout: none;
 							<h5>등록 일자</h5>
 							<h4>${product.regDate}</h4>
 						</div>
-						<div style="border: 1px solid #dce0e3; padding: 10px; background-color: #f7f8fa; max-height: 250px;">
+						<div style="border: 1px solid #dce0e3; padding: 10px; background-color: #f7f8fa; max-height: auto;">
 							<h4>한 줄 설명</h4>
 							<h5>${product.subContent}</h5>
 							<hr />
@@ -217,16 +219,22 @@ div{ -webkit-touch-callout: none;
 								<h5>${parts.name}</h5>
 							</c:forEach>
 						</div>
+						<div style="padding: 20px">
+						<div style="display: flex; justify-content: space-between;">
+						　<h5>가격 : &nbsp;&nbsp; ${product.price } 원</h5>
+						</div>
+					</div>
 					</div>
 					<br />
-					<div style="display: flex; justify-content: space-between;">
-						<div></div>
-						<h3>가격 : &nbsp;&nbsp; ${product.price } 원</h3>
-					</div>
+					
 				</div>
 				<!-- -->
+			
 
-				<div class="col-md-12">
+			</div>
+				
+				<div class="col-md-6" style="color: white;">　</div>
+				<div class="col-md-6">
 					<div class="row">
 						<div style="margin-top: 10px; width: 100%;">
 							<c:if test="${user == null }">
@@ -249,13 +257,12 @@ div{ -webkit-touch-callout: none;
 							<div style="display: flex; justify-content: space-between; margin-top: 10px">
 								<c:if test="${user != null }">
 									<button class="btn btn-primary" style="width: 55%;">문의하기</button>
-									<button class="btn btn-primary" style="width: 43%;">리뷰등록</button>
+									<button class="btn btn-primary" data-value="${product.productNo }" style="width: 43%;">리뷰등록</button>
 								</c:if>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 		</div>
 
 		<!-- 아코디언 헤더 -->
@@ -330,6 +337,11 @@ div{ -webkit-touch-callout: none;
 					<!-- 리뷰 아코디언 -->
 					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 						<div class="card-body">
+						<c:if test="${empty review }">
+						<p style="text-align: center;">등록된 리뷰가 없네요! 상품을 구매하고 첫번째 리뷰어가 되어주세요!</p>
+						</c:if>
+						
+						<c:if test="${!empty review }">
 
 							<table class="table table-hover text-center">
 								<thead style="background-color: #ff4500; color: #fff;">
@@ -339,20 +351,27 @@ div{ -webkit-touch-callout: none;
 										<th>내용</th>
 										<th>별점</th>
 										<th>등록일</th>
+										<th>비고</th>
 									</tr>
 								</thead>
 								<tbody>
 									<c:forEach var="review" items="${review}">
-										<tr>
+											<tr id="review_row">
 											<th>${review.user.userId}</th>
-											<th style="font-weight: bolder;"><a href="/product/getReview/${review.reviewNo }" class="link-dark text-decoration-none">${review.title }</a></th>
+											<th style="font-weight: bolder;">${review.title }</th>
 											<th>${review.content }</th>
 											<th>${review.rating }</th>
 											<th>${review.regDate }</th>
+											<c:if test="${review.user.userId == user.userId}">
+											<th><div class="btn-updateReview" style="cursor: pointer;" data-value="${review.reviewNo }" onclick="fncUpdateReview(this)">수정</div>
+											<hr/>
+											<div class="btn-deleteReview" style="cursor: pointer;" data-value="${review.reviewNo }" onclick="deleteReview(this)">삭제</div></th>
+											</c:if>
 										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -375,25 +394,26 @@ div{ -webkit-touch-callout: none;
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">작성자명</p>
 					<div class="col-md-12">
-						<p class="text-left" style="padding-left: 20px;">${user.userName }</p>
+						<p class="text-left"  style="padding-left: 20px;">${user.userName }</p>
 					</div>
 				</div>
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">리뷰 제목</p>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="title" placeholder="제목을 입력하세요" style="border: none;">
+						<input type="text" class="form-control" name="title" placeholder="제목을 입력하세요" required style="border: none;">
 					</div>
 				</div>
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">리뷰 내용</p>
 					<div class="col-md-12">
-						<textarea class="form-control" name="content" placeholder="내용을 입력하세요" style="height: 10em;    border: none;    resize: none;"></textarea>
+						<textarea class="form-control" name="content" placeholder="내용을 입력하세요" required style="height: 10em;    border: none;    resize: none;"></textarea>
 					</div>
 				</div>
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">별점</p>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="rating" placeholder="1~10" style="border: none;">
+						<input type="number" class="form-control" name="rating" placeholder="1~10" required min="1" max="10" style="border: none;">
+						
 					</div>
 				</div>
 				<div class="text -right" style="margin-top: 20px; padding-right: 10px;">
@@ -403,54 +423,54 @@ div{ -webkit-touch-callout: none;
 			</form>
 		</div>
 	</div>
+	
+	<div class="updateReviewModal">
+		<!-- 리뷰 수정 모달창 -->
+		<div class="modal_content">
+			<form action="/product/updateReview" method="POST">
+				<h2 class="text-center" style="margin-bottom:25px;">리뷰 작성</h2>
+				<div class="col-md-12 form-group" style="padding-left: 20px;">
+					<p class="text-left" style="padding-left: 13px;">상품명</p>
+					<div class="col-md-12">
+						<p class="text-left" style="padding-left: 20px;">${product.name}</p>
+						<input type="number" class="form-control" name="reviewNo" id="updateReviewNo" value="" required style="display: none;">
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">작성자명</p>
+					<div class="col-md-12">
+						<p class="text-left" style="padding-left: 20px;">${user.userName }</p>
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">리뷰 제목</p>
+					<div class="col-md-12">
+						<input type="text" class="form-control" name="title" id="updateReviewTitle" value="" placeholder="제목을 입력하세요" required style="border: none;">
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">리뷰 내용</p>
+					<div class="col-md-12">
+						<textarea class="form-control" name="content" value="" id="updateReviewContent" placeholder="내용을 입력하세요" required style="height: 10em;    border: none;    resize: none;"></textarea>
+					</div>
+				</div>
+				<div class="col-md-12 form-group">
+					<p class="text-left" style="padding-left: 13px;">별점</p>
+					<div class="col-md-12">
+						<input type="number" class="form-control" name="rating" value="" id="updateReviewRating" placeholder="1~10" required min="1" max="10" style="border: none;">
+						
+					</div>
+				</div>
+				<div class="text -right" style="margin-top: 20px; padding-right: 10px;">
+					<button type="submit" class="btn btn-primary" id="updateReviewDone">등록</button>
+					<button type="button" onclick="cancelBtn()" class="btn btn-primary" id="updateReviewCancel">취소</button>
+				</div>
+			</form>
+		</div>
+	</div>
 
 
 	<script type="text/javascript">
-	const fncCoupon = (()=>{
-	    const num = [];
-		    for(let i=1; i<100; i++){
-		        num.push(i);
-		    }
-		    const result = [];
-		    
-		    for(let i=0; i<1; i++){
-		        const index= Math.floor(Math.random()*(num.length-i));
-		        if(num[index]<11 && 1<num[index]){
-		            result.push("1");
-		            break;
-		        }
-		        if(num[index]<16 && 11<num[index]){
-		            result.push("2");
-		            break;
-		        }
-		        result.push("0");
-		        //num.splice(index,1);
-		    }
-		    let display;
-				switch(result[0]) {
-				case "1" : display ="10%할인권";
-					break;
-				case "2" : display ="20%할인권";
-					break;
-				default : display = "꽝";
-			}
-	    	alert(display);
-	    	$('.couponBtn').attr("disabled","disabled");
-		    $.ajax(
-		    	{
-		    		url : "/coupon/json/addCoupon",
-		    		method : "GET",
-		    		data : {
-		    			salePercent : result[0],
-		    			eventNum : "1"
-		    		},
-		    		dataType : "json",
-		    		success : function(data, status) {
-		    			
-		    		}
-		    	}		
-		    )		    
-	})    
 	
 	
 	$(function() {
@@ -476,7 +496,7 @@ div{ -webkit-touch-callout: none;
 		 
 		  //관련상품
 		 $(".btn-primary:contains('관련상품')").on("click", function(){
-			 self.location = "/product/getListProduct/${product.foodCategory.foodCategoryNo}";
+			 self.location = "/product/listProduct/${product.foodCategory.foodCategoryNo}";
 		 })
 	});
 </script>
@@ -516,7 +536,22 @@ div{ -webkit-touch-callout: none;
 $(function(){ 
 
   $(".btn-primary:contains('리뷰등록')").click(function(){
-    $(".modal").fadeIn();
+	  const no = $(this).data("value");
+	  $.ajax({
+			url : "/product/api/validationReview/"+no,
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	console.log(data);
+	        	if(data == true){
+	        		$(".modal").fadeIn();
+	        	}else{
+	        		alert('상품 구매 후 이용 가능한 서비스입니다.')
+	        	}
+	        }
+		})
+    		
   });
   
   $("#insertReviewCancel").click(function(){
@@ -524,6 +559,68 @@ $(function(){
   });
   
 });
+$(function(){ 
+	
+	$(".btn-updateReview").click(function(){
+	    $(".updateReviewModal").fadeIn();
+	  });
+		  $("#updateReviewCancel").click(function(){
+	    $(".updateReviewModal").fadeOut();
+	  });
+	});
+	
+function fncUpdateReview(e){
+	const no = $(e).data("value");
+	console.log(no);
+	
+	$.ajax({
+		url : "/product/api/getReview/"+no,
+		method : "GET",
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+        success : function(data){
+        	console.log(data);
+        	$('#updateReviewNo').val(data["reviewNo"]);
+        	$('#updateReviewTitle').val(data["title"]);
+        	$('#updateReviewContent').val(data["content"]);
+        	$('#updateReviewRating').val(data["rating"]);
+        }
+	})
+};
+
+function deleteReview(e){
+	const no = $(e).data("value");
+	$.ajax({
+		url : "/product/api/deleteReview/"+no,
+		method : "GET",
+		dataType : "false",
+		contentType : "application/json; charset=utf-8",
+        complete : function(data){
+			$('#review_row').remove();
+			alert("리뷰가 삭제되었습니다.");
+        }
+	})
+};
+
+function updateLikeProduct(e){
+	const no = $(e).data("value");
+	const cl = $(e).next("small");
+	///*
+	$.ajax({
+		url : "/product/api/updateLikeProduct/"+no,
+		method : "GET",
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+        success : function(data){
+        	cl.text(data.likeCount);
+        	if(data.result === "Liked"){
+        		$(e).attr("class","bi-heart-fill")
+        	} else {
+        		$(e).attr("class","bi-heart")
+        	}
+        }
+	})
+};
 </script>
 
 	<br />
