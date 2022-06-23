@@ -18,15 +18,14 @@
 	<style>
 		
 		h2{
-		
 			text-align: left; 
 		}
 
 		h2:after {
 			content: "";
 			display: block;
-			width: 170px;
-			border-bottom: 1px solid #bcbcbc;
+			width: 140px;
+			border-bottom: 2px solid #FF4500;
 			margin: 20px 0px;
 			padding:0px 10px 0px 10px;
 		}
@@ -34,28 +33,20 @@
 		h5:after {
 	        content: "";
 	        display: block;
-	        width: 250px;
-	        border-bottom: 1px solid #bcbcbc;
-	        margin: 20px auto;
+	        width: 70px;
+	        border-bottom: 2px solid #FF4500;
+	        margin: 20px 10px;
+	        margin-top: 5px;
 		}
 		
 		button:hover{
-			color: #FF607F;
+			color: #FF4500;
 		}
 		
 		.thumbnail{
 			width: 100px;
 			height: 100px;
 		}	
-		
-		h6:after {
-	        content: "";
-	        display: block;
-	        width: 80px;
-	        border-bottom: 2px solid #000000;
-	        margin: 20px 0px;
-	        margin-top: 10px;
-		}
 		
 		.close {
 		  display:inline-block;
@@ -75,7 +66,36 @@
 	        margin: 0 auto; 
 	        float: none;
 	        margin-bottom: 10px; 
-		}	
+	        border: 2px solid #FF4500;
+	        width: 40rem; 
+	        padding: 0px 0px 0px 50px; 
+	        border-radius: 10px;
+		}
+		
+		/*체크박스*/
+		input[type="checkbox"]{
+        	display: none;
+        }
+     
+	    input[type="checkbox"] + label{
+	        display: inline-block;
+	        width: 20px;
+	        height: 20px;
+	        border:3px solid #FF4500;
+	        position: absolute;
+	        font-size: 14px;
+	      }
+		input[type="checkbox"]:checked + label::after{
+	        content:'V';
+	        color: #FF4500;
+	        font-size: 16px;
+	        width: 20px;
+	        height: 20px;
+	        text-align: center;
+	        position: absolute;
+	        left: 0;
+	        top:0;
+	      }	
 		
 	</style>
 	
@@ -87,7 +107,7 @@
 		 	<h2>장바구니</h2>
 		 </div>
 		 <div class="col-xs-4">
-		 	<div style="border:1px solid; padding:1px 0px 10px 12px; margin:20px; width:600px; margin-top:80px; border-radius: 3px; border-color: #969696;">
+		 	<div style="border:1px solid; padding:1px 0px 10px 12px; margin-left:60px; margin-right:40px; width:600px; margin-top:80px; border-radius: 3px; border-color: #969696;">
 		 			<div class="row">
 						 <div class="col-xs-4" style="padding: 7px 0px 0px 0px;">
 						 	<div style="border:1px solid; padding:10px; margin:20px; width:85px; border-radius: 4px; border-color: #969696;">
@@ -103,8 +123,8 @@
 									<c:when test="${user.grade eq '3'}">슬밀마스터</c:when>
 								 </c:choose> 
 								 ]입니다.</div>
-		 					<hr style="border:1px solid; width:400px; bottom:15px"/>
-		 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : ${user.totalPoint} P</div>
+		 					<hr style="border:1px solid #FF4500; width:400px; bottom:15px"/>
+		 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : <fmt:formatNumber type="number" maxFractionDigits="0" value="${user.totalPoint}"/> P</div>
 		 				</div>				
 		 			</div>
 		 	</div>
@@ -121,8 +141,11 @@
 	 
 	        <thead>
 	          <tr>
-	            <th align="center">NO</th>
-	            <th align="center">이미지</th>
+	            <th align="center">
+					<input type="checkbox" id="delete_title" disabled="disabled"/>&emsp;
+					<label for="delete_title"></label>&emsp;&ensp;&ensp;<br/>
+				</th>
+	            <th align="right">Image</th>
 	            <th align="center">상품명</th>
 	            <th align="center">옵션</th>
 	             <th align="center">수량</th>
@@ -131,16 +154,21 @@
 	          </tr>
 	        </thead>
 	
-			<tbody style="font-size:15px">
+			<tbody class="table_body" style="font-size:15px">
 				<c:set var="total" value="0" />
-				<c:set var="customprice" value="0" />
 				<c:set var="i" value="0" />
 				<c:forEach var="cpd" items="${customProductList}">
 					<c:set var="i" value="${i+1}" />
-					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
-						  <td align="left">${i}</td>
-						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
+						  <td align="left">
+						  	<input type="checkbox" id="cart_delete${i}" name="check" data-customProductNo="${cpd.customProductNo}"/>&emsp;
+							<label for="cart_delete${i}"></label>&emsp;&ensp;&ensp;<br/>
+						  </td>
+						  <td align="left">
+						  	<a href="/product/getProduct/${cpd.product.productNo}">
+						  		<img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'>
+						  	</a>
+						  </td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -156,7 +184,7 @@
 						  	<button type='button' class="btn btn-outline-primary btn-sm plus" data-no="${cpd.customProductNo}" onclick="fnCalCartCount('plus',this);">+</button> 
 						  </td>
 						  <td align="left">
-						  <span id="customprice" name="price">${cpd.price*cpd.count}</span>원</td>
+						  <span id="customcartprice" name="price"><fmt:formatNumber type="number" maxFractionDigits="0" value="${cpd.price*cpd.count}"/></span>원</td>
 						  <td>
 						  	<div>
 				                <p><a type="button" class="change" data-value="${cpd.customProductNo}"  data-toggle="modal" data-target="#changeModal">옵션선택다시하기</a>
@@ -170,12 +198,23 @@
 	        </tbody>
 	      </table><br/>
 	      
-	      <div class="container" style="justify-content: center; display:flex;">
-				<h5>결제예정 금액 :  <span id="total">${total}</span>원</h5>
-				<div style="border:none; float:right">
-				<button class="button" id="order" style="margin-left:200px; padding: 5px; font-size:20px; border:1px #FF4500; background-color:white;" onclick="fncInsertPurchase()">전체상품주문</button>
+	      <div class="container">
+	      <div class="row">
+	      	<div class="col-md-4">
+	      		<div>
+	      			<button type="button" class="btn btn-primary" onclick="fncSelectDelete()">선택상품 삭제</button>
 				</div>
-		</div>
+			</div>
+			<div class="col-md-4">
+				<h4>결제예정 금액 :  <span id="totalSum"><fmt:formatNumber type="number" maxFractionDigits="0" value="${total}"/></span>원</h4><br/><br/>
+			</div>
+			<div class="col-md-3">
+				<div style="border:none; float:right">
+					<button type="button" class="button" id="order" style="margin-left:200px; margin-top: -50px; background-color:#FFF; border-radius:5px; border:2px solid #FF4500; font-size:22px; width: 240px" onclick="fncInsertPurchase()">전체상품 주문</button>
+				</div>
+			</div>
+		 </div>
+		 </div>
 		
 		
 		<!-- 페이징처리 -->
@@ -200,46 +239,49 @@
 			<div class="modal-content">
 
 				<!-- 헤더 -->
-				<div class="modal-header" style="background-color: #282828; color: white;">
+				<div class="modal-header">
 					<h3 class="modal-title" id="productName"></h3>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button><br/>
 										
 				</div>
 
 				<!-- 바디 -->
-				<div id="follow-modal-body" class="modal-body" style="background-color: #282828;">
+				<div id="follow-modal-body" class="modal-body">
 
 					<form class="cc" name="insertCustom" method="post">
 						<input type="hidden" id="customProductNo" name="customProductNo"/>
 						<div class="container"> 
 						    
-							<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+							<div class="card">
 							  <div class="card-body">
-							    <h6 class="card-title">제품구성</h6>
+							    <h5 class="card-title">제품구성</h5>
 							    <p class="card-text">
-										<div class="container productParts">
-										</div>
-								</p>
+							    <div class="row">
+								    <div class="col-md-4 partsAppend" style="margin-right: 60px;"></div>
+									<div class="col-md-4 execptButton" style="margin-left: 30px;"></div>
 							  </div>
+							  </p>
+							  </div>
+			  
 							</div><br/>
 							
-							<div class="card" id="insertcard" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+							<div class="card" id="insertcard">
 								<div class="card-body">
-								    <h6 class="card-title">추가재료</h6>
+								    <h5 class="card-title">추가재료</h5>
 								    <h8 class="card-subtitle mb-2 text-muted">*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</h8>
 								    <p class="card-text">
-										<div class="container">
-											재료 검색 : 
-												<div style="display:flex;">	
-													<div class="form-outline">
-														<input name="searchKeyword" type="search" class="form-control search" value=""/>
-													</div>		  
-													<button type="button" class="btn btn-primary partSearch" onclick="search()">
-														<i class="bi bi-search"></i>
-													</button>
-												</div>
+										<div class="container" style="display:flex; justify-content: center">
+											재료 검색 : &emsp;
+											<div style="display:flex;">	
+												<div class="form-outline">
+													<input name="searchKeyword" type="search" class="form-control search" value="" style="border-color: #FF4500; border-width: 2px;"/>
+												</div>		  
+												<button type="button" class="btn btn-primary partSearch" onclick="search()">
+													<i class="bi bi-search"></i>
+												</button>
+											</div>
 										</div>
 										<div class="container">
 											<div class="plusparts"></div>
@@ -248,7 +290,7 @@
 								  </div>
 							</div><br/>
 				
-					  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+					  		<div class="card">
 								<div class="card-body">
 								    <h8 class="card-subtitle mb-2 text-muted"></h8>
 								    <p class="card-text">
@@ -263,6 +305,7 @@
 				
 								</div>
 							</div><br/>
+						</div>
 					</form>
 
 				</div>
@@ -285,6 +328,14 @@
 	
 	//insertPurchase submit
 	function fncInsertPurchase() {
+		
+		let totalSum = $('#totalSum').text().replace(",","");
+
+		if(totalSum==='0' || isNaN(totalSum)){
+			toastr.error("구매할 상품이 없습니다.","",{timeOut:2000});
+			return;
+		}
+		
   		$(".list").attr("method" , "GET").attr("action" , "/purchase/insertPurchase").submit();
   	  }
 	
@@ -292,7 +343,7 @@
 	function fnCalCartCount(type, ths){
 		var stat = $(ths).parents("td").find("span[name='count']").text();
 		var num = parseInt(stat,10);
-		var price = parseInt($(ths).parents("tr").find("span[name='price']").text());
+		var price = parseInt($(ths).parents("tr").find("span[name='price']").text().replace(",",""));
 		var oneprice = parseInt(price,10)/num;
 		
 		if(type=='minus'){
@@ -304,24 +355,21 @@
 			$(ths).parents("td").find("span[name='count']").text(num);
 			
 			const minus = price - oneprice;
-			$(ths).parents("tr").find("span[name='price']").text(minus);
-			const minustotal = parseInt($("#total").text()) - oneprice;
-			$("#total").text(minustotal);
+			$(ths).parents("tr").find("span[name='price']").text(minus.toLocaleString());
+			const minustotal = parseInt($("#totalSum").text().replace(",","")) - oneprice;
+			$("#totalSum").text(minustotal.toLocaleString());
 
 		}else{
 			num++;
 			$(ths).parents("td").find("span[name='count']").text(num);
-			
             const plus = price + oneprice;
-            $(ths).parents("tr").find("span[name='price']").text(plus);
-            const plustotal = parseInt($("#total").text()) + oneprice;
-			$("#total").text(plustotal);
+            $(ths).parents("tr").find("span[name='price']").text(plus.toLocaleString());
+            const plustotal = parseInt($("#totalSum").text().replace(",","")) + oneprice;
+			$("#totalSum").text(plustotal.toLocaleString());
 		}
 		
 		const customProductNo = $(ths).attr('data-no');
-		console.log(customProductNo);
 		const count = $(ths).parents("td").find("span[name='count']").text();
-		console.log(count);
 		
 		$.ajax({
 			url:"/purchase/api/updateCustomProduct/"+customProductNo+"/"+count,
@@ -356,15 +404,16 @@
 		        dataType : "json",
 		        success : function(data){	
 		        	for(var i=0; i<data.partsList.length; i++){
-		        		const productParts = "<div class='partsList'><span>"+data.partsList[i].name+"</span> &emsp;&emsp;"
-						+"<button type='button' class='btn btn-outline-primary execpt' style='margin-right:10px;' data-partsNo='"+ data.partsList[i].productPartsNo +"' data-partsName='" + data.partsList[i].name +"' onClick='fncClickExcept(this)'>제외하기</button></div>"
+		        		const productParts = "<div class='container productparts' style='line-height:35px;'>"+data.partsList[i].name+"</div>";
+						const productPartsButton = "<button type='button' class='btn btn-outline-primary execpt' data-partsNo='"+ data.partsList[i].productPartsNo +"' data-partsName='" + data.partsList[i].name +"' onClick='fncClickExcept(this)'>제외하기</button>"
 		        		
-		        		$(".productParts").append(productParts);
+		        		$(".partsAppend").append(productParts);
+		        		$(".execptButton").append(productPartsButton);
 		        	}
-
+					
 	               $("#customProductNo").val(data.customProduct.customProductNo);
 	               $("#productName").text(data.customProduct.product.name);
-	               $("#customPrice").text(data.customProduct.product.price);
+	               $("#customPrice").text((data.customProduct.product.price).toLocaleString());
 		        }
 	    	});	
 			
@@ -372,22 +421,39 @@
 		
 		//장바구니리스트에서 삭제
 		$(".delete").on("click",function(){
-			var del = confirm("장바구니에서 삭제할까요?");	
-			const customproductNo = $(this).data('value');
+			let del = confirm("장바구니에서 삭제할까요?");	
+			let customproductNo = $(this).data('value');
 			if(del){
 				window.location.href="/purchase/deleteCustomProduct/"+customproductNo;
 			}
 		});
-		
-		
 	})
+	
+	function fncSelectDelete(){
+		let checkBoxArr = []; 
+		$("input:checkbox[name='check']:checked").each(function() {
+		    checkBoxArr.push($(this).attr("data-customProductNo"));     // 체크된 것만 값을 뽑아서 배열에 push
+		    console.log(checkBoxArr);
+		})
+		
+		if(checkBoxArr.length>0){
+		    let del = confirm("선택된 상품을 장바구니에서 삭제할까요?");	
+		    if(del){
+				$(".list").append(`<input type="hidden" name ="checkBoxArr" value="\${checkBoxArr}">`);	
+				$(".list").attr("method" , "POST").attr("action" , "/purchase/deleteCustomProduct").submit();
+		    }
+		}else{
+			toastr.error("삭제할 상품을 선택해주세요.","",{timeOut:2000});
+			return;
+		}
+	}
 	
 	////모달
 	//제외재료번호, 이름 배열
 	const minusNo = [];
 	const minusName = [];
 	
-	//form insertCustomProduct
+	//form updateCustomProduct
 	function fncUpdateCustomProduct(ths) {
 		
 		/* const plusParts = $('.name');
@@ -401,7 +467,7 @@
 		if(conf){ */
 
 			const count = $("#customProductCount").text();
-			const customprice= $("#total").text();
+			const customprice= $("#customPrice").text();
 			const cartStatus = $(ths).val();
 			
 			$(".cc").append(`<input type="hidden" name ="count" value="\${count}">`);
@@ -409,11 +475,11 @@
 			$(".cc").append(`<input type="hidden" name ="minusNameA" value="\${minusName}">`);
 			$(".cc").append(`<input type="hidden" name ="price" value="\${customprice}">`);
 			$(".cc").append(`<input type="hidden" name ="cartStatus" value="\${cartStatus}">`);
-			$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
+			$(".cc").attr("method" , "POST").attr("action" , "/purchase/updateCustomProduct").submit();
 		//}
 	 }
 	
-	//상품구성재료 제외안되어있으면 제외하기
+	//제외하기버튼클릭시 안에서 사용(상품구성재료 제외안되어있으면 제외하기)
 	function fncExecpt(partsNo, partsName, ths){
 		minusNo.push(partsNo);
 
@@ -474,13 +540,13 @@
 	
 			$(ths).closest("div").find("span[name='gram']").text(num);
 			
-	        const minus = parseInt($("#customPrice").text()) - calprice;
+	        const minus = parseInt($("#customPrice").text().replace(",","")) - calprice;
 	        $("#customPrice").text(minus);
 		}else{
 			num+=10;
 			$(ths).closest("div").find("span[name='gram']").text(num);
 	
-	        const plus = parseInt($("#customPrice").text()) + calprice;
+	        const plus = parseInt($("#customPrice").text().replace(",","")) + calprice;
 	        $("#customPrice").text(plus);
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text(num));
@@ -519,9 +585,10 @@
 		               $(".search").val('');
 		               $(".plusparts").append(parts); 
 		                              
-		                const productprice = $("#customPrice").text();
+		                const productprice = $("#customPrice").text().replace(",","");
+		                console.log("productprice"+productprice);
 		                const result = parseInt(productprice)+parseInt(data.price);
-		                $("#customPrice").text(result);
+		                $("#customPrice").text(result.toLocaleString());
 			        }
 				})
 			}else{
@@ -568,7 +635,7 @@
 		 
 		 //모달위에 autocomplete appendTo
 		 $("#changeModal").on("shown.bs.modal", function() {
-			  $(".searchS").autocomplete("option", "appendTo", "#changeModal")
+			  $(".search").autocomplete("option", "appendTo", "#changeModal")
 			})
 		 
 		$(".partSearch").on("click",()=>{
@@ -597,8 +664,13 @@
 	
 	//추가재료 삭제
 	function fncClose(ths){
-		 $(ths).closest("div").parent().remove();
+		let partsPrice = parseInt($(ths).closest("div").parent().find("span[name='partsprice']").text());
+		let count = parseInt($(ths).closest("div").parent().find("span[name='gram']").text())/10;
+		let customPrice = $('#customPrice').text().replace(",","");
+		let total = customPrice - (partsPrice*count);
+		$('#customPrice').text(total.toLocaleString());
 		
+		$(ths).closest("div").parent().remove();		
 	}
 	
 	//커스터마이징 한 상품 수량변경
