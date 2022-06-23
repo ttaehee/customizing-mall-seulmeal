@@ -180,7 +180,7 @@
 					<i class="bi bi-search"></i>
 				</button>
 				<c:if test="${ !empty user }">
-					<button style="font-size: 25px;" onclick="window.location.href='/purchase/getListPurchase'" type="button" class="btn btn-primary">
+					<button style="font-size: 25px;" onclick="window.location.href='/purchase/getListCustomProduct/1'" type="button" class="btn btn-primary">
 						<i style="" class="bi bi-cart3"></i>
 					</button>
 				</c:if>				
