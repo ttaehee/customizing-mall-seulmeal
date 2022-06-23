@@ -43,7 +43,8 @@ public class UserRestController {
 	@Autowired
 	private LoginService loginService;
 	
-
+	@Autowired
+	private PurchaseService purchaseService;
 	
 
 	public UserRestController() {
@@ -428,21 +429,37 @@ public class UserRestController {
 	}
 	
 	@PostMapping("api/insertPoint")
-	public Point insertPoint(@RequestBody Map<String, Object> map, Point point, HttpSession session) throws Exception{
+	public JSONObject insertPoint(@RequestBody Map<String, Object> map, Point point,  HttpSession session) throws Exception{
 		
-		User user=(User)(session.getAttribute("user"));
-		System.out.println("::user : "+user);
+		JSONObject json = new JSONObject();
+
+		int purchaseNo=(Integer)map.get("purchaseNo");
+		System.out.println(":: purchase : "+purchaseNo);
 		
 		
-		point.setUserId(user.getUserId());
-		point.setPointStatus((String)map.get("status"));
-		point.setPoint(Integer.parseInt((String)map.get("price")));
 		
+		Purchase purchase = purchaseService.getPurchase(purchaseNo);
+		purchase.setPurchaseStatus("0");
+		purchaseService.updatePurchaseCode(purchase);
+		
+		
+		String userId=purchase.getUser().getUserId();
+		User user=userService.getUser(userId);
+		
+		point.setUserId(userId);
+		point.setPurchaseNo(purchase.getPurchaseNo());
+		point.setPointStatus("2");
+		point.setPoint(purchase.getPrice());
 		userService.insertPoint(point);
 		
-		point=userService.getPoint(point.getPointNo());
+		user.setTotalPoint((purchase.getPrice()+user.getTotalPoint()));
+		userService.updateUserTotalPoint(user);
+		user=userService.getUser(userId);
 		
-		return point;
+		json.put("chargePoint", purchase.getPrice());
+		json.put("totalPoint", user.getTotalPoint());
+		
+		return json;
 	}
 	
 	

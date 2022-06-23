@@ -39,13 +39,7 @@ input{
     border: solid 1px #dadada;
     background: #fff;
 }
-.login-confirm-wrap{
 
-    margin: 10px 60px 20px 60px;
-    padding: 10px;
-    /* border: solid 1px #dadada; */
-    background: #fff;
-}
 /*input 아이디 form*/
 #input-id{
     border: none;
@@ -240,8 +234,28 @@ input{
 .findId{
 	text-align: center;
 }
+.login-confirm-wrap{
+
+   margin:  10px 10px 10px 10px;
+  
+   
+}
 
 
+/* #line1{
+
+	border-top: 2px solid black;
+	border-left: 2px solid black;
+	border-right: 2px solid black; 
+	
+}
+#line2{
+
+	border-bottom: 2px solid black;
+	 
+	
+} 
+ */
 }
 
 </style>
@@ -252,11 +266,18 @@ input{
 	<div class="main">
 		<!--로그인 부분-->
 		<form class="form-signin" method="post" action="/user/findUserId" target="_self">
-			<section class="login-wrap">
+			<section class="login-wrap">	
+
+				
+				
 				<h2>아이디 찾기</h2>
 				<div class="login-confirm-wrap">
-					<div id="phoneCheck" style="float:left; border-bottom: 2px solid blue;"><a style="float:left;" onclick="phone()" >핸드폰</a></div>
-					<div id="emailCheck" style="float:right; border-bottom: 2px solid blue;"><a  style="float:right;" onclick="email()" >이메일</a></div>			
+					<table>
+					  <tr>
+					    <td id ="line1" class="line1" style="width:250px;height: 50px;"><a onclick="phone()" >핸드폰</a> </td>
+					    <td id ="line2" class="line2"style="width:250px;height: 50px;"><a onclick="email()" >이메일</a></td>
+					  </tr>
+					</table>		
 				</div>
 				<div class="login-id-wrap">
 					<input id="input-id" name="name" placeholder="이름" type="text"></input>
@@ -312,13 +333,37 @@ input{
 function email(){
 	$(".phone").css("display","none");
 	$(".email").css("display","block");
+	$("#line2").css("border-top","2px solid black");
+	$("#line2").css("border-left","2px solid black");
+	$("#line2").css("border-right","2px solid black");
+	$("#line1").css("border-bottom","2px solid black");
+	$("#line1").css("border-top",'');
+	$("#line1").css("border-left",'');
+	$("#line1").css("border-right",'');
+	$("#line2").css("border-bottom",'');
+	
 }
 
 function phone(){
 	$(".email").css("display","none");
 	$(".phone").css("display","block");
+	$("#line1").css("border-top","2px solid black");
+	$("#line1").css("border-left","2px solid black");
+	$("#line1").css("border-right","2px solid black");
+	$("#line2").css("border-bottom","2px solid black");
+	$("#line2").css("border-top",'');
+	$("#line2").css("border-left",'');
+	$("#line2").css("border-right",'');
+	$("#line1").css("border-bottom",'');
+	
 }
 
+ $(function(){
+	$("#line1").css("border-top","2px solid black");
+	$("#line1").css("border-left","2px solid black");
+	$("#line1").css("border-right","2px solid black");
+	$("#line2").css("border-bottom","2px solid black");
+});  
 
 
 

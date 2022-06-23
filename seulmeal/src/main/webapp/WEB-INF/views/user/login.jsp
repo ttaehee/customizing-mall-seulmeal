@@ -528,6 +528,17 @@ h3{
         window.location.href=uri;
     } 
    
+   $("#input-pw").on('keyup', function(e){
+       if(e.key==='Enter'||e.keyCode===13){
+    	   login();
+    	   
+       }
+   })
+
+   
+   
+   
+   
    function login(){
 	   
 	   const userId= $("#input-id").val();
@@ -558,11 +569,14 @@ h3{
 	        		$("#loginCheck").css("color","crimson").text("비밀번호가 일치하지 않습니다.");
 	        		return;
 	        	}
-	        	
+	     
 	        }
 		})		 
 		
 	}
+   
+   
+ 
    
 </script>
 </body>
