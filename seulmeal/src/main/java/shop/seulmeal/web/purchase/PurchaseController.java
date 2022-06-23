@@ -191,15 +191,31 @@ public class PurchaseController {
 		return "redirect:/purchase/getListCustomProduct/1";
 	}	
 		
-	//커스터마이징 상품 장바구니에서 삭제 
+	//커스터마이징 상품 장바구니에서 낱개삭제 
 	@GetMapping("deleteCustomProduct/{customProductNo}")
 	@Transactional(rollbackFor= {Exception.class})
 	public String deleteCustomProduct(@PathVariable int customProductNo) {
 		
-		System.out.println("/deletePurchase");
+		System.out.println("/deletePurchase : Get");
 
 		int result = purchaseService.deleteCustomProduct(customProductNo);
 		System.out.println("delete : "+result);
+		
+		return "redirect:/purchase/getListCustomProduct/1";
+	}	
+	
+	//커스터마이징 상품 장바구니에서 선택다중삭제 
+	@PostMapping("deleteCustomProduct")
+	@Transactional(rollbackFor= {Exception.class})
+	public String deleteCustomProduct(String checkBoxArr) {
+		
+		System.out.println("/deletePurchase Post : " + checkBoxArr);
+		
+		String[] check = checkBoxArr.split(",");
+
+		for(String customProductNo : check ) {
+			purchaseService.deleteCustomProduct(Integer.parseInt(customProductNo));
+		}
 		
 		return "redirect:/purchase/getListCustomProduct/1";
 	}	

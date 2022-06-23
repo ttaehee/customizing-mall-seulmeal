@@ -18,7 +18,6 @@
 	<style>
 		
 		h2{
-		
 			text-align: left; 
 		}
 
@@ -34,9 +33,10 @@
 		h5:after {
 	        content: "";
 	        display: block;
-	        width: 250px;
+	        width: 70px;
 	        border-bottom: 2px solid #FF4500;
-	        margin: 20px auto;
+	        margin: 20px 10px;
+	        margin-top: 5px;
 		}
 		
 		button:hover{
@@ -66,7 +66,36 @@
 	        margin: 0 auto; 
 	        float: none;
 	        margin-bottom: 10px; 
-		}	
+	        border: 2px solid #FF4500;
+	        width: 40rem; 
+	        padding: 0px 0px 0px 50px; 
+	        border-radius: 10px;
+		}
+		
+		/*체크박스*/
+		input[type="checkbox"]{
+        	display: none;
+        }
+     
+	    input[type="checkbox"] + label{
+	        display: inline-block;
+	        width: 20px;
+	        height: 20px;
+	        border:3px solid #FF4500;
+	        position: absolute;
+	        font-size: 14px;
+	      }
+		input[type="checkbox"]:checked + label::after{
+	        content:'V';
+	        color: #FF4500;
+	        font-size: 16px;
+	        width: 20px;
+	        height: 20px;
+	        text-align: center;
+	        position: absolute;
+	        left: 0;
+	        top:0;
+	      }	
 		
 	</style>
 	
@@ -112,7 +141,10 @@
 	 
 	        <thead>
 	          <tr>
-	            <th align="center">NO</th>
+	            <th align="center">
+					<input type="checkbox" id="delete_title" disabled="disabled"/>&emsp;
+					<label for="delete_title"></label>&emsp;&ensp;&ensp;<br/>
+				</th>
 	            <th align="right">Image</th>
 	            <th align="center">상품명</th>
 	            <th align="center">옵션</th>
@@ -122,7 +154,7 @@
 	          </tr>
 	        </thead>
 	
-			<tbody style="font-size:15px">
+			<tbody class="table_body" style="font-size:15px">
 				<c:set var="total" value="0" />
 				<c:set var="customprice" value="0" />
 				<c:set var="i" value="0" />
@@ -130,8 +162,11 @@
 					<c:set var="i" value="${i+1}" />
 					<c:set var="customprice" value="${cpd.price}" />
 					<tr class="ct_list_pop">
-						  <td align="left">${i}</td>
-						  <td align="left" data-no="${cpd.product.productNo}" title="Click : 상품확인" ><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
+						  <td align="left">
+						  	<input type="checkbox" id="cart_delete${i}" name="check" data-customProductNo="${cpd.customProductNo}"/>&emsp;
+							<label for="cart_delete${i}"></label>&emsp;&ensp;&ensp;<br/>
+						  </td>
+						  <td align="left"><img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'></td>
 						  <td align="left">${cpd.product.name}</td>
 						  <td align="left">
 						  <c:forEach var="pp" items="${cpd.plusParts}">
@@ -147,7 +182,7 @@
 						  	<button type='button' class="btn btn-outline-primary btn-sm plus" data-no="${cpd.customProductNo}" onclick="fnCalCartCount('plus',this);">+</button> 
 						  </td>
 						  <td align="left">
-						  <span id="customprice" name="price">${cpd.price*cpd.count}</span>원</td>
+						  <span id="customcartprice" name="price">${cpd.price*cpd.count}</span>원</td>
 						  <td>
 						  	<div>
 				                <p><a type="button" class="change" data-value="${cpd.customProductNo}"  data-toggle="modal" data-target="#changeModal">옵션선택다시하기</a>
@@ -161,12 +196,23 @@
 	        </tbody>
 	      </table><br/>
 	      
-	      <div class="container" style="justify-content: center; display:flex;">
-				<h5>결제예정 금액 :  <span id="total">${total}</span>원</h5>
-				<div style="border:none; float:right">
-				<button class="button" id="order" style="margin-left:200px; background-color:#FFF; border-radius:5px; border:2px solid #FF4500; font-size:22px; width: 240px" onclick="fncInsertPurchase()">전체상품 주문</button>
+	      <div class="container">
+	      <div class="row">
+	      	<div class="col-md-4">
+	      		<div>
+	      			<button type="button" class="btn btn-primary" onclick="fncSelectDelete()">선택상품 삭제</button>
 				</div>
-		</div>
+			</div>
+			<div class="col-md-4">
+				<h4>결제예정 금액 :  <span id="total">${total}</span>원</h4><br/><br/>
+			</div>
+			<div class="col-md-3">
+				<div style="border:none; float:right">
+					<button type="button" class="button" id="order" style="margin-left:200px; margin-top: -50px; background-color:#FFF; border-radius:5px; border:2px solid #FF4500; font-size:22px; width: 240px" onclick="fncInsertPurchase()">전체상품 주문</button>
+				</div>
+			</div>
+		 </div>
+		 </div>
 		
 		
 		<!-- 페이징처리 -->
@@ -191,46 +237,49 @@
 			<div class="modal-content">
 
 				<!-- 헤더 -->
-				<div class="modal-header" style="background-color: #282828; color: white;">
+				<div class="modal-header">
 					<h3 class="modal-title" id="productName"></h3>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button><br/>
 										
 				</div>
 
 				<!-- 바디 -->
-				<div id="follow-modal-body" class="modal-body" style="background-color: #282828;">
+				<div id="follow-modal-body" class="modal-body">
 
 					<form class="cc" name="insertCustom" method="post">
 						<input type="hidden" id="customProductNo" name="customProductNo"/>
 						<div class="container"> 
 						    
-							<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+							<div class="card">
 							  <div class="card-body">
-							    <h6 class="card-title">제품구성</h6>
+							    <h5 class="card-title">제품구성</h5>
 							    <p class="card-text">
-										<div class="container productParts">
-										</div>
-								</p>
+							    <div class="row">
+								    <div class="col-md-4 partsAppend" style="margin-right: 60px;"></div>
+									<div class="col-md-4 execptButton" style="margin-left: 30px;"></div>
 							  </div>
+							  </p>
+							  </div>
+			  
 							</div><br/>
 							
-							<div class="card" id="insertcard" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+							<div class="card" id="insertcard">
 								<div class="card-body">
-								    <h6 class="card-title">추가재료</h6>
+								    <h5 class="card-title">추가재료</h5>
 								    <h8 class="card-subtitle mb-2 text-muted">*추가를 원하는 재료는 검색 후 추가해주세요 (한번 추가당 10g)*</h8>
 								    <p class="card-text">
-										<div class="container">
-											재료 검색 : 
-												<div style="display:flex;">	
-													<div class="form-outline">
-														<input name="searchKeyword" type="search" class="form-control search" value=""/>
-													</div>		  
-													<button type="button" class="btn btn-primary partSearch" onclick="search()">
-														<i class="bi bi-search"></i>
-													</button>
-												</div>
+										<div class="container" style="display:flex; justify-content: center">
+											재료 검색 : &emsp;
+											<div style="display:flex;">	
+												<div class="form-outline">
+													<input name="searchKeyword" type="search" class="form-control search" value="" style="border-color: #FF4500; border-width: 2px;"/>
+												</div>		  
+												<button type="button" class="btn btn-primary partSearch" onclick="search()">
+													<i class="bi bi-search"></i>
+												</button>
+											</div>
 										</div>
 										<div class="container">
 											<div class="plusparts"></div>
@@ -239,7 +288,7 @@
 								  </div>
 							</div><br/>
 				
-					  		<div class="card" style="width: 40rem; padding: 0px 0px 0px 50px; border-radius: 10px;">
+					  		<div class="card">
 								<div class="card-body">
 								    <h8 class="card-subtitle mb-2 text-muted"></h8>
 								    <p class="card-text">
@@ -254,6 +303,7 @@
 				
 								</div>
 							</div><br/>
+						</div>
 					</form>
 
 				</div>
@@ -276,6 +326,12 @@
 	
 	//insertPurchase submit
 	function fncInsertPurchase() {
+
+		if($('#total').text()==='0' || isNaN($('#total').text())){
+			toastr.error("구매할 상품이 없습니다.","",{timeOut:2000});
+			return;
+		}
+		
   		$(".list").attr("method" , "GET").attr("action" , "/purchase/insertPurchase").submit();
   	  }
 	
@@ -347,12 +403,13 @@
 		        dataType : "json",
 		        success : function(data){	
 		        	for(var i=0; i<data.partsList.length; i++){
-		        		const productParts = "<div class='partsList'><span>"+data.partsList[i].name+"</span> &emsp;&emsp;"
-						+"<button type='button' class='btn btn-outline-primary execpt' style='margin-right:10px;' data-partsNo='"+ data.partsList[i].productPartsNo +"' data-partsName='" + data.partsList[i].name +"' onClick='fncClickExcept(this)'>제외하기</button></div>"
+		        		const productParts = "<div class='container productparts' style='line-height:35px;'>"+data.partsList[i].name+"</div>";
+						const productPartsButton = "<button type='button' class='btn btn-outline-primary execpt' data-partsNo='"+ data.partsList[i].productPartsNo +"' data-partsName='" + data.partsList[i].name +"' onClick='fncClickExcept(this)'>제외하기</button>"
 		        		
-		        		$(".productParts").append(productParts);
+		        		$(".partsAppend").append(productParts);
+		        		$(".execptButton").append(productPartsButton);
 		        	}
-
+					
 	               $("#customProductNo").val(data.customProduct.customProductNo);
 	               $("#productName").text(data.customProduct.product.name);
 	               $("#customPrice").text(data.customProduct.product.price);
@@ -363,22 +420,39 @@
 		
 		//장바구니리스트에서 삭제
 		$(".delete").on("click",function(){
-			var del = confirm("장바구니에서 삭제할까요?");	
-			const customproductNo = $(this).data('value');
+			let del = confirm("장바구니에서 삭제할까요?");	
+			let customproductNo = $(this).data('value');
 			if(del){
 				window.location.href="/purchase/deleteCustomProduct/"+customproductNo;
 			}
 		});
-		
-		
 	})
+	
+	function fncSelectDelete(){
+		let checkBoxArr = []; 
+		$("input:checkbox[name='check']:checked").each(function() {
+		    checkBoxArr.push($(this).attr("data-customProductNo"));     // 체크된 것만 값을 뽑아서 배열에 push
+		    console.log(checkBoxArr);
+		})
+		
+		if(checkBoxArr.length>0){
+		    let del = confirm("선택된 상품을 장바구니에서 삭제할까요?");	
+		    if(del){
+				$(".list").append(`<input type="hidden" name ="checkBoxArr" value="\${checkBoxArr}">`);	
+				$(".list").attr("method" , "POST").attr("action" , "/purchase/deleteCustomProduct").submit();
+		    }
+		}else{
+			toastr.error("삭제할 상품을 선택해주세요.","",{timeOut:2000});
+			return;
+		}
+	}
 	
 	////모달
 	//제외재료번호, 이름 배열
 	const minusNo = [];
 	const minusName = [];
 	
-	//form insertCustomProduct
+	//form updateCustomProduct
 	function fncUpdateCustomProduct(ths) {
 		
 		/* const plusParts = $('.name');
@@ -392,7 +466,7 @@
 		if(conf){ */
 
 			const count = $("#customProductCount").text();
-			const customprice= $("#total").text();
+			const customprice= $("#customPrice").text();
 			const cartStatus = $(ths).val();
 			
 			$(".cc").append(`<input type="hidden" name ="count" value="\${count}">`);
@@ -400,11 +474,11 @@
 			$(".cc").append(`<input type="hidden" name ="minusNameA" value="\${minusName}">`);
 			$(".cc").append(`<input type="hidden" name ="price" value="\${customprice}">`);
 			$(".cc").append(`<input type="hidden" name ="cartStatus" value="\${cartStatus}">`);
-			$(".cc").attr("method" , "POST").attr("action" , "/purchase/insertCustomProduct").submit();
+			$(".cc").attr("method" , "POST").attr("action" , "/purchase/updateCustomProduct").submit();
 		//}
 	 }
 	
-	//상품구성재료 제외안되어있으면 제외하기
+	//제외하기버튼클릭시 안에서 사용(상품구성재료 제외안되어있으면 제외하기)
 	function fncExecpt(partsNo, partsName, ths){
 		minusNo.push(partsNo);
 
@@ -559,7 +633,7 @@
 		 
 		 //모달위에 autocomplete appendTo
 		 $("#changeModal").on("shown.bs.modal", function() {
-			  $(".searchS").autocomplete("option", "appendTo", "#changeModal")
+			  $(".search").autocomplete("option", "appendTo", "#changeModal")
 			})
 		 
 		$(".partSearch").on("click",()=>{

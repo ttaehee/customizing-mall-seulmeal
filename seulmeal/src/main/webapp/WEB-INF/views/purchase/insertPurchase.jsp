@@ -50,7 +50,6 @@
         top:0;
       }
 
-
 	h2:after {
 		content: "";
 		display: block;
@@ -210,7 +209,7 @@
 						<input class="btn btn-default" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
 					</div>
 						<input type="text" id="sample3_address" placeholder="주소" readonly><br>
-						<input type="text" id="address_detail" placeholder="상세주소">
+						<input type="text" id="address" placeholder="상세주소">
 					
 					<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
 						<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
@@ -452,7 +451,7 @@
 		
 		const userId = $('#userId').val();
 		const name = $('#name').val();
-		const address = $('#sample3_postcode').val() +"/"+ $('#sample3_address').val() +"/"+ $('#address_detail').val();
+		const address = $('#sample3_postcode').val() +"/"+ $('#sample3_address').val() +"/"+ $('#address').val();
 		console.log(address);
 		const phone = $('#phone').val();
 		const email = $('#email').val();
