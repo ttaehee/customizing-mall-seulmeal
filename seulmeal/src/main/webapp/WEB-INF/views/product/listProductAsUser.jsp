@@ -26,9 +26,9 @@
 	
 </style>
 </head>
-<body style="background-color: #fff; min-height: 2000px;">
+<body style="background-color: #fff;">
 <jsp:include page="../layer/header.jsp"></jsp:include>
-<div>
+
 	<div class="container px-4 py-5" id="custom-cards">
     <h2 class="pb-2 border-bottom">이 상품 어떠세?</h2>
     	<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-5 py-3">
@@ -74,14 +74,15 @@
 			  </ul>
 			</nav>
 		</div>
-	
 	</div>	
 	
+	<jsp:include page="../layer/upscroll.jsp"></jsp:include>
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
+	
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
-</div>
-<jsp:include page="../layer/footer.jsp"></jsp:include>
-
 <script type="text/javascript">
+
+
 $(function(){
 	$(".productHref").on("click",function(){
 		const no =$(this).data("value");

@@ -70,7 +70,6 @@ public class ProductController {
 	@Transactional
 	public String insertProduct(Product product, Foodcategory f, Model model, String partsNo, String partsName,MultipartFile thumbnailFile)
 			throws Exception {
-		System.out.println("f::::::::::::::::::::::::::::: "+f);
 		product.setFoodCategory(f);
 		
 		System.out.println(thumbnailFile);
@@ -224,6 +223,7 @@ public class ProductController {
 	public String updateProduct(@PathVariable int productNo, Product product, Foodcategory f, Model model, String partsNo, String partsName,MultipartFile thumbnailFile) throws Exception {
 		product.setProductNo(productNo);
 		product.setFoodCategory(f);
+
 		System.out.println("thumbnailFile : "+thumbnailFile.getOriginalFilename());
 		if(thumbnailFile != null && !thumbnailFile.getOriginalFilename().equals("")) {
 			String thumbnailName = UUID.randomUUID().toString()+"_"+thumbnailFile.getOriginalFilename();
@@ -232,6 +232,7 @@ public class ProductController {
 			thumbnailFile.transferTo(newFileName);
 			product.setThumbnail(thumbnailName);
 		}
+
 		productService.updateProduct(product);
 		
 		return "redirect:/product/admin/listProduct/1";
@@ -384,6 +385,15 @@ public class ProductController {
 		return "/product/listReview";
 	}
 	
+	@PostMapping(value= {"updateReview/{productNo}"})
+	public String updateReview(@PathVariable int productNo, Review review, HttpSession session) throws Exception {
+		review.setProduct(productService.getProduct(productNo));
+		review.setStatus("0");
+		System.out.println(review);
+		productService.updateReview(review);
+		return "redirect:/product/getProduct/"+productNo;
+	}
+	
 	@GetMapping(value= {"deleteReview/{reviewNo}"})
 	public String deleteReview(@PathVariable int reviewNo, HttpSession session) throws Exception {
 		productService.deleteReview(reviewNo);
@@ -461,14 +471,12 @@ public class ProductController {
 		map.put("search", search);
 
 		Map<String, Object> result = productService.getListLikeProduct(map);
-		List<Like> list = (List) result.get("list");
-		List<Product> product = (List) result.get("product");
+		List<Product> product = (List) result.get("list");
 
 		Page resultPage = new Page
 				(search.getCurrentPage(), ((Integer) result.get("totalCount")).intValue(), pageUnit, pageSize);
 
-		model.addAttribute("like", list);
-		model.addAttribute("product", product);
+		model.addAttribute("like", product);
 		model.addAttribute("page", resultPage);
 		model.addAttribute("search", search);
 

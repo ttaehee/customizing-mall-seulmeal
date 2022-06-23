@@ -15,15 +15,14 @@
 	<form action="/product/updateProduct/${productNo }" method="POST" enctype="multipart/form-data">
 		<div class="row">
 			<div class="col-md-12 form-group">
-			<label for="Email3" class="col-sm-6 control-label h4">음식 카테고리 설정
-				<h6 style="margin-top: 16px">
-				<select name="foodCategoryNo">
+			<label for="Email3" class="col-sm-6 control-label h5" style="justify-content: space-between;">음식 카테고리 설정
+				<br/>
+				<select name="foodCategoryNo" style="height:35px; width: 200px">
 					<c:forEach var="foodcategory" items="${list}">
 						<c:set var="i" value="${product.foodCategory}" />
 						<option value="${foodcategory.foodCategoryNo}">${foodcategory.name}</option>
 					</c:forEach>
 				</select>
-				</h6>
 				</label>
 			</div>
 			
@@ -31,35 +30,35 @@
 			<div class="col-md-6 form-group">
 				<label for="Email3" class="col-sm-6 control-label h4" >상품명</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="name" name="name" placeholder="상품명" value="${product.name}">
+					<input type="text" class="form-control" id="name" name="name" placeholder="상품명" required value="${product.name}">
 				</div>
 			</div>
 			
 			<div class="col-md-6 form-group" style="margin-bottom: 50px">
 				<label for="Email3" class="col-sm-6 control-label h4" >짧은 내용</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="subContent" name="subContent" placeholder="짧은내용" value="${product.subContent}"/>
+					<input type="text" class="form-control" id="subContent" name="subContent" placeholder="짧은내용" required value="${product.subContent}"/>
 				</div>
 			</div>
 			
 			<div class="col-md-4 form-group">
-				<label for="Email3" class="col-sm-4 control-label h4" >가격</label>
+				<label for="Email3" class="col-sm-4 control-label h5" >가격</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="price" name="price" value="${product.price}"/>
+					<input type="text" class="form-control" id="price" name="price" required value="${product.price}"/>
 				</div>				
 			</div>
 			
 			<div class="col-md-4 form-group">
-				<label for="Email3" class="col-sm-4 control-label h4" >칼로리</label>
+				<label for="Email3" class="col-sm-4 control-label h5" >칼로리</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="calorie" name="calorie" value="${product.calorie}"/>
+					<input type="text" class="form-control" id="calorie" name="calorie" required value="${product.calorie}"/>
 				</div>
 			</div>
 			
 			<div class="col-md-4 form-group" style="margin-bottom: 50px">
-				<label for="Email3" class="col-sm-4 control-label h4" >재고</label>
+				<label for="Email3" class="col-sm-4 control-label h5" >재고</label>
 					<div class="col-md-12">
-					<input type="text" class="form-control" id="stock" name="stock" value="${product.stock}" />
+					<input type="text" class="form-control" id="stock" name="stock" required value="${product.stock}" />
 				</div>
 			</div>
 			<div class="col-md-12 form-group"style="margin-bottom: 10px">
@@ -68,13 +67,12 @@
 			</div>
 				
 			<div class="col-md-12" style="margin-top:20px;" >
+
 				<div class="filebox" style="display: flex; justify-content:space-around;">
-					<input class="upload-name" value="파일선택" disabled="disabled" style="width:90%;">
-					<label class="btn btn-primary" for="ex_filename">썸네일</label> 
+					<input class="upload-name" value="파일선택" disabled="disabled" style="width:96%;">
 					<input type="file" accept="image/*" name="thumbnailFile" id="ex_filename" class="upload-hidden" onchange="readURL(event);" />  
 				</div>
 			</div>
-			
 			<div class="col-md-12" style="margin-top: 50px">
 				<label for="Email3" class="col-sm-4 control-label h4" >상세내용</label>
 				<textarea id="summernote" name="content">${product.content}</textarea>
@@ -96,21 +94,11 @@
 </div>
 
 <script type="text/javascript">
-const deleteAttachmentNo = [];
-const deleteAttachmentName = [];
-
-function deleteAttachment(e){
-	const no = $(e).closest("div").data("value");
-	const name = $(e).closest("div").text();
-	deleteAttachmentNo.push(no);
-	deleteAttachmentName.push(name);
-	$(e).closest("div").css("display","none");
-}
 
 
 	//fileUploadTag
 	$(document).ready(function(){
-		const fileTarget = $('.filebox .upload-hidden');
+		const fileTarget = $('.upload-hidden');
 		let filename;	
 		fileTarget.on('change', function(){  // 값이 변경되면
 			if(window.FileReader){  // modern browser
@@ -122,6 +110,10 @@ function deleteAttachment(e){
 			$(this).siblings('.upload-name').val(filename);
 		});
 	});
+	
+	$(".filebox").on("click",()=>{
+		document.querySelector("#ex_filename").click();
+	})
 	
 	//////
 	

@@ -26,21 +26,24 @@
 			<p style="text-align: right;">*</p>
 			
 			<thead style="background-color: #ff4500; color: #fff;">
-				<tr>
-					<th>음식카테고리명</th>
+				<tr id="table_row">
+					<th>썸네일</th>
 					<th>상품명</th>
 					<th>가격</th>
-					<th>등록일자</th>
+					<th>재고량</th>
 					<th>상태</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="product" items="${product}" varStatus="status">
-				<tr>
+				<c:forEach var="product" items="${like}" varStatus="status">
+				<tr id="like_row">
+					<th>
+					<a href="/product/getProduct/${product.productNo }"><img src="/resources/attachments/${product.thumbnail}" style=" object-fit:cover; height: 88px; width: 144px;" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'"></a>
+					</th>
 					<th style="padding-left: 50px; text-align: left;"><a href="/product/getProduct/${product.productNo }">${product.name}</a></th>
 					<th>${product.price}</th>
 					<th>${product.stock}</th>
-					<th>	<div data-value="${product.productNo}" class="btn-delete" id="deleteLike" style="cursor: pointer;">
+					<th>	<div data-value="${product.productNo}" onclick="updateLikeProduct(this)" class="btn-delete" id="deleteLike" style="cursor: pointer;">
 						좋아요 취소</div>
 					</th>
 				</tr>
@@ -60,18 +63,28 @@
 		</div>
 	</div>	
 </div>
-		
-<jsp:include page="../layer/footer.jsp"></jsp:include>
+
+			<jsp:include page="../layer/upscroll.jsp"></jsp:include>
+	<jsp:include page="../layer/footer.jsp"></jsp:include>
+	
+	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>
 
 <script> 
-$(function(){ 
-
-	  $(".btn-delete").click(function(){
-		  const no =$(this).data("value");
-		window.location.href = '/product/api/updateLikeProduct/'+no;
-	  });
-	  
-	});
+function updateLikeProduct(e){
+	const no = $(e).data("value");
+	///*
+	$.ajax({
+		url : "/product/api/updateLikeProduct/"+no,
+		method : "GET",
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+        success : function(data){
+			$('#like_row').remove();
+			alert("상품의 좋아요를 취소했습니다.");
+			
+        }
+	})
+};
 </script>
 </body>
 </html>
