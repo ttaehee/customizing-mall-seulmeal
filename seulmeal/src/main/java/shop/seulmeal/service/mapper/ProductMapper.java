@@ -93,7 +93,7 @@ public interface ProductMapper {
 	
 	public void insertLikeProduct(Map<String, Object> map) throws Exception;
 
-	public List<Like> getListLikeProduct(Map<String, Object> map) throws Exception;
+	public List<Product> getListLikeProduct(Map<String, Object> map) throws Exception;
 
 	public void deleteLikeProduct(Map<String, Object> map) throws Exception;
 

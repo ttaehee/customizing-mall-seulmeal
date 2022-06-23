@@ -85,7 +85,7 @@
 				<div class="col-md-12 form-group">
 				<label for="Email3" class="col-sm-4 control-label h5" style="margin-top: 10px" >재고</label>
 					<div class="col-md-12">
-					<input type="number" class="form-control" id="stock" name="stock" required />
+					<input type="number" class="form-control" id="stock" name="stock" required min="0" />
 				</div>
 				</div>
 			</div>

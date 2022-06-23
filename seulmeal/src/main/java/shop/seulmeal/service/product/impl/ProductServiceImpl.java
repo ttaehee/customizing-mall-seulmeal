@@ -269,20 +269,14 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public Map<String, Object> getListLikeProduct(Map<String, Object> map) throws Exception {
-		List<Like> list = productMapper.getListLikeProduct(map);
+		List<Product> list = productMapper.getListLikeProduct(map);
 
-		List<Product> product = new ArrayList<Product>();
-		
-		for( int i = 0; i < list.size(); i++ ) {
-			product.add(productMapper.getProduct(list.get(i).getProductNo()));
-		}
 		Map<String, Object> result = new HashMap<String,Object>();
 		
 		String userId = (String) map.get("userId");
 		int totalCount = productMapper.getLikeProductTotalCount(userId);
 		
 		result.put("list", list);
-		result.put("product", product);
 		result.put("totalCount", totalCount);
 
 		return result;

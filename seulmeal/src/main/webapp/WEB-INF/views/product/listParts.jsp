@@ -91,19 +91,19 @@
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">재료명</p>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="name" placeholder="재료명을 입력하세요" style="border: none;">
+						<input type="text" class="form-control" name="name" placeholder="재료명을 입력하세요(필수사항 최대 14자)" equired maxlength='14' style="border: none;">
 					</div>
 				</div>
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">재료 가격</p>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="price" placeholder="가격을 입력하세요" style="border: none;">
+						<input type="number" class="form-control" name="price" placeholder="가격을 입력하세요(필수사항)" equired min="0" style="border: none;">
 					</div>
 				</div>
 				<div class="col-md-12 form-group">
 					<p class="text-left" style="padding-left: 13px;">재료 칼로리</p>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="calorie" placeholder="칼로리를 입력하세요" style="border: none;">
+						<input type="number" class="form-control" name="calorie" placeholder="칼로리를 입력하세요(필수사항)" equired min="0" style="border: none;">
 					</div>
 				</div>
 				<div class="text-right" style="margin-top: 20px; padding-right: 10px;">
@@ -125,19 +125,19 @@
 						
 						<p class="text-left" style="padding-left: 13px;">재료명</p>
 						<div class="col-md-12">
-							<input type="text" class="form-control" name="name" id="updateName" value="" placeholder="재료명을 입력하세요" style="border: none;">
+							<input type="text" class="form-control" name="name" id="updateName" value="" placeholder="재료명을 입력하세요(필수사항 최대 14자)" equired maxlength='14' style="border: none;">
 						</div>
 					</div>
 					<div class="col-md-12 form-group">
 						<p class="text-left" style="padding-left: 13px;">재료 가격</p>
 						<div class="col-md-12">
-							<input type="text" class="form-control" name="price" id="updatePrice" value="" placeholder="가격을 입력하세요" style="border: none;">
+							<input type="number" class="form-control" name="price" id="updatePrice" value="" placeholder="가격을 입력하세요(필수사항)" equired min="0" style="border: none;">
 						</div>
 					</div>
 					<div class="col-md-12 form-group">
 						<p class="text-left" style="padding-left: 13px;">재료 칼로리</p>
 						<div class="col-md-12">
-							<input type="text" class="form-control" name="calorie" id="updateCalorie" value="" placeholder="칼로리를 입력하세요" style="border: none;">
+							<input type="number" class="form-control" name="calorie" id="updateCalorie" value="" placeholder="칼로리를 입력하세요(필수사항)" equired min="0" style="border: none;">
 						</div>
 					</div>
 					<div class="text-right" style="margin-top: 20px; padding-right: 10px;">
