@@ -16,7 +16,6 @@
 	    <div class="row flex-nowrap">
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
-				${prevPage }
 				<div style="margin-bottom: 20px;">
 					<span>블랙리스트 유저 : 0</span>			
 					<span>주문한 상품 : ${count.PURCHASECOUNT}</span>
@@ -61,6 +60,33 @@
 						<canvas id="mixed-chart2"></canvas>
 					</div>					
 				</div>
+	            
+	            <table class="table table-hover text-center">
+				<thead style="background-color: #ff4500; color: #fff;">
+					<tr>
+						<th>일자</th>
+						<th>가입자수</th>
+						<th>구매횟수</th>
+						<th>판매액</th>
+						<th>리뷰횟수</th>
+						<th>문의횟수</th>
+						<th>게시글횟수</th>
+					</tr>
+				</thead>
+				<tbody>					
+					<c:forEach var="u" items="${userDay}" varStatus="statusNum">
+					<tr>
+						<th>${u.REGDATE}</th>
+						<th>${u.UCNT}</th>
+						<th>${purchaseDay[statusNum.index].UCNT}</th>
+						<th>${purchasePriceDay[statusNum.index].UCNT}</th>
+						<th>${reviewDay[statusNum.index].UCNT}</th>
+						<th>${queryDay[statusNum.index].UCNT}</th>
+						<th>${communityDay[statusNum.index].UCNT}</th>
+					</tr>
+					</c:forEach>
+				</tbody>
+			</table>
 	            
 	        </div>
 	    </div>

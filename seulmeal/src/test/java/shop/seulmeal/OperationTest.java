@@ -70,6 +70,29 @@ class OperationTest {
 	String api;
 	
 	@Test
+	void adminCount() {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("table", "post");
+		map.put("post_status", 0);
+		//map.put("option", "price");
+		List<Map<String,Object>> list = operationMapper.countAdminDay(map);
+		
+		for (Map<String, Object> map2 : list) {
+			System.out.println(map2);
+		}
+	}
+	
+	//@Test
+	void mainProduct() {
+		User user = new User();
+		Map<String,Object> map = new HashMap<>();
+		user.setFoodCategoryName1("한식");
+		map.put("user", user);
+		List<Product> list = operationMapper.selectUserProduct(map);
+		System.out.println(list);
+	}
+	
+	//@Test
 	void userCount() {
 		Map<String,Object> map =operationMapper.countAdmin();
 		List<Map<String,Object>> list = operationMapper.salePrice();

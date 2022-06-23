@@ -63,6 +63,7 @@
 				</div>
 			</div>
 			<div class="col-md-12 form-group"style="margin-bottom: 10px">
+				<input type="hidden" value="${product.thumbnail}" name="thumbnail" />
 				<label for="Email3" class="col-sm-2 control-label h4" >썸네일</label>
 			</div>
 				

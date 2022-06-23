@@ -44,7 +44,7 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>	
 	<br/>
 	<div class="container">
-		<div class="row" style="border-top: thick double #4b6cb7; border-bottom: thick double #4b6cb7; margin-bottom: 1rem; margin-top: 2rem;">
+		<div class="row" style="border-top: thick double #ff4500; border-bottom: thick double #ff4500; margin-bottom: 1rem; margin-top: 2rem;">
 			<div class="col-6">
 				<h1 class="pt-5 mb-4 fw-bold">이벤트</h1>
 			</div>

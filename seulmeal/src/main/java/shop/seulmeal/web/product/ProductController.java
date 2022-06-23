@@ -224,7 +224,8 @@ public class ProductController {
 	public String updateProduct(@PathVariable int productNo, Product product, Foodcategory f, Model model, String partsNo, String partsName,MultipartFile thumbnailFile) throws Exception {
 		product.setProductNo(productNo);
 		product.setFoodCategory(f);
-		if(thumbnailFile != null) {
+		System.out.println("thumbnailFile : "+thumbnailFile.getOriginalFilename());
+		if(thumbnailFile != null && !thumbnailFile.getOriginalFilename().equals("")) {
 			String thumbnailName = UUID.randomUUID().toString()+"_"+thumbnailFile.getOriginalFilename();
 			
 			File newFileName = new File(path,thumbnailName);
@@ -233,7 +234,7 @@ public class ProductController {
 		}
 		productService.updateProduct(product);
 		
-		return "redirect:/product/getProduct/" + product.getProductNo();
+		return "redirect:/product/admin/listProduct/1";
 	}	
 	@GetMapping(value = {"deleteProduct/{productNo}"})
 	public String deleteProduct(@PathVariable int productNo, HttpSession session) throws Exception {

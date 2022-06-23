@@ -76,8 +76,7 @@ public class AttachmentsController {
 		
 		try {
 			// 파일 저장
-	        InputStream fileStream = multipartFile.getInputStream();
-	        FileUtils.copyInputStreamToFile(fileStream, targetFile);	
+			multipartFile.transferTo(targetFile);
 	        	        
 	        json.put("url", "/resources/attachments/"+savedFileName);  
 	        json.put("result", "success");

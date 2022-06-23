@@ -27,8 +27,6 @@
 						<c:forEach var="attachments" items="${post.attachments}">
 							<div data-value="${attachments.attachmentsNo}">${attachments.attachmentName}<button type="button" onclick="deleteAttachment(this)" class="btn btn-primary">x</button></div>
 						</c:forEach>
-							
-							<input type="file" name="uploadfile" multiple="multiple" id="ex_filename" class="upload-hidden" />  
 					</div>
 				</div>
 				<div class="col-md-12" style="margin-top:20px;" >

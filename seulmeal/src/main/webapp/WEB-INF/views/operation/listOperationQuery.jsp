@@ -188,9 +188,6 @@
 			<div class="col-md-4">
 				<nav aria-label="...">
 				  <ul class="pagination">
-			  		<li class="page-item disabled">
-				      <span class="page-link" data-value="1">Previous</span>
-				    </li>
 				  	<c:forEach var="i" begin="${page.beginUnitPage}" end="${page.endUnitPage}">
 				  		<li class="page-item">
 				  			<c:if test="${search.searchKeyword ==null }">
@@ -201,9 +198,6 @@
 				  			</c:if>
 				  		</li>
 				  	</c:forEach>
-				  	<li class="page-item">
-				      <a class="page-link" href="#">Next</a>
-				    </li>
 				  </ul>
 				</nav>
 			</div>
@@ -262,8 +256,6 @@
 	    _this.cnt = 0; // 입력횟수 체크
 	    _this.compChk = false; // 입력완료 체크
 	    _this.msg = [
-	        '비밀 번호 틀렸습니다',
-	        'Success! 😍'
 	    ]; 
 	
 	    _this.parent = document.querySelector('.pwWrap');

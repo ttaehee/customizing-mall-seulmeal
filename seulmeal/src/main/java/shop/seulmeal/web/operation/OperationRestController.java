@@ -125,8 +125,9 @@ public class OperationRestController {
 		JSONObject json = new JSONObject(); 
 		
 		Post sPost = operationService.getOperation(post);
-		
-		if(sPost !=null && sPost.getPassword() == post.getPassword()) {
+		System.out.println(sPost);
+		System.out.println(post);
+		if(sPost !=null && sPost.getPassword().equals(post.getPassword())) {
 			json.put("result","true");
 		} else {
 			json.put("result","false");

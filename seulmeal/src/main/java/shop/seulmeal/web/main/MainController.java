@@ -1,5 +1,6 @@
 package shop.seulmeal.web.main;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -116,8 +117,8 @@ public class MainController {
 				List<Product> list = (List)map.get("list");
 				model.addAttribute("list",list);
 			}else {
-				map = productService.getListProduct(search);
-				List<Product> list = (List)map.get("list");
+				map.put("user", user);				
+				List<Product> list = operationService.selectUserProduct(map);
 				model.addAttribute("list",list);
 			}
 		}
@@ -128,12 +129,39 @@ public class MainController {
 	
 	@GetMapping("/admin")
 	public String adminPage(HttpSession session, Model model, HttpServletRequest request) throws Exception {
-		
+		Map<String,Object> map = new HashMap<String,Object>();
 		User user = (User)session.getAttribute("user");
 		model.addAttribute("count",operationService.countAdmin());
 		model.addAttribute("userCount",operationService.userCount("users"));
 		model.addAttribute("purchaseCount",operationService.userCount("purchase"));
 		model.addAttribute("salePrice",operationService.salePrice());
+		
+		// table 부분
+		// user 일일 가입자수
+		map.put("table", "users");		
+		model.addAttribute("userDay",operationService.countAdminDay(map));
+		
+		// 구매 횟수
+		map.put("table", "purchase");
+		model.addAttribute("purchaseDay",operationService.countAdminDay(map));
+		
+		// 판매액
+		map.put("option", "price");
+		model.addAttribute("purchasePriceDay",operationService.countAdminDay(map));
+		map.put("option", null);
+		
+		// 리뷰횟수
+		map.put("table", "review");
+		model.addAttribute("reviewDay",operationService.countAdminDay(map));
+		
+		// 문의 횟수
+		map.put("table", "post");
+		map.put("post_status", 3);
+		model.addAttribute("queryDay",operationService.countAdminDay(map));
+		
+		// 게시판 글쓴 횟수
+		map.put("post_status", 0);
+		model.addAttribute("communityDay",operationService.countAdminDay(map));
 		
 		if(user != null) {
 			String referer = request.getServletPath();

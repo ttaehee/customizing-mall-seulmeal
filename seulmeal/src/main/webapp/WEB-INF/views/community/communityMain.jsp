@@ -958,8 +958,6 @@ div.modal-content{
 		const btn = $(`\${modal}`).find(".btn-primary")
 		const next = $(e).next(".reportTrue");
 		
-<<<<<<< HEAD
-		
 		$.ajax({
 			url : "/community/api/checkReport/"+btn.data("value"),
 			method : "GET",
@@ -1004,7 +1002,7 @@ div.modal-content{
 	        }
 		})		
 
-		$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
+		//$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
 	}
 	
 	// 팔로우 해제

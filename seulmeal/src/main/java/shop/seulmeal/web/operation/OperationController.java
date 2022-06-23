@@ -226,7 +226,7 @@ public class OperationController {
 		attachmentsService.deleteAttachments(deleteAttachmentNo,deleteAttachmentName);
 		// 등록
 		System.out.println(uploadfile.length);
-		if(uploadfile.length > 1) {
+		if(uploadfile.length >= 1) {
 			attachments.setPostNo(Integer.toString(post.getPostNo()));
 			
 			attachmentsService.insertAttachments(uploadfile, attachments);
@@ -234,14 +234,13 @@ public class OperationController {
 		
 		// 이벤트 썸내일
 		System.out.println(checkThumnail);
-		System.out.println();
-		System.out.println("============================="+checkThumnail.equals(post.getThumnail()));
+		System.out.println(post.getThumnail());
 		if(thumnailFile != null && !checkThumnail.equals(post.getThumnail())) {
-			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();
-			post.setThumnail(name);
-			
+			String name = UUID.randomUUID().toString()+"_"+thumnailFile.getOriginalFilename();			
 			File file = new File(path+post.getThumnail());
+			System.out.println(path+post.getThumnail());
 			file.delete();
+			post.setThumnail(name);
 			
 			File newFileName = new File(path,name);
 			thumnailFile.transferTo(newFileName);
