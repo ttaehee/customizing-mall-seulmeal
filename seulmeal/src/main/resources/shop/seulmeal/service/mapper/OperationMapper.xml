@@ -384,7 +384,7 @@
 		TO_CHAR(TO_DATE(reg_date), 'YYYY-MM') as MONTHLYDATA
 		FROM ${table}
 		<where>
-			reg_date &gt;= '22/01/01' AND reg_date &lt; '23/01/01'
+			reg_date &gt;= '2022-01' AND reg_date &lt; '2023-01'
 		</where>
 		GROUP BY TO_CHAR(TO_DATE(reg_date), 'YYYY-MM')
 		ORDER BY MONTHLYDATA
@@ -394,7 +394,7 @@
 		SELECT sum(price) as count,
 		TO_CHAR(TO_DATE(reg_date), 'YYYY-MM') as MONTHLYDATA
 		FROM purchase
-		WHERE reg_date &gt;= '22/01/01' AND reg_date &lt; '23/01/01'
+		WHERE reg_date &gt;= '2022-01' AND reg_date &lt; '2023-01'
 		GROUP BY TO_CHAR(TO_DATE(reg_date), 'YYYY-MM')
 		ORDER BY MONTHLYDATA
 	</select>

@@ -203,8 +203,16 @@
       Kakao.Link.sendCustom({
         templateId: 78625,   // 복사해둔 템플릿 ID
         templateArgs: {
-          title: "슬밀메인페이지",
-          description: "123123",
+        	<c:if test="${empty product}">
+        		title: "SeulMeal MealKit",
+        	</c:if>
+        	<c:if test="${!empty product}">
+	    		title: "${product.name}",
+	    	</c:if>   
+          description: "커스텀이 가능한 슬밀 밀키트 몰입니다.",
+			<c:if test="${!empty product}">
+				imageUrl: "http:www.seulmeal.shop/resources/attachments/${product.thumbnail}",
+			</c:if> 
           url : "${url}",
         },
       });
