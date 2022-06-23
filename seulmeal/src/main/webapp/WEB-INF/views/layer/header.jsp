@@ -114,7 +114,7 @@
 						<a class="dropdown-item" href="/purchase/getListCustomProduct/1">내 장바구니</a>
 						<a class="dropdown-item" href="/purchase/getListPurchase">내 구매내역</a>
 						<a class="dropdown-item" href="/community/getProfile/${user.userId}">내 게시글</a>
-
+						<a class="dropdown-item" href="/product/listLikeProduct/1">찜 목록</a>
 						<c:if test="${user.role == 1}">
 							<a class="dropdown-item" href="/admin">관리자페이지</a>
 						</c:if>

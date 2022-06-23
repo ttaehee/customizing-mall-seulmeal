@@ -5,6 +5,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style type="text/css">
+	.todayList{
+		font-size: 18px;
+		border-left: 1px solid gray;
+		border-right: 1px solid gray;
+		padding: 5px;
+	}
+	
+	.todayList+.todayList{
+		margin-left: 40px;
+	}
+</style>
 <title>관리자 페이지</title>
 <!-- chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,13 +28,13 @@
 	    <div class="row flex-nowrap">
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
-				<div style="margin-bottom: 20px;">
-					<span>블랙리스트 유저 : 0</span>			
-					<span>주문한 상품 : ${count.PURCHASECOUNT}</span>
-					<span>재고없는 상품 : ${count.PRODUCTCOUNT}</span>					
-					<span>진행중인 이벤트 : ${count.EVENTCOUNT}</span>
-					<span>답변대기중인 문의 : ${count.ANSWERWAITCOUNT}</span>
-					<span>신고된 게시글 : ${count.REPORTCOUNT}</span>
+				<div style="margin-bottom: 20px; justify-content: center; display: flex;">
+					<span class="todayList">블랙리스트 유저 : 0</span>			
+					<span class="todayList">주문한 상품 : ${count.PURCHASECOUNT}</span>
+					<span class="todayList">재고없는 상품 : ${count.PRODUCTCOUNT}</span>					
+					<span class="todayList">진행중인 이벤트 : ${count.EVENTCOUNT}</span>
+					<span class="todayList">답변대기중인 문의 : ${count.ANSWERWAITCOUNT}</span>
+					<span class="todayList">신고된 게시글 : ${count.REPORTCOUNT}</span>
 				</div>
 	            <iframe class="frame" style="height:100vh; width:100%; display:none;" src="/product/admin/listProduct"></iframe>
 	            <!-- user -->
@@ -33,6 +45,7 @@
 	            <iframe id="productListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/admin/listProduct/1"></iframe>
 	            <iframe id="partsListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/listParts/1/0"></iframe>
 	            <iframe id="foodCategoryListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/listFoodCategory"></iframe>
+	            <iframe id="reviewListFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/product/listReview/1"></iframe>
 	            
 	            <!-- community -->
 	            <iframe id="reportPostFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/community/getListReportPost/0"></iframe>
@@ -133,6 +146,10 @@
 		$("#foodCategoryList").on("click",()=>{
 			$(".frame").css("display","none");
 			$("#foodCategoryListFrame").css("display","block");
+		})
+		$("#reviewList").on("click",()=>{
+			$(".frame").css("display","none");
+			$("#reviewListFrame").css("display","block");
 		})
 		
 		// purchase

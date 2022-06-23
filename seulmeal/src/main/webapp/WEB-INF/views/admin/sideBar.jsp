@@ -57,6 +57,9 @@
 	                    <li>
 	                        <a href="#" class="nav-link px-0" id="foodCategoryList"> <span class="d-none d-sm-inline">음식카테고리</span></a>
 	                    </li>
+	                    <li>
+	                        <a href="#" class="nav-link px-0" id="reviewList"> <span class="d-none d-sm-inline">리뷰관리</span> 2</a>
+	                    </li>
 	                </ul>
 	            </li>
 	            <li>
@@ -74,10 +77,7 @@
 	                    <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
 	                    <li class="w-100">
 	                        <a href="#" class="nav-link px-0" id="sale"> <span class="d-none d-sm-inline">판매내역</span> 1</a>
-	                    </li>
-	                    <li>
-	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">리뷰관리</span> 2</a>
-	                    </li>
+	                    </li>	                    
 	                    <li>
 	                        <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">할인관리</span> 3</a>
 	                    </li>
