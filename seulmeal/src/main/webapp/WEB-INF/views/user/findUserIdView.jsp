@@ -287,12 +287,12 @@ input{
 					<input class="email" id="email" name="email" placeholder="이메일" type="text" style="display: none;"></input>
 				</div>
 				<div class="login-pw-wrap" id="emailCheckForm" style="display: none;">
-					<input id="emailCode" name="email" placeholder="인증번호를 입력하세요" type="text"></input>
+					<input id="emailCode" name="email" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="인증번호를 입력하세요" type="text"></input>
 				</div>
 				<div class="login-btn-wrap" id="confirm">
 					<button id="login-btn" type="button" onclick="idSearch()">인증 번호 받기</button>
 				</div>
-				<div class="login-btn-wrap" id="findId" style="display: none;">
+				<div class="login-btn-wrap" id="findId"  style="display: none;">
 					<button id="login-btn" type="button" onclick="confirmEmail()" data-toggle="modal" data-target="#exampleModal">아이디 찾기</button>
 				</div>
 
