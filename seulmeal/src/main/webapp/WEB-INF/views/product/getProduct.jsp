@@ -375,6 +375,17 @@ div{ -webkit-touch-callout: none;
 										</c:forEach>
 									</tbody>
 								</table>
+								<div class="container">
+									<div class="row" style="justify-content: center;">
+										<nav aria-label="...">
+											<ul class="pagination">
+												<c:forEach var="i" begin="${page.beginUnitPage}" end="${page.endUnitPage}">
+													<li class="page-item"><a class="page-link" href="/product/getProduct/${productNo}/${i}/${searchCondition}">${i}</a></li>
+												</c:forEach>
+											</ul>
+										</nav>
+									</div>
+								</div>
 							</c:if>
 						</div>
 					</div>

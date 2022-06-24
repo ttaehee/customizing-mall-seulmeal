@@ -399,7 +399,7 @@ public class ProductController {
 		productService.deleteReview(reviewNo);
 		String currentPage = (String) session.getAttribute("currentPage");
 		session.removeAttribute(currentPage);
-		return "redirect: /product/listReview/"+currentPage;
+		return "redirect:/product/listReview/"+currentPage;
 	}
 	
 	@GetMapping(value= {"restoreReview/{reviewNo}"})
