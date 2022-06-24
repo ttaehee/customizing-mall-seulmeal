@@ -177,7 +177,7 @@ public class UserRestController {
 				if(user.getUserName().equals(userName)) {
 					
 					int num = confirmService.confirmNum();
-					String message = "인증번호는 ["+num+"] 입니다";
+					String message = "[슬밀]인증번호는 ["+num+"] 입니다.";
 					System.out.println("message : "+message);
 					
 					confirmService.sendSMS(phone, message);
@@ -222,7 +222,7 @@ public class UserRestController {
 				if(user.getUserId().equals(userId)) {
 					
 					int num = confirmService.confirmNum();
-					String message = "인증번호는 ["+num+"] 입니다";
+					String message = "인증번호는 ["+num+"] 입니다.";
 					confirmService.sendMail(message, email);
 					session.setAttribute("num", num);
 					session.setAttribute("userId", user.getUserId());
@@ -246,7 +246,7 @@ public class UserRestController {
 					if(user.getUserId().equals(userId)) {
 					
 					int num = confirmService.confirmNum();
-					String message = "인증번호는 ["+num+"] 입니다";
+					String message = "[슬밀]인증번호는 ["+num+"] 입니다.";
 					System.out.println("message : "+message);
 					
 					confirmService.sendSMS(phone, message);
@@ -309,7 +309,8 @@ public class UserRestController {
 		
 		if(user == null) {			
 			int num = confirmService.confirmNum();
-			String message = "인증번호는 ["+num+"] 입니다";
+			String message = "인증번호는 ["+num+"] 입니다"
+					+ "\n커스텀이 가능한 슬밀 밀키트 몰입입니다.";
 			System.out.println("message : "+message);
 			
 			confirmService.sendSMS(phone, message);
@@ -335,7 +336,7 @@ public class UserRestController {
 			
 			if(user == null) {			
 				int num = confirmService.confirmNum();
-				String message = "인증번호는 ["+num+"] 입니다";
+				String message = "인증번호는 ["+num+"] 입니다.";
 				confirmService.sendMail(message, email);
 				session.setAttribute(email, num);
 				json.put("result", "success");
@@ -378,7 +379,7 @@ public class UserRestController {
 			if(user.getUserId().equals(userId)) {
 				
 				int num = confirmService.confirmNum();
-				String message = "인증번호는 ["+num+"] 입니다";
+				String message = "[슬밀]인증번호는 ["+num+"] 입니다";
 				confirmService.sendMail(message, email);
 				session.setAttribute(email, num);
 				session.setAttribute("userId", user.getUserId());

@@ -108,8 +108,8 @@ public class ProductServiceImpl implements ProductService {
 		return (List<Foodcategory>) productMapper.getListFoodCategory();
 	}
 
-	public List<Foodcategory> getAdminFoodCategory() throws Exception {
-		return (List<Foodcategory>) productMapper.getAdminFoodCategory();
+	public List<Foodcategory> getAdminFoodCategory(String status) throws Exception {
+		return (List<Foodcategory>) productMapper.getAdminFoodCategory(status);
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {

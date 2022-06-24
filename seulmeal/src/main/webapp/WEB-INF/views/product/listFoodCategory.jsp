@@ -25,18 +25,28 @@ function check() {
 <body>
 
 <jsp:include page="../layer/header.jsp"></jsp:include>
+				
 
 <table class="table table-hover text-center" style="height: autopx; width: 500px; margin-left:auto; margin-right:auto;">
-			<form id="insert" action="/product/insertFoodCategory" onsubmit="return check()" method="POST">
 				<p style="font-size: 35px; text-align: center;">음식 카테고리 설정</p>
 				<hr style="padding:-5%; border: solid 2px #ff4500; width:520px">
+				<tr>
+							<th><button class="btn btn-primary"><a href="/product/listFoodCategory/0">활성화 목록 보기</a></button></th>
+							<th><button class="btn btn-primary"><a href="/product/listFoodCategory/1">비활성화 목록 보기</a></button></th>
+				</tr>
+				</table>
+				<hr style="padding:-5%; border: solid 2px #ff4500; width:520px">
+				
+				
+<table class="table table-hover text-center" style="height: autopx; width: 500px; margin-left:auto; margin-right:auto;">
+			<form id="insert" action="/product/insertFoodCategory" onsubmit="return check()" method="POST">
 				<tr>
 					<th><input type="text" class="form-control" id="insertText" placeholder="카테고리명을 입력하세요" style="border: none; background-color: #fff;"/></th>
 					<th><button type="submit" class="btn btn-primary" style="width:100%; height:100%;  border: none; background-color: #fff;">등록</button></th>
 				</tr>
 			</form>
 			</thead>
-			
+				
 				<tr style="background-color: #ff4500; color: #fff;">
 					<th>카테고리명</th>
 					<th>상태</th>
@@ -60,6 +70,7 @@ function check() {
 				</c:forEach>
 			</tbody>
 		</table>
+		<hr style="padding:-5%; border: solid 2px #ff4500; width:520px">
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 
 <script type="text/javascript"> 

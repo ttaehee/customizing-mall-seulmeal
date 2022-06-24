@@ -29,7 +29,7 @@
 						</div>
 						<hr>
 						<div style="text-align: center; height:24px; margin-bottom: 20px;" >
-							<a role="button" id="deleteProfileImageBtn"
+							<a href="#" role="button" id="deleteProfileImageBtn"
 								class="btn btn-secondary popover-test" title="Popover title" >현재 사진 삭제</a>
 						</div>
 						<hr>

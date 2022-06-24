@@ -195,7 +195,7 @@
 	</select>
 
 	<select id="getAdminFoodCategory" resultMap="foodCategorySelectMap">
-		SELECT * FROM foodcategory ORDER BY foodcategory_no
+		SELECT * FROM foodcategory where status = #{status} ORDER BY foodcategory_no
 	</select>
 
 	<update id="deleteFoodCategory">
