@@ -16,6 +16,20 @@
 	.todayList+.todayList{
 		margin-left: 40px;
 	}
+	
+	.chartTitle{
+		cursor: pointer;
+		opacity: 0.5;
+	}
+	
+	.chartTitle:hover{
+		opacity: 1.0;
+		color: #ff4500;
+	}
+	
+	.chartTitle+.chartTitle{
+		margin-left: 40px;
+	}
 </style>
 <title>관리자 페이지</title>
 <!-- chart.js -->
@@ -59,47 +73,163 @@
 	            <iframe id="queryFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/3/0/0"></iframe>
 	            <!--<canvas id="myChart" width="400" height="200"></canvas>-->	            
 				<div>
-					<h3 class="text-center">유저 가입수</h3>
-					<canvas style="width: 100%; height: 300px;" id="user-chart"></canvas>
+					
+					
 				</div>
 				
-				<div style="display:flex; width: 100%;">
+				<div style="display:flex; width: 100%;" class="adminMainComponet">
 					<div style="width: 50%">
-						<h3 class="text-center">판매량</h3>
-						<canvas id="mixed-chart"></canvas>
+						<div style="display: flex; justify-content: center;">
+							<h3 id="userJoinBtn" class="text-center chartTitle" style="color: #ff4500; opacity: 1.0;">유저 가입수</h3>
+							<h3 id="saleCountBtn" class="text-center chartTitle">판매량</h3>
+							<h3 id="salePriceBtn" class="text-center chartTitle">매출액</h3>							
+						</div>
+						<div class="chartComponet">
+							<!-- 판매량 -->
+							<div id="saleCount" style="display: none;">
+								<canvas id="mixed-chart"></canvas>
+							</div>
+							<!-- 매출액 -->
+							<div id="salePrice" style="display: none;">
+								<canvas id="mixed-chart2"></canvas>
+							</div>
+							<!-- 유저가입수 -->
+							<div id="userJoin">
+								<canvas style="width: 100%; " id="user-chart"></canvas>
+							</div>
+						</div>
+						
+						<hr style="color:#ff4500; height: 5px;" />
+						<br/>		
+						
+						<!-- 월통계 -->
+						<h3 class="text-center">월 최고의 물건</h3>
+						<table class="table table-hover text-center">
+							<thead style="background-color: #ff4500; color: #fff;">
+								<tr>
+									<th>목차</th>
+									<th>이동링크</th>
+									<th>조건</th>
+									<th>일자</th>
+								</tr>
+							</thead>				
+							<tbody>
+								<tr>
+									<th>최고 좋아요 게시글</th>
+									<th style="cursor: pointer;" data-target="postLike" data-value="${monthPostLike[0].POST_NO}" onClick="navi(this)">제목 :${monthPostLike[0].TITLE}</th>
+									<th>좋아요 수 : ${monthPostLike[0].LIKE_COUNT}</th>
+									<th>일자 : ${monthPostLike[0].REG_DATE}</th>
+								</tr>
+								
+								<tr>
+									<th>최고 댓글 게시글</th>
+									<th style="cursor: pointer;" data-target="postComment" data-value="${monthPostComment[0].POST_NO}" onClick="navi(this)">제목 : ${monthPostLike[0].TITLE}</th>
+									<th>댓글 수 : ${monthPostComment[0].COUNT}</th>
+									<th>일자 : ${monthPostComment[0].REG_DATE}</th>
+								</tr>
+								
+								<tr>
+									<th>최고 판매 상품</th>
+									<th style="cursor: pointer;" data-target="saleProduct" data-value="${monthSaleProduct[0].PRODUCT_NO}" onClick="navi(this)">상풍명 : ${monthSaleProduct[0].NAME}</th>
+									<th>판매 수 : ${monthSaleProduct[0].COUNT}</th>
+									<th>매출액 : ${monthSaleProduct[0].CNT}</th>
+								</tr>
+							</tbody>
+						</table>
+						
+						<hr style="color:#ff4500; height: 5px;" />
+						<br/>						
+						
+						
+						<div class="monthP" style="display: flex; justify-content: center;">	
+							<!-- 재료 월통계 -->
+							<div style="width: 45%; margin-right: 20px;">
+							<h3 class="text-center">월 재료 판매</h3>
+							<table class="table table-hover text-center">
+								<thead style="background-color: #ff4500; color: #fff;">
+									<tr>
+										<th>랭킹</th>
+										<th>상품명</th>
+										<th>판매량</th>
+									</tr>
+								</thead>				
+								<tbody>
+									<c:forEach var="parts" items="${monthSaleParts}">
+										<c:set var="i" value="${i+1}" />
+									<tr>
+										<th>${i}</th>
+										<th>${parts.NAME}</th>
+										<th>${parts.COUNT}</th>
+									</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+							</div>
+							<!-- 상품 월 통계 -->
+							<div style="width: 45%">				
+								<h3 class="text-center">월 상품 판매</h3>
+								<table class="table table-hover text-center">
+									<thead style="background-color: #ff4500; color: #fff;">
+										<tr>
+											<th>랭킹</th>
+											<th>상품명</th>
+											<th>판매액</th>
+											<th>판매량</th>
+										</tr>
+									</thead>				
+									<tbody>
+										<c:forEach var="product" items="${monthSaleProduct10}">
+											<c:set var="j" value="${j+1}" />
+										<tr>
+											<th>${j}</th>
+											<th>${product.NAME}</th>
+											<th>${product.CNT}</th>
+											<th>${product.COUNT}</th>
+										</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+							</div>
+									
 					</div>
-					<div style="width: 50%">
-						<h3 class="text-center">매출액</h3>
-						<canvas id="mixed-chart2"></canvas>
+					
+					
+					<div style="width: 50%;">
+						<h3 class="text-center">월 통계</h3>
+						
+						<table class="table table-hover text-center">
+							<thead style="background-color: #ff4500; color: #fff;">
+								<tr>
+									<th>일자</th>
+									<th>가입자수</th>
+									<th>구매횟수</th>
+									<th>판매액</th>
+									<th>리뷰횟수</th>
+									<th>문의횟수</th>
+									<th>게시글횟수</th>
+								</tr>
+							</thead>				
+							<tbody>					
+								<c:forEach var="u" items="${userDay}" varStatus="statusNum">
+								<tr>
+									<th>${u.REGDATE}</th>
+									<th>${u.UCNT}</th>
+									<th>${purchaseDay[statusNum.index].UCNT}</th>
+									<th>${purchasePriceDay[statusNum.index].UCNT}</th>
+									<th>${reviewDay[statusNum.index].UCNT}</th>
+									<th>${queryDay[statusNum.index].UCNT}</th>
+									<th>${communityDay[statusNum.index].UCNT}</th>
+								</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+						
+						
 					</div>					
 				</div>
 	            
-	            <table class="table table-hover text-center">
-				<thead style="background-color: #ff4500; color: #fff;">
-					<tr>
-						<th>일자</th>
-						<th>가입자수</th>
-						<th>구매횟수</th>
-						<th>판매액</th>
-						<th>리뷰횟수</th>
-						<th>문의횟수</th>
-						<th>게시글횟수</th>
-					</tr>
-				</thead>
-				<tbody>					
-					<c:forEach var="u" items="${userDay}" varStatus="statusNum">
-					<tr>
-						<th>${u.REGDATE}</th>
-						<th>${u.UCNT}</th>
-						<th>${purchaseDay[statusNum.index].UCNT}</th>
-						<th>${purchasePriceDay[statusNum.index].UCNT}</th>
-						<th>${reviewDay[statusNum.index].UCNT}</th>
-						<th>${queryDay[statusNum.index].UCNT}</th>
-						<th>${communityDay[statusNum.index].UCNT}</th>
-					</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+	           
 	            
 	        </div>
 	    </div>
@@ -109,57 +239,131 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
 <script type="text/javascript">
+	function navi(e){
+		const target = $(e).data("target");
+		
+		if(target==='postLike'){
+			window.location.href="/community/getPost/"+$(e).data('value')
+			return;
+		}
+		
+		if(target==='postComment'){
+			window.location.href="/community/getPost/"+$(e).data('value')
+			return;
+		}
+		
+		if(target==='saleProduct'){
+			window.location.href="/product/getProduct/"+$(e).data('value')
+			return;
+		}
+		
+	}
+
 	$(()=>{
+		// chart 클릭
+		// userChart
+		$("#userJoinBtn").on("click",function (){
+			//글자색 바꾸기
+			$(".chartTitle").css({"color":"black","opacity":"0.5"});			
+			$(this).css({"color":"#ff4500","opacity":"1"});
+			
+			// 다른 chart display none
+			$("#saleCount").css("display","none");
+			$("#salePrice").css("display","none");
+			
+			// 자기 chart block
+			$("#userJoin").css("display","block");			
+		});
+		
+		// saleCountChart
+		$("#saleCountBtn").on("click",function (){
+			//글자색 바꾸기
+			$(".chartTitle").css({"color":"black","opacity":"0.5"});			
+			$(this).css({"color":"#ff4500","opacity":"1"});
+			
+			// 다른 chart display none
+			$("#userJoin").css("display","none");
+			$("#salePrice").css("display","none");
+			
+			// 자기 chart block
+			$("#saleCount").css("display","block");
+		});
+		
+		// salePriceChart		
+		$("#salePriceBtn").on("click",function (){
+			//글자색 바꾸기
+			$(".chartTitle").css({"color":"black","opacity":"0.5"});			
+			$(this).css({"color":"#ff4500","opacity":"1"});
+			
+			// 다른 chart display none
+			$("#userJoin").css("display","none");
+			$("#saleCount").css("display","none");
+			
+			// 자기 chart block
+			$("#salePrice").css("display","block");
+		});
+		
 		//
 		$("#notice").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#noticeFrame").css("display","block");
 		})
 		$("#event").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#eventFrame").css("display","block");
 		})
 		$("#query").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#queryFrame").css("display","block");
 		})
 		
 		// 유저
 		$("#userList").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#userListFrame").css("display","block");
 		})
 		$("#blackUserList").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#blackUserListFrame").css("display","block");
 		})
 		
 		// product		
 		$("#productList").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#productListFrame").css("display","block");
 		})
 		$("#partsList").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#partsListFrame").css("display","block");
 		})
 		$("#foodCategoryList").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#foodCategoryListFrame").css("display","block");
 		})
 		$("#reviewList").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#reviewListFrame").css("display","block");
 		})
 		
 		// purchase
 		$("#sale").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#saleFrame").css("display","block");
 		})
 		
 		// 커뮤니티
 		$("#reportPost").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#reportPostFrame").css("display","block");
 		})

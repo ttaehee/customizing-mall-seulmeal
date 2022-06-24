@@ -164,4 +164,22 @@ public class OperationServiceImpl implements OperationService {
 		return operationMapper.countAdminDay(map);
 	}
 
+	@Override
+	public List<Map<String, Object>> monthChart(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return operationMapper.monthChart(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> monthSaleParts(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return operationMapper.monthSaleParts(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> monthSaleProduct(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return operationMapper.monthSaleProduct(map);
+	}
+
 }

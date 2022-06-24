@@ -163,6 +163,26 @@ public class MainController {
 		map.put("post_status", 0);
 		model.addAttribute("communityDay",operationService.countAdminDay(map));
 		
+		// 이달의 좋아요 최고 게시글
+		map.put("table", "post");
+		model.addAttribute("monthPostLike",operationService.monthChart(map));
+		
+		// 이달의 최고댓글 게시글
+		map.put("table", "post p,comments c");
+		model.addAttribute("monthPostComment",operationService.monthChart(map));
+		
+		// 이달의 최고 판매상품
+		map.put("table", "product p, purchase pp, customproduct c");
+		model.addAttribute("monthSaleProduct",operationService.monthChart(map));
+		
+		// 이달의 탑텐 최고 판매재료
+		map.put("count", 10);
+		model.addAttribute("monthSaleParts",operationService.monthSaleParts(map));
+		
+		// 이달의 탑텐 최고 판매상품
+		map.put("count", 10);
+		model.addAttribute("monthSaleProduct10",operationService.monthSaleProduct(map));
+		
 		if(user != null) {
 			String referer = request.getServletPath();
 			String[] refererA = referer.split("/");

@@ -70,6 +70,25 @@ class OperationTest {
 	String api;
 	
 	@Test
+	void monthAdmin() {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("table", "post");
+		map.put("option", "post");
+		List<Map<String,Object>> list = operationMapper.monthChart(map);
+		
+		for (Map<String, Object> map2 : list) {
+			System.out.println(map2);
+		}
+		
+		map.put("table", "post p,comments c");
+		map.put("option", "commentCount");
+		list = operationMapper.monthChart(map);
+		for (Map<String, Object> map2 : list) {
+			System.out.println(map2);
+		}
+	}
+	
+	//@Test
 	void adminCount() {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("table", "post");

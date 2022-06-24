@@ -465,4 +465,82 @@
 		GROUP BY b.dt
 		ORDER BY b.dt
 	</select>
+	
+	<!-- 월별 통계 -->
+	<select id="monthChart" parameterType="map" resultType="map">
+		SELECT *
+		FROM (
+		<!-- SELECT -->
+		<if test="table =='post'">
+			SELECT like_count,post_no,reg_date,title
+		</if>
+		<if test=" table == 'post p,comments c'">
+			SELECT COUNT(*) COUNT,p.post_no,p.reg_date,p.title
+		</if>
+		<if test="table == 'product p, purchase pp, customproduct c'">
+			SELECT p.product_no,p.name, SUM(pp.price+pp.usepoint) cnt, COUNT(*) count
+		</if>
+		FROM 
+		<!-- TABLE -->
+		<if test="table =='post'">
+			${table}
+		</if>
+		<if test=" table == 'post p,comments c'">
+			${table}
+		</if>
+		<if test="table == 'product p, purchase pp, customproduct c'">
+			${table}
+		</if>
+		<where>
+			<if test="table =='post'">
+				(reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+			</if>
+			<if test=" table == 'post p,comments c'">
+				(p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD')) AND p.post_no=c.post_no AND c.status=0
+			</if>
+			<if test="table == 'product p, purchase pp, customproduct c'">
+				(p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+				AND p.product_no = c.product_no(+) AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
+			</if>
+		</where>
+		<!-- GROUP BY -->
+		<if test=" table == 'post p,comments c'">
+			GROUP BY p.post_no,p.reg_date,p.title
+		</if>
+		<if test="table == 'product p, purchase pp, customproduct c'">
+			GROUP BY p.product_no,p.name
+		</if>
+		<!-- ORDER BY -->
+		<if test="option == 'post'">
+			ORDER BY like_count desc
+		</if>
+		<if test=" table == 'post p,comments c'">
+			ORDER BY COUNT(*) desc
+		</if>
+		<if test="table == 'product p, purchase pp, customproduct c'">
+			ORDER BY COUNT(*) desc
+		</if>
+		)
+		WHERE ROWNUM=1
+	</select>
+	
+	<select id="monthSaleParts" parameterType="map" resultType="map">
+		SELECT * FROM(
+		SELECT p.parts_no,p.name, COUNT(*) count FROM parts p, purchase pp, customproduct c, customparts cp
+		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+		AND p.parts_no = cp.parts_no(+) AND cp.customproduct_no = c.customproduct_no(+)  AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
+		GROUP BY p.parts_no,p.name
+		ORDER BY COUNT(*) desc
+		) WHERE ROWNUM &lt; #{count}
+	</select>
+	
+	<select id="monthSaleProduct" parameterType="map" resultType="map">
+		SELECT * FROM(
+		SELECT p.product_no,p.name, SUM(pp.price+pp.usepoint) cnt, COUNT(*) count FROM product p, purchase pp, customproduct c
+		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+		AND p.product_no = c.product_no(+) AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
+		GROUP BY p.product_no,p.name
+		ORDER BY cnt desc
+		) WHERE ROWNUM &lt; #{count} AND cnt IS NOT NULL
+	</select>
 </mapper>
