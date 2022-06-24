@@ -453,6 +453,8 @@ public class UserRestController {
 		point.setPoint(purchase.getPrice());
 		userService.insertPoint(point);
 		
+		
+		
 		user.setTotalPoint((purchase.getPrice()+user.getTotalPoint()));
 		userService.updateUserTotalPoint(user);
 		user=userService.getUser(userId);

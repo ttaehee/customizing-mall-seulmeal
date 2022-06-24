@@ -17,7 +17,7 @@
     height:100%;
 }
 .form-horizontal{
- width:600px;
+ width:800px;
     margin:0 auto;
 }
 
@@ -36,7 +36,7 @@ border-bottom: 1px solid gainsboro;
 .card-body{
 width:300px;
  margin: 0px 0px 0px 160px;
-    text-align: right;
+   /*  text-align: right; */
 }
 
 .category{
@@ -58,6 +58,11 @@ margin: 0px 0px 50px 160px;
 .form-group{
 margin: 40px 0px 0px 0px;
 }
+
+.line{
+ border: solid 1px #212121;
+ margin: 20px  0px 20px 0px;
+} 
 </style>
 </head>
 <script type="text/javascript">
@@ -294,8 +299,8 @@ function fncClose(ths){
 
 		<form class="form-horizontal" method="post" action="/user/insertUserInformation"  enctype="multipart/form-data">
 			<h2>추가 정보</h2>
-			<br/>
-
+			<div class="line"></div>
+<%-- 
 			<div>
 				<img src="/resources/attachments/profile_image/default_profile.jpg" id="img_section" style="width: 300px; height: 300px;"> <br /> <br />
 				<div class="under-login" id="find-signup-wrap-ko">
@@ -377,8 +382,77 @@ function fncClose(ths){
 				<input type="file" id="imageFile" name="imageFile" multiple="multiple">
 				<p class="help-block">프로필 이미지를 선택해주세요</p>
 			</div> -->
+			 --%>
+<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">프로필 이미지</label>
+				<div class="col-sm-3">
+					<img src="/resources/attachments/profile_image/${user.profileImage }" id="img_section" style="width: 200px; height: 200px;">
+				
+				</div>
+				<br/><br/>
+				<div class="col-sm-7" style="margin-top: 160px;">
+				<div class="under-login" id="find-signup-wrap-ko" >
+					<input type='hidden'  name='profileImage' value='${user.profileImage }' />
+					<input type="text" id="file_route" disabled="disabled" value="이미지 선택"><!-- accept="image/*" -->
+					<label for="upload_file" style="border: solid 1px black;">확인</label>
+					<input type="file" id="upload_file" name="imageFile" style="position: absolute; clip: rect(0, 0, 0, 0);">
+				 <script>
+			        const reader = new FileReader();
 			
-
+			        reader.onload = (readerEvent) => {
+			            document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
+			        };
+			
+			        document.querySelector("#upload_file").addEventListener("change", (changeEvent) => {
+			
+			            const imgFile = changeEvent.target.files[0];
+			            reader.readAsDataURL(imgFile);
+			        })
+			    </script>
+				</div>
+				</div>
+			</div>
+			
+			
+			<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">상태메세지</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="profilemessage" name="profilemessage" value="${user.profileMessage }" placeholder="">
+				</div>
+			</div>
+			
+			<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">음식 카테고리</label>
+				<div class="col-sm-10">
+					<c:forEach var="foodcategory" items="${foodcategoryList}">
+					<label class="btn btn-primary active">
+						<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);"> ${foodcategory.name }
+					</label> 
+					
+					
+				</c:forEach>
+				</div>
+			</div>
+					
+			<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">비선호 재료</label>
+				<div class="col-sm-10">
+					<div class="container"> 
+								<div class="hateParts"  style="display:flex;">	
+									<div class="form-outline">
+										<input name="searchKeyword" type="search" class="form-control search" value="" />
+									</div>		  
+									<button type="button" class="btn btn-primary partSearch" onclick="search()">
+										<i class="bi bi-search"></i>
+									</button>
+								</div>
+						</div>
+						<div class="container">
+							<div class="plusparts"></div>
+						</div>
+				</div>
+			</div>
+				
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" class="btn btn-default">저장</button>

@@ -12,19 +12,63 @@
 		display: flex;
 		justify-content: space-between;
 	}
+	
+	.input{
+	/*  margin: 0px 10px 8px 10px; */
+    padding: 10px;
+    border: solid 1px #dadada;
+    background: #fff;
+    width: 500px;
+	}
+	
+	 #wrap{
+    width:100%;
+    height:100%;
+}
+  
+#wrap .box{ 
+    width:800px;
+   margin: 0 auto;
+  
+}
+.line{
+ border: solid 1px #212121;
+ margin: 20px  0px 20px 0px;
+} 
+
+.col-sm-2{
+margin-top: 15px;
+}
+
+.btn-user{
+border: solid 1px #ff4500;
+background: #fff;
+height:46px;
+width: 112px;
+}
+.btn-user:disabled{
+border: solid 1px #dadada;
+}
+
+.btn-post{
+border: solid 1px #ff4500;
+background: #fff;
+height:44px;
 </style>
 </head>
 <body>
 
 <jsp:include page="../layer/header.jsp"></jsp:include>
-
- <div class="container" style="margin-top:20px;">
+<div id="wrap">
+<div class="box">
+<div class="container" style="margin-top:20px;">
 	<h2 style="text-align: center;">회원가입</h2>
+	<div class="line"></div>
 	<form class="form-horizontal" method="post" action="/user/insertUser" target="_self">
 	  <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">아이디</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="userId" name="userId"  placeholder="아이디는 8글자 이상 공백,특수문자,한글이 불가능 합니다">
+	      <input type="text" class="input" id="userId" name="userId"  placeholder="아이디">
 	      <div id="checkUserId"></div>
 	      <div style="font-size: 15px;">아이디는 8글자 이상 공백,특수문자,한글이 불가능 합니다.</div>
 	    </div>
@@ -32,45 +76,46 @@
 	  <div class="form-group row">
 	    <label for="Password3" class="col-sm-2 control-label">비밀번호</label>
 	    <div class="col-sm-10">
-	      <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
+	      <input type="password" class="input" id="password" name="password" placeholder="비밀번호">
 	      <div id="passResult" style="color:crimson;"></div>
-	      <div style="font-size: 15px;">비밀번호는 8글자 이상 특수문자1개, 알파벳 대문자 1개를 포함하고 공백과 아이디가 포함되지 않아야 합니다.</div>
+	      <div style="font-size: 15px; width: 500px;">비밀번호는 8글자 이상 특수문자1개, 알파벳 대문자 1개를 포함하고 공백과 아이디가 포함되지 않아야 합니다.</div>
 	    </div>
 	  </div>
 	  <div class="form-group row">
 	    <label for="Password3" class="col-sm-2 control-label">비밀번호 확인</label>
 	    <div class="col-sm-10">
-	      <input type="password" class="form-control" id="confirmPassword"  placeholder="비밀번호 확인">
+	      <input type="password" class="input" id="confirmPassword"  placeholder="비밀번호 확인">
 	      <div id="passCheck" style="color:crimson;"></div>
 	    </div>	    
 	  </div>
 	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">이름</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력해 주세요">
+	      <input type="text" class="input" id="userName" name="userName" placeholder="이름">
 	    </div>
 	  </div>
 	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">닉네임</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="nickName" name="nickName" placeholder="닉네임은 5글자 이상 입력해 주세요">
+	      <input type="text" class="input" id="nickName" name="nickName" placeholder="닉네임">
 	      <div id="checknickName" style="color:crimson;"></div>
-	      <div style="font-size: 15px;">닉네임은 5글자 이상 입력해 주세요.</div>
+	      <div style="font-size: 15px;display: none;">닉네임은 5글자 이상 입력해 주세요.</div>
 	    </div>
 	  </div>
 	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">이메일</label>
 	    <div class="col-sm-10">	    	
 		    <div class="inputBar">
-				<input style="width: 100%;" type="text" class="form-control" id="email" name="emaile" placeholder="Email">
-				<input id="emailBtn" onclick="emailCheck()" value="인증하기" type="button" class="btn btn-default" disabled="disabled">
+				<input type="text" class="input" id="email" name="emaile" style="margin-bottom: 5px;" placeholder="이메일">
+				<input id="emailBtn" onclick="emailCheck()" value="인증하기" type="button" class="btn-user" disabled="disabled">
 		    </div>
 	    </div>
-	   
+	   <label for="Email3" class="col-sm-2 control-label" style="display: none;"> </label>	
 	    <div class="col-sm-10" id="emailCheckForm" style="display: none;">
+			
 			<div class="inputBar">
-				<input name="email" style="width: 100%;" type="text" class="form-control" id="emailCode" placeholder="인증번호를 입력하세요">
-				<input type="button" onclick="confirmEmail()" class="btn btn-default" value="인증확인">
+				<input name="email" type="text" class="input" id="emailCode"  placeholder="인증번호를 입력하세요">
+				<input type="button" onclick="confirmEmail()" class="btn-user" value="인증확인">
 			</div>
 	    </div>
 	    
@@ -79,15 +124,16 @@
 	    <label for="Email3" class="col-sm-2 control-label">휴대폰</label>	    
 	    <div class="col-sm-10">
 	   		<div class="inputBar">
-				<input style="width: 100%;" type="text" class="form-control" id="phone" name="phone" placeholder="01000000000" maxlength=13>
-				<input id="phoneBtn" type="button" onclick="phoneCheck()" class="btn btn-default" value="인증하기" disabled="disabled">
+				<input type="text" class="input" id="phone" name="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  style="margin-bottom: 5px;" placeholder="숫자만 입력해주세요" maxlength=13>
+				<input id="phoneBtn" type="button" onclick="phoneCheck()" class="btn-user" value="인증하기" disabled="disabled">
 	    	</div>
 	    </div>
-	    
+	    <label for="Email3" class="col-sm-2 control-label" style="display: none;"> </label>
 	    <div class="col-sm-10" id="phoneCheckForm" style="display: none;">
+	    		
 	    	<div class="inputBar">
-				<input style="width: 100%;" type="text" class="form-control" id="phoneCode" name="phone" placeholder="인증번호를 입력하세요">
-				<input type="button" onclick="confirmPhone()" class="btn btn-default" value="인증하기">
+				<input style="width: 100%;" type="text" class="input" id="phoneCode" style="margin-bottom: 5px;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="phoneCode" placeholder="인증번호를 입력하세요">
+				<input type="button" onclick="confirmPhone()" class="btn-user" value="인증하기">
 	    	</div>
 	    </div>
 	    
@@ -97,11 +143,11 @@
 	    <div class="col-sm-10">
 	    	<!-- 주소 -->
 	    	<div style="display: flex; justify-content: space-between;">
-	    	<input type="text" class="form-control" id="sample3_postcode" placeholder="우편번호" style="width: 100%;" readonly>
-			<input class="btn btn-default" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
+	    	<input type="text" class="input" id="sample3_postcode" placeholder="우편번호" style="margin-bottom: 5px;" readonly>
+			<input class="btn-post" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
 			</div>
-			<input type="text" class="form-control" id="sample3_address" placeholder="주소" readonly><br>
-			<input type="text" class="form-control" id="address" name="address" placeholder="상세주소">
+			<input type="text" class="input" id="sample3_address" style="margin-bottom: 5px;" placeholder="주소" readonly><br>
+			<input type="text" class="input" id="address" name="address" style="margin-bottom: 5px;" placeholder="상세주소">
 			
 			<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
 				<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
@@ -112,17 +158,22 @@
 	   <div class="form-group row">
 	    <label for="Email3" class="col-sm-2 control-label">생년월일</label>
 	    <div class="col-sm-10">
-	      <input type="date" class="form-control" id="birth" name="birth" placeholder="Email">
+	      <input type="date" class="input" id="birth" name="birth"  min="1900-01-01" max="2022-07-01" placeholder="">
 	    </div>
 	  </div>
 	  
 	  <div class="form-group row">
 	    <div class="col-sm-offset-2 col-sm-10" style="display: flex; justify-content: flex-end;">
-	      <button id="insertUserIdBtn" disabled="disabled" type="submit" class="btn btn-default">가입하기</button>
+	      <button id="insertUserIdBtn"  type="submit" disabled="disabled" class="btn-user" >가입하기</button>
 	    </div>
 	  </div>
 	</form>
 </div>
+
+</div>
+
+</div>
+ 
     <jsp:include page="../layer/footer.jsp"></jsp:include>
 <!-- 주소록 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -239,8 +290,8 @@
 	
 	$("#nickName").on("keyup",()=>{
 		const nickName = $("#nickName").val();
-		if(nickName.length < 5){
-			$("#checknickName").css("color","crimson").text("닉네임은 5글자 이상 입력해주세요.");
+		if(nickName.length < 1){
+			$("#checknickName").css("color","crimson").text("닉네임을 입력해주세요.");
 		} else {
 			$.ajax({
 				url: "/user/api/confirmUserNickname/"+nickName,
@@ -385,7 +436,7 @@
 		})
 	}
 	
-	$(()=>{
+	/* $(()=>{
 		$("input").on("change",()=>{
 			const id = ($("#checkUserId").css("color")==="rgb(75, 108, 183)");
 			const pw = ($("#passResult").css("color")==="rgb(75, 108, 183)");
@@ -393,6 +444,29 @@
 			const nickName = ($("#checknickName").css("color")==="rgb(75, 108, 183)");
 			const phone = ($("#phone").attr("disabled")==="disabled");
 			const email = ($("#email").attr("disabled")==="disabled");
+			const address = ($("#address").val() !== '');
+			const birth = ($("#birth").val() !== '');
+			
+			console.log(address)
+			if(id && pw && pwC && nickName && phone && email && address && birth){
+				console.log("성공")
+				$("#insertUserIdBtn").removeAttr("disabled");
+			} else {
+				console.log("실패")
+				$("#insertUserIdBtn").attr("disabled","disabled");
+			}
+		})
+		
+	}); */
+	
+	 $(()=>{
+		$("input").on("change",()=>{
+			const id = ($("#checkUserId").css("color")==="rgb(255, 69, 0)");
+			const pw = ($("#passResult").css("color")==="rgb(255, 69, 0)");
+			const pwC = ($("#passCheck").css("color")==="rgb(255, 69, 0)");
+			const nickName = ($("#checknickName").css("color")==="rgb(255, 69, 0)");
+			const phone = ($("#phoneBtn").attr("disabled")==="disabled");
+			const email = ($("#emailBtn").attr("disabled")==="disabled");
 			const address = ($("#address").val() !== '');
 			const birth = ($("#birth").val() !== '');
 			
