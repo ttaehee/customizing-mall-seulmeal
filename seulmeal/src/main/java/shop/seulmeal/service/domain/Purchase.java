@@ -22,8 +22,6 @@ public class Purchase {
 	private String email;
 	private String message;
 	private String purchaseStatus;
-	private String reason;
-	private String image;
 	private String status;
 	private Date regDate;
 	private String paymentCondition;
