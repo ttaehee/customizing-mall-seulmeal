@@ -280,7 +280,7 @@
 						AND to_date(reg_date, 'yy/mm/dd') &gt;=to_date(add_months(SYSDATE,-3),'yy/mm/dd')
 					</if>
 				</if>
-				ORDER BY purchase_no) inner_table
+				ORDER BY purchase_no desc) inner_table
 			WHERE ROWNUM &lt; = #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 	</select>
@@ -369,7 +369,7 @@
 				<if test="searchCondition != null">
 					AND purchase_status=#{searchCondition:VARCHAR}
 				</if>
-				ORDER BY purchase_no) inner_table
+				ORDER BY purchase_no desc) inner_table
 			WHERE ROWNUM &lt; = #{endRowNum})
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>

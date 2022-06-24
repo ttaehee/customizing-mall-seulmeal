@@ -375,6 +375,17 @@ div{ -webkit-touch-callout: none;
 										</c:forEach>
 									</tbody>
 								</table>
+								<div class="container">
+									<div class="row" style="justify-content: center;">
+										<nav aria-label="...">
+											<ul class="pagination">
+												<c:forEach var="i" begin="${page.beginUnitPage}" end="${page.endUnitPage}">
+													<li class="page-item"><a class="page-link" href="/product/getProduct/${productNo}/${i}">${i}</a></li>
+												</c:forEach>
+											</ul>
+										</nav>
+									</div>
+								</div>
 							</c:if>
 						</div>
 					</div>
@@ -440,10 +451,9 @@ div{ -webkit-touch-callout: none;
 				<h2 class="text-center" style="margin-bottom:25px;">리뷰 수정</h2>
 				<div class="col-md-12 form-group" style="padding-left: 20px;">
 					<p class="text-left" style="padding-left: 13px;">상품명</p>
-					<div class="col-md-12">"
+					<div class="col-md-12">
 						<p class="text-left" style="padding-left: 20px;">${product.name}</p>
 						<input type="number" class="form-control" name="reviewNo" id="updateReviewNo" value="" required style="display: none;">
-						
 					</div>
 				</div>
 				<div class="col-md-12 form-group">

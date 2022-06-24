@@ -70,7 +70,7 @@
 
 	<!--  전체 게시글 목록 -->
 	<!--  '1' : 조회순, '2' : 베스트순, '3': 최신순--><!-- map : search / userId -->
-	<select id="getListPost" parameterType="map" resultMap="postSelectMap">
+	<!--select id="getListPost" parameterType="map" resultMap="postSelectMap">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
 				FROM	(SELECT p.*, u.nickname, u.profile_image, u.profile_message, u.role
@@ -101,19 +101,26 @@
 							 DESC )inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
-	</select>
+	</select-->
 	
-		<!--  전체 게시글 목록 -->
-	<!--  '1' : 조회순, '2' : 베스트순, '3': 최신순--><!-- map : search / userId -->
-	<!-- select id="getListPost" parameterType="map" resultMap="postSelectMap"
+	
+	<!--  차단유저 제외한 게시글 목록 -->
+	<select id="getListPostA" parameterType="map" resultMap="postSelectMap">
 		SELECT *
 		FROM	(SELECT inner_table.*, ROWNUM AS row_seq
-				FROM	(SELECT * FROM post	  
+				FROM	(SELECT p.*, u.nickname, u.profile_image, u.profile_message, u.role
+ 						FROM post p, users u	  
 						  	<where>
-						  		post_status = '0'
-						  		AND status = '0'
+						  		p.user_id = u.user_id
+	  							AND post_status = '0'
+	  							AND status = '0'
+	  							<if test="blockList != null">
+                                    <foreach item ="block" collection="blockList">
+                                        AND NOT p.user_id = #{block.relationUser.userId}
+                                    </foreach>
+                                </if>
 						  		<if test="userId != null">
-						  			AND user_id = #{userId}	
+						  			AND p.user_id = #{userId}	
 						  		</if>
 						  		<if test="userId == null and search.searchKeyword != null">
 						  			AND (title LIKE ('%'||#{search.searchKeyword}||'%') OR content LIKE ('%'||#{search.searchKeyword}||'%'))
@@ -122,19 +129,42 @@
 						 			
 							ORDER BY
 							<if test="search.searchCondition == null">
-								reg_date
+								p.reg_date
 							</if>
-							<if test="search.searchCondition != null">
+							<if test="userId == null and search.searchCondition != null">
 								<choose>
 									<when test="search.searchCondition == 1">views</when>
 									<when test="search.searchCondition == 2">like_count</when>
-									<when test="search.searchCondition == 3">reg_date</when>
+									<when test="search.searchCondition == 3">p.reg_date</when>
 								</choose>
 							</if>
-							 )inner_table
+							 DESC )inner_table
 				WHERE ROWNUM &lt;= #{search.endRowNum})
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
-	</select-->
+	</select>
+	
+	<!-- 차단유저 제외 게시글 전체 수 -->
+	<select id="getPostTotalCountA" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+	  	FROM(	SELECT p.*, u.nickname, u.profile_image, u.profile_message
+ 				FROM post p, users u	  
+	  	<where>
+	  		p.user_id = u.user_id
+	  		AND post_status = '0'
+	  		AND status = '0'
+	  		<if test="blockList != null">
+                <foreach item ="block" collection="blockList">
+                    AND NOT p.user_id = #{block.relationUser.userId}
+                </foreach>
+            </if>
+	  		<if test="userId != null">
+				AND p.user_id = #{userId}	
+			</if>
+	  		<if test="userId == null and search.searchKeyword != null">
+	  			AND (title like ('%'||#{search.searchKeyword}||'%') OR content like ('%'||#{search.searchKeyword}||'%'))	
+	  		</if>
+	  	</where> ) countTable
+	</select>
 	
 	
 	<!-- 게시글 전체 수 -->
@@ -155,21 +185,6 @@
 	  	</where> ) countTable
 	</select>
 	
-	<!-- 게시글 전체 수 -->
-	<!-- select id="getPostTotalCount" parameterType="map" resultType="int"
-		SELECT COUNT(*)
-	  	FROM(	SELECT * FROM post	  
-	  	<where>
-	  		post_status = '0'
-	  		AND status = '0'
-	  		<if test="userId != null">
-				AND user_id = #{userId}	
-			</if>
-	  		<if test="userId == null and search.searchKeyword != null">
-	  			AND (title like ('%'||#{search.searchKeyword}||'%') OR content like ('%'||#{search.searchKeyword}||'%'))	
-	  		</if>
-	  	</where> ) countTable
-	</select-->
 	
 	<update id="updatePost" parameterType="Post">
 		UPDATE post
@@ -433,6 +448,15 @@
 		</where>
 	</select>
 
+	<select id="checkLikePost" parameterType="String" resultMap="likeSelectMap">
+		SELECT post_no  
+		FROM likes
+		<where>
+			user_id = #{userId}
+		</where>
+	</select>
+
+
 	<!-- 좋아요 -->
 	<insert id="insertLike" parameterType="Like">
 		INSERT INTO
@@ -656,11 +680,18 @@
 		FROM report
 		<where>
 			post_no = #{postNo}
-			AND reporter_id =#{reporterId}
+			AND reporter_id = #{reporterId}
 		</where>
 	</select>
 
-
+	<select id="checkRelation" parameterType="Relation" resultType="string">
+		SELECT relation_status 
+		FROM relation  
+		<where>
+			user_id = #{userId}
+			AND relation_user_id = #{relationUser.userId}
+		</where>
+	</select>
 
 
 

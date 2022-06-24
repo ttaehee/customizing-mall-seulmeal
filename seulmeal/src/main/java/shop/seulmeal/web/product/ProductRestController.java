@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import shop.seulmeal.common.Page;
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Foodcategory;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Product;
@@ -69,8 +71,7 @@ public class ProductRestController {
 		map.put("content", review.getContent());
 		map.put("rating", review.getRating());
 		return map;
-	}
-	
+	}	
 	
 	@GetMapping("deleteReview/{reviewNo}")
 	public String deleteReview(@PathVariable int reviewNo) throws Exception {
@@ -121,5 +122,6 @@ public class ProductRestController {
 		System.out.println(foodcategory);
 		return foodcategory;
 	}
+	
 	
 }
