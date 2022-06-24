@@ -223,19 +223,19 @@ public class ProductController {
 	public String updateProduct(@PathVariable int productNo, Product product, Foodcategory f, Model model, String partsNo, String partsName,MultipartFile thumbnailFile) throws Exception {
 		product.setProductNo(productNo);
 		product.setFoodCategory(f);
-		product.setThumbnail(productService.getProduct(productNo).getThumbnail());
-		
-			if(thumbnailFile != null) {
-				String thumbnailName = UUID.randomUUID().toString()+"_"+thumbnailFile.getOriginalFilename();
-				
-				File newFileName = new File(path,thumbnailName);
-				thumbnailFile.transferTo(newFileName);
-				product.setThumbnail(thumbnailName);
-			}
-		
+
+		System.out.println("thumbnailFile : "+thumbnailFile.getOriginalFilename());
+		if(thumbnailFile != null && !thumbnailFile.getOriginalFilename().equals("")) {
+			String thumbnailName = UUID.randomUUID().toString()+"_"+thumbnailFile.getOriginalFilename();
+			
+			File newFileName = new File(path,thumbnailName);
+			thumbnailFile.transferTo(newFileName);
+			product.setThumbnail(thumbnailName);
+		}
+
 		productService.updateProduct(product);
 		
-		return "redirect:/product/getProduct/" + product.getProductNo();
+		return "redirect:/product/admin/listProduct/1";
 	}	
 	@GetMapping(value = {"deleteProduct/{productNo}"})
 	public String deleteProduct(@PathVariable int productNo, HttpSession session) throws Exception {
@@ -423,10 +423,13 @@ public class ProductController {
 		return "/product/listFoodCategory";
 	}
 	
-	@GetMapping(value = {"listFoodCategory"})
-	public String getListFoodCategory(Model model) throws Exception {
-
-			List<Foodcategory> list = productService.getAdminFoodCategory();
+	@GetMapping(value = {"listFoodCategory/{status}", "listFoodCategory"})
+	public String getListFoodCategory(@PathVariable(required=false) String status, Model model) throws Exception {
+			if(status == null) {
+				status = "0";
+			}
+			
+			List<Foodcategory> list = productService.getAdminFoodCategory(status);
 
 			model.addAttribute("list", list);
 

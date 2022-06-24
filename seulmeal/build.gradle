@@ -5,8 +5,8 @@ plugins {
 	id 'war'
 }
 
-group = 'shop.seulmeal'
-version = '0.0.1-SNAPSHOT'
+//group = 'shop.seulmeal'
+//version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 configurations {

@@ -58,7 +58,6 @@
 		padding: 4px;
 	}
 	
-	
 	.status:hover{
 		color: #FF4500;
 		background-color:none;
@@ -113,7 +112,7 @@
 							 </c:choose> 
 							 ]입니다.</div>
 	 					<hr style="border:1px solid #FF4500; width:370px; bottom:15px"/>
-	 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : ${user.totalPoint} P</div>
+	 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : <fmt:formatNumber type="number" maxFractionDigits="0"  value="${user.totalPoint}"/> P</div>
 	 				</div>			
 		 		</div>
 		 	</div>
@@ -173,7 +172,7 @@
 				  <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${cpd.price}"/>원</td>
 				  <c:set var="price" value="${price+cpd.price*cpd.count}" />
 			 	  <td>	
-		          	<a type="button" class="delete" data-value="${purchase.purchaseNo}">&ensp;x</a>
+		          	<a type="button" class="delete" data-value="${purchase.purchaseNo}" onClick="fncDelete(this)">&ensp;x</a>      	
 				  </td>		 
 			  </tr>  
 			  </c:forEach> 
@@ -260,13 +259,13 @@
 	$('#list').rowspan(6);
 	
 	//구매내역리스트에서 삭제
-	$(".delete").on("click",function(){
+	function fncDelete(ths){
 		var del = confirm("구매내역에서 삭제할까요?");	
-		const purchaseNo = $(this).data('value');
+		const purchaseNo = $(ths).data('value');
 		if(del){
 			window.location.href="/purchase/deletePurchase/"+purchaseNo;
 		}
-	});
+	}
 	
 	//무한스크롤
 	$(function(){
@@ -346,7 +345,7 @@
 									+`</td><td class='link' align='center' style='cursor:pointer;' onClick="window.location.href='/purchase/getPurchase/`+purchaseOne.purchaseNo+ `'">`
 									+ ppartsHTML + mpartsHTML
 									+`</td><td class='link' align='center' style='cursor:pointer;' onClick="window.location.href='/purchase/getPurchase/`+purchaseOne.purchaseNo+ `'">`+cpd.price.toLocaleString() + "원</td>"
-									+"<td><a type='button' class='delete' data-value='"+purchaseOne.purchaseNo+"'>&ensp;x</a></td></tr>";							
+									+"<td><a type='button' class='delete' data-value='"+purchaseOne.purchaseNo+"' onClick='fncDelete(this)'>&ensp;x</a></td></tr>";							
 
 								$("table tbody:last-child").append(purchaseListHtml);
 								}

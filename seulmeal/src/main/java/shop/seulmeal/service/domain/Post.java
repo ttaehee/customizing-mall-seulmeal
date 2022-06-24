@@ -31,7 +31,7 @@ public class Post {
 	private Date endDate;
 	private String postStatus;
 	private String publicStatus;
-	private int password;
+	private String password;
 	private String answerStatus;
 	private String status;
 	private String likeStatus;

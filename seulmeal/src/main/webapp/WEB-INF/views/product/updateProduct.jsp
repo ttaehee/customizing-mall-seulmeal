@@ -61,8 +61,13 @@
 					<input type="text" class="form-control" id="stock" name="stock" required value="${product.stock}" />
 				</div>
 			</div>
-				<div class="col-md-12" style="margin-top:20px;" >
-				<label for="Email3" class="col-sm-6 control-label h4" >썸네일</label>
+			<div class="col-md-12 form-group"style="margin-bottom: 10px">
+				<input type="hidden" value="${product.thumbnail}" name="thumbnail" />
+				<label for="Email3" class="col-sm-2 control-label h4" >썸네일</label>
+			</div>
+				
+			<div class="col-md-12" style="margin-top:20px;" >
+
 				<div class="filebox" style="display: flex; justify-content:space-around;">
 					<input class="upload-name" value="파일선택" disabled="disabled" style="width:96%;">
 					<input type="file" accept="image/*" name="thumbnailFile" id="ex_filename" class="upload-hidden" onchange="readURL(event);" />  

@@ -1,5 +1,6 @@
 package shop.seulmeal.web.main;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
@@ -106,18 +108,35 @@ public class MainController {
 		}		
 		search.setPageSize(pageSize);
 		if(user == null) {
+			// 이달의 최고판매 10개
+			map.put("option", "main");
+			map.put("count", 10);
+			model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
 			
 			map = productService.getListProduct(search);
 			List<Product> list = (List)map.get("list");
+			Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+					pageSize);
 			model.addAttribute("list",list);
+			model.addAttribute("resultPage", resultPage);
+			model.addAttribute("search", search);
 		} else {
 			if(user.getFoodCategoryName1() == null) {
+				// 이달의 최고판매 10개
+				map.put("option", "main");
+				map.put("count", 10);
+				model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
+				
 				map = productService.getListProduct(search);
 				List<Product> list = (List)map.get("list");
+				Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+						pageSize);
 				model.addAttribute("list",list);
+				model.addAttribute("resultPage", resultPage);
+				model.addAttribute("search", search);
 			}else {
-				map = productService.getListProduct(search);
-				List<Product> list = (List)map.get("list");
+				map.put("user", user);				
+				List<Product> list = operationService.selectUserProduct(map);
 				model.addAttribute("list",list);
 			}
 		}
@@ -128,12 +147,59 @@ public class MainController {
 	
 	@GetMapping("/admin")
 	public String adminPage(HttpSession session, Model model, HttpServletRequest request) throws Exception {
-		
+		Map<String,Object> map = new HashMap<String,Object>();
 		User user = (User)session.getAttribute("user");
 		model.addAttribute("count",operationService.countAdmin());
 		model.addAttribute("userCount",operationService.userCount("users"));
 		model.addAttribute("purchaseCount",operationService.userCount("purchase"));
 		model.addAttribute("salePrice",operationService.salePrice());
+		
+		// table 부분
+		// user 일일 가입자수
+		map.put("table", "users");		
+		model.addAttribute("userDay",operationService.countAdminDay(map));
+		
+		// 구매 횟수
+		map.put("table", "purchase");
+		model.addAttribute("purchaseDay",operationService.countAdminDay(map));
+		
+		// 판매액
+		map.put("option", "price");
+		model.addAttribute("purchasePriceDay",operationService.countAdminDay(map));
+		map.put("option", null);
+		
+		// 리뷰횟수
+		map.put("table", "review");
+		model.addAttribute("reviewDay",operationService.countAdminDay(map));
+		
+		// 문의 횟수
+		map.put("table", "post");
+		map.put("post_status", 3);
+		model.addAttribute("queryDay",operationService.countAdminDay(map));
+		
+		// 게시판 글쓴 횟수
+		map.put("post_status", 0);
+		model.addAttribute("communityDay",operationService.countAdminDay(map));
+		
+		// 이달의 좋아요 최고 게시글
+		map.put("table", "post");
+		model.addAttribute("monthPostLike",operationService.monthChart(map));
+		
+		// 이달의 최고댓글 게시글
+		map.put("table", "post p,comments c");
+		model.addAttribute("monthPostComment",operationService.monthChart(map));
+		
+		// 이달의 최고 판매상품
+		map.put("table", "product p, purchase pp, customproduct c");
+		model.addAttribute("monthSaleProduct",operationService.monthChart(map));
+		
+		// 이달의 탑텐 최고 판매재료
+		map.put("count", 10);
+		model.addAttribute("monthSaleParts",operationService.monthSaleParts(map));
+		
+		// 이달의 탑텐 최고 판매상품
+		map.put("count", 10);
+		model.addAttribute("monthSaleProduct10",operationService.monthSaleProduct(map));
 		
 		if(user != null) {
 			String referer = request.getServletPath();

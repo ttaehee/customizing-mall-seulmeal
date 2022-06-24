@@ -15,6 +15,7 @@
 	.text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
 	
 	.cardP {
+		margin: 20px;
 		overflow: hidden;
 	}
 	
@@ -24,9 +25,13 @@
 	  background-size: cover;	  
 	}
 	
-	.card-coverP:hover{
+	.card-coverP{
 		transform: scale(1.1);
 	}
+	
+	.card-coverP:hover{
+		transform: scale(1.2);
+	}	
 	
 	#tumbCard{
 		background-image: url('../../../../resources/attachments/${post.thumnail}');
@@ -36,6 +41,9 @@
 	    background-size: cover;
 	}
 	
+	.mb-0+.mb-0{
+		margin-left: 20px;
+	}
 	
 </style>
 </head>
@@ -53,7 +61,6 @@
 					<div style="display:flex; justify-content:space-between;">
 						<ul class="d-flex list-unstyled mt-auto">
 							<li class="me-auto">
-								<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
 							</li>							
 						</ul>
 						<ul class="d-flex list-unstyled mt-auto">
@@ -72,24 +79,24 @@
 		</div>
 	</div>
 	
-	<div class="card-header" id="headingOne" style="display:flex; justify-content: center; font-size: 30px;">
+	<div class="card-header" id="headingOne" style="display:flex; justify-content: center; font-size: 30px; background-color: #fff;">
 		<!-- 1번 -->
 		<h2 class="mb-0">
-			<a class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			<button class="btn btn-link acodi" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 				제목
-			</a>
+			</button>
 		</h2>
 
 		<!-- 2번 -->
 		<h2 class="mb-0">
-			<a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			<a class="btn btn-link collapsed acodi" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 				내용
 			</a>
 		</h2>
 
 		<!-- 3번 -->
 		<h2 class="mb-0">
-			<a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+			<a class="btn btn-link collapsed acodi" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
 				할인상품
 			</a>
 		</h2>
@@ -132,10 +139,10 @@
 				<!-- 3번 -->
 				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 					<div class="card-body">
-						<div class="row">
+						<div class="row" style="justify-content: center;">
 						<c:forEach var="product" items="${post.discountProduct}">
 							<c:if test="${product.productNo !=0}">
-								<div class="col-md-4 cardP">
+								<div class="col-md-5 cardP">
 									<div class="card card-cover card-coverP h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="transaition : all 0.2s linear; background-image: url('/resources/attachments/${product.thumbnail}');">
 										<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
 											<div data-value="${product.productNo}" class="productHref">
@@ -145,9 +152,8 @@
 											<h5 class="productTarget">${product.price}원</h5>
 											<h5 class="productTarget">${product.calorie}Cal</h5>
 											</div>
-											<ul class="d-flex list-unstyled mt-auto">
+											<ul class="d-flex list-unstyled mt-auto" style="justify-content:flex-end;">
 												<li class="me-auto">
-													<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
 												</li>
 												<li class="d-flex align-items-center me-3">
 													<i style="font-size:1.5rem; color:black;" class="bi bi-clipboard-heart-fill"></i>

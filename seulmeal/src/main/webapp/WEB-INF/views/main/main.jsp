@@ -116,93 +116,63 @@
 				</div>
 			</div>
 		</c:forEach>
-		</div>
 	</div>
-	
-	<!-- carousel iamge-slie 
-	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-		<ol class="carousel-indicators">
-			<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-			<c:forEach var="post" items="${listE}">
-				<c:set var="i" value="${ i+1 }" />
-				<li data-target="#carouselExampleIndicators" data-slide-to="${i}"></li>
-			</c:forEach>
-		</ol>
-		<div class="carousel-inner">
-			<div class="carousel-item active">
-				<img class="d-block w-100" src="../../../resources/attachments/image/seulMeal.png" alt="First slide" style="height:600px;">
-			</div>
-			<c:forEach var="post" items="${listE}">
-				<div class="carousel-item" data-value="${post.postNo}" id="eventBanner">
-					<c:if test="${post.thumnail == null}">
-						<img class="d-block w-100" src="../../../resources/attachments/image/tetris.png" alt="First slide" style="height:600px;">
-					</c:if>
-					<c:if test="${post.thumnail != null}">
-						<img class="d-block w-100" src="../../../resources/attachments/${post.thumnail}" alt="Second slide" style="height:600px;">
-					</c:if>			
-					<div class="carousel-caption d-none d-md-block">
-						<h2 class="display-6 fw-bold">${post.title}</h2>
-						<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}shortContent</h2>
-						<h2 class="endDateView">~${post.endDate}</h2>
-					</div>
-				</div>
-			</c:forEach>   
-		</div>
-		<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-			<span class="sr-only">Previous</span>
-		</a>
-		<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-			<span class="carousel-control-next-icon" aria-hidden="true"></span>
-			<span class="sr-only">Next</span>
-		</a>
 	</div>
-	 -->
-	<!-- 
-	<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-	  <div class="carousel-indicators">
-	    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-	    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-	    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-	  </div>
-	  <div class="carousel-inner">
-	    <div class="carousel-item active" >
-	      <img src="resources/attachments/image/tetris.png" class="d-block w-100" alt="..." style="height:500px;">
-	      <div class="carousel-caption d-none d-md-block">
-	        <h5>First slide label</h5>
-	        <p>Some representative placeholder content for the first slide.</p>
-	      </div>
-	    </div>
-	    <div class="carousel-item">
-	      <img src="https://t.ly/j26ep" class="d-block w-100" alt="..." style="height:500px;">
-	      <div class="carousel-caption d-none d-md-block">
-	        <h5>Second slide label</h5>
-	        <p>Some representative placeholder content for the second slide.</p>
-	      </div>
-	    </div>
-	    <div class="carousel-item">
-	      <img src="https://t.ly/j26ep" class="d-block w-100" alt="..." style="height:500px;">
-	      <div class="carousel-caption d-none d-md-block">
-	        <h5>Third slide label</h5>
-	        <p>Some representative placeholder content for the third slide.</p>
-	      </div>
-	    </div>
-	  </div>
-	  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-	    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-	    <span class="visually-hidden">Previous</span>
-	  </button>
-	  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-	    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-	    <span class="visually-hidden">Next</span>
-	  </button>
-	</div>
-	 -->
+	 
 	<main role="main">
 	<section class="text-center">
 	<div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">이 상품 어떠세요?</h2>
-    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+    
+    
+    <!-- ---------------------------------- -->
+    <div style="color:#ff4500;">
+    	${resultPage}
+    	<h2 class="pb-2 border-bottom">이 달의 인기 상품?</h2>
+    </div>
+    
+    <div class="mainProduct">
+	<c:forEach var="product" items="${monthSaleProduct}">		
+			<div class="col">
+				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.THUMBNAIL}');">
+					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
+						<div data-value="${product.PRODUCT_NO}" class="productHref">
+						<h2 class="display-6fw-bold productTarget">${product.NAME}</h2>
+						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
+						<c:if test="${product.ORIGIN_PRICE != null}">
+							<h5 class="productTarget" style="text-decoration: line-through;">${product.ORIGIN_PRICE}원</h5>
+						</c:if>						
+						<h5 class="productTarget">${product.PRICE}원</h5>
+						<h5 class="productTarget">${product.CALORIE}Cal</h5>
+						</div>
+						<ul class="d-flex list-unstyled mt-auto">
+							<li class="me-auto">
+								<c:if test="${ !empty user }">
+									<i class="bi bi-cart3" style="font-size: 1.5rem;" onclick="window.location.href='/purchase/insertCustomProduct/${product.PRODUCT_NO}'" type="button" class="btn btn-primary">
+									</i>
+								</c:if>
+							</li>
+							<li class="d-flex align-items-center me-3">
+								<i style="font-size:1.5rem; color:black;" class="bi bi-clipboard-heart-fill"></i>
+								&nbsp;<small>${product.REVIEW_COUNT}</small>
+							</li>
+							<li class="d-flex align-items-center">
+								<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+								&nbsp;<small class="likeText">${product.LIKE_COUNT}</small>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>			
+	</c:forEach>
+	</div>
+    
+    
+    
+    
+    
+    <!-- ----------------------------------- -->
+    
+    <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
 	<c:forEach var="product" items="${list}">		
 			<div class="col">
 				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
@@ -268,6 +238,38 @@ $jq(document).ready(function() {
 		arrow : true, */
 		fade : false
 	});
+	
+	$jq('.mainProduct').slick({
+		  centerMode: true,
+		  centerPadding: '60px',
+		  arrows : true,
+		  //dots: true,
+		  autoplay: true,
+		  autoplaySpeed: 2000,
+		  infinite: true,
+		  nextArrows : true,
+		  slidesToShow: 3,
+		  responsive: [
+		    {
+		      breakpoint: 768,
+		      settings: {
+		        arrows: false,
+		        centerMode: true,
+		        centerPadding: '40px',
+		        slidesToShow: 3
+		      }
+		    },
+		    {
+		      breakpoint: 480,
+		      settings: {
+		        arrows: false,
+		        centerMode: true,
+		        centerPadding: '40px',
+		        slidesToShow: 1
+		      }
+		    }
+		  ]
+		});
 });
 	
 	$(function(){
@@ -323,6 +325,102 @@ $jq(document).ready(function() {
 		})
 		//*/
 	}
+	
+	
+	
+	   // 게시글 무한스크롤
+	   $(function(){
+	      
+	      let currentPage = 2;
+	      let maxPage = ${resultPage.maxPage};
+
+	      
+	      let abc = 1;
+	      $(window).scroll(function(){
+	         
+	         let $window = $(this);
+	         let scrollTop = $window.scrollTop();
+	         let windowHeight = $window.height();
+	         let documentHeight = $(document).height();         
+	         
+	         if(scrollTop + windowHeight>= documentHeight && currentPage <= maxPage){
+	            setTimeout(getListPost,200);//0.2초
+	         }
+	         
+	            function getListPost(){
+	            	console.log(maxPage)
+	               
+	               $.ajax({
+	                  url:"/api/main?currentPage="+currentPage,
+	                  type:"GET",
+	                  datatype:"json",
+	                  async: false,
+	                  success: function(product, status, jqXHR){
+
+	                     console.log(product.list);
+	                     for(let i=0; i<product.length; i++){
+		                     let productCard = `
+			             			<div class="col">
+			         				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/\${product.thumbnail}');">
+			         					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
+			         						<div data-value="\${product.productNo}" class="productHref">
+			         						<h2 class="display-6fw-bold productTarget">\${product.name}</h2>
+			         						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>`
+			         						
+       						if(product.originPrice != 0){
+       							productCard += `<h5 class="productTarget" style="text-decoration: line-through;">\${product.originPrice}원</h5>`
+  							}
+			         		
+      						productCard +=	`<h5 class="productTarget">\${product.price}원</h5>
+			         						<h5 class="productTarget">\${product.calorie}Cal</h5>
+			         						</div>
+			         						<ul class="d-flex list-unstyled mt-auto">
+			         							<li class="me-auto">
+			         								<c:if test="${ !empty user }">
+			         									<i class="bi bi-cart3" style="font-size: 1.5rem;" onclick="window.location.href='/purchase/insertCustomProduct/\${product.productNo}'" type="button" class="btn btn-primary">
+			         									</i>
+			         								</c:if>
+			         							</li>
+			         							<li class="d-flex align-items-center me-3">
+			         								<i style="font-size:1.5rem; color:black;" class="bi bi-clipboard-heart-fill"></i>
+			         								&nbsp;<small>\${product.reviewCount}</small>
+			         							</li>
+			         							<li class="d-flex align-items-center">
+			         								<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+			         								&nbsp;<small class="likeText">\${product.likeCount}</small>
+			         							</li>
+			         						</ul>
+			         					</div>
+			         				</div>
+			         			</div>
+			                     `
+			                     
+	                     }
+					
+	                     
+	                     
+
+	                     
+	                     
+	                     
+	                  }//success
+	                  , error: function(status, jqXHR){
+	                     console.log("error status: "+ status);
+	                     console.log("jqXHR: "+ jqXHR);
+	                     alert("페이지 로드 실패");
+	                  }
+	                  
+	               })//jQuery.ajax()
+	               
+	               console.log(currentPage)
+	            currentPage ++;
+	            }//getListPost
+	            
+	      })//window.scroll()
+	      
+	      
+	   });	
+	
 </script>
 </body>
 </html>

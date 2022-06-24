@@ -201,15 +201,17 @@ public class PurchaseRestController {
 					purchaseService.updateCustomProductStatus(cp);
 				}
 				
-				//사용포인트
-				point.setUserId(user.getUserId());
-				point.setPurchaseNo(purchase.getPurchaseNo());
-				point.setPointStatus("0");
-				point.setPoint(purchase.getUsePoint());
-				userService.insertPoint(point);
-				//총포인트에서 사용포인트 빼기
-				user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
-				userService.updateUserTotalPoint(user);
+				if(purchase.getUsePoint()!=0) {
+					//사용포인트
+					point.setUserId(user.getUserId());
+					point.setPurchaseNo(purchase.getPurchaseNo());
+					point.setPointStatus("0");
+					point.setPoint(purchase.getUsePoint());
+					userService.insertPoint(point);
+					//총포인트에서 사용포인트 빼기
+					user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+					userService.updateUserTotalPoint(user);
+				}
 				
 				json.put("purchase", purchase);
 				json.put("sucess", "true");
@@ -265,11 +267,7 @@ public class PurchaseRestController {
 	      purchase.setUser(user);
 	      
 	      //구매확정 후 포인트적립
-	      List<CustomProduct> list=purchase.getCustomProduct();
-	      int total=0;
-	      for(CustomProduct cp : list) {
-	    	  total += cp.getPrice()*cp.getCount();
-	      }
+	      int total=purchase.getPrice()+purchase.getUsePoint();
 	      
 	      int plusPoint=0;
 	      if(user.getGrade().equals("0")) {
@@ -288,7 +286,7 @@ public class PurchaseRestController {
 		  point.setPoint(plusPoint);
 		  userService.insertPoint(point);
 		  //유저 총포인트
-		  user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+		  user.setTotalPoint(user.getTotalPoint()+plusPoint);
 		  userService.updateUserTotalPoint(user);
 	      
 	      return purchase;

@@ -71,13 +71,12 @@ public class AttachmentsController {
 		
 		// 저장될 파일명
 		String savedFileName = UUID.randomUUID()+extension;
-		
+		System.out.println(extension);
 		File targetFile = new File(path+savedFileName);
 		
 		try {
 			// 파일 저장
-	        InputStream fileStream = multipartFile.getInputStream();
-	        FileUtils.copyInputStreamToFile(fileStream, targetFile);	
+			multipartFile.transferTo(targetFile);
 	        	        
 	        json.put("url", "/resources/attachments/"+savedFileName);  
 	        json.put("result", "success");

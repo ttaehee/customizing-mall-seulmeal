@@ -58,7 +58,7 @@
 <script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>	
 	<div class="container">
         <div class="row">
-            <div class="col" style="border-bottom: 2px solid; margin-top:20px; ">            	
+            <div class="col" style="border-bottom: 2px solid #ff4500; margin-top:20px; ">            	
             	<h1>${post.title}<c:if test="${post.publicStatus==1}"><i class="bi bi-lock-fill"></i></c:if></h1>
             </div>            
         </div>
@@ -66,7 +66,7 @@
             <div class="col-2 queryHeader">${post.postNo}</div>
             <div class="col-2 queryHeader">${post.regDate}</div>
         </div>
-        <div class="row" style="border-bottom: 2px solid; text-align: center;">
+        <div class="row" style="border-bottom: 2px solid #ff4500; text-align: center;">
             <div class="col-2 queryHeader">${post.user.userId}</div>
             <div class="col-3" style="display: flex;">
             <div style="margin-right: 10px;">
@@ -105,7 +105,7 @@
 				</c:if>
         	</div>		
         </div>
-        <div class="row" style="border-bottom: 2px solid; min-height: 400px;">
+        <div class="row" style="border-bottom: 2px solid #ff4500; min-height: 400px;">
             <div class="col">${post.content}</div>            
         </div>
         <c:if test="${user.role==1}">        

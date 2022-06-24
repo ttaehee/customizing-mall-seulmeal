@@ -64,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
+		System.out.println("@!#!@!@$!@$@:"+new Integer(totalCount));
 		map.put("totalCount", new Integer(totalCount));
 
 		return map;
@@ -108,8 +109,8 @@ public class ProductServiceImpl implements ProductService {
 		return (List<Foodcategory>) productMapper.getListFoodCategory();
 	}
 
-	public List<Foodcategory> getAdminFoodCategory() throws Exception {
-		return (List<Foodcategory>) productMapper.getAdminFoodCategory();
+	public List<Foodcategory> getAdminFoodCategory(String status) throws Exception {
+		return (List<Foodcategory>) productMapper.getAdminFoodCategory(status);
 	}
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception {

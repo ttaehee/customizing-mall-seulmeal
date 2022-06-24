@@ -22,10 +22,17 @@ public interface OperationService {
 	public int updateAnswer(Comment comment);
 	public int deleteAnswer(Comment comment);
 	
+	// main
+	public List<Product> selectUserProduct(Map<String,Object> map);
+	
 	// admin
 	public List<Map<String,Object>> userCount(String table);
 	public List<Map<String,Object>> salePrice();
 	public Map<String,Object> countAdmin();
+	public List<Map<String,Object>> countAdminDay(Map<String,Object> map);
+	public List<Map<String,Object>> monthChart(Map<String,Object> map);
+	public List<Map<String,Object>> monthSaleParts(Map<String,Object> map);
+	public List<Map<String,Object>> monthSaleProduct(Map<String,Object> map);
 	
 	// 오토컴플릿
 	public List<Map<String,Object>> getProductName(Map<String,Object> map);
