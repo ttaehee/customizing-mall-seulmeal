@@ -16,6 +16,7 @@ public interface CommunityService {
 	public int insertPost(Post post);
 	public Post getPost(int postNo);
 	public Map<String,Object> getListPost(Search search, String userId);
+	public Map<String,Object> getListPostA(Search search, String userId, List<Relation> blockList);//test
 	public int updatePost(Post post);
 	public int deletePost(int postNo);
 	
@@ -53,5 +54,6 @@ public interface CommunityService {
 	
 	// 신고체크
 	public int checkReport(Report report);
-	
+	public String checkRelation(Relation relation);
+	public List<Like> checkLikePost(String userId);
 }

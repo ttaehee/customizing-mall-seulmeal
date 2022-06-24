@@ -1,10 +1,7 @@
 package shop.seulmeal.web.community;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,31 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.attachments.AttachmentsService;
 import shop.seulmeal.service.community.CommunityService;
-import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
 import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
-import shop.seulmeal.service.mapper.CommunityMapper;
 import shop.seulmeal.service.user.UserService;
 
 @RestController
@@ -61,82 +50,11 @@ public class CommunityRestController {
 	public CommunityRestController() {
 		System.out.println(this.getClass());
 	}
-
-	/*
-	@GetMapping("/communityMain") // o
-	public Map<String,Object> communityMain(@RequestParam(required = false) String searchKeyword,
-			@RequestParam(required = false) String searchCondition, HttpSession session) throws Exception {
-
-		// 1. communityService.getListPost();
-		// 2. productService.getListProduct() 추천밀키트 리스트
-
-		System.out.println("//////////////" + session.getAttribute("user"));
-
-		// 전체 post
-		Search search = new Search();
-		search.setCurrentPage(1);
-		search.setPageSize(13);
-		search.setSearchKeyword(searchKeyword);
-		search.setSearchCondition(searchCondition);
-		Map<String, Object> map = communityService.getListPost(search, null); // 모든 게시글
-		
-		Page resultPage = new Page(search.getCurrentPage(), (int) map.get("postTotalCount"), pageUnit, search.getPageSize());
-
-
-		Map<String, Object> map03 = new HashMap<>();
-
-		List<Post> postList = (List<Post>) map.get("postList");
-		
-		List<Attachments> attachmentList = new ArrayList<>();
-
-		for(Post post : postList) {
-			map03.put("postNo", post.getPostNo());
-			post.setAttachments(attachmentsService.getAttachments(map03));  
-		}
-		
-		System.out.println("//////////////////"+postList);
-		
-		
-//		product
-//		Search productSearch = new Search();
-//		productSearch.setCurrentPage(1);
-//		productSearch.setPageSize(3);
-//		Map<String, Object> productMap = productService.getListProduct(productSearch);
-		
-
-		// 팔로우, 팔로워 수
-		String userId = ((User) session.getAttribute("user")).getUserId();
-
-		Map<String, Object> map02 = new HashMap<>();
-		map02.put("userId", userId);
-		map02.put("relationUserId", userId);
-		map02.put("relationStatus", "0");
-
-		int followCnt = communityMapper.getRelationTotalCount(map02);
-		int followerCnt = communityMapper.getFollowerTotalCount(map02);
-
-		// 차단유저 목록
-		List<Relation> blockList = (List<Relation>)communityService.getListBlock(null, userId, "1").get("blockList");
-		
-		
-		Map<String,Object> resultMap = new HashMap<>();
-		
-		//model
-		resultMap.put("postList", postList);
-		resultMap.put("resultPage",resultPage);
-		//model.addAttribute("productList", (List<Product>) productMap.get("list"));
-		resultMap.put("followCnt", followCnt);
-		resultMap.put("followerCnt", followerCnt);
-		resultMap.put("blockList", blockList);
-
-		return resultMap;
-	}
-*/
 	
 	// 무한스크롤
 	@GetMapping("getListPost") // oo
 	public List<Post> getListPost(@RequestParam(required = false, defaultValue = "2") int currentPage,
-			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String searchOption ,@RequestParam(required = false) String userId) {
+			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String searchOption ,@RequestParam(required = false) String userId, HttpSession session) {
 		
 		System.out.println("RestC : CurrentP : "+ currentPage);
 		
@@ -146,18 +64,43 @@ public class CommunityRestController {
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchOption);
 
+		
+		User loginUser = (User)session.getAttribute("user");
+
+		List<Relation> relationList = communityService.getAllRelation(loginUser.getUserId());
+		List<Relation> blockList = new ArrayList<>();
+		
+		for (Relation block : relationList) {	
+			if(block.getRelationStatus().equals("1")) {
+				blockList.add(block);
+			}
+		}
+		
 		// 메인 게시글 : userId = null (searchKeyword, searchOption 존재)
 		// 내 프로필 게시글 : userId = session (searchKeyword, searchOption 존재x)
 		// 타 프로필 게시글 : userId  (위와 동일)
-		Map<String, Object> map = communityService.getListPost(search, userId);
+		Map<String, Object> map = communityService.getListPostA(search, userId, blockList);
 		//map.put("search", search);
 		
-		Map<String, Object> attachMap = new HashMap<>();
+		// 좋아요 여부 체크
+		List<Like> likeList =  communityService.checkLikePost(loginUser.getUserId());
+
+		
 		List<Post> postList = (List<Post>)map.get("postList");
+		
+		Map<String, Object> attachMap = new HashMap<>();
 				
 		for(Post post : postList) {
 			attachMap.put("postNo", post.getPostNo());
 			post.setAttachments(attachmentsService.getAttachments(attachMap));
+			
+			// 좋아요 게시글 상태값 변경
+			for(Like like: likeList) {
+				
+				if(post.getPostNo() == like.getPostNo()) {
+					post.setLikeStatus("1");
+				}
+			}
 			
 			// 닉네임없는 유저, id를 닉네임으로 저장
 			if(post.getUser().getNickName() == null) {
@@ -186,8 +129,7 @@ public class CommunityRestController {
 				}
 			}
 		}
-		System.out.println(("/////"+map.get("postTotalCount")));
-		System.out.println("/////"+postList);
+		System.out.println("/////aaaaa"+postList);
 		return postList;
 	}
 
@@ -455,7 +397,8 @@ public class CommunityRestController {
 		String imageFileName = "default_profile.jpg";
 		String imageFilePath = path + "/" + imageFileName; 
 		
-		return imageFilePath;
+		System.out.println("//////"+imageFilePath);
+		return "/resources/attachments/profile_image/default_profile.jpg";
 	}
 	
 	@PostMapping("insertReportPost") // o

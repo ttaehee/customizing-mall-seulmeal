@@ -61,8 +61,17 @@ img.rounded-circle{
 	margin-bottom: 0px;
 }
 
+#post-title-body{
+	padding: 30px 30px 20px 30px;
+}
+
+
 #post-content-body{
 	margin-bottom: 80px;
+	height: 400px;
+	font-size: 18px;
+	padding-left:50px;
+	padding-top:30px;
 }
 
 #comment-profile-img{
@@ -78,7 +87,28 @@ img.rounded-circle{
 	
 .comment-con{
 	font-size: 13px;
+	margin-right: 15px;	
 }
+
+button#insertCommentBtn {
+    position: absolute;
+    margin: 20px 0px 0px 20px;
+}
+
+/* 좋아요수, 조회수, 댓글수 아이콘*/
+.reaction-wrapper{
+    width:  splay: flex;
+    margin-top: -28px;
+    align-items: center;
+}
+	
+.reaction-wrapper .icon{
+    height: 25px;
+    font-size: 17px;
+    margin: 0 3px 0 10px;
+}
+
+    
 
 .comment-reg{
 	font-size: 10px;
@@ -87,6 +117,7 @@ img.rounded-circle{
 #deleteCommentBtn{
 	font-size: 12px;
 }
+
 
 </style>
 
@@ -100,14 +131,7 @@ img.rounded-circle{
 	
 	<div class="container">
 	
-	<div>
-		<c:if test="${sessionScope.user.userId == post.user.userId}">
-			<button id="updatePostBtn" type="button"
-				class="btn btn-primary" onclick="location.href='/community/updatePost/${post.postNo}'">수정</button>
-			<button id="deletePostBtn" type="button" 
-				class="btn btn-primary"  onclick="location.href='/community/deletePost/${post.postNo}'">삭제</button>
-		</c:if>
-	</div>
+
 
 		<!-- 게시글 이미지 또는 제목/간략내용 -->
 		<div class="your-class" style="margin-bottom:30px">
@@ -118,34 +142,7 @@ img.rounded-circle{
 					</div>
 				</c:forEach>
 		</div>
-
 		
-		
-		<!-- div class="info">
-			<!-- 프로필 이미지
-			<div class="user"> 
-				<div class="profile-img">
-					<c:if test="${not empty post.user.profileImage}">
-						<img class="rounded-circle"
-						src="/resources/attachments/profile_image/${post.user.profileImage}">
-					</c:if>
-					<c:if test="${empty post.user.profileImage}">
-						<img class="rounded-circle"
-						src="/resources/attachments/profile_image/default_profile.jpg">
-					</c:if>
-				</div>
-				
-				<!-- 닉네임 
-				<div class="nick">
-					<strong>${post.user.nickName}</strong>
-				</div>
-			</div>
-
-		</div-->
-
-
-
-
 		<!-- 제목, 내용 -->
 		<div id="accordion" style="margin-top:50px;">			
 				<div class="card" style="min-height: 500px; width:85%; left:8%;">
@@ -154,15 +151,33 @@ img.rounded-circle{
 					  <div id="post-title-body" class="card-body" style="font-size: 25px">
 							<strong>${post.title}</strong>
 					  </div>
+					 <div class="info" style="padding-left:30px;">
+						<div class="user" style="width:100%"> 
+							<div class="nick">
+									<c:if test="${sessionScope.user.userId == post.user.userId}">
+										<span class="btn up del"  style="float:right; display:inline-block; "><button style="padding:0px 10px 0px 0px;"	 id="updatePostBtn" type="button"
+											class="btn btn-primary" onclick="location.href='/community/updatePost/${post.postNo}'">수정</button>
+										<button id="deletePostBtn" type="button" style="padding:0px 15px 0px 0px;"
+											class="btn btn-primary"  onclick="location.href='/community/deletePost/${post.postNo}'">삭제</button>
+											</span>
+									</c:if>
+							</div>
+						</div>
 					</div>
 					
+					  
+					</div>
+					
+					
+					
 					<div id="post-content" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
-						<div id="post-content-body" class="card-body"  style="font-size: 18px; padding:30px; margin-bottom:0px">
+						<div id="post-content-body" class="card-body" >
 							 ${post.content}
 						</div>
 					</div>
 					
 					<div class="post-content">
+						
 	                    <div class="reaction-wrapper">
 	                    	<!-- 좋아요수, 조회수, 댓글수 -->
 	                    	<i class="bi bi-heart icon" data-value="${post.postNo}"></i><span id="heart-cnt">${post.likeCount}</span>
@@ -170,7 +185,7 @@ img.rounded-circle{
 	                    	<i class="bi bi-chat-left icon">${post.commentCount}</i>
 	                    </div>
 	                    <!-- 등록날짜-->
-	                    <div class="post-time" style="text-align:right;">${post.regDate}</div>
+	                    <div class="post-time" style="margin-right:40px; text-align:right;">${post.regDate}</div>
 	                </div>
 					
 					

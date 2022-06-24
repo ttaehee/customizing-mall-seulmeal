@@ -24,7 +24,9 @@ public interface CommunityMapper {
 	public int deletePost(int postNo);
 	
 	public List<Post> getListPost(Map<String,Object> map);//Search(검색+정렬) + userId(myPost)
+	public List<Post> getListPostA(Map<String,Object> map);//Search(검색+정렬) + userId(myPost)
 	public int getPostTotalCount(Map<String,Object> map);//
+	public int getPostTotalCountA(Map<String,Object> map);
 
 	
 	//Comment
@@ -46,7 +48,8 @@ public interface CommunityMapper {
 	public int getReportTotalCount();
 	
 	//Like
-	public Like checkLike(Like like);//추가
+	public Like checkLike(Like like);
+	public List<Like> checkLikePost(String userId);
 	public int insertLike(Like like);
 	public int deleteLike(Like like);
 	public int postLikeCountUp(Integer postNo);
@@ -73,4 +76,5 @@ public interface CommunityMapper {
 	
 	// 신고 체크
 	public int checkReport(Report report);
+	public String checkRelation(Relation relation);
 }

@@ -28,11 +28,11 @@ import shop.seulmeal.service.attachments.AttachmentsService;
 import shop.seulmeal.service.community.CommunityService;
 import shop.seulmeal.service.domain.Attachments;
 import shop.seulmeal.service.domain.Comment;
+import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.Report;
 import shop.seulmeal.service.domain.User;
-import shop.seulmeal.service.mapper.CommunityMapper;
 import shop.seulmeal.service.product.ProductService;
 import shop.seulmeal.service.user.UserService;
 
@@ -51,9 +51,6 @@ public class CommunityController {
 
 	@Autowired
 	private AttachmentsService attachmentsService;
-
-	@Autowired
-	private CommunityMapper communityMapper;
 
 	int pageUnit = 5;
 	int pageSize = 5;
@@ -80,31 +77,53 @@ public class CommunityController {
 			return "user/login";
 		}
 		
+		// 팔로우, 차단유저 목록 세션에 저장
 		User loginUser = (User)session.getAttribute("user");
 		List<Relation> relationList = communityService.getAllRelation(loginUser.getUserId());
-		System.out.println("/////"+relationList);
-		loginUser.setRelation(relationList);
-		session.setAttribute("user", loginUser);
+		((User)session.getAttribute("user")).setRelation(relationList);
 
-		// 전체 post
+		// 전체 게시글
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(pageSize);//pageSize
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchCondition);
-		Map<String, Object> postMap = communityService.getListPost(search, null); // 모든 게시글
+		
+		List<Relation> blockList = new ArrayList<>();
+		
+		for (Relation block : relationList) {	
+			if(block.getRelationStatus().equals("1")) {
+				blockList.add(block);
+			}
+		}
+		
+		Map<String, Object> postMap = communityService.getListPostA(search, null, blockList);
+		
+		// 좋아요 여부 체크
+		List<Like> likeList =  communityService.checkLikePost(loginUser.getUserId());
+		//System.out.println("//////////////"+likeList);
+		
+		List<Post> postList = (List<Post>) postMap.get("postList");
+		
 		// 게시글 무한스크롤 -> maxPage 필요
 		Page resultPage = new Page(1, (int) postMap.get("postTotalCount"), pageUnit, pageSize);
-		System.out.println("//postTotalC:"+ postMap.get("postTotalCount"));
-		
+		//System.out.println("//postTotalC:"+ postMap.get("postTotalCount"));
 		
 		Map<String, Object> attachMap = new HashMap<>();
-		List<Post> postList = (List<Post>) postMap.get("postList");
-		List<Attachments> attachmentList = new ArrayList<>();
 
 		for(Post post : postList) {
+			// 게시글 사진
 			attachMap.put("postNo", post.getPostNo());
 			post.setAttachments(attachmentsService.getAttachments(attachMap));
+			
+			// 좋아요 게시글 상태값 변경
+			for(Like like: likeList) {
+				
+				if(post.getPostNo() == like.getPostNo()) {
+					post.setLikeStatus("1");
+				}
+			}
+			
 			
 			// 닉네임없는 유저, id를 닉네임으로 저장
 			if(post.getUser().getNickName() == null) {
@@ -133,6 +152,7 @@ public class CommunityController {
 			}			
 		}
 		
+		System.out.println("////////"+postList);
 		/* product
 		Search productSearch = new Search();
 		productSearch.setCurrentPage(1);
@@ -317,21 +337,42 @@ public class CommunityController {
 	}
 
 	@GetMapping("getProfile/{userId}")
-	public String getProfile(@PathVariable String userId, Model model, HttpSession session) throws Exception {
+	public String getProfile(@PathVariable String userId, Model model, HttpSession session, Relation relation) throws Exception {
 
-		// default : 타인 게시글
-		boolean isMine = false;
-		
-		// 본인 게시글 
-		if(((User)session.getAttribute("user")).getUserId().equals(userId)){
-			isMine = true; 
+		if(((User)session.getAttribute("user")).getProfileImage()==null) {
+			((User)session.getAttribute("user")).setProfileImage("default_profile.jpg");
 		}
+		
+		
+		// default : 본인 게시글
+		boolean isMine = true;
+
+		String relationStatus = null;
+
+		// 타인 게시글
+		if(!((User)session.getAttribute("user")).getUserId().equals(userId)){
+			isMine = false;
+			
+			relation.setUserId(((User)session.getAttribute("user")).getUserId());
+			
+			User relationUser = new User();
+			relationUser.setUserId(userId);
+			relation.setRelationUser(relationUser);
+			
+			relationStatus = communityService.checkRelation(relation);
+			System.out.println("/////////"+relationStatus);
+		}
+		
+		// 팔로우, 차단유저 목록 세션에 저장
+		User loginUser = (User)session.getAttribute("user");
+		List<Relation> relationList = communityService.getAllRelation(loginUser.getUserId());
+		((User)session.getAttribute("user")).setRelation(relationList);
 		
 		Search search = new Search();
 		search.setCurrentPage(1);
 		search.setPageSize(pageSize);
-
-		Map<String,Object> postMap = communityService.getListPost(search, userId);
+		
+		Map<String,Object> postMap = communityService.getListPostA(search, userId, null);
 		
 		Page resultPage = new Page(1, (int) postMap.get("postTotalCount"), pageUnit, pageSize);
 		
@@ -344,7 +385,6 @@ public class CommunityController {
 		
 		Map<String, Object> attachMap = new HashMap<>();
 		List<Post> postList = (List<Post>) postMap.get("postList");
-//		List<Attachments> attachmentList = new ArrayList<>();
 
 		for(Post post : postList) {
 			attachMap.put("postNo", post.getPostNo());
@@ -353,11 +393,6 @@ public class CommunityController {
 			// 닉네임없는 유저, id를 닉네임으로 저장
 			if(post.getUser().getNickName() == null) {
 				post.getUser().setNickName(post.getUser().getUserId());
-			}
-			
-			// 프로필이미지 없는 유저, 기본이미지로 저장
-			if(post.getUser().getProfileImage()==null) {
-				post.getUser().setProfileImage("default_profile.jpg");
 			}
 			
 			if(post.getAttachments() == null) {
@@ -382,6 +417,7 @@ public class CommunityController {
 		
 		//model
 		model.addAttribute("isMine", isMine);
+		model.addAttribute("relationStatus", relationStatus);// 0:팔로우관계, null:관계x
 		model.addAttribute("profileUser",userService.getProfile(userId));
 		model.addAttribute("postList", (List<Post>)postMap.get("postList"));
 		model.addAttribute("resultPage",resultPage);

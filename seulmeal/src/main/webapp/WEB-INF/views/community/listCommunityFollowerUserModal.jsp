@@ -58,7 +58,7 @@
 											<c:choose>
 												<c:when test="${not empty relation.relationUser.nickName}">
 													<a
-														href="/community/getProfile/${relation.relationUser.nickName}">${relation.relationUser.nickName}</a>
+														href="/community/getProfile/${relation.relationUser.userId}">${relation.relationUser.nickName}</a>
 												</c:when>
 												<c:otherwise>
 													<a

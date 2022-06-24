@@ -34,6 +34,7 @@ public class Post {
 	private int password;
 	private String answerStatus;
 	private String status;
+	private String likeStatus;
 	
 	// post媛� comment瑜� 媛�吏�怨� �엳�떎.
 	private List<Comment> comments;
