@@ -423,10 +423,13 @@ public class ProductController {
 		return "/product/listFoodCategory";
 	}
 	
-	@GetMapping(value = {"listFoodCategory"})
-	public String getListFoodCategory(Model model) throws Exception {
-
-			List<Foodcategory> list = productService.getAdminFoodCategory();
+	@GetMapping(value = {"listFoodCategory/{status}", "listFoodCategory"})
+	public String getListFoodCategory(@PathVariable(required=false) String status, Model model) throws Exception {
+			if(status == null) {
+				status = "0";
+			}
+			
+			List<Foodcategory> list = productService.getAdminFoodCategory(status);
 
 			model.addAttribute("list", list);
 
