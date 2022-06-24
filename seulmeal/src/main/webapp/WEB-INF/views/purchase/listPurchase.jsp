@@ -112,7 +112,7 @@
 							 </c:choose> 
 							 ]입니다.</div>
 	 					<hr style="border:1px solid #FF4500; width:370px; bottom:15px"/>
-	 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : ${user.totalPoint} P</div>
+	 					<div align="center" style="padding: 0px 0px 0px 30px;">가용포인트 : <fmt:formatNumber type="number" maxFractionDigits="0"  value="${user.totalPoint}"/> P</div>
 	 				</div>			
 		 		</div>
 		 	</div>
