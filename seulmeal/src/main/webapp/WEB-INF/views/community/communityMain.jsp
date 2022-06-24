@@ -543,10 +543,10 @@ div.modal-content{
                     <div class="post-content">
                         <div class="reaction-wrapper">
                            <c:if test="${post.likeStatus eq 1}">
-                               <i class="bi bi-heart-fill icon" style="color:red;" data-value="${post.postNo}"></i>
+                               <i class="bi bi-heart-fill icon" onclick="like(this)" style="color:red;" data-value="${post.postNo}"></i>
                             </c:if>
                             <c:if test="${empty post.likeStatus}">
-                               <i class="bi bi-heart icon" data-value="${post.postNo}"></i>
+                               <i class="bi bi-heart icon" onclick="like(this)" data-value="${post.postNo}"></i>
                             </c:if>
                             <!-- 4.조회수, 댓글수 -->
                             <i class="bi bi-eye icon">${post.views}</i>
@@ -649,16 +649,14 @@ div.modal-content{
    
 
    // 좋아요, 좋아요 취소
-   function like(){
-   $("i.bi.bi-heart.icon, i.bi.bi-heart-fill.icon").on("click", function() {
-      const heart = $(this)      
-      console.log(하트);
-      const postNo = $(this).data("value");
+   function like(e){
+      const heart = $(e)
+      const postNo = $(e).data("value");
       //alert("postNo: " + postNo);
       console.log("postNo: " + postNo);
 
       //like_cnt = <span class="like-cnt">${post.likeCount}</span>
-      const div_like_cnt = $(this).parent().parent().find("span.like-cnt");
+      const div_like_cnt = $(e).parent().parent().find("span.like-cnt");
       console.log(div_like_cnt);
       
       $.ajax({
@@ -692,8 +690,6 @@ div.modal-content{
             console.log(status); // "errror"
          }
       });
-
-   });
    }
    
    
@@ -726,8 +722,6 @@ div.modal-content{
 
    // 게시글 무한스크롤
    $(function(){
-      
-      like();
       
       let currentPage = 2;
       let maxPage = ${resultPage.maxPage};
@@ -844,9 +838,9 @@ div.modal-content{
                         }
                         
                         if(post.likeStatus === '1'){                           
-                           $(postCard).find("i.bi.bi-eye.icon").before(`<i class="bi bi-heart-fill icon" style="color:red;" data-value="\${post.postNo}"></i>`);
+                           $(postCard).find("i.bi.bi-eye.icon").before(`<i class="bi bi-heart-fill icon" onclick="like(this)" style="color:red;" data-value="\${post.postNo}"></i>`);
                         }else if(post.likeStatus === undefined ){
-                           $(postCard).find("i.bi.bi-eye.icon").before(` <i class="bi bi-heart icon" data-value="\${post.postNo}"></i>`);
+                           $(postCard).find("i.bi.bi-eye.icon").before(` <i class="bi bi-heart icon" onclick="like(this)" data-value="\${post.postNo}"></i>`);
                         }
                         
                         //$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);                     
@@ -865,13 +859,8 @@ div.modal-content{
                         console.log("postC: "+postCard);
                         
                         $(".left-col").append(postCard);
-                        
-
                         //index++;
                      }//for
-                     abc++
-                     console.log(abc);
-                     like();
                      slick2('.your-class'+currentPage);                        
                   }//success
                   , error: function(status, jqXHR){

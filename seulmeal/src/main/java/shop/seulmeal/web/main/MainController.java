@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
@@ -107,15 +108,32 @@ public class MainController {
 		}		
 		search.setPageSize(pageSize);
 		if(user == null) {
+			// 이달의 최고판매 10개
+			map.put("option", "main");
+			map.put("count", 10);
+			model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
 			
 			map = productService.getListProduct(search);
 			List<Product> list = (List)map.get("list");
+			Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+					pageSize);
 			model.addAttribute("list",list);
+			model.addAttribute("resultPage", resultPage);
+			model.addAttribute("search", search);
 		} else {
 			if(user.getFoodCategoryName1() == null) {
+				// 이달의 최고판매 10개
+				map.put("option", "main");
+				map.put("count", 10);
+				model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
+				
 				map = productService.getListProduct(search);
 				List<Product> list = (List)map.get("list");
+				Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+						pageSize);
 				model.addAttribute("list",list);
+				model.addAttribute("resultPage", resultPage);
+				model.addAttribute("search", search);
 			}else {
 				map.put("user", user);				
 				List<Product> list = operationService.selectUserProduct(map);

@@ -212,15 +212,20 @@ ul#profile-Arrange {
 	border: none;
 }
 
-#post-list-title {
-	margin-top: 20px;
-	margin-left: 20px;
+.post-list-title{
+	margin: 30px;
 	font-size: 20px;
 	font-weight: bold;
 }
 
-#post-list-content {
-	margin: 30px;
+.post-shortContent{
+	margin-bottom:30px;
+}
+
+
+.post-list-content{
+	margin-left: 50px; 
+	margin-bottom: 70px; 
 }
 
 .post-image {
@@ -375,6 +380,20 @@ div.modal-content{
     opacity: 1;
 }
 
+/* 좋아요수, 조회수, 댓글수 아이콘*/
+.reaction-wrapper{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    margin-top: -28px;
+    align-items: center;
+}
+
+.reaction-wrapper .icon{
+    height: 25px;
+    font-size: 17px;
+    margin: 0 3px 0 10px;
+}
 
 </style>
 </head>
@@ -444,30 +463,45 @@ div.modal-content{
 					
 						<!-- 타 프로필일 경우,  -->
 						<c:if test="${isMine == false}">
-							<button id="insertFollowBtn" onclick="insertFollowBtn(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
-								팔로우
-							</button>
-							<button id="insertBlockBtn" onclick="insertBlock(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
+							<c:if test="${relationStatus eq '0'}">
+								<button id="deleteFollowBtn" onclick="deleteFollow2(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a ">
+								팔로잉
+								</button>	
+								<button id="insertBlockBtn" onclick="insertBlock(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
 								차단하기
-							</button>
+								</button>													
+							</c:if>
+							<c:if test="${empty relationStatus}">
+								<button id="insertFollowBtn" onclick="insertFollowBtn(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a">
+								팔로우
+								</button>
+								<button id="insertBlockBtn" onclick="insertBlock(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
+								차단하기
+								</button>
+							</c:if>
+							<c:if test="${relationStatus eq '1'}">
+								<button id="deleteBlockBtn" onclick="deleteBlock(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
+								차단해제
+								</button>
+							</c:if>
 							<li id="profile-details"> 
 									<span class="d-block" id="profile-label" >팔로잉</span> 
-									<span class = "followTotalCount" id="profile-number"> ${followMap.followTotalCount}</span>
+									<span class = "followTotalCount n" id="profile-number"> ${followMap.followTotalCount}</span>
 							</li>
 							<li id="profile-details"> 
 									<span class="d-block" id="profile-label">팔로워</span> 
-									<span class = "followerTotalCount" id="profile-number"> ${followerMap.followerTotalCount}</span>
+									<span class = "followerTotalCount n" id="profile-number"> ${followerMap.followerTotalCount}</span>
 							</li>
 						</c:if>
 						<!-- 내 프로필일 경우,  -->
 						<c:if test="${isMine == true}">
 							<li id="profile-details"><a id = "follow-user-list" data-toggle="modal" data-target="#followModal"> 
 									<span class="d-block" id="profile-label" >팔로잉</span> 
-									<span id="profile-number" class="followTotalCount"> ${followMap.followTotalCount}</span>
+									<span id="profile-number" class="followTotalCount m"> ${followMap.followTotalCount}</span>
 							</a></li>
 							<li id="profile-details"><a id = "follower-user-list" data-toggle="modal" data-target="#followerModal"> 
 									<span class="d-block" id="profile-label">팔로워</span> 
-									<span id="profile-number" class="followerTotalCount"> ${followerMap.followerTotalCount}</span>
+									<span id="profile-number" class="followerTotalCount m"> ${followerMap.followerTotalCount}</span>
 							</a></li>
 							<li id="profile-details"><a id="block-user-list" data-toggle="modal" data-target="#blockUserModal">
 									<span class="d-block" id="profile-label">차단</span> 
@@ -496,7 +530,7 @@ div.modal-content{
 							</div>
 							<!-- 2. 닉네임 -->
 							<p id="post_nickname" class="username">
-								<a id="profile-nick" class="profile-link2"> ${post.user.nickName} </a>
+								<span id="profile-nick" class="profile-link2"> ${post.user.nickName} </span>
 							</p>
 						</div>
 						<!-- 게시글 옵션 아이콘 -->
@@ -517,8 +551,8 @@ div.modal-content{
                     	</c:when>
                     	<c:otherwise>
                     		<div class="post-list-title">${post.title}</div>
-                        	<div id="post-list-content">
-                            	<a class="post-shortContent" href="/community/getPost/${post.postNo}">${post.shortContent}</a>								
+                        	<div id="post-list-content" class="post-list-content">
+                            	<div style="margin-bottom: 30px;"><a class="post-shortContent" href="/community/getPost/${post.postNo}">${post.shortContent}</a></div>								
                         	</div>
                     	</c:otherwise>
                     </c:choose>
@@ -526,7 +560,6 @@ div.modal-content{
 					<div class="post-content">
 						<div class="reaction-wrapper">
 							<i class="bi bi-heart icon" data-value="${post.postNo}"></i> 
-							<i class="bi bi-heart-fill" style="display: none;"></i>
 							<!-- 4.조회수, 댓글수 -->
 							<i class="bi bi-eye icon">${post.views}</i> 
 							<i class="bi bi-chat-left icon">${post.commentCount}</i>
@@ -555,6 +588,73 @@ div.modal-content{
 
 	<script type="text/javascript">
 
+	function slick2(e){		
+		$(e).slick({
+			dots : true,
+			infinite : true,
+			speed : 500,
+			fade : true,
+			cssEase : 'linear',
+			arrows : true
+					});
+	}
+
+	// slick
+	$(document)
+	.ready(function() {
+			slick2('.your-class');
+			});
+	
+	// 좋아요, 좋아요 취소
+	function like(){
+	$("i.bi.bi-heart.icon, i.bi.bi-heart-fill.icon").on("click", function() {
+		const heart = $(this)		
+		console.log(heart);
+		const postNo = $(this).data("value");
+		//alert("postNo: " + postNo);
+		console.log("postNo: " + postNo);
+
+		//like_cnt = <span class="like-cnt">${post.likeCount}</span>
+		const div_like_cnt = $(this).parent().parent().find("span.like-cnt");
+		console.log(div_like_cnt);
+		
+		$.ajax({
+			url : "/community/api/insertLike/" + postNo,
+			method : "POST",
+			success : function (data, status, jqXHR){
+				
+            	console.log(data); //응답 body부 데이터
+				//console.log(JSON.stringify(data));
+            	//console.log(status); //"succes"
+            	//console.log(jqXHR)
+				           	
+            	const first_key = Object.keys(data)[0];
+            	const value = data[first_key];
+            	
+            	console.log(first_key);
+            	console.log(value);
+            	
+            	if(first_key === '좋아요'){
+            		heart.attr("class", "bi bi-heart-fill icon");
+            		heart.css("color","red");
+            	}else if(first_key === '좋아요 취소'){
+            		heart.attr("class", "bi bi-heart icon");
+            		heart.css("color","black");
+            	}
+        
+				div_like_cnt.html(value); // 좋아요 개수 수정
+			
+			}, error : function(jqXHR, status){
+				console.log(jqXHR);	// 응답 메시지
+				console.log(status); // "errror"
+			}
+		});
+
+	});
+	}
+
+	
+	
 	// 팔로우
 	function insertFollowBtn(e){
 		let relationUserId = $(e).data("value");
@@ -566,15 +666,15 @@ div.modal-content{
 			success : function(data, status, jqXHR) {
 
 				console.log("data : " + data);
-				console.log(data.userFollowCnt);
-				console.log(data.relationUserFollowerCnt);
 				console.log("status: " + status);
 				console.log("jqXHR: " + jqXHR);
 				
+				console.log(data.userFollowCnt);
+				console.log(data.relationUserFollowerCnt);
 				console.log(data.relationUserFollowerCnt)
 							
-				$("#insertFollowBtn").html('<i class="bi bi-person-check-fill"></i>');
-				$(".followerTotalCount").text(data.relationUserFollowerCnt);
+				$("#insertFollowBtn").text("팔로잉");
+				$("span.followerTotalCount.n").text(data.relationUserFollowerCnt);
 				
 			}, error : function(jqXHR, status){
 				console.log(jqXHR);	// 응답 메시지
@@ -583,9 +683,8 @@ div.modal-content{
 		});
 	};
 	
-	
 	// 팔로우 해제
-	function deleteFollow(e){
+	function deleteFollow1(e){
 		let relationUserId = $(e).data("value");
 		//alert("relationUserId: " + relationUserId);
 		
@@ -613,6 +712,36 @@ div.modal-content{
 		}// confirm
 	};
 	
+	// 팔로우 해제
+	function deleteFollow2(e){
+		let relationUserId = $(e).data("value");
+		//alert("relationUserId: " + relationUserId);
+		
+		let result = confirm(relationUserId+"님의 팔로우를 취소하시겠어요?")
+		if(result){
+			$.ajax({
+				url : "/community/api/deleteFollow/"+relationUserId,
+				method : "POST",
+				success : function(data, status, jqXHR) {
+					
+					//alert(data.userFollowCnt)
+					//alert(data.relationUserFollowerCnt)
+					console.log("data : " + data);
+					console.log("status: " + status);
+					console.log("jqXHR: " + jqXHR);
+					
+					//$(e).parent().parent().remove();
+					$().text("팔로우");
+					$("span.followerTotalCount").text(data.relationUserFollowerCnt);
+					
+				}, error : function(jqXHR, status){
+					console.log(jqXHR);	// 응답 메시지
+					console.log(status); // "errror"
+				}
+			});
+		}// confirm
+	};
+	
 	// 차단
 	function insertBlock(e){
 		
@@ -631,11 +760,12 @@ div.modal-content{
 					console.log("jqXHR: " + jqXHR);
 					
 					if(data === 1){
-						alert("차단성공")
+						//alert("차단성공")
 						$("#insertBlockBtn").text("차단해제");
+						$(".btn.btn-primary.a").text("");
 						// '<i class="bi bi-person-x"></i>'
 					}else{
-						console.log("차단실패")
+						//console.log("차단실패")
 					}
 					
 				},error : function(jqXHR, status){
@@ -649,6 +779,31 @@ div.modal-content{
 	}
 	
 	// 차단해제
+	function deleteBlock(e){
+		const relationUserId = $(e).data("value");
+		//alert(relationUserId);
+		console.log(relationUserId);
+		
+		const line = $(this).parent().parent(); 
+		console.log(line);
+		
+		$.ajax({
+			url : "/community/api/deleteBlock/" + relationUserId,
+			method : "POST",
+			success : function(status) {
+				
+				if(status === 1){
+					//alert("차단해제 완료!");
+					line.remove();
+				}else{
+					//alert("차단해제 실패..");
+				}
+			}
+		});
+		
+	}
+	
+	/*
 	$("button.action-btn:contains('차단해제')").on("click", function() {
 		
 		const relationUserId = $(this).data("value");
@@ -673,29 +828,12 @@ div.modal-content{
 		});
 
 	});
-	
-	
-	
-	function slick2(e){		
-		$(e).slick({
-			dots : true,
-			infinite : true,
-			speed : 500,
-			fade : true,
-			cssEase : 'linear',
-			arrows : true
-					});
-	}
-
-	// slick
-	$(document)
-	.ready(function() {
-			slick2('.your-class');
-			});
-
+	*/
 
 	// 게시글 무한스크롤
 	$(function(){
+		
+		like();
 		
 		let currentPage = 2;
 		
@@ -713,133 +851,129 @@ div.modal-content{
 				setTimeout(getListPost,200);//0.2초
 			}
 			
-				function getListPost(){
-								
-					$.ajax({
-						url:"/community/api/getListPost?currentPage="+currentPage+"&userId="+userId,
-						type:"GET",
-						datatype:"json",
-						success: function(data, status, jqXHR){
+			function getListPost(){
+				
+				$.ajax({
+					url:"/community/api/getListPost?currentPage="+currentPage,
+					type:"GET",
+					datatype:"json",
+					success: function(data, status, jqXHR){
 
-							console.log("success status: "+ status);
-							console.log("data: " + data);
-							console.log("jqXHR: "+ jqXHR);
-							console.log("json/stringify: "+JSON.stringify(data));						
-							//const posts = JSON.stringify(data);	
+						console.log("success status: "+ status);
+						console.log("data: " + data);
+						console.log("jqXHR: "+ jqXHR);
+						console.log("json/stringify: "+JSON.stringify(data));						
+						//const posts = JSON.stringify(data);	
+						
+								
+						for(let i = 0; i<data.length; i++){
 							
+							let post = data[i];
+							
+							let likeStats = post.likeStatus;
+							console.log("/////"+likeStats)
+							
+							let postCardHtml = `
+								<div class="post-card">
+								    <div class="info">
+								        <div class="user">
+								            <div class="profile-pic">
+								                <a class ="profile-link">
+								                    <img class="profile-img"/>
+								                </a>
+								            </div>                  
+								            <p id = "post_nickname" class="username">
+								                <a id= "profile-nick" class ="profile-link2" ></a>
+								            </p>
+								        </div>
+								        <i id = "option_icon" class="bi bi-three-dots option_icon" data-toggle="modal" ></i>
+								    </div>
+								    <div class="your-class-m">
+								    <div class="your-class\${currentPage}">
+								    	
+								    </div>
+								    </div>
+								    <div class="post-content">
+								        <div class="reaction-wrapper">
+								        
+								            <i class="bi bi-eye icon"></i>
+								            <i class="bi bi-chat-left icon"></i>
+								        </div>
+								        <p class="likes">좋아요 <span class="like-cnt"></span></p>	
+								        
+								        <div class="post-time"></div>
+								    </div>
+								</div>
+								`;
+								
+							let div1 = `
+										<a class ="post-link">
+											<img id = "post-img" class="post-image"/>
+										</a>
+										`;
 									
-							for(let i = 0; i<data.length; i++){
-								
-								let postCardHtml = `
-									<div class="post-card">
-									    <div class="info">
-									        <div class="user">
-									            <div class="profile-pic">
-									                <a class ="profile-link">
-									                    <img class="profile-img"/>
-									                </a>
-									            </div>                  
-									            <p id = "post_nickname" class="username">
-									                <a id= "profile-nick" class ="profile-link2" ></a>
-									            </p>
-									        </div>
-									        <i id = "option_icon" class="bi bi-three-dots"></i>
-									    </div>
-									    <div class="your-class-m">
-									    <div class="your-class\${currentPage}">
-									    	
-									    </div>
-									    </div>
-									    <div class="post-content">
-									        <div class="reaction-wrapper">
-									            <i class="bi bi-heart icon" data-value=""></i>
-									            <i class="bi bi-heart-fill" style="display:none;"></i>
-									            <i class="bi bi-eye icon"></i>
-									            <i class="bi bi-chat-left icon"></i>
-									        </div>
-									        <p class="likes">좋아요 <span class="like-cnt"></span></p>	
-									        
-									        <div class="post-time"></div>
-									    </div>
-									</div>
-									`;
-								
-								let div1 = `
-											<a class ="post-link">
-												<img id = "post-img" class="post-image"/>
-											</a>
-											`;
-										
-								let div2 = `<div class="post-list-title"></div>
-							            <div id="post-list-content">
-							                <a class="post-shortContent"></a>								
-							            </div>`;
-								
-							    let div3 = `<div class="description"></div>`;
-								
-								
-								let post = data[i];
-																
-								let postCard = $($.parseHTML(postCardHtml));
-								let div_1 = $($.parseHTML(div1));
-								let div_2 = $($.parseHTML(div2));
-								let div_3 = $($.parseHTML(div3));
-								
-								/*
-								console.log(postCard)
-								console.log(div_1)
-								console.log(div_2)
-								console.log(div_3)
-								*/
+							let div2 = `<div class="post-list-title"></div>
+						            <div id="post-list-content" class="post-list-content">
+						            <div style="margin-bottom: 30px;"><a class="post-shortContent"></a></div>								
+						            </div>`;
+							
+						    let div3 = `<div class="description"></div>`;
+							
+							let postCard = $($.parseHTML(postCardHtml));
+							let div_1 = $($.parseHTML(div1));
+							let div_2 = $($.parseHTML(div2));
+							let div_3 = $($.parseHTML(div3));
 
-								console.log(post.attachments == "")
-								console.log(post.attachments != "")
+							
+							if(post.attachments == ""){
 								
-								if(post.attachments == ""){
-									
-									$(postCard).find(".your-class-m").append(div_2);
+								$(postCard).find(".your-class-m").append(div_2);
 
-									$(postCard).find(".post-list-title").text(post.title);
-									$(postCard).find(".post-shortContent").attr("href","/community/getPost/"+post.postNo)
-									$(postCard).find(".post-shortContent").append(post.shortContent);
-								}else{
-									
-									$(postCard).find(".post-time").before(div_3);
-									
-									$(postCard).find(".description").html(post.shortContent);
-									
-									for(let j = 0; j < post.attachments.length; j++){	
-										$(postCard).find(".your-class"+currentPage).append(`
-											<a class ="post-link">
-												<img id = "post-img" class="post-image" src="/resources/attachments/\${post.attachments[j].attachmentName}"/>
-											</a>
-											`);
-										$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
-										//$(postCard).find(".post-image").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
-										console.log("/////"+post.attachments[j].attachmentName);
-									}
+								$(postCard).find(".post-list-title").text(post.title);
+								$(postCard).find(".post-shortContent").attr("href","/community/getPost/"+post.postNo)
+								$(postCard).find(".post-shortContent").append(post.shortContent);
+							}else{
+								
+								$(postCard).find(".post-time").before(div_3);
+								$(postCard).find(".description").html(post.shortContent);
+								
+								for(let j = 0; j < post.attachments.length; j++){	
+									$(postCard).find(".your-class"+currentPage).append(`
+										<a class ="post-link">
+											<img id = "post-img" class="post-image" src="/resources/attachments/\${post.attachments[j].attachmentName}"/>
+										</a>
+										`);
+									$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
 								}
-								
-								//$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
-								$(postCard).find(".profile-img").attr("src","/resources/attachments/profile_image/"+post.user.profileImage);
-								$(postCard).find(".profile-link").attr("href","/community/getProfile/"+post.user.userId)
-								$(postCard).find(".profile-link2").attr("href","/community/getProfile/"+post.user.userId)
-								$(postCard).find(".profile-link2").text(post.user.nickName);
-								
-								$(postCard).find("i.bi.bi-heart.icon").attr("data-value", post.postNo);
-								$(postCard).find("i.bi.bi-eye.icon").text(post.views);
-								$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
-								$(postCard).find(".like-cnt").text(post.likeCount);
-								$(postCard).find(".post-time").text(post.regDate);
-								
-								console.log("postC: "+postCard);
-								
-								$(".left-col").append(postCard);
-								
+							}
+							
+							if(post.likeStatus === '1'){									
+								$(postCard).find("i.bi.bi-eye.icon").before(`<i class="bi bi-heart-fill icon" style="color:red;" data-value="\${post.postNo}"></i>`);
+							}else if(post.likeStatus === undefined ){
+								$(postCard).find("i.bi.bi-eye.icon").before(` <i class="bi bi-heart icon" data-value="\${post.postNo}"></i>`);
+							}
+							
+							//$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
+							$(postCard).find(".profile-img").attr("src","/resources/attachments/profile_image/"+post.user.profileImage);
+							$(postCard).find(".profile-link").attr("href","/community/getProfile/"+post.user.userId)
+							$(postCard).find(".profile-link2").attr("href","/community/getProfile/"+post.user.userId)
+							$(postCard).find(".profile-link2").text(post.user.nickName);
+							
+							$(postCard).find("i.bi.bi-eye.icon").text(post.views);
+							$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
+							$(postCard).find(".like-cnt").text(post.likeCount);
+							$(postCard).find(".post-time").text(post.regDate);
+							$(postCard).find(".option_icon").attr("data-value", post.postNo);
+							//$(postCard).find(".option_icon").attr("data-target",".fade\${index}");
+							
+							console.log("postC: "+postCard);
+							
+							$(".left-col").append(postCard);
 
 								
 							}//for
 							
+							like();
 							slick2('.your-class'+currentPage);								
 						}//success
 						, error: function(status, jqXHR){

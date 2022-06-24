@@ -110,7 +110,7 @@
 		SELECT product_no FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
-			AND p.status =' 0'
+			AND p.status =0
 			<if test="searchKeyword != '' ">
 				AND (
 				f.name like '%'||#{searchKeyword}||'%' OR p.name like '%'||#{searchKeyword}||'%'

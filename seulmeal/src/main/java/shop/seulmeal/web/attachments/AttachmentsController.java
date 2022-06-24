@@ -71,7 +71,7 @@ public class AttachmentsController {
 		
 		// 저장될 파일명
 		String savedFileName = UUID.randomUUID()+extension;
-		
+		System.out.println(extension);
 		File targetFile = new File(path+savedFileName);
 		
 		try {

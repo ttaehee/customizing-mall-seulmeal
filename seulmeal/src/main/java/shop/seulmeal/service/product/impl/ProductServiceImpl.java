@@ -64,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
+		System.out.println("@!#!@!@$!@$@:"+new Integer(totalCount));
 		map.put("totalCount", new Integer(totalCount));
 
 		return map;

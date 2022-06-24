@@ -478,7 +478,7 @@
 			SELECT COUNT(*) COUNT,p.post_no,p.reg_date,p.title
 		</if>
 		<if test="table == 'product p, purchase pp, customproduct c'">
-			SELECT p.product_no,p.name, SUM(pp.price+pp.usepoint) cnt, COUNT(*) count
+			SELECT p.product_no,p.name, SUM(pp.price+pp.usepoint) cnt, COUNT(*) count			
 		</if>
 		FROM 
 		<!-- TABLE -->
@@ -526,7 +526,8 @@
 	
 	<select id="monthSaleParts" parameterType="map" resultType="map">
 		SELECT * FROM(
-		SELECT p.parts_no,p.name, COUNT(*) count FROM parts p, purchase pp, customproduct c, customparts cp
+		SELECT p.parts_no,p.name, COUNT(*) count
+		FROM parts p, purchase pp, customproduct c, customparts cp
 		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
 		AND p.parts_no = cp.parts_no(+) AND cp.customproduct_no = c.customproduct_no(+)  AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
 		GROUP BY p.parts_no,p.name
@@ -536,10 +537,20 @@
 	
 	<select id="monthSaleProduct" parameterType="map" resultType="map">
 		SELECT * FROM(
-		SELECT p.product_no,p.name, SUM(pp.price+pp.usepoint) cnt, COUNT(*) count FROM product p, purchase pp, customproduct c
+		SELECT p.product_no,p.name, SUM(pp.price+pp.usepoint) cnt, COUNT(*) count		
+		<if test="option =='main'">
+			,p.thumbnail, p.price, p.calorie, p.sub_content, p.origin_price, p.like_count, p.review_count
+		</if>
+		FROM product p, purchase pp, customproduct c
 		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
 		AND p.product_no = c.product_no(+) AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
+		<if test="option =='main'">
+			AND p.status = 0
+		</if>
 		GROUP BY p.product_no,p.name
+		<if test="option =='main'">
+			,p.thumbnail, p.price, p.calorie, p.sub_content, p.origin_price, p.like_count, p.review_count
+		</if>
 		ORDER BY cnt desc
 		) WHERE ROWNUM &lt; #{count} AND cnt IS NOT NULL
 	</select>

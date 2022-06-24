@@ -21,11 +21,15 @@
 	  background-size: cover;
 	  color:none !important;
 	  cursor: pointer;
-	  transaition : all 0.2s linear;
+	  transform: scale(1.1);
+	}
+	
+	.cdCol{
+		transaition : all 0.2s linear;
 	}
 	
 	.card-cover:hover{
-		transform: scale(1.1);
+		transform: scale(1.2);
 	}
 	
 	.cardComponet{
@@ -81,17 +85,14 @@
 			
 			<c:forEach var="post" items="${list}">	
 				<div class="row row-cols-1 row-cols-lg-10 align-items-stretch g-4 py-3 cardComponet">
-					<div class="col" style="overflow: hidden;">
+					<div class="col cdCol" style="overflow: hidden;">
 						<div data-value="${post.postNo}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${post.thumnail}');">						
 							<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
 								<h2 class="display-6 fw-bold title">${post.title}</h2>
 								<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold shortContent">${post.shortContent}</h2>
 								<h2 class="endDateView">~${post.endDate}</h2>
 								<div style="display:flex; justify-content:space-between;">
-									<ul class="d-flex list-unstyled mt-auto">
-										<li class="me-auto">
-											<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
-										</li>							
+									<ul class="d-flex list-unstyled mt-auto">			
 									</ul>
 									<ul class="d-flex list-unstyled mt-auto">
 										<li class="d-flex align-items-center me-3" style="font-size:1.5rem; margin-right:5px;">
