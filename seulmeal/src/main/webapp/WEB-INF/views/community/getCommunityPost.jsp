@@ -98,7 +98,7 @@ button#insertCommentBtn {
 /* 좋아요수, 조회수, 댓글수 아이콘*/
 .reaction-wrapper{
     width:  splay: flex;
-    margin-top: -28px;
+    margin-top: 28px;
     align-items: center;
 }
 	
@@ -157,8 +157,9 @@ button#insertCommentBtn {
 									<c:if test="${sessionScope.user.userId == post.user.userId}">
 										<span class="btn up del"  style="float:right; display:inline-block; "><button style="padding:0px 10px 0px 0px;"	 id="updatePostBtn" type="button"
 											class="btn btn-primary" onclick="location.href='/community/updatePost/${post.postNo}'">수정</button>
-										<button id="deletePostBtn" type="button" style="padding:0px 15px 0px 0px;"
-											class="btn btn-primary"  onclick="location.href='/community/deletePost/${post.postNo}'">삭제</button>
+											<button id="deletePostBtn" type="button" style="padding : 0px 15px 0px 0px;" data-value = "${post.postNo}" 
+											 class="btn btn-primary"  onclick="deletePost(this)">삭제</button>
+											
 											</span>
 									</c:if>
 							</div>
@@ -236,7 +237,7 @@ button#insertCommentBtn {
 										<!-- button id="updateCommentBtn" type="button"
 											class="btn btn-primary" data-value="${comment.commentNo}">수정</button-->
 										<button id="deleteCommentBtn" type="button"
-											class="btn btn-primary" data-value="${comment.commentNo}">삭제</button>
+											class="btn btn-primary deleteC" data-value="${comment.commentNo}">삭제</button>
 									</c:if>
 								</div>
 							</div>
@@ -256,6 +257,18 @@ button#insertCommentBtn {
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 
 	<script>
+	
+	function deletePost(e){
+		
+		let postNo = $(e).data("value");
+		
+		let result = confirm("정말 삭제하시겠습니까?")
+		if(result){
+			window.location.href= "/community/deletePost/"+postNo;
+		}
+	}
+	
+	
 		$("#insertCommentBtn")
 				.on("click",function() {
 
@@ -293,7 +306,7 @@ button#insertCommentBtn {
 													<span class="comment-con">\${data.content}</span>
 													<span class="comment-reg">\${data.regDate}</span>
 													<button id="deleteCommentBtn" type="button"
-														class="btn btn-primary" data-value="\${data.commentNo}">삭제</button>
+														class="btn btn-primary deleteC" data-value="\${data.commentNo}">삭제</button>
 												</div>
 											</div>`
 											
@@ -318,7 +331,7 @@ button#insertCommentBtn {
 		
 		function deleteComment(){
 			
-			$(".btn.btn-primary:contains('삭제')").on("click", function() {
+			$(".btn-primary.deleteC").on("click", function() {
 				
 				let commentNo = $(this).data("value");
 				//alert("commentNo: " + commentNo);

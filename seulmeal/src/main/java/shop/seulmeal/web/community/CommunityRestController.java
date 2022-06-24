@@ -94,11 +94,13 @@ public class CommunityRestController {
 			attachMap.put("postNo", post.getPostNo());
 			post.setAttachments(attachmentsService.getAttachments(attachMap));
 			
-			// 좋아요 게시글 상태값 변경
-			for(Like like: likeList) {
-				
-				if(post.getPostNo() == like.getPostNo()) {
-					post.setLikeStatus("1");
+			if(likeList != null) {
+				// 좋아요 게시글 상태값 변경
+				for(Like like: likeList) {
+					
+					if(like!=null &&post.getPostNo() == like.getPostNo()) {
+						post.setLikeStatus("1");
+					}
 				}
 			}
 			
@@ -393,7 +395,7 @@ public class CommunityRestController {
 	@PostMapping("deleteProfileImage")
 	public String deleteProfileImage(HttpSession session) throws Exception {
 
-		String path = System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
+		String path = "/resources/attachments/profile_image";
 		String imageFileName = "default_profile.jpg";
 		String imageFilePath = path + "/" + imageFileName; 
 		

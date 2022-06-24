@@ -116,14 +116,16 @@ public class CommunityController {
 			attachMap.put("postNo", post.getPostNo());
 			post.setAttachments(attachmentsService.getAttachments(attachMap));
 			
-			// 좋아요 게시글 상태값 변경
-			for(Like like: likeList) {
-				
-				if(post.getPostNo() == like.getPostNo()) {
-					post.setLikeStatus("1");
+			
+			if(likeList != null) {
+				// 좋아요 게시글 상태값 변경
+				for(Like like: likeList) {
+					
+					if(like!=null &&post.getPostNo() == like.getPostNo()) {
+						post.setLikeStatus("1");
+					}
 				}
 			}
-			
 			
 			// 닉네임없는 유저, id를 닉네임으로 저장
 			if(post.getUser().getNickName() == null) {
