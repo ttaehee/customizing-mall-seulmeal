@@ -38,10 +38,10 @@
 								                <div id="block-list-image" class="profile-pic" style="width:45px; height: 45px;">
 								                	<c:choose>
 	                                                  <c:when test="${empty relation.relationUser.profileImage}">
-	                                                     <img src="/resources/attachments/profile_image/default_profile.jpg"  class="rounded-circle">
+	                                                      <a href="/community/getProfile/${relation.relationUser.userId}"><img src="/resources/attachments/profile_image/default_profile.jpg"  class="rounded-circle"></a>
 	                                                  </c:when>
 	                                                  <c:otherwise>
-	                                                     <img src="/resources/attachments/profile_image/${relation.relationUser.profileImage}" class="rounded-circle"/>
+	                                                      <a href="/community/getProfile/${relation.relationUser.userId}"><img src="/resources/attachments/profile_image/${relation.relationUser.profileImage}" class="rounded-circle"/></a>
 	                                                  </c:otherwise>
 	                                              	</c:choose>
 								                </div>
@@ -49,16 +49,16 @@
 								                   <div id="block-list-nickname" style="font-size: 15px">
 								                   		<c:choose>
 										                  	<c:when test="${not empty relation.relationUser.nickName}">
-																${relation.relationUser.nickName}
+																<a href="/community/getProfile/${relation.relationUser.userId}">${relation.relationUser.nickName}</a>
 															</c:when>
 															<c:otherwise>
-																${relation.relationUser.userId}		
+																<a href="/community/getProfile/${relation.relationUser.userId}">${relation.relationUser.userId}</a>							
 															</c:otherwise>
 														</c:choose>	
 								                  </div>
 								                    <div id="block-list-profilemsg" class="sub-text" style="margin:0px; font-size: 10px;">${relation.relationUser.profileMessage}</div>
 								                </div>
-								                <div><button class="action-btn" onclick="deleteBlock(this)" data-value="${relation.relationUser.userId}">차단해제</button></div>
+								                <div><button class="action-btn" data-value="${relation.relationUser.userId}">차단해제</button></div>
 								            </div>
 								            
                                           </div>

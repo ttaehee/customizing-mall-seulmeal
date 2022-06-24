@@ -108,9 +108,9 @@ public class ProductController {
 		return "redirect:/product/admin/listProduct";
 	}
 
-	@GetMapping(value={"getProduct/{productNo}/{currentPage}","getProduct/{productNo}"})
-	public String getProduct(@PathVariable(required = false) String currentPage, @PathVariable int productNo, Search search, Model model, HttpServletRequest request) throws Exception {
-		Product product = productService.getProduct(productNo);
+	@GetMapping("getProduct/{prodNo}")
+	public String getProduct(@PathVariable(required = false) String currentPage, @PathVariable int prodNo, Search search, Model model, HttpServletRequest request) throws Exception {
+		Product product = productService.getProduct(prodNo);
 		List<Parts> list = productService.getProductParts(product.getProductNo());
 		product.setParts(list);
 		
@@ -124,10 +124,10 @@ public class ProductController {
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
 		}
-		search.setPageSize(pageSize);
+		search.setPageSize(20);
 		System.out.println(search);
 		
-		search.setSearchSort(productNo);
+		search.setSearchSort(prodNo);
 
 		Map<String, Object> map = productService.getListReview(search);
 		List<Review> list0 = (List) map.get("list");
@@ -141,7 +141,7 @@ public class ProductController {
 				pageSize);
 
 		model.addAttribute("review", listr);
-		model.addAttribute("page", resultPage);
+		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 		model.addAttribute("product", product);
 		return "/product/getProduct";
@@ -399,7 +399,7 @@ public class ProductController {
 		productService.deleteReview(reviewNo);
 		String currentPage = (String) session.getAttribute("currentPage");
 		session.removeAttribute(currentPage);
-		return "redirect:/product/listReview/"+currentPage;
+		return "redirect: /product/listReview/"+currentPage;
 	}
 	
 	@GetMapping(value= {"restoreReview/{reviewNo}"})

@@ -35,7 +35,7 @@
 			<tbody>
 				<c:forEach var="review" items="${review}" varStatus="status">
 				<tr>
-					<th style="width:260px; padding-left: 30px; text-align: left;">[${product.name}] ${review.title}
+					<th style="width:260px; padding-left: 30px; text-align: left;">[${review.product.name}] ${review.title}
 					<hr/>${review.user.userId}</th>
 					<th style="max-width:590px; word-wrap:break-word; text-align:left;">${review.content }</th>
 					<th style="width:180px;">${review.regDate }</th>

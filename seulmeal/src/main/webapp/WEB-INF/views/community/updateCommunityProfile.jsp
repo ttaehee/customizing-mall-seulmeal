@@ -29,13 +29,6 @@ margin: 40px 0px 0px 0px;
 	margin-left:10px;
 	width:100px;
 	height:100px;
-	border: 2px solid #fff;
-    border-radius: 7px;
-    color: #fff;
-}
-
-#updateProfileImageModal_Btn {
-    margin-top: 40px;
 }
 
 .form-check{
@@ -145,10 +138,10 @@ margin: 40px 0px 0px 0px;
 					success : function(data,status) {
 						
 						//(status : sucess or err)
-						//alert("status: " + status);
+						alert("status: " + status);
 						console.log("status: " + status);
 						
-						//alert("data : " + data);
+						alert("data : " + data);
 						console.log("data : " + data);
 
 						$("#img_section").attr("src",data);
