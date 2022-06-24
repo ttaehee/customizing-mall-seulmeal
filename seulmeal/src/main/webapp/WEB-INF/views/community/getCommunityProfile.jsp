@@ -535,10 +535,9 @@ div.modal-content{
 						</div>
 						<!-- 게시글 옵션 아이콘 -->
 						<i id="option_icon" class="bi bi-three-dots option_icon"></i>
-
+						
 
 					</div>
-
 					<!-- 3. 게시글사진/제목+간략내용 --> 
                     <c:choose>
                     	<c:when test="${not empty post.attachments}">
