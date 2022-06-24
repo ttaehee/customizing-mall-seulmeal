@@ -35,7 +35,7 @@ public interface ProductService {
 
 	public List<Foodcategory> getListFoodCategory() throws Exception;
 	
-	public List<Foodcategory> getAdminFoodCategory() throws Exception;
+	public List<Foodcategory> getAdminFoodCategory(String status) throws Exception;
 
 	public void deleteFoodCategory(int foodCategoryNo) throws Exception;
 	
