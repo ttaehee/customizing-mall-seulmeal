@@ -201,7 +201,7 @@
 	<main role="main">
 	<section class="text-center">
 	<div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">이 상품 어떠세?</h2>
+    <h2 class="pb-2 border-bottom">이 상품 어떠세요?</h2>
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
 	<c:forEach var="product" items="${list}">		
 			<div class="col">
@@ -218,15 +218,18 @@
 						</div>
 						<ul class="d-flex list-unstyled mt-auto">
 							<li class="me-auto">
-								<i class="bi bi-cart-plus-fill" style="font-size:2rem; color:black;"></i>
+								<c:if test="${ !empty user }">
+									<i class="bi bi-cart3" style="font-size: 1.5rem;" onclick="window.location.href='/purchase/insertCustomProduct/${product.productNo}'" type="button" class="btn btn-primary">
+									</i>
+								</c:if>
 							</li>
 							<li class="d-flex align-items-center me-3">
 								<i style="font-size:1.5rem; color:black;" class="bi bi-clipboard-heart-fill"></i>
-								<small>&nbsp;${product.reviewCount}</small>
+								&nbsp;<small>${product.reviewCount}</small>
 							</li>
 							<li class="d-flex align-items-center">
 								<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
-								<small class="likeText">&nbsp;${product.likeCount}</small>
+								&nbsp;<small class="likeText">${product.likeCount}</small>
 							</li>
 						</ul>
 					</div>

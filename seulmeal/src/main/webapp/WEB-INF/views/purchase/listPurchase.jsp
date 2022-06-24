@@ -14,8 +14,9 @@
 
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
+<jsp:include page="../layer/upscroll.jsp"></jsp:include>
 
-	<style>
+<style>
 	
 	.thumbnail{
 		width: 200px;
@@ -51,7 +52,7 @@
 	
 	/*구매내역 검색조건 버튼*/
 	.status{
-		border: 2px solid #FF4500;
+		border: 2px solid #FFF;
 		border-radius: 7px;
 		background-color: #FFF;
 		padding: 4px;
@@ -73,9 +74,7 @@
 		color: #FF4500;
 	}
 	
-
-	
-	</style>
+</style>
 
 
 	 <div class="container">
@@ -86,7 +85,7 @@
 		 <h2>${user.userName}님의 구매내역 조회</h2>
 		    <form class="form-inline" name="detailForm">
 		     <input type="hidden" name="userId" value="${user.userId}"/>
-			 <div class="form-group text-right">
+			 <div class="form-group text-right">&emsp;&emsp;
 				 <button class="status" onclick="location.href='/purchase/getListPurchase'">전체</button>&emsp;
 				 <button class="status" name="searchCondition" value="0">오늘</button>&emsp;
 				 <button class="status" name="searchCondition" value="1">1주일</button>&emsp;
@@ -143,7 +142,7 @@
 			<c:forEach var="purchase" items="${purchaseList}">
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">	
-			      <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''"><br/><br/>
+			      <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'"><br/><br/>
 			      	${purchase.regDate}&ensp;[${purchase.purchaseNo}]<br/><br/>
 			      		<div>
 			      		<c:choose>
@@ -161,9 +160,9 @@
 				  		<img class="thumbnail" src='/resources/attachments/${cpd.product.thumbnail}'>
 				  	</a>
 				  </td>
-				  <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''">${cpd.count}</td>
-				  <td class="link" align="left" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''">${cpd.product.name}</td>
-				  <td class="link" align="left" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''">
+				  <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'">${cpd.count}</td>
+				  <td class="link" align="left" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'">${cpd.product.name}</td>
+				  <td class="link" align="left" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'">
 				  <c:forEach var="pp" items="${cpd.plusParts}">
 				  	+ ${pp.parts.name}, ${pp.gram}g, <fmt:formatNumber type="number" maxFractionDigits="0"  value="${pp.parts.price*pp.gram/10}" />원 <br/>
 				  	</c:forEach>
@@ -171,7 +170,7 @@
 				  	- ${mp.minusName} <br/>
 				  	</c:forEach>
 				  </td>
-				  <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'" onMouseOut=" window.status=''"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${cpd.price}"/>원</td>
+				  <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${cpd.price}"/>원</td>
 				  <c:set var="price" value="${price+cpd.price*cpd.count}" />
 			 	  <td>	
 		          	<a type="button" class="delete" data-value="${purchase.purchaseNo}">&ensp;x</a>
@@ -339,11 +338,14 @@
 								
 								purchaseListHtml = 
 
-									"<tr class='ct_list_pop'><td align='center'><br/><br/><a href='/purchase/getPurchase/"+purchaseOne.purchaseNo+"'>"+purchaseOne.regDate+"&ensp;["+purchaseOne.purchaseNo+"]</a><br/><br/><div>"
-									+status+"</div></td><td align='left'><img class='thumbnail' src='/resources/attachments/"+cpd.product.thumbnail+"'></td>"
-									+"<td align='center'>"+cpd.count +"</td><td align='left'>" + cpd.product.name +"</td><td align='left'>"
+									`<tr class='ct_list_pop'><td class='link' align='center' style='cursor:pointer;' onClick="window.location.href='/purchase/getPurchase/`+purchaseOne.purchaseNo+ `'"><br/><br/>`
+									+purchaseOne.regDate+"&ensp;["+purchaseOne.purchaseNo+"]</a><br/><br/><div>"+status
+									+"</div></td><td align='left'><a href='/product/getProduct/"+cpd.product.productNo+"' class='btn btn-primary'><img class='thumbnail' src='/resources/attachments/"+cpd.product.thumbnail+"'></a></td>"
+									+`<td class='link' align='center' style='cursor:pointer;' onClick="window.location.href='/purchase/getPurchase/`+purchaseOne.purchaseNo+ `'">`+cpd.count 
+									+`</td><td class='link' align='center' style='cursor:pointer;' onClick="window.location.href='/purchase/getPurchase/`+purchaseOne.purchaseNo+ `'">` + cpd.product.name 
+									+`</td><td class='link' align='center' style='cursor:pointer;' onClick="window.location.href='/purchase/getPurchase/`+purchaseOne.purchaseNo+ `'">`
 									+ ppartsHTML + mpartsHTML
-									+"</td><td align='center'>"+cpd.price.toLocaleString() + "원</td>"
+									+`</td><td class='link' align='center' style='cursor:pointer;' onClick="window.location.href='/purchase/getPurchase/`+purchaseOne.purchaseNo+ `'">`+cpd.price.toLocaleString() + "원</td>"
 									+"<td><a type='button' class='delete' data-value='"+purchaseOne.purchaseNo+"'>&ensp;x</a></td></tr>";							
 
 								$("table tbody:last-child").append(purchaseListHtml);

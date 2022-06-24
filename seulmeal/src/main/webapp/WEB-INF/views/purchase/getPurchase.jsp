@@ -166,7 +166,7 @@
 					    <h5 class="card-title">배송정보</h5>
 					    <p class="card-text">
 							<div>받으시는분 : ${purchase.name} </div>
-							<div>주소 : 
+							<div>주소 :
 							${fn:replace(purchase.address, '/', '<br/>')}
 							</div>
 							<div>휴대전화 : ${purchase.phone} </div>
@@ -178,7 +178,7 @@
 
 		</div>
 		<div class="container" style="display: flex; justify-content: center;">
-			<button type="button" class="bt" onClick="window.location.href='/purchase/getListCustomProduct/1'">확인</button>
+			<button type="button" class="bt" onClick="window.location.href='/purchase/getListPurchase'">확인</button>
 		</div>
 		</div>
 	</div>

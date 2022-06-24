@@ -142,7 +142,7 @@
 	        <thead>
 	          <tr>
 	            <th align="center">
-					<input type="checkbox" id="delete_title" disabled="disabled"/>&emsp;
+					<input type="checkbox" id="delete_title" onClick="selectAll(this)"/>&emsp;
 					<label for="delete_title"></label>&emsp;&ensp;&ensp;<br/>
 				</th>
 	            <th align="right">Image</th>
@@ -188,7 +188,7 @@
 						  <td>
 						  	<div>
 				                <p><a type="button" class="change" data-value="${cpd.customProductNo}"  data-toggle="modal" data-target="#changeModal">옵션선택다시하기</a>
-				                <a type="button" class="delete" data-value="${cpd.customProductNo}">&ensp;x</a>
+				                <a type="button" class="delete" data-value="${cpd.customProductNo}">&emsp;&emsp;x</a>
 				            </div>
 						  </td>
 						  <c:set var="total" value="${total+cpd.price*cpd.count}" />
@@ -260,7 +260,7 @@
 							    <p class="card-text">
 							    <div class="row">
 								    <div class="col-md-4 partsAppend" style="margin-right: 60px;"></div>
-									<div class="col-md-4 execptButton" style="margin-left: 30px;"></div>
+									<div class="col-md-4 exceptButton" style="margin-left: 30px;"></div>
 							  </div>
 							  </p>
 							  </div>
@@ -405,10 +405,10 @@
 		        success : function(data){	
 		        	for(var i=0; i<data.partsList.length; i++){
 		        		const productParts = "<div class='container productparts' style='line-height:35px;'>"+data.partsList[i].name+"</div>";
-						const productPartsButton = "<button type='button' class='btn btn-outline-primary execpt' data-partsNo='"+ data.partsList[i].productPartsNo +"' data-partsName='" + data.partsList[i].name +"' onClick='fncClickExcept(this)'>제외하기</button>"
+						const productPartsButton = "<button type='button' class='btn btn-outline-primary except' data-partsNo='"+ data.partsList[i].productPartsNo +"' data-partsName='" + data.partsList[i].name +"' onClick='fncClickExcept(this)'>제외하기</button>"
 		        		
 		        		$(".partsAppend").append(productParts);
-		        		$(".execptButton").append(productPartsButton);
+		        		$(".exceptButton").append(productPartsButton);
 		        	}
 					
 	               $("#customProductNo").val(data.customProduct.customProductNo);
@@ -429,6 +429,7 @@
 		});
 	})
 	
+	//장바구니리스트에서 선택삭제
 	function fncSelectDelete(){
 		let checkBoxArr = []; 
 		$("input:checkbox[name='check']:checked").each(function() {
@@ -447,6 +448,16 @@
 			return;
 		}
 	}
+	
+	//장바구니리스트에서 전체선택
+	function selectAll(selectAll)  {
+	  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	  
+	  checkboxes.forEach((checkbox) => {
+	  	checkbox.checked = selectAll.checked;
+	  })
+	}
+	
 	
 	////모달
 	//제외재료번호, 이름 배열
@@ -480,7 +491,7 @@
 	 }
 	
 	//제외하기버튼클릭시 안에서 사용(상품구성재료 제외안되어있으면 제외하기)
-	function fncExecpt(partsNo, partsName, ths){
+	function fncExcept(partsNo, partsName, ths){
 		minusNo.push(partsNo);
 
         minusName.push(partsName);
@@ -494,7 +505,7 @@
     	const partsName = $(ths).attr('data-partsName'); 
     	
     	if(minusNo.length == 0){
-    		fncExecpt(partsNo, partsName, $(ths));
+    		fncExcept(partsNo, partsName, $(ths));
     		return;
     	}
     	
@@ -510,7 +521,7 @@
     			return;
     		}
     	}
-    	fncExecpt(partsNo, partsName, $(ths));
+    	fncExcept(partsNo, partsName, $(ths));
     	console.log("ggminusNo"+minusNo);
     	console.log("ggminusName"+minusName);
     	return;
@@ -541,13 +552,13 @@
 			$(ths).closest("div").find("span[name='gram']").text(num);
 			
 	        const minus = parseInt($("#customPrice").text().replace(",","")) - calprice;
-	        $("#customPrice").text(minus);
+	        $("#customPrice").text(minus.toLocaleString());
 		}else{
 			num+=10;
 			$(ths).closest("div").find("span[name='gram']").text(num);
 	
 	        const plus = parseInt($("#customPrice").text().replace(",","")) + calprice;
-	        $("#customPrice").text(plus);
+	        $("#customPrice").text(plus.toLocaleString());
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text(num));
 		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(num);
@@ -638,28 +649,26 @@
 			  $(".search").autocomplete("option", "appendTo", "#changeModal")
 			})
 		 
-		$(".partSearch").on("click",()=>{
-			
+		$(".partSearch").on("click",()=>{		
 			fncGetParts();
 		})
 		
 		//추가재료 검색 엔터적용
-		$(".search").keydown(function(key){
-			        if(key.keyCode==13) {
-				           fncGetParts();
-				    }     
+		$(".search").on("keydown", function(e){
+	        if(e.key==="Enter" || e.keyCode==13) {
+		           fncGetParts();
+		    }     
 		});
-		
 	})
 	
 	//엔터 시 submit 방지
-	document.insertCustom.addEventListener("keydown", evt => {
-		  if (evt.code === "Enter") 
-		  evt.preventDefault();
+	document.insertCustom.addEventListener("keydown", e => {
+		  if (e.code === "Enter"|| e.keyCode==13) 
+		  e.preventDefault();
 	});
-	document.list.addEventListener("keydown", evt => {
-		  if (evt.code === "Enter") 
-		  evt.preventDefault();
+	document.list.addEventListener("keydown", e => {
+		  if (e.code === "Enter"|| e.keyCode==13) 
+		  e.preventDefault();
 	});
 	
 	//추가재료 삭제
@@ -694,6 +703,8 @@
 	
 	//모달창 닫으면 추가한데이터 삭제
 	$('#changeModal').on('hidden.bs.modal', function (e) {
+		$(this).find('.productparts').remove();
+		$(this).find('.except').remove();
 		$(this).find('.search').val('');
 		$(this).find('.partsList').remove();
 		$(this).find('.searchparts').remove();
