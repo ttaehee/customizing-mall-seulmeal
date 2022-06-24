@@ -121,8 +121,8 @@
 					    <p class="card-text">
 							<div>구매번호 : ${purchase.purchaseNo} </div>
 								<div>구매일자 : ${purchase.regDate} </div>
-								<div>구매자이름 : ${user.userName} </div>
-								<div>구매자 휴대전화 : ${user.phone} </div>
+								<div>구매자이름 : ${purchase.user.userName} </div>
+								<div>구매자 휴대전화 : ${purchase.user.phone} </div>
 								<div>구매처리상태 : 
 									<c:choose>
 										<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
@@ -132,14 +132,14 @@
 									</c:choose><br/>
 									적립 포인트 :
 									<c:choose>
-										<c:when test="${user.grade eq '0'}"> <fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.005}" />P<br/>
-										(${user.userName}님은 슬밀프랜드 등급으로<br/> 구매금액의 0.5%가 적립됩니다)</c:when>
-										<c:when test="${user.grade eq '1'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.01}" />P<br/>
-										(${user.userName}님은 슬밀패밀리 등급으로<br/> 구매금액의 1%가 적립됩니다)</c:when>
-										<c:when test="${user.grade eq '2'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.03}" />P<br/>
-										(${user.userName}님은 슬밀히어로 등급으로<br/> 구매금액의 3%가 적립됩니다)</c:when>
-										<c:when test="${user.grade eq '3'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.05}" />P<br/>
-										(${user.userName}님은 슬밀마스터 등급으로<br/> 구매금액의 5%가 적립됩니다)</c:when>
+										<c:when test="${purchase.user.grade eq '0'}"> <fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.005}" />P<br/>
+										(${purchase.user.userName}님은 슬밀프랜드 등급으로<br/> 구매금액의 0.5%가 적립됩니다)</c:when>
+										<c:when test="${purchase.user.grade eq '1'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.01}" />P<br/>
+										(${purchase.user.userName}님은 슬밀패밀리 등급으로<br/> 구매금액의 1%가 적립됩니다)</c:when>
+										<c:when test="${purchase.user.grade eq '2'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.03}" />P<br/>
+										(${purchase.user.userName}님은 슬밀히어로 등급으로<br/> 구매금액의 3%가 적립됩니다)</c:when>
+										<c:when test="${purchase.user.grade eq '3'}"><fmt:formatNumber type="number" maxFractionDigits="0" value="${price*0.05}" />P<br/>
+										(${purchase.user.userName}님은 슬밀마스터 등급으로<br/> 구매금액의 5%가 적립됩니다)</c:when>
 									</c:choose><br/>
 							</div>
 						</p>
