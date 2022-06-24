@@ -81,7 +81,7 @@
 				  	<img class="thumbnail" src='/resources/attachments/${product.thumbnail}'>
 				  	</div>
 				  	<div class="col-md-6" align="justify" style="margin-top: 60px; font-size: 18px;">
-				    <div class="card-title" id="price">${product.price}원</div>
+				    <div class="card-title" id="price"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${product.price}"/>원</div>
 				    <div class="card-subtitle mb-2 text-muted" style="font-size: 15px;">!! 재료 추가,제외를 원하지 않는 분은<br/> 설정을 그대로 진행해주세요 !!</div>
 				    </div>
 				</div>
@@ -131,7 +131,7 @@
 		  		<div class="card">
 					<div class="card-body">
 					    <p class="card-text">
-							<div>커스터마이징상품 금액 :&ensp;<span id="total">${product.price}</span>원</div><br/>
+							<div>커스터마이징상품 금액 :&ensp;<span id="total"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${product.price}"/></span>원</div><br/>
 	
 							<div>커스터마이징상품 수량 :<span id="count">
 								<button type='button' class="btn btn-outline-primary btn-sm minus" onclick="fnCalCount('minus',this);">-</button>
@@ -162,7 +162,7 @@
 	function fncInsertCustomProduct(ths) {
 
 		const count = $("#customProductCount").text();
-		const customprice= $("#total").text();
+		const customprice= $("#total").text().replace(",","");
 		const cartStatus = $(ths).val();
 		
 		$(".cc").append(`<input type="hidden" name ="count" value="\${count}">`);
@@ -226,7 +226,7 @@
 	function fnCalGram(type, ths){
 		var stat = $(ths).closest("div").find("span[name='gram']").text();
 		var num = parseInt(stat,10);		
-		let calprice = parseInt($(ths).closest("div").find("span[name='partsprice']").text());
+		let calprice = parseInt($(ths).closest("div").find("span[name='partsprice']").text().replace(",",""));
 
 		if(type=='minus'){
 			num-=10;
@@ -237,14 +237,14 @@
 
 			$(ths).closest("div").find("span[name='gram']").text(num);
 			
-            const minus = parseInt($("#total").text()) - calprice;
-            $("#total").text(minus);
+            const minus = parseInt($("#total").text().replace(",","")) - calprice;
+            $("#total").text(minus.toLocaleString());
 		}else{
 			num+=10;
 			$(ths).closest("div").find("span[name='gram']").text(num);
 
-            const plus = parseInt($("#total").text()) + calprice;
-            $("#total").text(plus);
+            const plus = parseInt($("#total").text().replace(",","")) + calprice;
+            $("#total").text(plus.toLocaleString());
 		}
 		const pgram = parseInt($(ths).closest("div").find("span[name='gram']").text(num));
 		const ppgram = $(ths).closest("div").find("input[name='plusGram']").val(num);
@@ -285,9 +285,9 @@
 		               $(".plusparts").append(parts);
 		               
 		                
-		                const productprice = $("#total").text();
+		                const productprice = $("#total").text().replace(",","");
 		                const result = parseInt(productprice)+parseInt(data.price);
-		                $("#total").text(result);
+		                $("#total").text(result.toLocaleString());
 			        }
 				})
 			}else{
@@ -355,7 +355,13 @@
 	
 	//추가재료 삭제
 	function fncClose(ths){
-		 $(ths).closest("div").parent().remove();
+		let partsPrice = parseInt($(ths).closest("div").parent().find("span[name='partsprice']").text());
+		let count = parseInt($(ths).closest("div").parent().find("span[name='gram']").text())/10;
+		let customPrice = $('#total').text().replace(",","");
+		let total = customPrice - (partsPrice*count);
+		$('#total').text(total.toLocaleString());
+		
+		$(ths).closest("div").parent().remove();
 		
 	}
 	

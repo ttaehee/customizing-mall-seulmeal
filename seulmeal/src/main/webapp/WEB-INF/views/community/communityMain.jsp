@@ -947,6 +947,7 @@ div.modal-content{
 	        	}
 	        }
 		})		
+		//$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
 	}
 	
 	// 팔로우 해제

@@ -503,6 +503,8 @@ public class UserController {
 		
 		System.out.println("/getListCustomProduct : "+ purchaseNo);
 		
+		
+		
 		purchase=purchaseService.getPurchase(purchaseNo);
 			
 		model.addAttribute(purchase);
@@ -519,14 +521,17 @@ public class UserController {
 		
 		user = userService.getUser(purchase.getUser().getUserId());
 		
-		user.setTotalPoint(purchase.getPrice());
+		user.setTotalPoint((purchase.getPrice()+user.getTotalPoint()));
+		userService.updateUserTotalPoint(user);
+		user=userService.getUser(user.getUserId());
 		
+		model.addAttribute(user);
 		userService.updateUserTotalPoint(user);
 		
 		return "user/getChargeUserPoint";
 	}
 		
-	@GetMapping("listUserPoint/{currentPage}")
+	@GetMapping(value={ "listUserPoint/{currentPage}/{searchCondition}","listUserPoint/{currentPage}" , "listUserPoint"})
 	public String listUserPoint(Model model, @PathVariable(required = false) String currentPage, @PathVariable(required = false) String searchCondition, HttpSession session) throws Exception {
 		
 		Search search = new Search();

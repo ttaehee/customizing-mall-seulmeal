@@ -9,59 +9,111 @@
 <title>회원 목록</title>
 <style type="text/css">
 
-a.button {
-  display: block;
-  position: relative;
-  float: left;
-  width: 150px;
+
+.btn btn-orang {
+  display: block !important;
+  position: relative !important;
+  float: left !important;
+  width: 150px !important;
   padding: 0;
-  margin: 10px 20px 10px 0;
-  font-weight: 600;
+  margin: 10px 20px 10px 0 !important;
+  font-weight: 600 !important;
   color: #fff;
-  text-align: center;
-  line-height: 50px;
-  border-radius: 5px;
-  border: solid 2px #FF4500;
-  transition: all 0.2s ;
+  text-align: center !important;
+  line-height: 50px !important;
+  border-radius: 5px !important;
+  border: solid 2px #FF4500 !important;
+  transition: all 0.2s  !important;
 }
 .btnOrange {
+  float: left ;
+  width: 150px ;
+  padding: 0;
+  margin: 10px 20px 10px 0;
+  text-align: center ;
   background: #fff;
+  line-height: 50px ; 
+  border: solid 1px #FF4500 !important;
+  
 }
 .btnFade.btnOrange:hover {
   background: #FF4500;
   color: #fff !important;
 }
+
+input{
+    margin: 0px 10px 8px 10px;
+    padding: 10px;
+    border: solid 1px #dadada;
+    background: #fff;
+}
 </style>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<!-- 아래 제이쿼리는 1.0이상이면 원하는 버전을 사용하셔도 무방합니다. -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 </head>
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
 	<div class="container">
+		
+		
 		<div class="row">
+			<div class="col-md-10">
+			<h3 >포인트</h3>
+	
 			
-			<h3 class="col-md-10">포인트</h3>
+		</div>
+			
 			<div class="col-md-2">
 			<!-- <button class="custom-btn btn-1" onclick="location.href='/user/chargeUserPoint'">포인트 충전</button>	 -->
-			 <a href="/user/chargeUserPoint" title="Button fade orange" class="button btnFade btnOrange" >포인트 충전</a>
+			 <!-- <a href="/user/chargeUserPoint" title="Button fade orange" class="button btnFade btnOrange" >포인트 충전</a> -->
+			 <button type="button" title="Button fade orange" class="btnOrange" data-toggle="modal" data-target="#staticBackdrop">
+			  포인트 충전
+			</button>
 			</div>
-		<table class="table table-striped table-hover">
+		<table class="table table-striped table-hover" style="text-align: right;">
 			<thead>
 				<tr>
-					<th>구분</th>
+					<th>
+						<div class="dropdown">
+						  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+						    구분
+						  </button>
+						  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						    <a class="dropdown-item" href="/user/listUserPoint/0/0">사용</a>
+						    <a class="dropdown-item" href="/user/listUserPoint/0/1">적립</a>
+						    <a class="dropdown-item" href="/user/listUserPoint/0/2">충전</a>
+						  </div>
+						</div>
+					
+					</th>
 					<th>포인트</th>
-					<th>날짜</th>
+					<th style="text-align: center;">구매 내역</th>
+					<th style="text-align: center;">날짜</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody >
 				<c:forEach var="point" items="${pointList}">
 				<tr>
-					<th><c:choose>
-						<c:when test="${point.pointStatus eq '0'}">사용</c:when>
-						<c:when test="${point.pointStatus eq '1'}">적립</c:when>
-						<c:when test="${point.pointStatus eq '2'}">충전</c:when>
+					<th ><c:choose>
+						<c:when test="${point.pointStatus eq '0'}"><div style="color: #994936;">사용</div></c:when>
+						<c:when test="${point.pointStatus eq '1'}"><div style="color: #6D992E;">적립</div></c:when>
+						<c:when test="${point.pointStatus eq '2'}"><div style="color: #003EE6;">충전</div></c:when>
 						
-					</c:choose></th>
-					<th>${point.point}</th>
-					<th>${point.regDate}</th>
+					</c:choose>
+					</th>
+					<th ><div >${point.point} P</div></th>
+					
+					<th style="text-align: center;"><c:choose>
+						<c:when test="${point.pointStatus eq '0'}"><a  href="/purchase/getPurchase/${point.purchaseNo}">${point.purchaseNo}</a></c:when>
+						<c:when test="${point.pointStatus eq '1'}"><a href="/purchase/getPurchase/${point.purchaseNo}">${point.purchaseNo}</a></c:when>
+						<c:when test="${point.pointStatus eq '2'}"></c:when>	
+					</c:choose>
+					</th>
+					
+					
+					
+					<th style="text-align: center;">${point.regDate}</th>
 				</tr>
 				</c:forEach>
 			</tbody>
@@ -87,6 +139,173 @@ a.button {
 		</div>
 	</div>	
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">포인트 충전</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="login-id-wrap" style="text-align: center;">
+        <input id="input-id" type="hidden" id="userId" name="userId" value="${user.userId}"/>
+		<input name="price" id="price"/> 원
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onClick="iamport()">충전하기</button>
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="getCharge" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">포인트 충전 완료</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+       <div id="insertPoint" style="text-align: center;"></div>
+        <div id="totalPoint" style="text-align: center;"></div>
+        
+      </div>
+      <div class="modal-footer">
+        
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <jsp:include page="../layer/footer.jsp"></jsp:include>
+<script type="text/javascript">
+function iamport(){
+	
+	var form1 = $(".box").serialize();
+	
+	let customNo = [];
+	let ar = $(".customProductNo").get();
+	console.log(ar);
+	
+	for ( var i = 0; i < ar.length; i++) {
+		customNo.push(ar[i].value);
+	}
+	console.log(customNo);
+	console.log($('#price').val());
+	const userId = $('#userId').val();
+	const name = "0";
+	const address ="0";
+	const phone = "0";
+	const email = "0";
+	const message ="0";
+	const price = $('#price').val();
+	const usePoint = "0";
+	const paymentCondition = "0";
+
+		$.ajax({
+			url:"/purchase/api/insertPurchase",
+			method:"POST",
+			data:JSON.stringify({
+				name : name,
+				address : address,
+				phone : phone,
+				email : email,
+				message : message,
+				price : price,
+				paymentCondition : paymentCondition,
+				usePoint : usePoint,
+				customProductNo : customNo
+				//plusPoint : plusPoint
+			}),
+			headers : {
+				"Accept" : "application/json",
+				"Content-Type" : "application/json"
+			},
+			dataType : "json",
+			success : function(data){
+				console.log(data);
+				IMP.init('imp83644059'); 
+				IMP.request_pay(
+				    { 
+		 		  	pay_method: data.paymentCondition,
+		  		  	merchant_uid: data.purchaseNo,
+		  		  	name: "포인트 충전",
+		  		  	amount: data.price,
+		   		 	buyer_email: data.email,
+		   			buyer_name: data.name,
+		  			buyer_tel: data.phone,
+		  		  	buyer_addr: data.address,
+		   		 	buyer_postcode: "01181"
+					}, function(rsp) {
+						if(rsp.success){
+							var msg = '결제가 완료되었습니다.';
+			  		      	
+			  		      	 $.ajax({
+			  		  			url:"/purchase/api/verifyIamport",
+			  		  			method:"POST",
+			  		  			data:JSON.stringify({
+			  		  				imp_uid : rsp.imp_uid,
+			  		  				purchaseNo : rsp.merchant_uid,
+			  		  				amount : rsp.paid_amount
+			  		  			}),
+			  		  			headers : {
+			  		  				"Accept" : "application/json",
+			  		  				"Content-Type" : "application/json"
+			  		  			},
+			  		  			dataType : "json",
+			  		  			success : function(data){
+			  		  				console.log(data);
+			  		  				/*  window.location.href='/user/getChargeUserPoint/' + data.purchase.purchaseNo;  */
+			  		  				
+					  		  		
+			  		  				
+			  		  			$.ajax({
+				  		  			url:"/user/api/insertPoint",
+				  		  			method:"POST",
+				  		  			data:JSON.stringify({
+				  		  				purchaseNo : data.purchase.purchaseNo
+				  		  			}),
+				  		  			headers : {
+				  		  				"Accept" : "application/json",
+				  		  				"Content-Type" : "application/json"
+				  		  			},
+				  		  			dataType : "json",
+				  		  			success : function(data){
+				  		  			$("#insertPoint").text('충전 포인트 : '+data.chargePoint);
+				  		  			$("#totalPoint").text('가용 포인트 : '+data.totalPoint);
+				  		  			$("#staticBackdrop").modal('hide');
+			  		  				$("#getCharge").modal('show');
+			  		  				
+				  		  			} 
+				  		  		})
+			  		  			}			
+			  		  	
+			  		      	 })	
+			  		  			
+			  		      	
+						}else{
+							var msg = '결제에 실패하였습니다.';
+					         msg += '에러내용 : ' + rsp.error_msg;
+	
+						}
+					/* alert(msg); */
+				})
+			}
+		})
+	}
+</script>
 </body>
 </html>

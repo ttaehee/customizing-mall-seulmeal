@@ -12,9 +12,13 @@
 }
   
 #wrap .box{ 
-    width:800px;
+    width:500px;
     height:300px;
     margin:0 auto;
+    border: solid 1px #dadada;
+    text-align: center;
+    padding: 10px 10px 10px 10px;
+    font-size: 18px;
 } 
 </style>
 
@@ -23,10 +27,16 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 <div id="wrap">
 <div class="box">
-<h1>포인트 충전 내역</h1>
-<div class="row">
-	  		<div class="col-xs-4 col-md-2"><strong>충전 포인트</strong></div>
-			<div class="col-xs-8 col-md-4">${purchase.price}p</div>
+		<h2>포인트 충전 내역</h2>
+		<div class="row" style=" text-align: center !important;">
+	  		<div class="col-md-3"></div>
+	  		<div class="col-md-3">충전 포인트</div>
+			<div class="col-md-3">${purchase.price}p</div>
+		</div>
+		<div class="row">
+		<div class="col-md-3"></div>
+	  		<div class="col-md-3">내 포인트</div>
+			<div class="col-md-3">${user.totalPoint}p</div>
 		</div>
 </div>
 </div>

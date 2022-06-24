@@ -26,11 +26,11 @@ body { background: #fff; }
   
 .bluetop {
   border-collapse: collapse;
-  border-top: 3px solid #ff4500;
+  border-top: 3px solid #168;
 }  
 .bluetop th {
-  color: #ff4500;
-  background: #FBF8EF;
+  color: #168;
+  background: #f0f6f9;
 }
 .bluetop th, .bluetop td {
   padding: 10px;
@@ -51,49 +51,50 @@ body { background: #fff; }
 	<div class="container">
 		<br /> <br /> <br /> <br />
 		<h2>내 정보</h2>
-		<form method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
-			
-			<div class="form-group row">
-				<label for="Email3" class="col-sm-2 col-form-label">아이디</label>
+		<form class="form-horizontal" method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
+			<div class="form-group">
+				<label for="Email3" class="col-sm-2 control-label">아이디</label>
 				<div class="col-sm-10">
+				
+				
 				 <input type='hidden'  name='userId' value='${user.userId }' />
 				${user.userId }
 				</div>
 			</div>
-			<div class="form-group row">
-				<label for="Password3" class="col-sm-2 control-label">비밀번호</label>
+			<div class="form-group">
+				<label for="Password3" class="col-sm-2 control-label">Password</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="password" name="password" placeholder="">
 					 <div id="checkPassword"></div>
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Password3" class="col-sm-2 control-label">새 비밀번호</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="">
 					<div id="passResult" style="color:crimson;"></div>
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Password3" class="col-sm-2 control-label">비밀번호 확인</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" id="confirmPassword" placeholder="">
 					<div id="passCheck" style="color:crimson;"></div>
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">이름</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="userName" name="userName" value="${user.userName }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">닉네임</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="nickName" name="nickName" value="${user.nickName }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">회원등급</label>
 				<div class="col-sm-10" data-toggle="modal" data-target="#exampleModalCenter">
 				
@@ -111,41 +112,34 @@ body { background: #fff; }
 					 
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">이메일</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="email" name="email" value="${user.email }" placeholder="">
 				</div>
 			</div>
-			<div class="form-group row">
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">휴대폰</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="phone" name="phone" value="${user.phone }" placeholder="">
 				</div>
 			</div>
-		   <div class="form-group row">
-		    <label for="Email3" class="col-sm-2 control-label">주소</label>
-		    <div class="col-sm-10">
-		    	<!-- 주소 -->
-		    	<div style="display: flex; justify-content: space-between;">
-		    	<input type="text" class="form-control" id="sample3_postcode" name="address"  placeholder="우편번호" style="width: 100%;" readonly>
-				<input class="btn btn-default" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
+			<div class="form-group">
+				<label for="Email3" class="col-sm-2 control-label">주소</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="address" name="address" value="${user.address }" placeholder="">
 				</div>
-				<input type="text" class="form-control" id="sample3_address" name="address" value="${user.address }"  placeholder="주소" ><br>
-				<input type="text" class="form-control" id="address" name="address" placeholder="상세주소">
-				
-				<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
-					<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
-				</div>
-				
-		    </div>
-		  </div>
-			<div class="form-group row">
+			</div>
+			<div class="form-group">
 				<label for="Email3" class="col-sm-2 control-label">생년월일</label>
 				<div class="col-sm-10">
 					 ${user.birth } 
 				</div>
+				
+				
 			</div>
+			
+			
 			<br/>
 
 			<div>
@@ -171,7 +165,7 @@ body { background: #fff; }
 				</div>
 			</div>
 			
-			<div class="fform-group row">
+			<div class="form-group">
 				<h4>상태메세지</h4>
 				<div class="">
 					<input type="text" class="form-control" id="profilemessage" name="profilemessage" value="${user.profileMessage }" placeholder="내용을 입력해 주세요">
@@ -290,9 +284,8 @@ body { background: #fff; }
 </div>
 	
 <jsp:include page="../layer/footer.jsp"></jsp:include>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script type="text/javascript" src="/resources/javascript/user/address.js"></script>
-<script type="text/javascript">	
+	
+<script type="text/javascript">
 	
 function search(){
 	var word = $(".search").val();

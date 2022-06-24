@@ -71,6 +71,7 @@ public class ProductRestController {
 		return map;
 	}
 	
+	
 	@GetMapping("deleteReview/{reviewNo}")
 	public String deleteReview(@PathVariable int reviewNo) throws Exception {
 		productService.deleteReview(reviewNo);
@@ -110,6 +111,7 @@ public class ProductRestController {
 		json.put("result", result);
 		json.put("likeCount", product.getLikeCount());
 		return json;
+	
 	}
 	
 	@PostMapping("insertFoodCategory")

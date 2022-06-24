@@ -83,6 +83,7 @@
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>
 		
+		
 		<select id="checkDuplicationUserId" resultType="int">
 			SELECT count(user_id) from users where user_id= #{userId}
 		</select>
@@ -148,7 +149,7 @@
 		</insert>
 		
 		<update id="resetBlockCount">
-			UPDATE users SET blacklist_status = 1, block_count = 0, blacklist_count = blacklist_count + 1 WHERE block_count = 50
+			UPDATE users SET blacklist_status = 1, block_count = 0, blacklist_count = blacklist_count + 1, blacklist_date = SYSDATE WHERE block_count = 50
 		</update>
 		
 		<update id="updateBlackList">

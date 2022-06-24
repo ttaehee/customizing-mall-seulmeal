@@ -50,7 +50,6 @@
         top:0;
       }
 
-
 	h2:after {
 		content: "";
 		display: block;
@@ -173,7 +172,7 @@
 						  	<span id ="count" name="count"> ${cpd.count} </span> 
 						  </td>
 						  <td align="left">
-						  <span id="customprice" name="customPrice">${cpd.price*cpd.count}</span>원</td>
+						  <span id="customprice" name="customPrice"><fmt:formatNumber type="number" maxFractionDigits="0" value="${cpd.price*cpd.count}"/></span>원</td>
 						  <c:set var="sum" value="${sum+cpd.price*cpd.count}" />
 						  
 					  </tr>  
@@ -210,7 +209,7 @@
 						<input class="btn btn-default" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
 					</div>
 						<input type="text" id="sample3_address" placeholder="주소" readonly><br>
-						<input type="text" id="address" name="address" placeholder="상세주소">
+						<input type="text" id="address" placeholder="상세주소">
 					
 					<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
 						<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
@@ -277,7 +276,7 @@
 												<input input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="usepoint" placeholder="사용할 포인트" style="width:150px;"></input> P<br/><br/>
 												(100P 단위로 사용가능)<br/><br/>
 												<input type="password" id="password" name="password" value="" placeholder="비밀번호" style="width:150px;"></input>
-												<button type="button" class="btn btn-outline-primary" id="confirm" style="font-size:18px;" onClick="fnCalTotal()">확인</button>
+												<button type="button" class="btn btn-outline-primary" id="confirm" style="font-size:16px;" onClick="fnCalTotal()">확인</button>
 											</div>
 										</div>
 									</div>
@@ -358,6 +357,18 @@
 	function fnCalTotal(){
 		usepoint = parseInt($('#usepoint').val());
 		console.log(usepoint);
+		
+		if($('#confirm').text()==="적용취소"){
+			let con = confirm("포인트적용을 취소할까요?");
+			if(con){
+				$("#price").text(sum.toLocaleString());
+				$('#usepoint').val('');
+				$('#password').val('');
+				document.getElementById('usepoint').readOnly = false;
+        		document.getElementById('password').readOnly = false;
+        		$('#confirm').text('확인');
+			}
+		}
 
 		let total = sum-usepoint;
 		const password = $('#password').val();
@@ -390,7 +401,7 @@
 		        		$("#price").text(total.toLocaleString());
 		        		console.log(parseInt($('#price').text().replace(",","")));
 		        		
-		        		$('#confirm').attr("disabled","disabled");
+		        		$('#confirm').text('적용취소');
 		        		document.getElementById('usepoint').readOnly = true;
 		        		document.getElementById('password').readOnly = true;
 		        		
@@ -440,19 +451,24 @@
 		
 		const userId = $('#userId').val();
 		const name = $('#name').val();
-		const address = $('#address').val();
+		const address = $('#sample3_postcode').val() +"/"+ $('#sample3_address').val() +"/"+ $('#address').val();
+		console.log(address);
 		const phone = $('#phone').val();
 		const email = $('#email').val();
 		const message = $('#message').val();
 		const price = $('#price').text().replace(",","");
 		const usePoint = (!$('#usepoint').val().replace(",","")) ? "0": $('#usepoint').val().replace(",","");
 		
+		//포인트로만 결제시 아임포트 불필요
 		if(parseInt($('#price').text().replace(",",""))==0){
 			
 			$(".cc").append(`<input type="hidden" name ="usePoint" value="\${usePoint}">`);
 			$(".cc").append(`<input type="hidden" name ="paymentCondition" value="1">`);
+			$(".cc").append(`<input type="hidden" name ="address" value="\${address}">`);
 					
 			$("form").attr("method" , "POST").attr("action" , "/purchase/insertPurchase").submit();
+			
+		//아임포트결제
 		}else{
 			$(".cc").append(`<input type="hidden" id ="paymentCondition" value="0">`);
 			const paymentCondition = $('#paymentCondition').val();

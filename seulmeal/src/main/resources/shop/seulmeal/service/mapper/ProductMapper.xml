@@ -264,7 +264,7 @@
 
 		UPDATE product
 		<set>
-			average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product.product_no = #{review.productNo} AND review.status = '0' ) COUNT)
+			average_rating = (SELECT AVG(rating) FROM (SELECT rating FROM review WHERE product.product_no = #{product.productNo} AND review.status = '0' ) COUNT)
 		</set>
 		<where>
 			product_no = #{product.productNo}
@@ -561,12 +561,12 @@
 
 	</insert>
 
-	<select id="getListLikeProduct" parameterType="Map" resultMap="likeSelectMap">
+	<select id="getListLikeProduct" parameterType="Map" resultMap="productSelectMap">
 		SELECT *
 		FROM (SELECT inner_table.*, ROWNUM AS row_seq
-		FROM (SELECT * FROM likes
+		FROM (SELECT p.product_no, p.name AS name, p.price AS price, p.stock AS stock, p.thumbnail AS thumbnail FROM product p, likes l
 		<where>
-			likes.user_id = #{userId} AND likes.product_no IS NOT NULL
+			l.user_id = #{userId} AND l.product_no = p.product_no
 		</where>
 		ORDER BY like_no DESC )inner_table
 		WHERE ROWNUM &lt;= #{search.endRowNum} )

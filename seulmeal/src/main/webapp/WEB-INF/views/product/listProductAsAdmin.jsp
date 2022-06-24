@@ -31,6 +31,12 @@
 		opacity:0.7;
 	}
 	
+	th img{
+	width: 100%;
+	max-width: 144px;
+	height: auto;
+	}
+	
 </style>
 
 </head>
@@ -79,7 +85,7 @@
 					<th>
 					
 					<c:if test="${!empty product.thumbnail}">
-						<img src="/resources/attachments/${product.thumbnail}" style="height: 81px; width: 144px;" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
+						<img src="/resources/attachments/${product.thumbnail}" style=" object-fit:cover; height: 88px; width: 144px;" alt="..." class="img-thumbnail" onerror="this.src='http://folo.co.kr/img/gm_noimage.png'">
 					</c:if>
 					<c:if test="${empty product.thumbnail}">
 						<img src="http://folo.co.kr/img/gm_noimage.png" style="height: 81px; width: 144px;" alt="..." class="img-thumbnail">

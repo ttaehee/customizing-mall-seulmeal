@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		return userMapper.updateBlockCount(userId);
 	}
 	
-	@Scheduled(cron = "0 12 12 * * ? ")
+	@Scheduled(cron = "0 41 11 * * ? ")
 	public void updateBlackList() throws Exception {
 		userMapper.insertBlackList();
 		userMapper.resetBlockCount();
