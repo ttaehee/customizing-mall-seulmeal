@@ -333,24 +333,22 @@
 			 }
 		 });
 		 
-		$(".partSearch").on("click",()=>{
-			
+		$(".partSearch").on("click",()=>{	
 			fncGetParts();
 		})
 		
 		//추가재료 검색 엔터적용
-		$(".search").keydown(function(key){
-			        if(key.keyCode==13) {
-				           fncGetParts();
-				    }     
+		$(".search").on("keydown", function(e){
+	        if(e.key==="Enter" || e.keyCode==13) {
+		           fncGetParts();
+		    }     
 		});
-		
 	})
 
 	//엔터 시 submit 방지
-	document.insertCustom.addEventListener("keydown", evt => {
-		  if (evt.code === "Enter") 
-		  evt.preventDefault();
+	document.insertCustom.addEventListener("keydown", e => {
+		  if(e.code === "Enter" || e.keyCode==13) 
+			  e.preventDefault();
 		});
 	
 	//추가재료 삭제

@@ -83,13 +83,6 @@ section.main{
 	padding:40px 0px;
 }
 
-.icon {
-	height: 100%;
-	/*cursor: pointer;*/
-	margin: 0 10px;
-	display: inline-block;
-}
-
 #insertLikeBtn{
 	cursor:pointer;
 }
@@ -116,6 +109,7 @@ section.main{
     display: grid;
     grid-template-columns: 60% 40%;
     grid-gap: 40px;
+    margin-left: 14%;
 }
 
 .left-col{
@@ -195,16 +189,20 @@ section.main{
     border: none;
 }
 
-#post-list-title{
-	margin-top: 20px;
-	margin-left: 20px;
+.post-list-title{
+	margin: 30px;
 	font-size: 20px;
 	font-weight: bold;
 }
 
-#post-list-content{
-	margin: 30px; 
-	
+.post-shortContent{
+	margin-bottom:30px;
+}
+
+
+.post-list-content{
+	margin-left: 50px; 
+	margin-bottom: 70px; 
 }
 
 .post-image{
@@ -265,16 +263,9 @@ section.main{
 
 .reaction-wrapper .icon{
     height: 25px;
-    margin: 0;
-    margin-right: 20px;
+    font-size: 17px;
+    margin: 0 3px 0 10px;
 }
-
-.reaction-wrapper .icon.save{
-    margin-left: auto;
-}
-
-
-
 
 /* //////////우측 프로필 카드////////*/
 .right-col{
@@ -284,13 +275,15 @@ section.main{
 }
 
 .profile-card{
-    width: 400px;
+    width: 370px;
     display:flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 10px 0px 0px 100px;
     border: 1px solid #dfdfdf;
 	border-radius: 3px;
+	padding: inherit;
+	border-radius: 10px;
 }
 
 /* 내 프로필 카드- 내 프로필 이미지*/
@@ -428,8 +421,6 @@ div.modal-content{
 	</div>
 	<!-- 검색, 정렬, 게시글 작성버튼 끝 -->
 
-
-
 	<section class="main">
 	
 		<div class="wrapper">
@@ -461,7 +452,7 @@ div.modal-content{
 							aria-hidden="true">
 							<div class="modal-dialog modal-dialog-scrollable modal-md "
 								role="document">
-								<div class="modal-content">
+								<div class="modal-content" style="width:460px;" >
 					
 									<!-- 헤더 -->
 									<div class="modal-header">
@@ -471,8 +462,6 @@ div.modal-content{
 											<span aria-hidden="true">&times;</span>
 										</button>
 									</div>
-					
-					
 									<div class="modal-body">
 										<c:choose>
 											<c:when test="${sessionScope.user.userId == post.user.userId}">
@@ -492,15 +481,11 @@ div.modal-content{
 												</div>
 											</c:otherwise>
 										</c:choose>	
-
+										<hr>
+										<div style="margin:10px; text-align: center; margin:0px;">
+											<button type="button"  class="btn btn-secondary" data-dismiss="modal">취소</button>
+										</div>
 									</div>
-
-									<!-- 푸터 -->
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary"
-											data-dismiss="modal">취소</button>
-									</div>
-					
 								</div>
 							</div>
 						</div>
@@ -509,7 +494,7 @@ div.modal-content{
 					<!-- 게시글 신고 모달 -->
 					<div class="modal fade" id="reportModal${i}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					  <div class="modal-dialog" role="document">
-					    <div class="modal-content">
+					    <div class="modal-content" style="width:460px; border-radius: 15px;">
 					      <div class="modal-header">
 					        <h5 class="modal-title" id="exampleModalLabel">게시글 신고 사유</h5>
 					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -549,15 +534,20 @@ div.modal-content{
                     	</c:when>
                     	<c:otherwise>
                     		<div class="post-list-title">${post.title}</div>
-                        	<div id="post-list-content">
-                            	<a class="post-shortContent" href="/community/getPost/${post.postNo}">${post.shortContent}</a>								
+                        	<div  class="post-list-content">
+                            	<div style="margin-bottom: 30px;"><a class="post-shortContent" href="/community/getPost/${post.postNo}">${post.shortContent}</a></div>								
                         	</div>
                     	</c:otherwise>
                     </c:choose>
                     
                     <div class="post-content">
                         <div class="reaction-wrapper">
-                            <i class="bi bi-heart icon" data-value="${post.postNo}"></i>
+                        	<c:if test="${post.likeStatus eq 1}">
+                            	<i class="bi bi-heart-fill icon" style="color:red;" data-value="${post.postNo}"></i>
+                            </c:if>
+                            <c:if test="${empty post.likeStatus}">
+                            	<i class="bi bi-heart icon" data-value="${post.postNo}"></i>
+                            </c:if>
                             <!-- 4.조회수, 댓글수 -->
                             <i class="bi bi-eye icon">${post.views}</i>
                             <i class="bi bi-chat-left icon">${post.commentCount}</i>
@@ -659,8 +649,10 @@ div.modal-content{
 	
 
 	// 좋아요, 좋아요 취소
-	$("i.bi.bi-heart.icon").on("click", function() {
+	function like(){
+	$("i.bi.bi-heart.icon, i.bi.bi-heart-fill.icon").on("click", function() {
 		const heart = $(this)		
+		console.log(heart);
 		const postNo = $(this).data("value");
 		//alert("postNo: " + postNo);
 		console.log("postNo: " + postNo);
@@ -702,6 +694,8 @@ div.modal-content{
 		});
 
 	});
+	}
+	
 	
 	// 차단해제
 	$("button.action-btn:contains('차단해제')").on("click", function() {
@@ -719,10 +713,10 @@ div.modal-content{
 			success : function(status) {
 				
 				if(status === 1){
-					alert("차단해제 완료!");
+					//alert("차단해제 완료!");
 					line.remove();
 				}else{
-					alert("차단해제 실패..");
+					//alert("차단해제 실패..");
 				}
 			}
 		});
@@ -733,9 +727,11 @@ div.modal-content{
 	// 게시글 무한스크롤
 	$(function(){
 		
+		like();
+		
 		let currentPage = 2;
 		let maxPage = ${resultPage.maxPage};
-		let index = ${resultPage.pageUnit};
+		//let index = ${resultPage.pageUnit};
 
 		$(window).scroll(function(){
 			
@@ -765,6 +761,11 @@ div.modal-content{
 									
 							for(let i = 0; i<data.length; i++){
 								
+								let post = data[i];
+								
+								let likeStats = post.likeStatus;
+								console.log("/////"+likeStats)
+								
 								let postCardHtml = `
 									<div class="post-card">
 									    <div class="info">
@@ -787,8 +788,7 @@ div.modal-content{
 									    </div>
 									    <div class="post-content">
 									        <div class="reaction-wrapper">
-									            <i class="bi bi-heart icon" data-value=""></i>
-									            <i class="bi bi-heart-fill" style="display:none;"></i>
+									        
 									            <i class="bi bi-eye icon"></i>
 									            <i class="bi bi-chat-left icon"></i>
 									        </div>
@@ -798,7 +798,7 @@ div.modal-content{
 									    </div>
 									</div>
 									`;
-								
+									
 								let div1 = `
 											<a class ="post-link">
 												<img id = "post-img" class="post-image"/>
@@ -806,22 +806,17 @@ div.modal-content{
 											`;
 										
 								let div2 = `<div class="post-list-title"></div>
-							            <div id="post-list-content">
-							                <a class="post-shortContent"></a>								
+							            <div id="post-list-content" class="post-list-content">
+							            <div style="margin-bottom: 30px;"><a class="post-shortContent"></a></div>								
 							            </div>`;
 								
 							    let div3 = `<div class="description"></div>`;
 								
-								
-								let post = data[i];
-																
 								let postCard = $($.parseHTML(postCardHtml));
 								let div_1 = $($.parseHTML(div1));
 								let div_2 = $($.parseHTML(div2));
 								let div_3 = $($.parseHTML(div3));
 
-								console.log(post.attachments == "")
-								console.log(post.attachments != "")
 								
 								if(post.attachments == ""){
 									
@@ -833,7 +828,6 @@ div.modal-content{
 								}else{
 									
 									$(postCard).find(".post-time").before(div_3);
-									
 									$(postCard).find(".description").html(post.shortContent);
 									
 									for(let j = 0; j < post.attachments.length; j++){	
@@ -843,9 +837,13 @@ div.modal-content{
 											</a>
 											`);
 										$(postCard).find(".post-link").attr("href","/community/getPost/"+post.postNo);
-										//$(postCard).find(".post-image").attr("src","/resources/attachments/"+post.attachments[j].attachmentName);
-										console.log("/////"+post.attachments[j].attachmentName);
 									}
+								}
+								
+								if(post.likeStatus === '1'){									
+									$(postCard).find("i.bi.bi-eye.icon").before(`<i class="bi bi-heart-fill icon" style="color:red;" data-value="\${post.postNo}"></i>`);
+								}else if(post.likeStatus === undefined ){
+									$(postCard).find("i.bi.bi-eye.icon").before(` <i class="bi bi-heart icon" data-value="\${post.postNo}"></i>`);
 								}
 								
 								//$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
@@ -854,18 +852,22 @@ div.modal-content{
 								$(postCard).find(".profile-link2").attr("href","/community/getProfile/"+post.user.userId)
 								$(postCard).find(".profile-link2").text(post.user.nickName);
 								
-								$(postCard).find("i.bi.bi-heart.icon").attr("data-value", post.postNo);
 								$(postCard).find("i.bi.bi-eye.icon").text(post.views);
 								$(postCard).find("i.bi.bi-chat-left.icon").text(post.commentCount);
 								$(postCard).find(".like-cnt").text(post.likeCount);
 								$(postCard).find(".post-time").text(post.regDate);
+								$(postCard).find(".option_icon").attr("data-value", post.postNo);
+								//$(postCard).find(".option_icon").attr("data-target",".fade\${index}");
 								
 								console.log("postC: "+postCard);
 								
 								$(".left-col").append(postCard);
 								
+
+								//index++;
 							}//for
 							
+							like();
 							slick2('.your-class'+currentPage);								
 						}//success
 						, error: function(status, jqXHR){
@@ -944,7 +946,6 @@ div.modal-content{
 	        	}
 	        }
 		})		
-
 		//$(".report-form").attr("method","POST").attr("action","/community/insertReportPost").submit();
 	}
 	

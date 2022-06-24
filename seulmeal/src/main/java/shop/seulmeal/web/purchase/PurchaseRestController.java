@@ -202,15 +202,17 @@ public class PurchaseRestController {
 				}
 				
 				//사용포인트
-				point.setUserId(user.getUserId());
-				point.setPurchaseNo(purchase.getPurchaseNo());
-				point.setPointStatus("0");
-				point.setPoint(purchase.getUsePoint());
-				userService.insertPoint(point);
-				//총포인트에서 사용포인트 빼기
-				user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
-				userService.updateUserTotalPoint(user);
-				
+				if(purchase.getUsePoint() != 0) {
+					point.setUserId(user.getUserId());
+					point.setPurchaseNo(purchase.getPurchaseNo());
+					point.setPointStatus("0");
+					point.setPoint(purchase.getUsePoint());
+					userService.insertPoint(point);
+					//총포인트에서 사용포인트 빼기
+					user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+					userService.updateUserTotalPoint(user);
+				}
+	
 				json.put("purchase", purchase);
 				json.put("sucess", "true");
 				json.put("message", "성공!!!!!!");
@@ -265,12 +267,8 @@ public class PurchaseRestController {
 	      purchase.setUser(user);
 	      
 	      //구매확정 후 포인트적립
-	      List<CustomProduct> list=purchase.getCustomProduct();
-	      int total=0;
-	      for(CustomProduct cp : list) {
-	    	  total += cp.getPrice()*cp.getCount();
-	      }
-	      
+	      int total=purchase.getPrice()+purchase.getUsePoint();
+
 	      int plusPoint=0;
 	      if(user.getGrade().equals("0")) {
 	    	  plusPoint=(int) (total*0.005);
@@ -287,8 +285,9 @@ public class PurchaseRestController {
 		  point.setPointStatus("1");
 		  point.setPoint(plusPoint);
 		  userService.insertPoint(point);
-		  //유저 총포인트
-		  user.setTotalPoint(user.getTotalPoint()-purchase.getUsePoint());
+		  
+		  //유저 총포인트에 적립포인트 더해주기
+		  user.setTotalPoint(user.getTotalPoint()+plusPoint);
 		  userService.updateUserTotalPoint(user);
 	      
 	      return purchase;

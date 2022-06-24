@@ -30,7 +30,7 @@
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
 	<div class="container px-4 py-5" id="custom-cards">
-    <h2 class="pb-2 border-bottom">이 상품 어떠세?</h2>
+    <h2 class="pb-2 border-bottom">이 상품 어떠세요?</h2>
     	<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-5 py-3">
 			<c:forEach var="product" items="${list}">		
 				<div class="col" style="margin-top:20px;">
