@@ -408,12 +408,8 @@ public class UserController {
 			userService.deleteUser(((User) session.getAttribute("user")).getUserId());
 
 			session.invalidate();
-
-			return "redirect:/";
-		} else {
-			return "<script>alert('비밀번호가 일치하지 않습니다');</script>";
 		}
-
+			return "redirect:/";
 	}
 
 	@GetMapping(value = { "listUser/{currentPage}/{searchCondition}", "listUser/{currentPage}", "listUser" })

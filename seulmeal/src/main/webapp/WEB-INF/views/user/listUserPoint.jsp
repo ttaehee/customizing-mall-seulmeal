@@ -57,14 +57,7 @@ input{
 				<tr>
 					<th>
 						<div class="dropdown">
-						  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-						    구분
-						  </button>
-						  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						    <a class="dropdown-item" href="/user/listUserPoint/0/0">사용</a>
-						    <a class="dropdown-item" href="/user/listUserPoint/0/1">적립</a>
-						    <a class="dropdown-item" href="/user/listUserPoint/0/2">충전</a>
-						  </div>
+						  구분
 						</div>
 					
 					</th>

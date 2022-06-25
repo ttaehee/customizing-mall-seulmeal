@@ -470,14 +470,14 @@ public class UserRestController {
 		return json;
 	}
 	
-	@GetMapping(value = { "api/listBlackList" })
-	public List<Relation> getUserList() throws Exception {
-
-		List<Relation> blackList = userService.getListBlackList();
-
-		
-
-		return blackList;
-	}
-
+	/*
+	 * @GetMapping(value = { "api/listBlackList" }) public List<Relation>
+	 * getUserList() throws Exception {
+	 * 
+	 * List<Relation> blackList = userService.getListBlackList();
+	 * 
+	 * 
+	 * 
+	 * return blackList; }
+	 */
 }

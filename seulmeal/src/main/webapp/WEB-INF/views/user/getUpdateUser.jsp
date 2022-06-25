@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<title>insertUser</title>
+<title>슬밀 내정보</title>
 </head>
 <style>  
 body { background: #fff; }
@@ -82,6 +82,10 @@ height:46px;
 background: #fff;
 height:44px;
 }
+.line{
+ border: solid 1px #212121;
+ margin: 20px  0px 20px 0px;
+}
 </style>
 
 <body>
@@ -90,7 +94,8 @@ height:44px;
 
 	<div id="wrap">
 		<div class="box">
-		<h2>내 정보</h2>
+		<h2 style="text-align: center;">내 정보</h2>
+		<div class="line"></div>
 		<form method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
 			
 			<div class="form-group row">
@@ -135,18 +140,18 @@ height:44px;
 			</div>
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">회원등급</label>
-				<div class="col-sm-10" data-toggle="modal" data-target="#exampleModalCenter" style="margin-top:10px;">
+				<!-- <div class="col-sm-10" data-toggle="modal" data-target="#exampleModalCenter" style="margin-top:10px;"> -->
+				<div class="col-sm-10" style="margin-top:10px;">
 				
 				
 					<!-- Button trigger modal -->
-					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grade">
 					 <c:choose>
 						<c:when test="${user.grade eq '0'}">슬밀프랜즈</c:when>
 						<c:when test="${user.grade eq '1'}">슬밀패밀리</c:when>
 						<c:when test="${user.grade eq '2'}">슬밀히어로</c:when>
 						<c:when test="${user.grade eq '3'}">슬밀마스터</c:when>
-					</c:choose>
-				
+					</c:choose>	
 					</button>
 					 
 				</div>
@@ -284,6 +289,7 @@ height:44px;
 				<div class="col-sm-10" style="text-align: right">
 					<button type="submit" class="btn-user" id="save" disabled="disabled">저장</button>
 					<button id="cancelBtn" type="button" class="btn-user" onclick="history.back()">취소</button>
+					<button id="cancelBtn" type="button" class="btn-user" onclick="location.href='/user/deleteUser'">탈퇴</button>
 				</div>
 			</div>
 
@@ -296,7 +302,7 @@ height:44px;
 	
 	
 	<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="grade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
