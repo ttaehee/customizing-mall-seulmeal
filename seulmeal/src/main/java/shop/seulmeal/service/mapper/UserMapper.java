@@ -5,12 +5,14 @@ package shop.seulmeal.service.mapper;
 import java.util.List;
 import java.util.Map;
 
+
+
 import org.apache.ibatis.annotations.Mapper;
 
 import shop.seulmeal.common.Search;
-import shop.seulmeal.service.domain.BlackList;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.User;
 
 @Mapper
@@ -32,6 +34,12 @@ public interface UserMapper {
 	
 	public List<User> getListUser(Search search) throws Exception;
 	
+	public List<Relation> getListBlackList() throws Exception;
+
+	public int getListBlackListTotalCount() throws Exception;
+	
+	public int getListUserTotalCount(Search search) throws Exception;
+	
 	public int checkDuplicationUserId(String userId) throws Exception;
 	
 	public int checkDuplicationNickName(String nickName) throws Exception;
@@ -39,8 +47,6 @@ public interface UserMapper {
 	public User checkDuplicationPhone(String phone) throws Exception;
 	
 	public User checkDuplicationEmail(String email) throws Exception;
-	
-	public int getListUserTotalCount(Search search) throws Exception;
 	
 	public int updateUserGrade() throws Exception;
 	

@@ -8,49 +8,55 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <title>insertUser</title>
 </head>
+<style>
+	 #wrap{
+    width:100%;
+    height:100%;
+}
+  
+#wrap .box{ 
+     width:500px; 
+     margin: 0 auto;
+  	text-align: center;
+}
+
+</style>
 <body>
 
 <jsp:include page="../layer/header.jsp"></jsp:include>
 
- <div class="container">
+ <div id="wrap">
+ 
 	
-		<div class="page-header">
-	       <h3 class=" text">회원탈퇴</h3>
+		<div class="box">
+	       <h3 style="text-align: center">회원탈퇴</h3>
 	      
-	    </div>
 	    
-	    <br/>
-		<form class="form-horizontal" method="post" action="/user/deleteUser" target="_self">
-		<div class="row">
-	  		<div class="col-xs-4 col-md-2"><strong>회원탈퇴 안내</strong></div>
-			<div class="col-xs-8 col-md-4">한번 가시면 다시 돌아올수 없으니까 잘생각하세여</div>
-		</div>
+	    <form>
+	    <div class="form-group row">
+				<label for="Email3" class="col-sm-6 control-label">회원탈퇴 안내</label>
+				<div class="col-sm-6">
+					정말 떠나실건가요?
+				</div>
+			</div>
+			 <div class="form-group row">
+				<label for="Email3" class="col-sm-6 control-label">비밀번호 확인</label>
+				<div class="col-sm-6">
+					<input type="password" class="input" id="confirmPassword" placeholder="">
+					<div id="passCheck" style="color:crimson;"></div>
+				</div>
+			</div>
+	    
+	  
 		
-		<hr/>
-		
-		<div class="row">
-	  		<div class="col-xs-4 col-md-2 "><strong>비밀번호 확인</strong></div>
-			<div class="col-xs-8 col-md-4"> <input type="password" class="form-control" id="password" name="password"></div>
-		</div>
-		
-		<hr/>
-		
-		
-		<div class="row">
-	  		<div class="col-xs-4 col-md-2 "><strong>보안문자</strong></div>
-			<div class="col-xs-8 col-md-4"> <input type="text" class="form-control" id="captcha" name="captcha"></div>
-		</div>
-		
-		<hr/>
-		
-		
-		<div class="form-group">
 	    <div class="col-sm-offset-2 col-sm-10">
 	      <button type="submit" class="btn btn-default">탈퇴</button>
 	      <button type="button" onclick="location.href='/'" class="btn btn-default">취소</button>
 	    </div>
+	  
+	  </form>
 	  </div>
-	</form>
+	</div>
 	
 		
  	</div>

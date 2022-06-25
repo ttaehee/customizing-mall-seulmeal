@@ -1,7 +1,9 @@
 package shop.seulmeal.web.user;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -19,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import shop.seulmeal.common.Page;
+import shop.seulmeal.common.Search;
 import shop.seulmeal.service.confirm.ConfirmService;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
 import shop.seulmeal.service.domain.Purchase;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.naver.impl.KakaoAPI;
 import shop.seulmeal.service.naver.impl.LoginService;
@@ -465,6 +470,14 @@ public class UserRestController {
 		return json;
 	}
 	
-	
-
+	/*
+	 * @GetMapping(value = { "api/listBlackList" }) public List<Relation>
+	 * getUserList() throws Exception {
+	 * 
+	 * List<Relation> blackList = userService.getListBlackList();
+	 * 
+	 * 
+	 * 
+	 * return blackList; }
+	 */
 }

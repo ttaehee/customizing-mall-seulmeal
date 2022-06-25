@@ -7,6 +7,7 @@ import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.BlackList;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.User;
 
 public interface UserService {
@@ -24,6 +25,8 @@ public interface UserService {
 	public int deleteUser(String userId) throws Exception;
 	
 	public Map<String, Object> getListUser(Search search) throws Exception;
+	
+	public List<Relation> getListBlackList() throws Exception;
 	
 	public int confirmUserId(String userId) throws Exception; 
 	

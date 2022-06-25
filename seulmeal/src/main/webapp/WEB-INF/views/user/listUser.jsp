@@ -47,7 +47,7 @@
 				<tr>
 					<th>아이디</th>
 					<th>이름</th>
-					<th><a id="blackList" style="color: #fff;" href="/user/listUser/0/1">블랙리스트</a></th>
+					<th>닉네임</th>
 					
 				</tr>
 			</thead>
@@ -56,14 +56,7 @@
 				<tr>
 					<th><a href="/user/getUser/${user.userId}" class="link-dark text-decoration-none">${user.userId}</a></th>
 					<th>${user.userName}</th>
-					<th>
-					<c:choose>
-						<c:when test="${user.blackListStatus eq '0'}"><div ></div></c:when>
-						<c:when test="${user.blackListStatus eq '1'}"><div >블랙리스트</div></c:when>
-					
-					</c:choose>
-					
-					</th>
+					<th>${user.nickName}</th>
 				</tr>
 				</c:forEach>
 			</tbody>
@@ -91,6 +84,63 @@
 		</div>
 	</div>	
 </div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="blackList()">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+
+	<div class="list"></div>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <jsp:include page="../layer/footer.jsp"></jsp:include>
+<script type="text/javascript">
+function blackList(){
+	
+	
+	$.ajax({
+		url: "/user/api/listBlackList",
+		method: "GET",
+		headers : {
+            "Accept" : "application/json",
+            "Content-Type" : "application/json"
+        },
+        dataType : "json",
+        success : function(data){
+        	console.log(data);
+        	
+        	
+        	}
+        }
+	})		
+}
+
+</script>
 </body>
 </html>
