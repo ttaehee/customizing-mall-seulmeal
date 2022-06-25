@@ -87,9 +87,9 @@ public class MainController {
 		search.setPageSize(pageSize);
 		search.setSearchCondition("0");
 		// 이벤트		
-		Map<String,Object> map = operationService.getListOperation(search, 2);		
+		Map<String,Object> map = operationService.getListOperation(search, 2);	
 		model.addAttribute("listE",(List<Post>)map.get("list"));
-				
+		
 		// 푸드 카테고리
 		model.addAttribute("list",(List<Post>)map.get("list"));		
 		session.setAttribute("fList",productService.getListFoodCategory());
@@ -117,7 +117,7 @@ public class MainController {
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 		
-		
+		map.put("month",0);
 		if(userC == null) {
 			// 이달의 최고판매 10개
 			map.put("option", "main");
@@ -154,6 +154,8 @@ public class MainController {
 		model.addAttribute("salePrice",operationService.salePrice());
 		
 		// table 부분
+		map.put("month",0);
+		
 		// user 일일 가입자수
 		map.put("table", "users");		
 		model.addAttribute("userDay",operationService.countAdminDay(map));

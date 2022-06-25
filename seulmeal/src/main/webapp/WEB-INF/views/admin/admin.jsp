@@ -103,7 +103,7 @@
 						<br/>		
 						
 						<!-- 월통계 -->
-						<h3 class="text-center">월 최고의 물건</h3>
+						<h3 class="text-center"><span class="month" style="color:#ff4500;"></span>월 최고의 물건</h3>
 						<table class="table table-hover text-center">
 							<thead style="background-color: #ff4500; color: #fff;">
 								<tr>
@@ -144,7 +144,7 @@
 						<div class="monthP" style="display: flex; justify-content: center;">	
 							<!-- 재료 월통계 -->
 							<div style="width: 45%; margin-right: 20px;">
-							<h3 class="text-center">월 재료 판매</h3>
+							<h3 class="text-center"><span class="month" style="color:#ff4500;"></span>월 재료 판매</h3>
 							<table class="table table-hover text-center">
 								<thead style="background-color: #ff4500; color: #fff;">
 									<tr>
@@ -167,7 +167,7 @@
 							</div>
 							<!-- 상품 월 통계 -->
 							<div style="width: 45%">				
-								<h3 class="text-center">월 상품 판매</h3>
+								<h3 class="text-center"><span class="month" style="color:#ff4500;"></span>월 상품 판매</h3>
 								<table class="table table-hover text-center">
 									<thead style="background-color: #ff4500; color: #fff;">
 										<tr>
@@ -196,7 +196,11 @@
 					
 					
 					<div style="width: 50%;">
-						<h3 class="text-center">월 통계</h3>
+						<h3 class="text-center">
+							<input class="btn minusBtn" type="button" value="&lt;&lt;" />
+							<span class="month" style="color:#ff4500;"></span>월 통계
+							<input class="btn plusBtn" type="button" value=">>" />
+						</h3>
 						
 						<table class="table table-hover text-center">
 							<thead style="background-color: #ff4500; color: #fff;">
@@ -258,8 +262,39 @@
 		}
 		
 	}
+	
+	function minusBtn(){
+		
+	}
 
-	$(()=>{
+	$(()=>{		
+		const now = new Date();	// 현재 날짜 및 시간
+		const month = (now.getMonth())+1;	// 월
+		$(".month").text(month);
+		
+		// 달통계
+		let dayStatistics = month; 
+		
+		// 전달 데이터
+		$(".minusBtn").on("click",function(){
+			console.log(123)
+			dayStatistics--;
+			
+			const differenceMonth = dayStatistics - month;
+			console.log("differenceMonth : "+differenceMonth)
+			$.ajax({
+				url : "/api/getDayStatistics/"+differenceMonth,
+				method : "GET",
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+		        success : function(data){
+		        	
+		        	console.log(data)
+		        	
+		        }
+			})
+		});
+		
 		// chart 클릭
 		// userChart
 		$("#userJoinBtn").on("click",function (){
