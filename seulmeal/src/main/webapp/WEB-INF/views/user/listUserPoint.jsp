@@ -10,24 +10,9 @@
 <style type="text/css">
 
 
-.btn btn-orang {
-  display: block !important;
-  position: relative !important;
-  float: left !important;
-  width: 150px !important;
-  padding: 0;
-  margin: 10px 20px 10px 0 !important;
-  font-weight: 600 !important;
-  color: #fff;
-  text-align: center !important;
-  line-height: 50px !important;
-  border-radius: 5px !important;
-  border: solid 2px #FF4500 !important;
-  transition: all 0.2s  !important;
-}
 .btnOrange {
   float: left ;
-  width: 150px ;
+  width: 130px ;
   padding: 0;
   margin: 10px 20px 10px 0;
   text-align: center ;
@@ -36,10 +21,8 @@
   border: solid 1px #FF4500 !important;
   
 }
-.btnFade.btnOrange:hover {
-  background: #FF4500;
-  color: #fff !important;
-}
+
+
 
 input{
     margin: 0px 10px 8px 10px;
@@ -65,9 +48,7 @@ input{
 		</div>
 			
 			<div class="col-md-2">
-			<!-- <button class="custom-btn btn-1" onclick="location.href='/user/chargeUserPoint'">포인트 충전</button>	 -->
-			 <!-- <a href="/user/chargeUserPoint" title="Button fade orange" class="button btnFade btnOrange" >포인트 충전</a> -->
-			 <button type="button" title="Button fade orange" class="btnOrange" data-toggle="modal" data-target="#staticBackdrop">
+			 <button type="button" class="btnOrange" data-toggle="modal" data-target="#staticBackdrop">
 			  포인트 충전
 			</button>
 			</div>

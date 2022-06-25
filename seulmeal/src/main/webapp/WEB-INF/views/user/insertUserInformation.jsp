@@ -11,36 +11,31 @@
 
 <title>insertUserInformation</title>
 <style type="text/css">
-.container{
-    text-align: center;
-     width:100%;
+
+#wrap{
+    width:100%;
     height:100%;
 }
-.form-horizontal{
- width:600px;
-    margin:0 auto;
+  
+#wrap .box{ 
+    width:800px;
+   margin: 0 auto;
+  
 }
-
-
-h1{
-border-bottom: 1px solid gainsboro;
-}
-
 .under-login{
 	width:450px;
    /* height: 50px; */
    /*  border-bottom: 1px solid gainsboro; */
-    margin: 0px 0px 10px 0px;
-    text-align: right;
+    margin: 0px 0px 0px 0px;
 }
-.card-body{
+/* .card-body{
 width:300px;
  margin: 0px 0px 0px 160px;
-    text-align: right;
+   /*  text-align: right; */
 }
-
+ */
 .category{
-margin: 40px 0px 0px 0px;
+margin: 0px 0px 0px 0px;
 }
 
 .col-sm-offset-2{
@@ -48,15 +43,37 @@ text-align: right;
 }
 
 .hateParts{
-margin: 0px 0px 50px 160px;
+margin: 0px 0px 0px 0px;
 }
 
-.card-title{
-
-}
 
 .form-group{
-margin: 40px 0px 0px 0px;
+margin: 0px 0px 0px 0px;
+}
+
+.line{
+ border: solid 1px #212121;
+ margin: 20px  0px 20px 0px;
+} 
+
+.input{
+	/*  margin: 0px 10px 8px 10px; */
+    padding: 10px;
+    border: solid 1px #dadada;
+    background: #fff;
+    width: 500px;
+	}
+	
+.input-file	{
+ padding: 5px;
+    border: solid 1px #dadada;
+    background: #fff;
+}
+.btn-user{
+border: solid 1px #ff4500;
+background: #fff;
+height:40px;
+width: 90px;
 }
 </style>
 </head>
@@ -271,17 +288,40 @@ function fncGetParts(){
 });
 
 
-document.insertCustom.addEventListener("keydown", evt => {
+/* document.insertCustom.addEventListener("keydown", evt => {
 	  if (evt.code === "Enter") 
 	  evt.preventDefault();
 	});
-
+ */
+ 
+ $("#hates").on('keyup', function(e){
+     if(e.key==='Enter'||e.keyCode===13){
+    	 search();
+  	   
+     }
+ })
 
 function fncClose(ths){
 	 $(ths).closest("div").parent().remove();
 	
 }
 
+//카테고리 체크
+	function count_check(obj){
+	var chkBox = document.getElementsByName("foodcategory");
+	var chkCnt = 0;
+	
+	for(var i = 0; i<chkBox.length; i++){
+		if(chkBox[i].checked){
+			chkCnt++;
+		}
+	}
+	if(chkCnt > 3){
+		alert("3개까지 체크할 수 있습니다.");
+		obj.checked = false;
+		return false;
+	}
+}
 	
 </script>
 <body>
@@ -290,104 +330,98 @@ function fncClose(ths){
  <br/>
  <br/>
 
-	<div class="container">
+	<div id="wrap">
+<div class="box">
 
-		<form class="form-horizontal" method="post" action="/user/insertUserInformation"  enctype="multipart/form-data">
-			<h2>추가 정보</h2>
-			<br/>
+<form class="form-horizontal" method="post" action="/user/insertUserInformation"  enctype="multipart/form-data">
+			<h2 style="text-align: center;">추가 정보</h2>
+			<div class="line"></div>
 
-			<div>
-				<img src="/resources/attachments/profile_image/default_profile.jpg" id="img_section" style="width: 300px; height: 300px;"> <br /> <br />
-				<div class="under-login" id="find-signup-wrap-ko">
-					<input type="text" id="file_route" disabled="disabled" value="파일 선택">
-					<label for="upload_file" style="border: solid 1px black;">업로드</label>
-					<input type="file" id="upload_file" name="imageFile" accept="image/*" style="position: absolute; clip: rect(0, 0, 0, 0);">
+<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">프로필 이미지</label>
+				<div class="col-sm-3">
+					<img src="/resources/attachments/profile_image/${user.profileImage }" id="img_section" style="width: 200px; height: 200px;">
+				
+				</div>
+				<br/><br/>
+				<div class="col-sm-7" style="margin-top: 164px;">
+				<div class="under-login" id="find-signup-wrap-ko" >
+					<input type='hidden'  name='profileImage' value='${user.profileImage }' />
+					<input type="text" id="file_route" class="input-file" disabled="disabled" value="이미지 선택"><!-- accept="image/*" -->
+					<label for="upload_file" style="border: solid 1px #ff4500;padding: 5px;">확인</label>
+					<input type="file" id="upload_file" name="imageFile" style="position: absolute; clip: rect(0, 0, 0, 0);">
 				 <script>
-        const reader = new FileReader();
-
-        reader.onload = (readerEvent) => {
-            document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
-        };
-
-        document.querySelector("#upload_file").addEventListener("change", (changeEvent) => {
-
-            const imgFile = changeEvent.target.files[0];
-            reader.readAsDataURL(imgFile);
-        })
-    </script>
+			        const reader = new FileReader();
+			
+			        reader.onload = (readerEvent) => {
+			            document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
+			        };
+			
+			        document.querySelector("#upload_file").addEventListener("change", (changeEvent) => {
+			
+			            const imgFile = changeEvent.target.files[0];
+			            reader.readAsDataURL(imgFile);
+			        })
+			    </script>
+				</div>
 				</div>
 			</div>
 			
-			<div class="form-group">
-				<h4>상태메세지</h4>
-				<div class="">
-					<input type="text" class="form-control" id="profilemessage" name="profilemessage" placeholder="내용을 입력해 주세요">
+			
+			<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">상태메세지</label>
+				<div class="col-sm-10">
+					<input type="text" class="input" id="profilemessage" name="profilemessage" value="${user.profileMessage }" placeholder="">
 				</div>
 			</div>
 			
-			<div class="category">
-			<h4>좋아하는 음식 카테고리</h4>
-			<div class="btn-group" data-toggle="buttons">
-			
-				<c:forEach var="foodcategory" items="${foodcategoryList}">
+			<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">음식 카테고리</label>
+				<div class="col-sm-10">
+					<c:forEach var="foodcategory" items="${foodcategoryList}">
 					<label class="btn btn-primary active">
-						<input type="checkbox" name="foodcategory" value="${foodcategory.name }"> ${foodcategory.name }
+						<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);"> ${foodcategory.name }
 					</label> 
 					
 					
 				</c:forEach>
+				<div style="color:gray;">카테고리는 3개 이하 선택해 주세요.</div>
+				</div>
 			</div>
-			</div>
-		<!-- 	<div>
-			<h4>비선호 재료</h4>
-			<div>
-				<input class="search" />
-				<div class="partSearch">검색</div>
-				<div class="parts"></div>
-			</div>
-			</div> -->
-			
-				
-				<h4 class="card-title">비선호 재료</h4>
-				  
-				  
-						<div class="container"> 
+					
+			<div class="form-group row">
+				<label for="Email3" class="col-sm-2 control-label">비선호 식재료</label>
+				<div class="col-sm-10">
+					<div class="con"> 
 								<div class="hateParts"  style="display:flex;">	
-									<div class="form-outline">
-										<input name="searchKeyword" type="search" class="form-control search" value="" />
+									<div class="">
+										<input name="searchKeyword" type="search" class="input search" id="hates" value="" placeholder="예) 양파" />
 									</div>		  
-									<button type="button" class="btn btn-primary partSearch" onclick="search()">
+									<button type="button" class="btn btn-primary partSearch"  onclick="search()">
 										<i class="bi bi-search"></i>
 									</button>
 								</div>
 						</div>
-						<div class="container">
+						<div class="con">
 							<div class="plusparts"></div>
 						</div>
-			
-			
-				    
-					
+				</div>
+			</div>
 				
-			  
-			
-
-			<!-- <div class="form-group">
-				<label for="exampleInputFile"></label>
-				<input type="file" id="imageFile" name="imageFile" multiple="multiple">
-				<p class="help-block">프로필 이미지를 선택해주세요</p>
-			</div> -->
-			
-
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default">저장</button>
-					<button type="button" class="btn btn-default">건너뛰기</button>
+					<button type="submit" class="btn-user">저장</button>
+					<button type="button" class="btn-user"  onclick = "location.href = 'http://www.seulmeal.shop'">건너뛰기</button>
 				</div>
 			</div>
 
 		</form>
-	</div>
+
+</div>
+</div>
+
+		
+
 
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
 </body>

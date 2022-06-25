@@ -258,7 +258,7 @@ input{
 					<input id="input-id" name="userId" placeholder="아이디" type="text"></input>
 				</div>
 				<div class="login-pw-wrap">
-					<input class="phone" id="email" name="phone" placeholder="핸드폰 숫자만 입력" type="text"></input>
+					<input class="phone" id="email" name="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="숫자만 입력해주세요" type="text"></input>
 					<input class="email" id="email" name="email" placeholder="이메일" type="text" style="display: none;"></input>
 				</div>
 				<div class="login-pw-wrap" id="emailCheckForm" style="display: none;">
