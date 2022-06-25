@@ -255,8 +255,7 @@ public class UserController {
 			user.setProfileMessage(profilemessage);
 		}
 		
-		
-		
+	
 		userService.updateUser(user);
 		
 		if(partsName!=null) {
@@ -383,16 +382,29 @@ public class UserController {
 	public String resetUserPassword() throws Exception {
 		
 		
-		return "user/resetUserPassword";
+		return "user/resetUserPassword2";
 	}
 	
 	
 	
+	/*
+	 * @PostMapping("resetUserPassword") public String resetUserPassword( String
+	 * password, HttpSession session) throws Exception {
+	 * 
+	 * String userId = (String)session.getAttribute("userId");
+	 * 
+	 * User user = new User(); user.setUserId(userId); user.setPassword(password);
+	 * 
+	 * userService.updatePassword(user);
+	 * 
+	 * return "redirect:/"; }
+	 */
+	
 	
 	@PostMapping("resetUserPassword")
-	public String resetUserPassword( String password, HttpSession session) throws Exception {
+	public String resetUserPassword( String password, String userId, HttpSession session) throws Exception {
 		
-		String userId = (String)session.getAttribute("userId");
+		/* String userId = (String)session.getAttribute("userId"); */
 		
 		User user = new User();
 		user.setUserId(userId);

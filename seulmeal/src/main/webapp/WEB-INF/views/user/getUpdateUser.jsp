@@ -59,21 +59,43 @@ body { background: #fff; }
     background: #fff;
     width: 500px;
 	}
-
+.col-sm-2{
+margin-top: 15px;
+}
+.input-file	{
+ padding: 5px;
+    border: solid 1px #dadada;
+    background: #fff;
+}
+.btn-user{
+border: solid 1px #ff4500;
+background: #fff;
+height:40px;
+width: 90px;
+}
+.btn-user:disabled{
+border: solid 1px #dadada;
+}
+.btn-post{
+border: solid 1px #ff4500;
+height:46px;
+background: #fff;
+height:44px;
+}
 </style>
 
 <body>
 
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
-	<div class="container">
-		<div>
+	<div id="wrap">
+		<div class="box">
 		<h2>내 정보</h2>
 		<form method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
 			
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 col-form-label">아이디</label>
-				<div class="col-sm-10">
+				<div class="col-sm-10" style="margin-top:15px;">
 				 <input type='hidden'  name='userId' value='${user.userId }' />
 				${user.userId }
 				</div>
@@ -81,39 +103,39 @@ body { background: #fff; }
 			<div class="form-group row">
 				<label for="Password3" class="col-sm-2 control-label">비밀번호</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" id="password" name="password" placeholder="">
+					<input type="password" class="input" id="password" name="password" placeholder="">
 					 <div id="checkPassword"></div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="Password3" class="col-sm-2 control-label">새 비밀번호</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="">
+					<input type="password" class="input" id="newPassword" name="newPassword" placeholder="">
 					<div id="passResult" style="color:crimson;"></div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="Password3" class="col-sm-2 control-label">비밀번호 확인</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" id="confirmPassword" placeholder="">
+					<input type="password" class="input" id="confirmPassword" placeholder="">
 					<div id="passCheck" style="color:crimson;"></div>
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">이름</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="userName" name="userName" value="${user.userName }" placeholder="">
+					<input type="text" class="input" id="userName" name="userName" value="${user.userName }" placeholder="">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">닉네임</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="nickName" name="nickName" value="${user.nickName }" placeholder="">
+					<input type="text" class="input" id="nickName" name="nickName" value="${user.nickName }" placeholder="">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">회원등급</label>
-				<div class="col-sm-10" data-toggle="modal" data-target="#exampleModalCenter">
+				<div class="col-sm-10" data-toggle="modal" data-target="#exampleModalCenter" style="margin-top:10px;">
 				
 				
 					<!-- Button trigger modal -->
@@ -132,13 +154,13 @@ body { background: #fff; }
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">이메일</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="email" name="email" value="${user.email }" placeholder="">
+					<input type="text" class="input" id="email" name="email" value="${user.email }" placeholder="">
 				</div>
 			</div>
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">휴대폰</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="phone" name="phone" value="${user.phone }" placeholder="">
+					<input type="text" class="input" id="phone" name="phone" value="${user.phone }" placeholder="">
 				</div>
 			</div>
 		   <div class="form-group row">
@@ -146,13 +168,13 @@ body { background: #fff; }
 		    <div class="col-sm-10">
 		    	<!-- 주소 -->
 		    	<div style="display: flex; justify-content: space-between;">
-		    	<input type="text" class="form-control" id="sample3_postcode" name="address"  placeholder="우편번호" value="${user.address.split(',')[0] }" style="width: 100%;" readonly>
-				<input class="btn btn-default" id="findAddress" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
+		    	<input type="text" class="input" id="sample3_postcode" name="address"  placeholder="우편번호" value="${user.address.split(',')[0] }" style="margin-bottom: 5px;" readonly>
+				<input class="btn-post" id="findAddress" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
 				</div>
-				<input type="text" class="form-control" id="sample3_address" name="address" value="${user.address.split(',')[1]} ${user.address.split(',')[2]}"  placeholder="주소" ><br>
-				<input type="text" class="form-control" id="address" name="address" style="display: none;" placeholder="상세주소">
+				<input type="text" class="input" id="sample3_address" name="address" value="${user.address.split(',')[1]} ${user.address.split(',')[2]}" style="margin-bottom: 5px;"  placeholder="주소" ><br>
+				<input type="text" class="input" id="address" name="address" style="display: none;" placeholder="상세주소">
 				
-				<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
+				<div id="addressWrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
 					<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
 				</div>
 				
@@ -176,8 +198,8 @@ body { background: #fff; }
 				<div class="col-sm-7" style="margin-top: 160px;">
 				<div class="under-login" id="find-signup-wrap-ko" >
 					<input type='hidden'  name='profileImage' value='${user.profileImage }' />
-					<input type="text" id="file_route" disabled="disabled" value="이미지 선택"><!-- accept="image/*" -->
-					<label for="upload_file" style="border: solid 1px black;">확인</label>
+					<input type="text" id="file_route" class="input-file" disabled="disabled" value="이미지 선택"><!-- accept="image/*" -->
+					<label for="upload_file" style="border: solid 1px #ff4500;padding: 5px;">확인</label>
 					<input type="file" id="upload_file" name="imageFile" style="position: absolute; clip: rect(0, 0, 0, 0);">
 				 <script>
 			        const reader = new FileReader();
@@ -200,7 +222,7 @@ body { background: #fff; }
 			<div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">상태메세지</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="profilemessage" name="profilemessage" value="${user.profileMessage }" placeholder="">
+					<input type="text" class="input" id="profilemessage" name="profilemessage" value="${user.profileMessage }" placeholder="">
 				</div>
 			</div>
 			
@@ -257,10 +279,11 @@ body { background: #fff; }
 			</div>
 				
 			
-			<div class="form-group">
-				<div class="col-sm-offset-8 col-sm-10">
-					<button type="submit" class="btn btn-default" id="save" disabled="disabled">저장</button>
-					<button id="cancelBtn" type="button" class="btn btn-default" onclick="history.back()">취소</button>
+			<div class="form-group row">
+			
+				<div class="col-sm-10" style="text-align: right">
+					<button type="submit" class="btn-user" id="save" disabled="disabled">저장</button>
+					<button id="cancelBtn" type="button" class="btn-user" onclick="history.back()">취소</button>
 				</div>
 			</div>
 

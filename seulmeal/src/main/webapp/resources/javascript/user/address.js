@@ -1,5 +1,5 @@
 // 우편번호 찾기 찾기 화면을 넣을 element
-var element_wrap = document.getElementById('adderssWrap');
+var element_wrap = document.getElementById('addressWrap');
 
 function foldDaumPostcode() {
     // iframe을 넣은 element를 안보이게 한다.
