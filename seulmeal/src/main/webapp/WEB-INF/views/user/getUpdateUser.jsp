@@ -209,7 +209,27 @@ body { background: #fff; }
 				<div class="col-sm-10">
 					<c:forEach var="foodcategory" items="${foodcategoryList}">
 					<label class="btn btn-primary active">
-						<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);"> ${foodcategory.name }
+						<!-- 선택 안했을 경우 -->
+						<c:if test="${user.foodCategoryName1 == null}">
+							<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);"> ${foodcategory.name }
+						</c:if>
+						
+						<!-- 체크한 박스 -->
+						<c:if test="${user.foodCategoryName1 != null}">
+							<c:choose>							
+								<c:when test="${user.foodCategoryName1 == foodcategory.name}">
+									<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);" checked> ${foodcategory.name }
+								</c:when>
+								<c:when test="${user.foodCategoryName2 == foodcategory.name}">
+									<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);" checked> ${foodcategory.name }
+								</c:when>
+								<c:when test="${user.foodCategoryName3 == foodcategory.name}">
+									<input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);" checked> ${foodcategory.name }
+								</c:when>							
+								
+								<c:otherwise><input type="checkbox" name="foodcategory" value="${foodcategory.name }" onclick="count_check(this);"> ${foodcategory.name }</c:otherwise>
+							</c:choose>
+						</c:if>
 					</label> 
 					
 					
