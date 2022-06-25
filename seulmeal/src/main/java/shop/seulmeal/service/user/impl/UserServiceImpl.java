@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import shop.seulmeal.common.Search;
 import shop.seulmeal.service.domain.Parts;
 import shop.seulmeal.service.domain.Point;
+import shop.seulmeal.service.domain.Relation;
 import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.mapper.UserMapper;
 import shop.seulmeal.service.user.UserService;
@@ -70,6 +71,14 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		map.put("totalCount", totalCount);
 		
 		return map;
+	}
+	
+	@Override
+	public List<Relation> getListBlackList() throws Exception {
+		
+		List<Relation> list=userMapper.getListBlackList();
+
+		return list;
 	}
 
 	@Override
@@ -243,6 +252,9 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 		// TODO Auto-generated method stub
 		return userMapper.deletePoint(purchaseNo);
 	}
+
+
+	
 
 	
 

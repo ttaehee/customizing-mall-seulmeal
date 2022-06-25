@@ -97,7 +97,7 @@
 		<select id= "getListUser" resultMap="userSelectMap" parameterType="shop.seulmeal.common.Search">
 			SELECT *
 		  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
-		  					FROM		(	SELECT user_id , user_name, blacklist_status
+		  					FROM		(	SELECT user_id , user_name, nickname
 												FROM users 
 												<if test="searchCondition != null">
 													<where>
@@ -113,6 +113,36 @@
 							WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 		</select>
+		
+		<!-- <select id= "getListBlackList" resultMap="blickListSelectMap" parameterType="shop.seulmeal.common.Search">
+		SELECT *
+		  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+		  					FROM		(	SELECT user_id , reg_date
+												FROM relation 
+													<where>	
+													relation_status='2'	
+													</where>
+												ORDER BY  reg_date DESC) inner_table
+							WHERE ROWNUM &lt;= #{endRowNum} )
+			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+		
+		</select> -->
+		<select id= "getListBlackList" resultType="list" >
+		SELECT user_id , reg_date FROM relation where relation_status='2' ORDER BY  reg_date DESC
+		
+		</select>
+		
+		<select id="getListBlackListTotalCount" resultType="int" >
+		SELECT COUNT(*)
+			FROM( SELECT user_id , reg_date
+				FROM relation 
+						<where>
+							relation_status='2'	
+						</where>
+				) countTable
+		</select>
+		
+		
 		
 		
 		<select id="checkDuplicationUserId" resultType="int">
