@@ -167,7 +167,11 @@
 							</div>
 							<!-- 상품 월 통계 -->
 							<div style="width: 45%">				
-								<h3 class="text-center"><span class="month" style="color:#ff4500;"></span>월 상품 판매</h3>
+								<h3 class="text-center">
+									<input class="btn minusBtnMonth" type="button" value="&lt;&lt;" />
+									<span class="month" style="color:#ff4500;"></span>월 상품 판매
+									<input class="btn plusBtnMonth" type="button" value=">>" />
+								</h3>								
 								<table class="table table-hover text-center">
 									<thead style="background-color: #ff4500; color: #fff;">
 										<tr>
@@ -202,7 +206,7 @@
 							<input class="btn plusBtn" type="button" value=">>" />
 						</h3>
 						
-						<table class="table table-hover text-center">
+						<table class="table table-hover text-center dayStatis">
 							<thead style="background-color: #ff4500; color: #fff;">
 								<tr>
 									<th>일자</th>
@@ -263,36 +267,122 @@
 		
 	}
 	
-	function minusBtn(){
-		
+	// 매달 통계 ajax	
+	function monthStatistics(differenceMonth){
+		$.ajax({
+			url : "/api/getDayStatistics/"+differenceMonth,
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	const userDay = data.userDay;
+	        	const purchaseDay = data.purchaseDay;
+	        	const purchasePriceDay = data.purchasePriceDay;
+	        	const reviewDay = data.reviewDay;
+	        	const queryDay = data.queryDay;
+	        	const communityDay = data.communityDay;
+	        			        	
+	        	let statisticsCard = `
+	        	<thead style="background-color: #ff4500; color: #fff;">
+					<tr>
+						<th>일자</th>
+						<th>가입자수</th>
+						<th>구매횟수</th>
+						<th>판매액</th>
+						<th>리뷰횟수</th>
+						<th>문의횟수</th>
+						<th>게시글횟수</th>
+					</tr>
+				</thead>				
+				<tbody>`
+				
+				for(let i=0; i<userDay.length; i++){
+					statisticsCard += `
+						<tr>
+							<th>\${userDay[i].REGDATE}</th>
+							<th>\${userDay[i].UCNT}</th>
+							<th>\${purchaseDay[i].UCNT}</th>
+							<th>\${purchasePriceDay[i].UCNT}</th>
+							<th>\${reviewDay[i].UCNT}</th>
+							<th>\${queryDay[i].UCNT}</th>
+							<th>\${communityDay[i].UCNT}</th>
+						</tr>`
+				}
+					
+				statisticsCard +=`</tbody>`
+	        	
+				$(".dayStatis").empty();
+				$(".dayStatis").append(statisticsCard);					
+				
+	        }
+		})
 	}
 
 	$(()=>{		
 		const now = new Date();	// 현재 날짜 및 시간
 		const month = (now.getMonth())+1;	// 월
+		
+		function donClick(mo,dayStatistics){
+			console.log(dayStatistics)
+			if(dayStatistics<0){
+				return false;
+			}
+			if(mo === 12){
+				return false;
+			}
+			if(month >= mo){
+				return false;
+			}
+			return true
+		}
+		
+		function monthCycle(month){
+			if(month === 0){
+				return 12;
+			}
+			if(month === 13){
+				return 1;
+			}
+			return month;
+		}
+		
 		$(".month").text(month);
 		
 		// 달통계
-		let dayStatistics = month; 
+		let dayStatistics = month;
 		
-		// 전달 데이터
-		$(".minusBtn").on("click",function(){
-			console.log(123)
-			dayStatistics--;
+		// 월 상품판매
+		$(".minusBtnMonth").on("click",function(){
 			
-			const differenceMonth = dayStatistics - month;
-			console.log("differenceMonth : "+differenceMonth)
-			$.ajax({
-				url : "/api/getDayStatistics/"+differenceMonth,
-				method : "GET",
-				dataType : "json",
-				contentType : "application/json; charset=utf-8",
-		        success : function(data){
-		        	
-		        	console.log(data)
-		        	
-		        }
-			})
+		})
+		
+		// 월 상품판매
+		$(".plusBtnMonth").on("click",function(){
+			
+		})
+		
+		// 달통계 전달 데이터
+		$(".minusBtn").on("click",function(){
+			const mo =parseInt($(this).next(".month").text())-1;			
+			const trueMo = monthCycle(mo);
+			dayStatistics--;
+			console.log(dayStatistics)
+			$(this).next(".month").text(trueMo);			
+			const differenceMonth = dayStatistics - month;			
+			monthStatistics(differenceMonth)
+		});
+		
+		// 달통계 전달 데이터
+		$(".plusBtn").on("click",function(){
+			const mo = parseInt($(this).prev(".month").text())+1;			
+			const trueMo = monthCycle(mo);
+			dayStatistics++;			
+			if(donClick(trueMo,dayStatistics)){
+				return;
+			};			
+			$(this).prev(".month").text(trueMo);			
+			const differenceMonth = dayStatistics - month;			
+			monthStatistics(differenceMonth)
 		});
 		
 		// chart 클릭

@@ -462,7 +462,7 @@
 		</if>
 		GROUP BY reg_date) u,
 		
-		(SELECT TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') + LEVEL - 1 AS dt
+		(SELECT TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD') + LEVEL - 1 AS dt
 		FROM dual
 		CONNECT BY LEVEL &lt;= (TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,#{month}))) as rast from dual),'YY-MM-DD')
 		                - TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD')+1)) b
