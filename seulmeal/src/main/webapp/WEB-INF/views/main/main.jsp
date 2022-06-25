@@ -134,7 +134,7 @@
     	</c:if>
     	
     </div>
-    
+    ${user }
     <div class="mainProduct">
 	<c:forEach var="product" items="${monthSaleProduct}">
 			<div class="col">

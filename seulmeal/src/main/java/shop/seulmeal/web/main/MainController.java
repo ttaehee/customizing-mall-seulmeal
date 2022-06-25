@@ -136,10 +136,6 @@ public class MainController {
 				map.put("user", userC);
 				List<Map<String,Object>> list2 = operationService.selectUserProduct(map);
 				
-				for (Map<String, Object> map2 : list2) {
-					System.out.println("내가 좋아하는 상품 : "+map2);
-				}
-				
 				model.addAttribute("monthSaleProduct",list2);
 			}
 		}

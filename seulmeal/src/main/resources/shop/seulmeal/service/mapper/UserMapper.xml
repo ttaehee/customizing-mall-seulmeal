@@ -6,9 +6,35 @@
 	<mapper namespace="shop.seulmeal.service.mapper.UserMapper">
 	 
 	 <resultMap id="userSelectMap" type="shop.seulmeal.service.domain.User">
-		<result property="userId" 		column="user_id"    jdbcType="VARCHAR"/>
-		<result property="userName" 		column="user_name"  jdbcType="VARCHAR"/> 
-		<result property="blackListStatus" 		column="blacklist_status"   jdbcType="CHAR"/>
+		<id property="userId" 		column="user_id"    jdbcType="VARCHAR"/>
+		<result property="userName" 		column="user_name"  jdbcType="VARCHAR"/>
+		<result property="password" 		column="password"  jdbcType="VARCHAR"/>
+		<result property="birth" 		column="birth"  jdbcType="DATE"/>
+		<result property="address" 		column="address"  jdbcType="DATE"/>
+		<result property="phone" 		column="phone"  jdbcType="VARCHAR"/>
+		<result property="email" 		column="email"  jdbcType="VARCHAR"/>
+		<result property="grade" 		column="grade"  jdbcType="VARCHAR"/>
+		<result property="regDate" 		column="reg_date"  jdbcType="DATE"/>
+		<result property="loginDate" 		column="login_date"  jdbcType="DATE"/>
+		<result property="blockCount" 		column="block_count"  jdbcType="NUMERIC"/>
+		<result property="nickName" 		column="nickName"  jdbcType="VARCHAR"/>
+		<result property="profileImage" 		column="profile_image"  jdbcType="VARCHAR"/>
+		<result property="profileMessage" 		column="profile_message"  jdbcType="VARCHAR"/>
+		<result property="role" 		column="role"  jdbcType="VARCHAR"/>
+		<result property="userStatus" 		column="user_status"  jdbcType="VARCHAR"/>
+		<result property="totalCount" 		column="total_count"  jdbcType="NUMERIC"/>
+		<result property="confirmStatus" 		column="confirm_status"  jdbcType="VARCHAR"/>
+		<result property="blackLsitCount" 		column="blackLsit_count"  jdbcType="NUMERIC"/>
+		<result property="purchaseCount" 		column="purchase_count"  jdbcType="NUMERIC"/>
+		<result property="blackListStatus" 		column="blackList_status"  jdbcType="VARCHAR"/>
+		<result property="foodCategoryName1" 		column="foodCategory_name1"   jdbcType="CHAR"/>
+		<result property="foodCategoryName2" 		column="foodCategory_name2"   jdbcType="CHAR"/>
+		<result property="foodCategoryName3" 		column="foodCategory_name3"   jdbcType="CHAR"/>
+		<result property="totalPoint" 		column="total_point"   jdbcType="NUMERIC"/>
+		<collection property="parts" ofType="parts">
+			<result property="partsNo" column="parts_no" jdbcType="NUMERIC"/>
+			<result property="name" column="name" jdbcType="VARCHAR"/>
+		</collection>
 	</resultMap>
 	 
 		<insert id="insertUser">
@@ -31,8 +57,13 @@
 				) A	
 		</insert>
 		
-		<select id="getUser" resultType="shop.seulmeal.service.domain.User">
-	        	SELECT * FROM users WHERE user_id = #{userId:VARCHAR}
+		<select id="getUser" resultType="shop.seulmeal.service.domain.User" resultMap="userSelectMap">
+	        	SELECT u.*, hp.*, p.name FROM users u, hates_parts hp, parts p
+	        	<where>	        	
+	        	u.user_id = #{userId:VARCHAR}
+	        	AND u.user_id = hp.user_id(+)
+	        	AND hp.parts_no = p.parts_no(+)
+	        	</where>
 	    </select>
 	    
 	    <select id="getUserHatesParts" resultType="shop.seulmeal.service.domain.Parts">

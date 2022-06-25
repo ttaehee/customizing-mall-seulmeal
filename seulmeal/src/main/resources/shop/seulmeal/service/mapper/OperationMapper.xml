@@ -381,9 +381,9 @@
 	<!-- main -->
 	<select id="selectUserProduct" resultType="map">
 		SELECT THUMBNAIL, product_no , p.name, price, calorie, sub_content, p.origin_price, p.like_count, p.review_count, p.stock, p.status
-		FROM product p, foodcategory f
+		FROM product p, foodcategory f, productparts pp
 		<where>
-			p.foodcategory_no = f.foodcategory_no
+			p.foodcategory_no = f.foodcategory_no AND p.product_no = pp.product_no
 			AND p.status = '0'
 			<if test="user.foodCategoryName1 != null">
 				AND (f.name = #{user.foodCategoryName1}
@@ -396,6 +396,11 @@
 			</if>
 			<if test="user.foodCategoryName1 !=null">
 				)
+			</if>
+			<if test="user.parts.size() !=0">
+				<foreach collection="user.parts" item="parts">
+				
+				</foreach>
 			</if>
 		</where>
 		ORDER BY p.name DESC
@@ -482,15 +487,7 @@
 		</if>
 		FROM 
 		<!-- TABLE -->
-		<if test="table =='post'">
-			${table}
-		</if>
-		<if test=" table == 'post p,comments c'">
-			${table}
-		</if>
-		<if test="table == 'product p, purchase pp, customproduct c'">
-			${table}
-		</if>
+		${table}
 		<where>
 			<if test="table =='post'">
 				(reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
