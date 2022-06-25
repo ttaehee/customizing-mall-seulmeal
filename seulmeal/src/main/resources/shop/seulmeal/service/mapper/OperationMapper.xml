@@ -380,10 +380,10 @@
 	
 	<!-- main -->
 	<select id="selectUserProduct" resultType="map">
-		SELECT THUMBNAIL, product_no , p.name, price, calorie, sub_content, p.origin_price, p.like_count, p.review_count, p.stock, p.status
+		SELECT DISTINCT THUMBNAIL, p.product_no , p.name, p.price, p.calorie, sub_content, p.origin_price, p.like_count, p.review_count, p.stock, p.status
 		FROM product p, foodcategory f, productparts pp
 		<where>
-			p.foodcategory_no = f.foodcategory_no AND p.product_no = pp.product_no
+			p.foodcategory_no = f.foodcategory_no(+) AND p.product_no = pp.product_no(+)
 			AND p.status = '0'
 			<if test="user.foodCategoryName1 != null">
 				AND (f.name = #{user.foodCategoryName1}
@@ -398,8 +398,8 @@
 				)
 			</if>
 			<if test="user.parts.size() !=0">
-				<foreach collection="user.parts" item="parts">
-				
+				<foreach collection="user.parts" item="parts" open="AND (" separator=" AND " close=")">
+					pp.parts_no != #{parts.partsNo}
 				</foreach>
 			</if>
 		</where>
@@ -450,7 +450,7 @@
 			</otherwise>
 		</choose>		
 		FROM ${table}
-		WHERE (reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+		WHERE (reg_date BETWEEN TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,#{month}))) as rast from dual),'YY-MM-DD'))
 		<if test="table == 'purchase'">
 			AND purchase_status = 1
 		</if>
@@ -464,8 +464,8 @@
 		
 		(SELECT TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') + LEVEL - 1 AS dt
 		FROM dual
-		CONNECT BY LEVEL &lt;= (TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD')
-		                - TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD')+1)) b
+		CONNECT BY LEVEL &lt;= (TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,#{month}))) as rast from dual),'YY-MM-DD')
+		                - TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD')+1)) b
 		WHERE b.dt = u.regDate(+)
 		GROUP BY b.dt
 		ORDER BY b.dt
@@ -490,13 +490,13 @@
 		${table}
 		<where>
 			<if test="table =='post'">
-				(reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+				(reg_date BETWEEN TO_DATE((SELECT TRUNC( ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC( ADD_MONTHS(SYSDATE,#{month}) )) as rast from dual),'YY-MM-DD'))
 			</if>
 			<if test=" table == 'post p,comments c'">
-				(p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD')) AND p.post_no=c.post_no AND c.status=0
+				(p.reg_date BETWEEN TO_DATE((SELECT TRUNC( ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC( ADD_MONTHS(SYSDATE,#{month}) )) as rast from dual),'YY-MM-DD')) AND p.post_no=c.post_no AND c.status=0
 			</if>
 			<if test="table == 'product p, purchase pp, customproduct c'">
-				(p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+				(p.reg_date BETWEEN TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,${month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,${month}))) as rast from dual),'YY-MM-DD'))
 				AND p.product_no = c.product_no(+) AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
 			</if>
 		</where>
@@ -525,7 +525,7 @@
 		SELECT * FROM(
 		SELECT p.parts_no,p.name, COUNT(*) count
 		FROM parts p, purchase pp, customproduct c, customparts cp
-		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,#{month}))) as rast from dual),'YY-MM-DD'))
 		AND p.parts_no = cp.parts_no(+) AND cp.customproduct_no = c.customproduct_no(+)  AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
 		GROUP BY p.parts_no,p.name
 		ORDER BY COUNT(*) desc
@@ -539,7 +539,7 @@
 			,p.thumbnail, p.price, p.calorie, p.sub_content, p.origin_price, p.like_count, p.review_count
 		</if>
 		FROM product p, purchase pp, customproduct c
-		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(SYSDATE, 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(SYSDATE)) as rast from dual),'YY-MM-DD'))
+		WHERE (p.reg_date BETWEEN TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,#{month}))) as rast from dual),'YY-MM-DD'))
 		AND p.product_no = c.product_no(+) AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
 		<if test="option =='main'">
 			AND p.status = 0

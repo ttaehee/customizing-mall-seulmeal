@@ -202,7 +202,7 @@
 	</nav> 
 	
 
-</c:if>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -311,3 +311,4 @@
 	  return new bootstrap.Tooltip(tooltipTriggerEl)
 	})
 </script>	    
+</c:if>
