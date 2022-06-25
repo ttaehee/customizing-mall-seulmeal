@@ -42,7 +42,23 @@ body { background: #fff; }
 .bluetop th:last-child, .bluetop td:last-child {
   border-right: 0;
 }
-
+	 #wrap{
+    width:100%;
+    height:100%;
+}
+  
+#wrap .box{ 
+    width:800px;
+   margin: 0 auto;
+  
+}
+.input{
+	/*  margin: 0px 10px 8px 10px; */
+    padding: 10px;
+    border: solid 1px #dadada;
+    background: #fff;
+    width: 500px;
+	}
 
 </style>
 
@@ -51,7 +67,7 @@ body { background: #fff; }
 	<jsp:include page="../layer/header.jsp"></jsp:include>
 
 	<div class="container">
-		<br /> <br /> <br /> <br />
+		<div>
 		<h2>내 정보</h2>
 		<form method="post" action="/user/getUpdateUser" enctype="multipart/form-data">
 			
@@ -229,6 +245,9 @@ body { background: #fff; }
 			</div>
 
 		</form>
+		
+		</div>
+		
 	</div>
 	
 	

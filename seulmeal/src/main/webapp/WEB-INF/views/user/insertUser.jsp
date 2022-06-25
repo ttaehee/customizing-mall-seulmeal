@@ -52,6 +52,7 @@ border: solid 1px #dadada;
 
 .btn-post{
 border: solid 1px #ff4500;
+height:46px;
 background: #fff;
 height:44px;
 </style>
@@ -149,9 +150,10 @@ height:44px;
 			<input type="text" class="input" id="sample3_address" style="margin-bottom: 5px;" placeholder="주소" readonly><br>
 			<input type="text" class="input" id="address" name="address" style="margin-bottom: 5px;" placeholder="상세주소">
 			
-			<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
+			<div id="adderssWrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
 				<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
 			</div>
+			
 			
 	    </div>
 	  </div>
@@ -175,7 +177,6 @@ height:44px;
 </div>
  
     <jsp:include page="../layer/footer.jsp"></jsp:include>
-<!-- 주소록 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="/resources/javascript/user/address.js"></script>
 <script type="text/javascript">
