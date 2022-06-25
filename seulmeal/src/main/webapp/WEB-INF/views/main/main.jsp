@@ -125,13 +125,18 @@
     
     
     <!-- ---------------------------------- -->
-    <div style="color:#ff4500;">
-    	${resultPage}
-    	<h2 class="pb-2 border-bottom">이 달의 인기 상품?</h2>
+    <div style="color:#ff4500; margin-bottom: 30px;">
+    	<c:if test="${!empty user}">
+    		<h2 class="pb-2 border-bottom">${user.userId}회원님 추천제품</h2>
+    	</c:if>
+    	<c:if test="${empty user}">
+    		<h2 class="pb-2 border-bottom">이 달의 인기 상품</h2>
+    	</c:if>
+    	
     </div>
     
     <div class="mainProduct">
-	<c:forEach var="product" items="${monthSaleProduct}">		
+	<c:forEach var="product" items="${monthSaleProduct}">
 			<div class="col">
 				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.THUMBNAIL}');">
 					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
@@ -171,6 +176,10 @@
     
     
     <!-- ----------------------------------- -->
+    
+    <div style="color:#ff4500; margin-top: 30px;">
+    	<h2 class="pb-2 border-bottom">모든 상품 목록</h2>
+    </div>
     
     <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
 	<c:forEach var="product" items="${list}">		
@@ -305,6 +314,10 @@ $jq(document).ready(function() {
 	})
 		
 	function updateLikeProduct(e){
+		if("${user}" === ""){
+			toastr.error("로그인해주세요","로그인해주세요",{timeOut:10000})
+			return;
+		}
 		const no = $(e).parent().parent().parent().find(".productHref").data("value");
 		const cl = $(e).next("small");
 		///*
@@ -347,18 +360,17 @@ $jq(document).ready(function() {
 	            setTimeout(getListPost,200);//0.2초
 	         }
 	         
-	            function getListPost(){
-	            	console.log(maxPage)
-	               
+	            function getListPost(){	               
 	               $.ajax({
 	                  url:"/api/main?currentPage="+currentPage,
 	                  type:"GET",
 	                  datatype:"json",
 	                  async: false,
-	                  success: function(product, status, jqXHR){
+	                  success: function(data, status, jqXHR){
 
-	                     console.log(product.list);
-	                     for(let i=0; i<product.length; i++){
+	                    
+	                     for(let i=0; i<data.list.length; i++){
+	                    	 const product = data.list[i];
 		                     let productCard = `
 			             			<div class="col">
 			         				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/\${product.thumbnail}');">
@@ -394,7 +406,8 @@ $jq(document).ready(function() {
 			         				</div>
 			         			</div>
 			                     `
-			                     
+			                     //console.log(productCard)
+			                     $(".align-items-stretch").append(productCard)
 	                     }
 					
 	                     

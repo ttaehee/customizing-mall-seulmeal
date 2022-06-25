@@ -153,7 +153,7 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public List<Product> selectUserProduct(Map<String, Object> map) {
+	public List<Map<String,Object>> selectUserProduct(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return operationMapper.selectUserProduct(map);
 	}
@@ -177,7 +177,7 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public List<Map<String, Object>> monthSaleProduct(Map<String, Object> map) {
+	public List<Map<String,Object>> monthSaleProduct(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return operationMapper.monthSaleProduct(map);
 	}

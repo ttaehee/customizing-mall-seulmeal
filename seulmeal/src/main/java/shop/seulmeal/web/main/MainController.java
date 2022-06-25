@@ -107,41 +107,44 @@ public class MainController {
 			search.setCurrentPage(1);
 		}		
 		search.setPageSize(pageSize);
-		if(user == null) {
+
+		// 메인페이지 모든 상품들
+		map = productService.getListProduct(search);
+		List<Product> list = (List)map.get("list");
+		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+				pageSize);
+		model.addAttribute("list",list);
+		model.addAttribute("resultPage", resultPage);
+		model.addAttribute("search", search);
+		
+		
+		if(userC == null) {
 			// 이달의 최고판매 10개
 			map.put("option", "main");
 			map.put("count", 10);
 			model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
 			
-			map = productService.getListProduct(search);
-			List<Product> list = (List)map.get("list");
-			Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
-					pageSize);
-			model.addAttribute("list",list);
-			model.addAttribute("resultPage", resultPage);
-			model.addAttribute("search", search);
+			
 		} else {
-			if(user.getFoodCategoryName1() == null) {
+			System.out.println("userC : "+userC);
+			if(userC.getFoodCategoryName1() == null) {
 				// 이달의 최고판매 10개
 				map.put("option", "main");
 				map.put("count", 10);
 				model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
-				
-				map = productService.getListProduct(search);
-				List<Product> list = (List)map.get("list");
-				Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
-						pageSize);
-				model.addAttribute("list",list);
-				model.addAttribute("resultPage", resultPage);
-				model.addAttribute("search", search);
 			}else {
-				map.put("user", user);				
-				List<Product> list = operationService.selectUserProduct(map);
-				model.addAttribute("list",list);
+				map.put("user", userC);
+				List<Map<String,Object>> list2 = operationService.selectUserProduct(map);
+				
+				for (Map<String, Object> map2 : list2) {
+					System.out.println("내가 좋아하는 상품 : "+map2);
+				}
+				
+				model.addAttribute("monthSaleProduct",list2);
 			}
 		}
 		
-		System.out.println("user C 임 "+userC);
+		
 		return "main/main";
 	}
 	

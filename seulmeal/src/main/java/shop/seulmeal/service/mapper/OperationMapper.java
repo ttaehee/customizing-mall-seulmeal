@@ -36,7 +36,7 @@ public interface OperationMapper {
 	public int deleteAnswer(Comment comment);
 	
 	// main
-	public List<Product> selectUserProduct(Map<String,Object> map);
+	public List<Map<String,Object>> selectUserProduct(Map<String,Object> map);
 	
 	// admin
 	public List<Map<String,Object>> userCount(String table);

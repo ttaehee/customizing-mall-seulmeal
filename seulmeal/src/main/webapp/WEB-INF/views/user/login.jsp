@@ -466,9 +466,9 @@ h3{
          </div>
          <div>
             <span class="stay-check">
-					<input id="stay-checkbox" type="checkbox" name="checkLogin"></input>
-					<label for="stay-checkbox" id="stay-text">로그인 상태 유지</label>
-				</span>
+				<input id="stay-checkbox" type="checkbox" name="checkLogin"></input>
+				<label for="stay-checkbox" id="stay-text">로그인 상태 유지</label>
+			</span>
          </div>
       </form>
 		<div class="under-login" id="find-signup-wrap-ko">
@@ -580,5 +580,4 @@ h3{
    
 </script>
 </body>
-
 </html>

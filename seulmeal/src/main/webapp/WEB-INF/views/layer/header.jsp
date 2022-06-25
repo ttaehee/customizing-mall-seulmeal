@@ -93,7 +93,7 @@
 	    <div class="float-right" style="margin-right: 30px; padding-top:10px;">
         	
         	<c:if test="${ empty user }">
-	        	<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">로그인</button>
+        		<button type="button" class="btn btn-outline-primary me-2" onclick="login()" style="border:none;">로그인</button>
 	        	<button type="button" class="btn btn-primary" onclick="join()">회원가입</button>
         	</c:if>
         	
@@ -203,6 +203,27 @@
 	
 
 </c:if>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLongTitle">비공개 문의 비밀번호</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<%--<jsp:include page="../user/login.jsp"></jsp:include> --%>
+
+      </div>
+    </div>
+  </div>  
+</div>
+
+
+
 <script>
     Kakao.init("5a91dcc078a5d95d570495f33c363abb");   // 아까 복사해둔 JavaScript 키
     function sendLink() {

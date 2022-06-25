@@ -107,7 +107,7 @@ class OperationTest {
 		Map<String,Object> map = new HashMap<>();
 		user.setFoodCategoryName1("한식");
 		map.put("user", user);
-		List<Product> list = operationMapper.selectUserProduct(map);
+		List<Map<String,Object>> list = operationMapper.selectUserProduct(map);
 		System.out.println(list);
 	}
 	

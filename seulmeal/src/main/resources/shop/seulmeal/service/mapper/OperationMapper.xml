@@ -379,8 +379,8 @@
 	</update>
 	
 	<!-- main -->
-	<select id="selectUserProduct" resultType="product">
-		SELECT thumbnail, product_no , p.name, price, calorie, sub_content, p.origin_price, p.like_count, p.review_count, p.stock, p.status
+	<select id="selectUserProduct" resultType="map">
+		SELECT THUMBNAIL, product_no , p.name, price, calorie, sub_content, p.origin_price, p.like_count, p.review_count, p.stock, p.status
 		FROM product p, foodcategory f
 		<where>
 			p.foodcategory_no = f.foodcategory_no
