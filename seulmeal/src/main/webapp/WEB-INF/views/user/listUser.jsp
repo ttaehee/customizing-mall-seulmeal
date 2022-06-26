@@ -136,7 +136,7 @@ function blackList(){
         	console.log(data);
         	
         	
-        	}
+        	
         }
 	})		
 }

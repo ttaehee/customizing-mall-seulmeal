@@ -11,6 +11,13 @@
 		border-left: 1px solid gray;
 		border-right: 1px solid gray;
 		padding: 5px;
+		background-color: #ff4500;
+		color: #fff;
+	}
+	
+	.adminText{
+		font-size: 18px;
+		font-weight: 900;
 	}
 	
 	.todayList+.todayList{
@@ -30,6 +37,17 @@
 	.chartTitle+.chartTitle{
 		margin-left: 40px;
 	}
+	
+	.adminCardCompnet{
+		border: 1px solid #ddd;
+		padding:5px;
+		box-shadow: 0 6px 6px 0 gray;
+		margin-left:10px;
+		border-radius: 20px;
+	}
+	.adminCardCompnet+.adminCardCompnet{
+		
+	}
 </style>
 <title>관리자 페이지</title>
 <!-- chart.js -->
@@ -42,13 +60,13 @@
 	    <div class="row flex-nowrap">
 		<jsp:include page="sideBar.jsp"/>
 		<div class="col py-3" style="margin-left:17%;">
-				<div style="margin-bottom: 20px; justify-content: center; display: flex;">
-					<span class="todayList">블랙리스트 유저 : 0</span>			
-					<span class="todayList">주문한 상품 : ${count.PURCHASECOUNT}</span>
-					<span class="todayList">재고없는 상품 : ${count.PRODUCTCOUNT}</span>					
-					<span class="todayList">진행중인 이벤트 : ${count.EVENTCOUNT}</span>
-					<span class="todayList">답변대기중인 문의 : ${count.ANSWERWAITCOUNT}</span>
-					<span class="todayList">신고된 게시글 : ${count.REPORTCOUNT}</span>
+				<div class="" style="margin-bottom: 20px; justify-content: center; display: flex;">
+					<span class="todayList adminCardCompnet"><span class="adminText">블랙리스트 유저 :</span> 0</span>			
+					<span class="todayList adminCardCompnet"><span class="adminText">주문한 상품 :</span> ${count.PURCHASECOUNT}</span>
+					<span class="todayList adminCardCompnet"><span class="adminText">재고없는 상품 :</span> ${count.PRODUCTCOUNT}</span>					
+					<span class="todayList adminCardCompnet"><span class="adminText">진행중인 이벤트 :</span> ${count.EVENTCOUNT}</span>
+					<span class="todayList adminCardCompnet"><span class="adminText">답변대기중인 문의 :</span> ${count.ANSWERWAITCOUNT}</span>
+					<span class="todayList adminCardCompnet"><span class="adminText">신고된 게시글 :</span> ${count.REPORTCOUNT}</span>
 				</div>
 	            <iframe class="frame" style="height:100vh; width:100%; display:none;" src="/product/admin/listProduct"></iframe>
 	            <!-- user -->
@@ -77,96 +95,110 @@
 					
 				</div>
 				
-				<div style="display:flex; width: 100%;" class="adminMainComponet">
-					<div style="width: 50%">
-						<div style="display: flex; justify-content: center;">
-							<h3 id="userJoinBtn" class="text-center chartTitle" style="color: #ff4500; opacity: 1.0;">유저 가입수</h3>
-							<h3 id="saleCountBtn" class="text-center chartTitle">판매량</h3>
-							<h3 id="salePriceBtn" class="text-center chartTitle">매출액</h3>							
+				<div style="display:flex; width: 100%; justify-content: space-between;" class="adminMainComponet">
+					<div style="width: 50%; margin-right:20px;">
+						<div class="adminCardCompnet">
+							<div style="display: flex; justify-content: center;">
+								<h3 id="userJoinBtn" class="text-center chartTitle" style="color: #ff4500; opacity: 1.0;">유저 가입수</h3>
+								<h3 id="saleCountBtn" class="text-center chartTitle">판매량</h3>
+								<h3 id="salePriceBtn" class="text-center chartTitle">매출액</h3>							
+							</div>
+							<div class="chartComponet">
+								<!-- 판매량 -->
+								<div id="saleCount" style="display: none;">
+									<canvas id="mixed-chart"></canvas>
+								</div>
+								<!-- 매출액 -->
+								<div id="salePrice" style="display: none;">
+									<canvas id="mixed-chart2"></canvas>
+								</div>
+								<!-- 유저가입수 -->
+								<div id="userJoin">
+									<canvas style="width: 100%; " id="user-chart"></canvas>
+								</div>
+							</div>
 						</div>
-						<div class="chartComponet">
-							<!-- 판매량 -->
-							<div id="saleCount" style="display: none;">
-								<canvas id="mixed-chart"></canvas>
-							</div>
-							<!-- 매출액 -->
-							<div id="salePrice" style="display: none;">
-								<canvas id="mixed-chart2"></canvas>
-							</div>
-							<!-- 유저가입수 -->
-							<div id="userJoin">
-								<canvas style="width: 100%; " id="user-chart"></canvas>
-							</div>
-						</div>
-						
-						<hr style="color:#ff4500; height: 5px;" />
 						<br/>		
 						
 						<!-- 월통계 -->
-						<h3 class="text-center"><span class="month" style="color:#ff4500;"></span>월 최고의 물건</h3>
-						<table class="table table-hover text-center">
-							<thead style="background-color: #ff4500; color: #fff;">
-								<tr>
-									<th>목차</th>
-									<th>이동링크</th>
-									<th>조건</th>
-									<th>일자</th>
-								</tr>
-							</thead>				
-							<tbody>
-								<tr>
-									<th>최고 좋아요 게시글</th>
-									<th style="cursor: pointer;" data-target="postLike" data-value="${monthPostLike[0].POST_NO}" onClick="navi(this)">제목 :${monthPostLike[0].TITLE}</th>
-									<th>좋아요 수 : ${monthPostLike[0].LIKE_COUNT}</th>
-									<th>일자 : ${monthPostLike[0].REG_DATE}</th>
-								</tr>
-								
-								<tr>
-									<th>최고 댓글 게시글</th>
-									<th style="cursor: pointer;" data-target="postComment" data-value="${monthPostComment[0].POST_NO}" onClick="navi(this)">제목 : ${monthPostLike[0].TITLE}</th>
-									<th>댓글 수 : ${monthPostComment[0].COUNT}</th>
-									<th>일자 : ${monthPostComment[0].REG_DATE}</th>
-								</tr>
-								
-								<tr>
-									<th>최고 판매 상품</th>
-									<th style="cursor: pointer;" data-target="saleProduct" data-value="${monthSaleProduct[0].PRODUCT_NO}" onClick="navi(this)">상풍명 : ${monthSaleProduct[0].NAME}</th>
-									<th>판매 수 : ${monthSaleProduct[0].COUNT}</th>
-									<th>매출액 : ${monthSaleProduct[0].CNT}</th>
-								</tr>
-							</tbody>
-						</table>
-						
-						<hr style="color:#ff4500; height: 5px;" />
+						<div class="adminCardCompnet">
+							<div>
+								<div class="text-center year">2022</div>
+								<h3 class="text-center">
+									<input class="btn minusBestBtn" type="button" value="&lt;&lt;" />
+									<span class="month" style="color:#ff4500;"></span>월 최고의 물건
+									<input class="btn plusBestBtn" type="button" value=">>" />
+								</h3>
+							</div>
+							<table class="table table-hover text-center">
+								<thead style="background-color: #ff4500; color: #fff;">
+									<tr>
+										<th>목차</th>
+										<th>이동링크</th>
+										<th>조건</th>
+										<th>일자</th>
+									</tr>
+								</thead>				
+								<tbody id="bestMonth">
+									<tr>
+										<th>최고 좋아요 게시글</th>
+										<th style="cursor: pointer;" data-target="postLike" data-value="${monthPostLike[0].POST_NO}" onClick="navi(this)">제목 :${monthPostLike[0].TITLE}</th>
+										<th>좋아요 수 : ${monthPostLike[0].LIKE_COUNT}</th>
+										<th>일자 : ${monthPostLike[0].REG_DATE}</th>
+									</tr>
+									
+									<tr>
+										<th>최고 댓글 게시글</th>
+										<th style="cursor: pointer;" data-target="postComment" data-value="${monthPostComment[0].POST_NO}" onClick="navi(this)">제목 : ${monthPostLike[0].TITLE}</th>
+										<th>댓글 수 : ${monthPostComment[0].COUNT}</th>
+										<th>일자 : ${monthPostComment[0].REG_DATE}</th>
+									</tr>
+									
+									<tr>
+										<th>최고 판매 상품</th>
+										<th style="cursor: pointer;" data-target="saleProduct" data-value="${monthSaleProduct[0].PRODUCT_NO}" onClick="navi(this)">상풍명 : ${monthSaleProduct[0].NAME}</th>
+										<th>판매 수 : ${monthSaleProduct[0].COUNT}</th>
+										<th>매출액 : ${monthSaleProduct[0].CNT}</th>
+									</tr>
+								</tbody>
+							</table>
+							</div>
 						<br/>						
 						
 						
 						<div class="monthP" style="display: flex; justify-content: center;">	
 							<!-- 재료 월통계 -->
-							<div style="width: 45%; margin-right: 20px;">
-							<h3 class="text-center"><span class="month" style="color:#ff4500;"></span>월 재료 판매</h3>
-							<table class="table table-hover text-center">
-								<thead style="background-color: #ff4500; color: #fff;">
-									<tr>
-										<th>랭킹</th>
-										<th>상품명</th>
-										<th>판매량</th>
-									</tr>
-								</thead>				
-								<tbody>
-									<c:forEach var="parts" items="${monthSaleParts}">
-										<c:set var="i" value="${i+1}" />
-									<tr>
-										<th>${i}</th>
-										<th>${parts.NAME}</th>
-										<th>${parts.COUNT}</th>
-									</tr>
-									</c:forEach>
-								</tbody>
-							</table>
+							
+							<div class="adminCardCompnet">
+									<div class="text-center year">2022</div>
+									<h3 class="text-center">
+										<input class="btn minusBtnParts" type="button" value="&lt;&lt;" />
+										<span class="month" style="color:#ff4500;"></span>월 재료 판매
+										<input class="btn plusBtnParts" type="button" value=">>" />
+									</h3>							
+								<table class="table table-hover text-center">
+									<thead style="background-color: #ff4500; color: #fff;">
+										<tr>
+											<th>랭킹</th>
+											<th>상품명</th>
+											<th>판매량</th>
+										</tr>
+									</thead>				
+									<tbody id="parts10Card">
+										<c:forEach var="parts" items="${monthSaleParts}">
+											<c:set var="i" value="${i+1}" />
+										<tr>
+											<th>${i}</th>
+											<th>${parts.NAME}</th>
+											<th>${parts.COUNT}</th>
+										</tr>
+										</c:forEach>
+									</tbody>
+								</table>
 							</div>
 							<!-- 상품 월 통계 -->
-							<div style="width: 45%">				
+							<div class="adminCardCompnet">
+								<div class="text-center year">2022</div>			
 								<h3 class="text-center">
 									<input class="btn minusBtnMonth" type="button" value="&lt;&lt;" />
 									<span class="month" style="color:#ff4500;"></span>월 상품 판매
@@ -181,7 +213,7 @@
 											<th>판매량</th>
 										</tr>
 									</thead>				
-									<tbody>
+									<tbody id="product10Card">
 										<c:forEach var="product" items="${monthSaleProduct10}">
 											<c:set var="j" value="${j+1}" />
 										<tr>
@@ -199,42 +231,45 @@
 					</div>
 					
 					
-					<div style="width: 50%;">
-						<h3 class="text-center">
-							<input class="btn minusBtn" type="button" value="&lt;&lt;" />
-							<span class="month" style="color:#ff4500;"></span>월 통계
-							<input class="btn plusBtn" type="button" value=">>" />
-						</h3>
-						
-						<table class="table table-hover text-center dayStatis">
-							<thead style="background-color: #ff4500; color: #fff;">
-								<tr>
-									<th>일자</th>
-									<th>가입자수</th>
-									<th>구매횟수</th>
-									<th>판매액</th>
-									<th>리뷰횟수</th>
-									<th>문의횟수</th>
-									<th>게시글횟수</th>
-								</tr>
-							</thead>				
-							<tbody>					
-								<c:forEach var="u" items="${userDay}" varStatus="statusNum">
-								<tr>
-									<th>${u.REGDATE}</th>
-									<th>${u.UCNT}</th>
-									<th>${purchaseDay[statusNum.index].UCNT}</th>
-									<th>${purchasePriceDay[statusNum.index].UCNT}</th>
-									<th>${reviewDay[statusNum.index].UCNT}</th>
-									<th>${queryDay[statusNum.index].UCNT}</th>
-									<th>${communityDay[statusNum.index].UCNT}</th>
-								</tr>
-								</c:forEach>
-							</tbody>
-						</table>
-						
-						
-					</div>					
+					<div style="width:50%; justify-content: center; display: flex;">
+						<div class="adminCardCompnet" style="margin: auto;">
+							<div class="text-center year">2022</div>
+							<h3 class="text-center">
+								<input class="btn minusBtn" type="button" value="&lt;&lt;" />
+								<span class="month" style="color:#ff4500;"></span>월 통계
+								<input class="btn plusBtn" type="button" value=">>" />
+							</h3>
+							
+							<table class="table table-hover text-center dayStatis">
+								<thead style="background-color: #ff4500; color: #fff;">
+									<tr>
+										<th>일자</th>
+										<th>가입자수</th>
+										<th>구매횟수</th>
+										<th>판매액</th>
+										<th>리뷰횟수</th>
+										<th>문의횟수</th>
+										<th>게시글횟수</th>
+									</tr>
+								</thead>				
+								<tbody>					
+									<c:forEach var="u" items="${userDay}" varStatus="statusNum">
+									<tr>
+										<th>${u.REGDATE}</th>
+										<th>${u.UCNT}</th>
+										<th>${purchaseDay[statusNum.index].UCNT}</th>
+										<th>${purchasePriceDay[statusNum.index].UCNT}</th>
+										<th>${reviewDay[statusNum.index].UCNT}</th>
+										<th>${queryDay[statusNum.index].UCNT}</th>
+										<th>${communityDay[statusNum.index].UCNT}</th>
+									</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+							
+							
+						</div>
+					</div>				
 				</div>
 	            
 	           
@@ -270,7 +305,7 @@
 	// 매달 통계 ajax	
 	function monthStatistics(differenceMonth){
 		$.ajax({
-			url : "/api/getDayStatistics/"+differenceMonth,
+			url : "/api/getDayStatistics/0/"+differenceMonth,
 			method : "GET",
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
@@ -317,13 +352,181 @@
 	        }
 		})
 	}
-
+	
+	// 매달 최고상품 통계 ajax	
+	function monthProductAjax(differenceMonth){
+		$.ajax({
+			url : "/api/getDayStatistics/1/"+differenceMonth,
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	console.log(data)
+	        	const product = data.monthSaleProduct10;
+	        	let productCard ="";
+	        	
+	        	for(let i=0; i<product.length; i++){
+	        		productCard += `<tr>
+						<th>\${i+1}</th>
+						<th>\${product[i].NAME}</th>
+						<th>\${product[i].CNT}</th>
+						<th>\${product[i].COUNT}</th>
+					</tr>`
+	        	}
+	        	
+	        	if(product.length ===0){
+	        		productCard += `
+	        			<tr>
+							<td colspan="5" style="font-size: 100px;">							
+								<i class="bi bi-chat-left-dots"></i>
+								<div>글이 없습니다</div>						
+							</td>
+						</tr>`
+	        	}
+				
+	        	$("#product10Card").empty();
+	        	$("#product10Card").append(productCard);
+	        }
+		})
+	}
+	
+	/////////////////////////////////
+	// 매달 최고재료 통계 ajax	
+	function monthPartsAjax(differenceMonth){
+		$.ajax({
+			url : "/api/getDayStatistics/2/"+differenceMonth,
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	console.log(data)
+	        	const parts = data.monthSaleParts;
+	        	let partsCard ="";
+	        	
+	        	for(let i=0; i<parts.length; i++){
+	        		partsCard += `<tr>
+						<th>\${i+1}</th>
+						<th>\${parts[i].NAME}</th>
+						<th>\${parts[i].COUNT}</th>
+					</tr>`
+	        	}
+	        	
+	        	if(parts.length ===0){
+	        		partsCard += `
+	        			<tr>
+							<td colspan="5" style="font-size: 100px;">							
+								<i class="bi bi-chat-left-dots"></i>
+								<div>글이 없습니다</div>						
+							</td>
+						</tr>`
+	        	}
+				
+	        	$("#parts10Card").empty();
+	        	$("#parts10Card").append(partsCard);
+	        }
+		})
+	}
+	///////////////////////////////////////
+	
+	// 이달의 최고 물건들
+	function monthBestAjax(differenceMonth){
+		$.ajax({
+			url : "/api/getDayStatistics/3/"+differenceMonth,
+			method : "GET",
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+	        success : function(data){
+	        	const monthPostLike = data.monthPostLike;
+	        	const monthPostComment = data.monthPostComment;
+	        	const monthSaleProduct = data.monthSaleProduct;
+	        	let bsetCard ="";
+	        	
+	        	
+	        	if(monthPostLike.length !=0 ){
+	        		bsetCard += `
+	    	        	<tr>
+	    					<th>최고 좋아요 게시글</th>
+	    					<th style="cursor: pointer;" data-target="postLike" data-value="\${monthPostLike[0].POST_NO}" onClick="navi(this)">제목 :\${monthPostLike[0].TITLE}</th>
+	    					<th>좋아요 수 : \${monthPostLike[0].LIKE_COUNT}</th>
+	    					<th>일자 : \${monthPostLike[0].REG_DATE}</th>
+	    				</tr>`
+	        	} else {
+	        		bsetCard += `<tr>
+						<th>최고 좋아요 게시글</th>
+						<td colspan="3" style="font-size: 20px;">							
+							<i class="bi bi-chat-left-dots"></i>
+							<div>글이 없습니다</div>						
+						</td>
+					</tr>`
+	        	}
+	        	
+	        	if(monthPostComment.length != 0){
+	        		bsetCard += `
+	        			<tr>
+							<th>최고 댓글 게시글</th>
+							<th style="cursor: pointer;" data-target="postComment" data-value="\${monthPostComment[0].POST_NO}" onClick="navi(this)">제목 : \${monthPostLike[0].TITLE}</th>
+							<th>댓글 수 : \${monthPostComment[0].COUNT}</th>
+							<th>일자 : \${monthPostComment[0].REG_DATE}</th>
+						</tr>`
+	        	} else {
+	        		bsetCard += `<tr>
+						<th>최고 댓글 게시글</th>
+						<td colspan="3" style="font-size: 20px;">						
+							<i class="bi bi-chat-left-dots"></i>
+							<div>글이 없습니다</div>						
+						</td>
+					</tr>`
+	        	}
+				
+				if(monthSaleProduct.length != 0){
+					bsetCard += `
+						<tr>
+							<th>최고 판매 상품</th>
+							<th style="cursor: pointer;" data-target="saleProduct" data-value="${monthSaleProduct[0].PRODUCT_NO}" onClick="navi(this)">상풍명 : \${monthSaleProduct[0].NAME}</th>
+							<th>판매 수 : \${monthSaleProduct[0].COUNT}</th>
+							<th>매출액 : \${monthSaleProduct[0].CNT}</th>
+						</tr>
+						`
+				} else {
+					bsetCard += `<tr>
+						<th>최고 판매 상품</th>
+						<td colspan="3" style="font-size: 20px;">							
+							<i class="bi bi-chat-left-dots"></i>
+							<div>글이 없습니다</div>						
+						</td>
+					</tr>`
+        		}	
+				
+	        					
+	        	$("#bestMonth").empty();
+	        	$("#bestMonth").append(bsetCard);
+	        }
+		})
+	}
+	
+	///////////////////////////////////////
+	
 	$(()=>{		
 		const now = new Date();	// 현재 날짜 및 시간
 		const month = (now.getMonth())+1;	// 월
+		const year = (now.getFullYear());
+		
+		function yearCount(target, event, trueMo, status){
+			const mt = target.parent().find(".month").text();
+			const tYear = parseInt(target.text())
+			console.log(status)
+			if(trueMo !==month && event%6 === 0 && mt === "12" && status==="m"){
+				
+				target.text(tYear-1);
+				return;
+			}
+			if(trueMo !==month && event%6 === -5 && mt === "1" && status ==="p"){
+				target.text(tYear+1);
+				return;
+			}
+		}
 		
 		function donClick(mo,dayStatistics){
-			console.log(dayStatistics)
 			if(dayStatistics<0){
 				return false;
 			}
@@ -347,43 +550,147 @@
 		}
 		
 		$(".month").text(month);
+		$(".year").css("color","#ff4500").text(year)
 		
-		// 달통계
+		// 월 통계
 		let dayStatistics = month;
 		
+		// 월 상위 10개 상품
+		let monthProducts = month;
+		
+		// 월 상위 10개 재료
+		let monthParts = month;
+		
+		// 월 최고의 물건
+		let monthBest = month;
+		
+		/////////////////////
 		// 월 상품판매
 		$(".minusBtnMonth").on("click",function(){
+			const mo =parseInt($(this).next(".month").text())-1;			
+			const trueMo = monthCycle(mo);
+			monthProducts--;
+			$(this).next(".month").text(trueMo);
+			const differenceMonth = monthProducts - month;
+			monthProductAjax(differenceMonth);
 			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"m");
 		})
 		
 		// 월 상품판매
 		$(".plusBtnMonth").on("click",function(){
+			const mo = parseInt($(this).prev(".month").text())+1;			
+			const trueMo = monthCycle(mo);
+					
+			if(donClick(trueMo,monthProducts)){
+				return;
+			};
+			monthProducts++;	
+			$(this).prev(".month").text(trueMo);
+			const differenceMonth = monthProducts - month;
+			monthProductAjax(differenceMonth)
 			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"p");
 		})
+		//////////////////
+		
+		/////////////////////
+		// 월 재료판매
+		$(".minusBtnParts").on("click",function(){
+			const mo =parseInt($(this).next(".month").text())-1;			
+			const trueMo = monthCycle(mo);
+			monthParts--;
+			$(this).next(".month").text(trueMo);
+			const differenceMonth = monthParts - month;
+			monthPartsAjax(differenceMonth)
+			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"m");
+		})
+		
+		// 월 재료판매
+		$(".plusBtnParts").on("click",function(){
+			const mo = parseInt($(this).prev(".month").text())+1;			
+			const trueMo = monthCycle(mo);
+			console.log(monthParts)
+			if(donClick(trueMo,monthParts)){
+				return;
+			};
+			monthParts++;	
+			$(this).prev(".month").text(trueMo);
+			const differenceMonth = monthParts - month;
+			monthPartsAjax(differenceMonth)
+			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"p");
+		})
+		//////////////////
 		
 		// 달통계 전달 데이터
 		$(".minusBtn").on("click",function(){
 			const mo =parseInt($(this).next(".month").text())-1;			
 			const trueMo = monthCycle(mo);
-			dayStatistics--;
-			console.log(dayStatistics)
+			monthBest--;
+			console.log(monthBest)
 			$(this).next(".month").text(trueMo);			
-			const differenceMonth = dayStatistics - month;			
+			const differenceMonth = monthBest - month;			
 			monthStatistics(differenceMonth)
+			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"m");
 		});
 		
 		// 달통계 전달 데이터
 		$(".plusBtn").on("click",function(){
 			const mo = parseInt($(this).prev(".month").text())+1;			
 			const trueMo = monthCycle(mo);
-			dayStatistics++;			
+						
+			if(donClick(trueMo,monthBest)){
+				return;
+			};
+			monthBest++;
+			$(this).prev(".month").text(trueMo);			
+			const differenceMonth = monthBest - month;			
+			monthStatistics(differenceMonth)
+			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"p");
+		});
+		//////////////////
+		
+		// 달 베스트 데이터
+		$(".minusBestBtn").on("click",function(){
+			const mo =parseInt($(this).next(".month").text())-1;			
+			const trueMo = monthCycle(mo);
+			dayStatistics--;
+			console.log(dayStatistics)
+			$(this).next(".month").text(trueMo);			
+			const differenceMonth = dayStatistics - month;			
+			monthBestAjax(differenceMonth)
+			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"m");
+		});
+		
+		// 달통계 전달 데이터
+		$(".plusBestBtn").on("click",function(){
+			const mo = parseInt($(this).prev(".month").text())+1;			
+			const trueMo = monthCycle(mo);
+						
 			if(donClick(trueMo,dayStatistics)){
 				return;
-			};			
+			};
+			dayStatistics++;
 			$(this).prev(".month").text(trueMo);			
 			const differenceMonth = dayStatistics - month;			
-			monthStatistics(differenceMonth)
+			monthBestAjax(differenceMonth)
+			
+			const target = $(this).parent().prev(".year");
+			yearCount(target,differenceMonth,trueMo,"p");
 		});
+		//////////////////
 		
 		// chart 클릭
 		// userChart

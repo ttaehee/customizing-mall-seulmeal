@@ -56,10 +56,12 @@
 	  background-position: center center;
 	  background-size: cover;
 	  cursor: pointer;
+	  background-color: #0005;
+	  background-blend-mode: normal;
 	}
-	.card-cover:hover{
-		
-		opacity: 0.7;		
+	.card-cover:hover{		
+		opacity: 0.7;
+	  	background-blend-mode: soft-light;		
 	}
 	
 	.card-cover > .text-white > .productTarget{
@@ -134,7 +136,6 @@
     	</c:if>
     	
     </div>
-    ${user }
     <div class="mainProduct">
 	<c:forEach var="product" items="${monthSaleProduct}">
 			<div class="col">
@@ -187,13 +188,13 @@
 				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
 					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
 						<div data-value="${product.productNo}" class="productHref">
-						<h2 class="display-6fw-bold productTarget">${product.name}</h2>
+						<h2 class="display-6fw-bold productTarget productName">${product.name}</h2>
 						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
 						<c:if test="${product.originPrice != 0}">
-							<h5 class="productTarget" style="text-decoration: line-through;">${product.originPrice}원</h5>
+							<h5 class="productTarget originPrice" style="text-decoration: line-through;">${product.originPrice}원</h5>
 						</c:if>						
-						<h5 class="productTarget">${product.price}원</h5>
-						<h5 class="productTarget">${product.calorie}Cal</h5>
+						<h5 class="productTarget price">${product.price}원</h5>
+						<h5 class="productTarget calorie">${product.calorie}Cal</h5>
 						</div>
 						<ul class="d-flex list-unstyled mt-auto">
 							<li class="me-auto">
@@ -282,6 +283,10 @@ $jq(document).ready(function() {
 });
 	
 	$(function(){
+		$(".searchP").on("keyup",function(){
+			filter();
+		});
+		
 		$(".productHref").on("click",function(){
 			const no =$(this).data("value");
 			window.location.href = '/product/getProduct/'+no;
@@ -354,9 +359,10 @@ $jq(document).ready(function() {
 	         let $window = $(this);
 	         let scrollTop = $window.scrollTop();
 	         let windowHeight = $window.height();
-	         let documentHeight = $(document).height();         
+	         let documentHeight = $(document).height();
 	         
-	         if(scrollTop + windowHeight>= documentHeight && currentPage <= maxPage){
+	         if(scrollTop + windowHeight+200>= documentHeight && currentPage <= maxPage){
+	        	 console.log(123)
 	            setTimeout(getListPost,200);//0.2초
 	         }
 	         
@@ -368,7 +374,6 @@ $jq(document).ready(function() {
 	                  async: false,
 	                  success: function(data, status, jqXHR){
 
-	                    
 	                     for(let i=0; i<data.list.length; i++){
 	                    	 const product = data.list[i];
 		                     let productCard = `
@@ -376,15 +381,15 @@ $jq(document).ready(function() {
 			         				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/\${product.thumbnail}');">
 			         					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
 			         						<div data-value="\${product.productNo}" class="productHref">
-			         						<h2 class="display-6fw-bold productTarget">\${product.name}</h2>
+			         						<h2 class="display-6fw-bold productTarget productName">\${product.name}</h2>
 			         						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>`
 			         						
        						if(product.originPrice != 0){
-       							productCard += `<h5 class="productTarget" style="text-decoration: line-through;">\${product.originPrice}원</h5>`
+       							productCard += `<h5 class="productTarget originPrice" style="text-decoration: line-through;">\${product.originPrice}원</h5>`
   							}
 			         		
-      						productCard +=	`<h5 class="productTarget">\${product.price}원</h5>
-			         						<h5 class="productTarget">\${product.calorie}Cal</h5>
+      						productCard +=	`<h5 class="productTarget price">\${product.price}원</h5>
+			         						<h5 class="productTarget calorie">\${product.calorie}Cal</h5>
 			         						</div>
 			         						<ul class="d-flex list-unstyled mt-auto">
 			         							<li class="me-auto">
@@ -425,14 +430,41 @@ $jq(document).ready(function() {
 	                  
 	               })//jQuery.ajax()
 	               
-	               console.log(currentPage)
 	            currentPage ++;
 	            }//getListPost
 	            
 	      })//window.scroll()
 	      
 	      
-	   });	
+	   });
+	   
+	   
+	   
+	   //검색 필터
+	   // 메인페이지 검색
+	   function filter(){
+			const search = $(".searchP").val();
+			const cardCom = $(".align-items-stretch .text-shadow-1")
+						
+			for(let i=0; i<cardCom.length; i++){				
+				
+				title = $(cardCom[i]).find(".productName");
+				calorie = $(cardCom[i]).find(".calorie");
+				price = $(cardCom[i]).find(".price");
+				originPrice = $(cardCom[i]).find(".originPrice");
+				
+				//console.log($(cardCom[i]).parent().parent())
+				//console.log($(cardCom[i]).find(".productName"))
+				
+				if($(title[0]).text().indexOf(search) != -1 || $(calorie[0]).text().indexOf(search) != -1
+						|| $(price[0]).text().indexOf(search) != -1 || $(originPrice[0]).text().indexOf(search) != -1){
+					$(cardCom[i]).parent().parent().css("display","flex");
+				} else {
+					$(cardCom[i]).parent().parent().css("display","none");
+				}
+				
+			}
+		}
 	
 </script>
 </body>
