@@ -2,7 +2,7 @@
 
 ## 로고
 
-<img width="200px" height="200px" src="https://user-images.githubusercontent.com/92348108/147043548-701caed3-9be5-49a4-85db-4b9bc8c357ea.png" />
+<img width="200px" height="200px" src="https://user-images.githubusercontent.com/92348108/175928314-7676aa19-696d-4cca-9e20-212ee8c74d53.jpeg" />
 
 - CocktailFinder -ver 0.0.1
 - 프로젝트 기간 : 2022-05-04 ~ 2022-07-01
