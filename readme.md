@@ -2,7 +2,7 @@
 
 ## 로고
 
-<img width="200px" height="200px" src="https://user-images.githubusercontent.com/92348108/147043548-701caed3-9be5-49a4-85db-4b9bc8c357ea.png" />
+<img width="200px" height="200px" src="https://user-images.githubusercontent.com/92348108/175930241-fe189438-5f30-4b3c-a715-39b775ebc6ca.jpeg" />
 
 - SeulMeal -ver 0.0.1
 - 프로젝트 기간 : 2022-05-04 ~ 2022-07-01
@@ -10,14 +10,14 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/-Oracle-F80000?style=for-the-badge&logo=Oracle&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/02303A?style=for-the-badge&logo=Gradle&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/6DB33F?style=for-the-badge&logo=Spring&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/7952B3?style=for-the-badge&logo=Bootstrap&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-Bootstrap-7952B3?style=for-the-badge&logo=Bootstrap&logoColor=white"> &nbsp
     <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=Amazon%20AWS&logoColor=white"/> &nbsp
-    <img src="https://img.shields.io/badge/FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-Amazon EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white"> &nbsp
 </p>
 
 <hr />
