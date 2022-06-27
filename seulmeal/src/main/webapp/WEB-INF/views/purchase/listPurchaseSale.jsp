@@ -37,7 +37,7 @@
 	            <th align="center">구매일자</th>
 	            <th align="center">유저ID</th>
 	             <th align="center">상품명</th>
-	            <th align="center">상품금액</th>
+	            <th align="center">구매금액</th>
 	            <th align="center">결제금액</th>
 	            <th align="center">배송관리</th>
 	          </tr>
@@ -98,24 +98,30 @@
 	
 	function fncPurchaseStatus(ths){
 		
-		const purchaseNo=$(ths).data('value');	
+		const purchaseNo=$(ths).data('value');
 		
-		$.ajax({
-			url:"/purchase/api/updatePurchaseCode",
-			method:"POST",  
-			data:JSON.stringify({
-				purchaseNo : purchaseNo,
-				purchaseStatus: "2"
-			}),
-	        headers : {
-	            "Accept" : "application/json",
-	            "Content-Type" : "application/json"
-	        },
-	        dataType : "json",
-	        success : function(data){	
-	        	$(ths).closest('td').text('배송중');
-	        }
-    	});	
+		let conf=confirm("배송을 진행할까요?");
+		if(conf){
+			
+			$.ajax({
+				url:"/purchase/api/updatePurchaseCode",
+				method:"POST",  
+				data:JSON.stringify({
+					purchaseNo : purchaseNo,
+					purchaseStatus: "2"
+				}),
+		        headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){	
+		        	$(ths).closest('td').text('배송중');
+		        }
+	    	});	
+		}else{
+			return;
+		}
 	}
 	
 

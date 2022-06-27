@@ -84,6 +84,7 @@
 	            
 	            <!-- purchase -->
 	            <iframe id="saleFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/purchase/getListSale/1"></iframe>
+	            <iframe id="discountFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/listOperationDiscountEvent/admin/1"></iframe>
 	            
 	            <!-- operation -->
 	            <iframe id="noticeFrame" class="frame" style="height:100vh; width:100%; display:none;" src="/operation/getListOperation/1"></iframe>
@@ -169,7 +170,7 @@
 						<div class="monthP" style="display: flex; justify-content: center;">	
 							<!-- 재료 월통계 -->
 							
-							<div class="adminCardCompnet">
+							<div class="adminCardCompnet" style="width: 100%;">
 									<div class="text-center year">2022</div>
 									<h3 class="text-center">
 										<input class="btn minusBtnParts" type="button" value="&lt;&lt;" />
@@ -197,7 +198,7 @@
 								</table>
 							</div>
 							<!-- 상품 월 통계 -->
-							<div class="adminCardCompnet">
+							<div class="adminCardCompnet" style="width: 100%;">
 								<div class="text-center year">2022</div>			
 								<h3 class="text-center">
 									<input class="btn minusBtnMonth" type="button" value="&lt;&lt;" />
@@ -377,7 +378,7 @@
 	        	if(product.length ===0){
 	        		productCard += `
 	        			<tr>
-							<td colspan="5" style="font-size: 100px;">							
+							<td colspan="5" style="font-size: 80px;">							
 								<i class="bi bi-chat-left-dots"></i>
 								<div>글이 없습니다</div>						
 							</td>
@@ -414,7 +415,7 @@
 	        	if(parts.length ===0){
 	        		partsCard += `
 	        			<tr>
-							<td colspan="5" style="font-size: 100px;">							
+							<td colspan="5" style="font-size: 80px;">							
 								<i class="bi bi-chat-left-dots"></i>
 								<div>글이 없습니다</div>						
 							</td>
@@ -791,6 +792,12 @@
 			$(".adminMainComponet").css("display","none");
 			$(".frame").css("display","none");
 			$("#saleFrame").css("display","block");
+		})
+		
+		$("#discount").on("click",()=>{
+			$(".adminMainComponet").css("display","none");
+			$(".frame").css("display","none");
+			$("#discountFrame").css("display","block");
 		})
 		
 		// 커뮤니티

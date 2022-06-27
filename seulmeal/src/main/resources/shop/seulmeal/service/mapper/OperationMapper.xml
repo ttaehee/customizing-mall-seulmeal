@@ -207,21 +207,22 @@
 		</if>
 		
 		<if test="postStatus == 2">
-			SELECT post_no, title, short_content, end_date, reg_date, views, thumnail
-			FROM post
+			SELECT p.post_no, p.title, p.short_content, p.end_date, p.reg_date, p.views, p.thumnail, pd.name, pd.price, pd.product_no, p.discount
+			FROM post p, product pd
 			<where>
+				p.post_no=pd.post_no(+) AND
 				post_status = #{postStatus}				
 				<if test="search.searchCondition==0">
-					AND end_date &gt; SYSDATE AND status = '0'
+					AND p.end_date &gt; SYSDATE AND p.status = '0'
 				</if>
 				<if test="search.searchCondition==1">
-					AND end_date &lt; SYSDATE AND status = '1'
+					AND p.end_date &lt; SYSDATE AND p.status = '1'
 				</if>
 				<if test="search.searchKeyword !=null">
-					AND (title LIKE '%'||#{search.searchKeyword}||'%' OR content LIKE '%'||#{search.searchKeyword}||'%')
+					AND (p.title LIKE '%'||#{search.searchKeyword}||'%' OR p.content LIKE '%'||#{search.searchKeyword}||'%')
 				</if>
 			</where>
-			ORDER BY end_date desc, reg_date desc, status
+			ORDER BY p.end_date desc, p.reg_date desc, p.status
 		</if>
 	</select>
 	

@@ -70,6 +70,10 @@ margin: 40px 0px 0px 0px;
 	margin-top: 130px;  
 }
 
+.invalid-feedback{
+	margin-left: 3px !important;
+}
+
 </style>
 </head>
 <body>
@@ -95,7 +99,10 @@ margin: 40px 0px 0px 0px;
 			  <div class="form-group">
 			  	<label for="inputNickName" class="col-sm-5 control-label" style="font-size: 20px;">닉네임</label>
 			  	<div class="col-sm-7">
-			  	  <input type="text" name="nickName" style="width:605px;" id="nickName" class="form-control mx-sm-3"  value="${sessionScope.user.nickName}">
+			  	  <input type="text" name="nickName" required maxLength= 6 onInput="maxLengthCheck(this)" onKeyUp="inputDataCheck(this.id)" style="width:605px;" id="nickName" class="form-control mx-sm-3"  value="${sessionScope.user.nickName}">
+			  	  <small id="nickNameHelpInline" style="margin-left: 3px;" class="text-muted col-sm-7">
+				      5글자 이상 입력해주세요.
+			    </small>
 			    </div>
 			  </div>
 				
@@ -103,9 +110,9 @@ margin: 40px 0px 0px 0px;
 			  <div class="form-group">
 			    <label for="inputProfileMessage" class="col-sm-5 control-label" style="font-size: 20px;">상태메시지</label>
 				<div class="col-sm-7">
-				    <input type="text" name="profileMessage" style="width:605px;" id="profileMessage" class="form-control mx-sm-3" aria-describedby="nickNameHelpInline" value="${sessionScope.user.profileMessage}">
-				    <small id="nickNameHelpInline" class="text-muted col-sm-7">
-				      60자 이내로 입력해주세요.
+				    <input type="text" name="profileMessage" required maxLength=40 onInput="maxLengthCheck(this)" onKeyUp="inputDataCheck(this.id)" style="width:605px;" id="profileMessage" class="form-control mx-sm-3" aria-describedby="nickNameHelpInline" value="${sessionScope.user.profileMessage}">
+				    <small id="profileMsgHelpInline" style="margin-left: 3px;"  class="text-muted col-sm-7">
+				      40자 이내로 입력해주세요.
 			    </small>
 			    </div>
 			  </div>
@@ -123,7 +130,7 @@ margin: 40px 0px 0px 0px;
 		
 			<!-- 수정버튼 -->
 			<div class = "button-div">
-				<button id="updateProfileBtn" type="submit" class="btn btn-primary">
+				<button id="updateProfileBtn" type="button" onclick="updateProfile()" class="btn btn-primary">
 					수정</button>
 				<button id="cancelBtn" type="button" class="btn btn-primary" onclick="history.back()">
 					취소</button>
@@ -194,6 +201,63 @@ $(function(){
 	})
 })
 
+	
+	
+	$("#nickName").on("keyup",()=>{
+		const nickName = $("#nickName").val();
+		if(nickName.length < 5){
+			console.log(nickName);
+			$("#nickNameHelpInline").css("color","crimson").text("5글자 이상 입력해주세요.");
+		} else {
+			$.ajax({
+				url: "/user/api/confirmUserNickname/"+nickName,
+				method: "GET",
+				headers : {
+		            "Accept" : "application/json",
+		            "Content-Type" : "application/json"
+		        },
+		        dataType : "json",
+		        success : function(data){
+		        	if(data.result === "success"){
+		        		$("#nickNameHelpInline").css("color","#ff4500").text("사용가능한 닉네임 입니다.");
+		        		return;
+		        	}
+		        	if(data.result === "fail"){
+		        		$("#nickNameHelpInline").css("color","crimson").text("닉네임이 중복입니다.");
+		        		return;
+		        	}
+		        }
+			})
+		}
+	})
+	
+		$(()=>{
+	});
+	
+	
+	
+	
+	function maxLengthCheck(object) {
+	  if (object.value.length > object.maxLength) {
+	      object.value = object.value.slice(0, object.maxLength);
+	  }
+	}
+	
+	//submit 눌렀을때 updateProfile 함수 실행
+	function updateProfile(){
+	  //값 비어있으면
+	  if($("#nickName").val() == ""){
+	      // is-invalid 클래스를 붙여줘서 빨간 경고문구 붙여준다
+	      $("#nickNameHelpInline").text("닉네임을 입력해주세요.");
+	      $("#nickName").addClass("is-invalid");
+	      // 입력해야되는 창에 어그로
+	      $("#nickName").focus();
+	      return;
+	  }
+	 
+	  $(".profile-form").submit();
+}
+	
 	
 	
 </script>

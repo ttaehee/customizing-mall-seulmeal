@@ -498,7 +498,7 @@ h3{
 					</div>
 					<div class="facebook-login">
 						
-						<a href="https://kauth.kakao.com/oauth/authorize?client_id=972aafa79be1ef957c5ab9ed1149b0e7&redirect_uri=http://localhost:7100/user/kakaoLogin&response_type=code">
+						<a href="https://kauth.kakao.com/oauth/authorize?client_id=972aafa79be1ef957c5ab9ed1149b0e7&redirect_uri=http://www.seulmeal.shop/user/kakaoLogin&response_type=code">
 						<img src = "/resources/attachments/image/kakao_login_large_narrow.png" width="210px" height="50px">
 						</a>
 					</div>
@@ -522,7 +522,7 @@ h3{
             'response_type=code' +                  // 인증과정에 대한 내부 구분값 code 로 전공 (고정값)
             '&client_id=9v2VufeHsXfFnp8KaD49' +     // 발급받은 client_id 를 입력
             '&state=NAVER_LOGIN_TEST' +             // CORS 를 방지하기 위한 특정 토큰값(임의값 사용)
-            '&redirect_uri=http://192.168.0.51:7100/user/naver';   // 어플케이션에서 등록했던 CallBack URL를 입력
+            '&redirect_uri=http://www.seulmeal.shop/user/naver'   // 어플케이션에서 등록했던 CallBack URL를 입력
 
         // 사용자가 사용하기 편하게끔 팝업창으로 띄어준다.
         window.location.href=uri;

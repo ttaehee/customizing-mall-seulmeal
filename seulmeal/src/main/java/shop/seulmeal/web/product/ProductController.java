@@ -48,6 +48,7 @@ public class ProductController {
 	int pageSize = 10;
 
 	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
+	//private String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
 	
 	public ProductController() {
 		// TODO Auto-generated constructor stub

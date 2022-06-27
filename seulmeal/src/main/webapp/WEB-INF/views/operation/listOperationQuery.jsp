@@ -164,7 +164,10 @@
 				<c:forEach var="post" items="${list}">
 				<tr>
 					<th>${post.postNo}</th>
-					<th>
+					<th style="display:flex;">
+						<c:if test="${post.answerStatus ==1 }">
+							<span style="color:#ff4500;" class="badge badge-light">답변 완료</span>
+						</c:if>
 						<c:if test="${post.publicStatus ==0}">
 							<a href="/operation/getOperation/${post.postStatus}/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
 						</c:if>
@@ -339,7 +342,7 @@
 		        		$(".pNo").val("");
 		        	} else {
 		        		_this.message.textContent = _this.msg[0];
-		        		toastr.error("test","비밀번호 틀렸습니다",{timeOut:10000})
+		        		toastr.error("비밀번호가 틀렸습니다","비공개 게시글",{timeOut:10000})
 		        		$("#exampleModalCenter").modal("hide");
 		        		$(".pNo").val("");
 		        	}

@@ -50,7 +50,16 @@
 	
 	.text-shadow-1 { text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25); }
 	
+	.cardProduct{
+		transaition : all 0.2s linear;
+	}
+	
+	.productCover:hover{
+		transform: scale(1.1);
+	}
+	
 	.card-cover {
+		min-width: 400px;
 		min-height:400px;
 	  background-repeat: no-repeat;
 	  background-position: center center;
@@ -104,7 +113,7 @@
 			<img style="width: 100%; height:600px;" src="/resources/attachments/image/seulMeal.png" alt="">
 		</div>
 		<c:forEach var="post" items="${listE}">
-			<div class="carousel-inner"  id="eventBanner"  data-value="${post.postNo}">
+			<div class="carousel-inner eventBanner"  id="eventBanner"  data-value="${post.postNo}">
 				<c:if test="${post.thumnail == null}">
 					<img style="width: 100%; height:600px;" src="/resources/attachments/image/tetris.png" alt="">
 				</c:if>
@@ -127,7 +136,7 @@
     
     
     <!-- ---------------------------------- -->
-    <div style="color:#ff4500; margin-bottom: 30px;">
+    <div style="margin-bottom: 30px; color:black;">
     	<c:if test="${!empty user}">
     		<h2 class="pb-2 border-bottom">${user.userId}회원님 추천제품</h2>
     	</c:if>
@@ -138,10 +147,10 @@
     </div>
     <div class="mainProduct">
 	<c:forEach var="product" items="${monthSaleProduct}">
-			<div class="col">
-				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.THUMBNAIL}');">
+			<div class="col cardProduct">
+				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg productCover" style="background-image: url('/resources/attachments/${product.THUMBNAIL}');">
 					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
-						<div data-value="${product.PRODUCT_NO}" class="productHref">
+						<div data-value="${product.PRODUCT_NO}" class="productHref" onclick="getProductPage(this)">
 						<h2 class="display-6fw-bold productTarget">${product.NAME}</h2>
 						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
 						<c:if test="${product.ORIGIN_PRICE != null}">
@@ -178,16 +187,16 @@
     
     <!-- ----------------------------------- -->
     
-    <div style="color:#ff4500; margin-top: 30px;">
+    <div style="margin-top: 30px; color:black;">
     	<h2 class="pb-2 border-bottom">모든 상품 목록</h2>
     </div>
     
     <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
 	<c:forEach var="product" items="${list}">		
-			<div class="col">
-				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/${product.thumbnail}');">
+			<div class="col cardProduct">
+				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg productCover" style="background-image: url('/resources/attachments/${product.thumbnail}');">
 					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
-						<div data-value="${product.productNo}" class="productHref">
+						<div data-value="${product.productNo}" class="productHref"  onclick="getProductPage(this)">
 						<h2 class="display-6fw-bold productTarget productName">${product.name}</h2>
 						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
 						<c:if test="${product.originPrice != 0}">
@@ -229,7 +238,7 @@
 	<jsp:include page="../confirm.jsp"></jsp:include>
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
+	<script type="text/javascript" src="http://kenwheeler.github.io/slick/slick/slick.min.js"></script>
 <script type="text/javascript">
 const $jq = jQuery.noConflict();
 $jq(document).ready(function() {
@@ -287,13 +296,8 @@ $jq(document).ready(function() {
 			filter();
 		});
 		
-		$(".productHref").on("click",function(){
-			const no =$(this).data("value");
-			window.location.href = '/product/getProduct/'+no;
-		})
-		
 				
-		$("#eventBanner").on("click",function(){
+		$(".eventBanner").on("click",function(){
 			const no = $(this).data("value");
 			console.log(no)
 			window.location.href="/operation/getOperation/2/"+no;
@@ -317,6 +321,11 @@ $jq(document).ready(function() {
 			})
 		})
 	})
+	
+	function getProductPage(e){
+		const no =$(e).data("value");
+		window.location.href = '/product/getProduct/'+no;
+	}
 		
 	function updateLikeProduct(e){
 		if("${user}" === ""){
@@ -362,7 +371,6 @@ $jq(document).ready(function() {
 	         let documentHeight = $(document).height();
 	         
 	         if(scrollTop + windowHeight+200>= documentHeight && currentPage <= maxPage){
-	        	 console.log(123)
 	            setTimeout(getListPost,200);//0.2초
 	         }
 	         
@@ -377,10 +385,10 @@ $jq(document).ready(function() {
 	                     for(let i=0; i<data.list.length; i++){
 	                    	 const product = data.list[i];
 		                     let productCard = `
-			             			<div class="col">
-			         				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('/resources/attachments/\${product.thumbnail}');">
+			             			<div class="col cardProduct">
+			         				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg productCover" style="background-image: url('/resources/attachments/\${product.thumbnail}');">
 			         					<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
-			         						<div data-value="\${product.productNo}" class="productHref">
+			         						<div data-value="\${product.productNo}" class="productHref"  onclick="getProductPage(this)">
 			         						<h2 class="display-6fw-bold productTarget productName">\${product.name}</h2>
 			         						<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>`
 			         						
@@ -458,7 +466,7 @@ $jq(document).ready(function() {
 				
 				if($(title[0]).text().indexOf(search) != -1 || $(calorie[0]).text().indexOf(search) != -1
 						|| $(price[0]).text().indexOf(search) != -1 || $(originPrice[0]).text().indexOf(search) != -1){
-					$(cardCom[i]).parent().parent().css("display","flex");
+					$(cardCom[i]).parent().parent().css("display","block");
 				} else {
 					$(cardCom[i]).parent().parent().css("display","none");
 				}

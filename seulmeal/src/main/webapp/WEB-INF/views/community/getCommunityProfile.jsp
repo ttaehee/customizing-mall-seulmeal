@@ -267,7 +267,8 @@ ul#profile-Arrange {
 	height:30px;
 }
 
-.bi.bi-heart.icon{
+.bi.bi-heart.icon,
+.bi.bi-heart-fill.icon{
 	cursor:pointer;
 }
 
@@ -395,6 +396,14 @@ div.modal-content{
     margin: 0 3px 0 10px;
 }
 
+button#insertBlockBtn {
+    margin-right: 30px;
+}
+
+button#deleteBlockBtn {
+    margin-right: 30px;
+}
+
 </style>
 </head>
 <body>
@@ -464,22 +473,43 @@ div.modal-content{
 						<!-- 타 프로필일 경우,  -->
 						<c:if test="${isMine == false}">
 							<c:if test="${relationStatus eq '0'}">
+								<button id="insertFollowBtn" onclick="insertFollowBtn(this)" style="display: none;" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a">
+								팔로우
+								</button>
 								<button id="deleteFollowBtn" onclick="deleteFollow2(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a ">
 								팔로잉
 								</button>	
 								<button id="insertBlockBtn" onclick="insertBlock(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
 								차단하기
 								</button>													
+								<button id="deleteBlockBtn" onclick="deleteBlock(this)" style="display: none;" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
+								차단해제
+								</button>
 							</c:if>
 							<c:if test="${empty relationStatus}">
 								<button id="insertFollowBtn" onclick="insertFollowBtn(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a">
 								팔로우
 								</button>
+								<button id="deleteFollowBtn" onclick="deleteFollow2(this)" style="display: none;" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a ">
+								팔로잉
+								</button>
 								<button id="insertBlockBtn" onclick="insertBlock(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
 								차단하기
 								</button>
+								<button id="deleteBlockBtn" onclick="deleteBlock(this)" style="display: none;" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
+								차단해제
+								</button>
 							</c:if>
 							<c:if test="${relationStatus eq '1'}">
+								<button id="insertFollowBtn" onclick="insertFollowBtn(this)" style="display: none;" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a">
+								팔로우
+								</button>
+								<button id="deleteFollowBtn" onclick="deleteFollow2(this)" style="display: none;" type="button" data-value="${profileUser.userId}"  class="btn btn-primary a ">
+								팔로잉
+								</button>
+								<button id="insertBlockBtn" onclick="insertBlock(this)" style="display: none;" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
+								차단하기
+								</button>
 								<button id="deleteBlockBtn" onclick="deleteBlock(this)" type="button" data-value="${profileUser.userId}"  class="btn btn-primary">
 								차단해제
 								</button>
@@ -559,7 +589,12 @@ div.modal-content{
 
 					<div class="post-content">
 						<div class="reaction-wrapper">
-							<i class="bi bi-heart icon" data-value="${post.postNo}"></i> 
+							<c:if test="${post.likeStatus eq 1}">
+                            	<i class="bi bi-heart-fill icon" onclick="like(this)" style="color:red;" data-value="${post.postNo}"></i>
+                            </c:if>
+                            <c:if test="${empty post.likeStatus}">
+                            	<i class="bi bi-heart icon" onclick="like(this)" data-value="${post.postNo}"></i>
+                            </c:if> 
 							<!-- 4.조회수, 댓글수 -->
 							<i class="bi bi-eye icon">${post.views}</i> 
 							<i class="bi bi-chat-left icon">${post.commentCount}</i>
@@ -606,16 +641,14 @@ div.modal-content{
 			});
 	
 	// 좋아요, 좋아요 취소
-	function like(){
-	$("i.bi.bi-heart.icon, i.bi.bi-heart-fill.icon").on("click", function() {
-		const heart = $(this)		
-		console.log(heart);
-		const postNo = $(this).data("value");
+	function like(e){
+		const heart = $(e)		
+		const postNo = $(e).data("value");
 		//alert("postNo: " + postNo);
 		console.log("postNo: " + postNo);
 
 		//like_cnt = <span class="like-cnt">${post.likeCount}</span>
-		const div_like_cnt = $(this).parent().parent().find("span.like-cnt");
+		const div_like_cnt = $(e).parent().parent().find("span.like-cnt");
 		console.log(div_like_cnt);
 		
 		$.ajax({
@@ -649,8 +682,6 @@ div.modal-content{
 				console.log(status); // "errror"
 			}
 		});
-
-	});
 	}
 
 	
@@ -673,7 +704,8 @@ div.modal-content{
 				console.log(data.relationUserFollowerCnt);
 				console.log(data.relationUserFollowerCnt)
 							
-				$("#insertFollowBtn").text("팔로잉");
+				$("#insertFollowBtn").hide();
+				$("#deleteFollowBtn").show();
 				$("span.followerTotalCount.n").text(data.relationUserFollowerCnt);
 				
 			}, error : function(jqXHR, status){
@@ -731,7 +763,9 @@ div.modal-content{
 					console.log("jqXHR: " + jqXHR);
 					
 					//$(e).parent().parent().remove();
-					$().text("팔로우");
+					//$("#insertFollowBtn").text("팔로우");
+					$("#deleteFollowBtn").hide();
+					$("#insertFollowBtn").show();
 					$("span.followerTotalCount").text(data.relationUserFollowerCnt);
 					
 				}, error : function(jqXHR, status){
@@ -761,7 +795,8 @@ div.modal-content{
 					
 					if(data === 1){
 						//alert("차단성공")
-						$("#insertBlockBtn").text("차단해제");
+						$("#insertBlockBtn").hide();
+						$("#deleteBlockBtn").show();
 						$(".btn.btn-primary.a").text("");
 						// '<i class="bi bi-person-x"></i>'
 					}else{
@@ -795,6 +830,9 @@ div.modal-content{
 				if(status === 1){
 					//alert("차단해제 완료!");
 					line.remove();
+					$("#deleteBlockBtn").hide();
+					$("#insertBlockBtn").show();
+					$("#insertFollowBtn").show();
 				}else{
 					//alert("차단해제 실패..");
 				}
@@ -854,7 +892,7 @@ div.modal-content{
 			function getListPost(){
 				
 				$.ajax({
-					url:"/community/api/getListPost?currentPage="+currentPage,
+					url:"/community/api/getListPost?currentPage="+currentPage+"&userId="+userId,
 					type:"GET",
 					datatype:"json",
 					success: function(data, status, jqXHR){
@@ -936,6 +974,7 @@ div.modal-content{
 								
 								$(postCard).find(".post-time").before(div_3);
 								$(postCard).find(".description").html(post.shortContent);
+
 								
 								for(let j = 0; j < post.attachments.length; j++){	
 									$(postCard).find(".your-class"+currentPage).append(`
@@ -948,9 +987,9 @@ div.modal-content{
 							}
 							
 							if(post.likeStatus === '1'){									
-								$(postCard).find("i.bi.bi-eye.icon").before(`<i class="bi bi-heart-fill icon" style="color:red;" data-value="\${post.postNo}"></i>`);
+								$(postCard).find("i.bi.bi-eye.icon").before(`<i class="bi bi-heart-fill icon" onclick="like(this)" style="color:red;" data-value="\${post.postNo}"></i>`);
 							}else if(post.likeStatus === undefined ){
-								$(postCard).find("i.bi.bi-eye.icon").before(` <i class="bi bi-heart icon" data-value="\${post.postNo}"></i>`);
+								$(postCard).find("i.bi.bi-eye.icon").before(` <i class="bi bi-heart icon" onclick="like(this)" data-value="\${post.postNo}"></i>`);
 							}
 							
 							//$(postCard).find("a.profile-link").attr("href","/community/getProfile/"+post.user.userId);							
@@ -972,8 +1011,6 @@ div.modal-content{
 
 								
 							}//for
-							
-							like();
 							slick2('.your-class'+currentPage);								
 						}//success
 						, error: function(status, jqXHR){

@@ -109,9 +109,8 @@ public class UserController {
 
 		String imageFilePath = null;
 //		String absolutePath = new File("").getAbsolutePath()+"\\";
-		String path = System.getProperty("user.dir") + "/src/main/webapp/resources/attachments/profile_image";
-		// String path =
-		// "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
+		//String path = System.getProperty("user.dir") + "/src/main/webapp/resources/attachments/profile_image";
+		String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/profile_image";
 		File file = new File(path);
 
 		if (!file.exists()) {
@@ -208,7 +207,7 @@ public class UserController {
 //		String absolutePath = new File("").getAbsolutePath()+"\\";
 		// String path =
 		// System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/profile_image";
-		String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
+		String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/profile_image";
 		File file = new File(path);
 
 		if (!file.exists()) {

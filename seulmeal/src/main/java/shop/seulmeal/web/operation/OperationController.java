@@ -252,7 +252,7 @@ public class OperationController {
 		
 		operationService.updateOperation(post);
 		
-		System.out.println("deleteProductNo : "+deleteProductNo);
+		//System.out.println("deleteProductNo : "+deleteProductNo);
 		if(post.getPostStatus().equals("2")) {
 			System.out.println("===================이벤트=========================");
 			System.out.println("productNo : "+productNo);
@@ -323,6 +323,22 @@ public class OperationController {
 		}
 	}
 	
+	@GetMapping("listOperationDiscountEvent/admin/{currentPage}")
+	public String getListOperationDiscountEvent(@PathVariable String currentPage, Search search, Model model) {
+		if(currentPage != null) {
+			search.setCurrentPage(new Integer(currentPage));
+		}
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setSearchCondition("0");
+		search.setPageSize(pageSize);
+				
+		Map<String,Object> map = operationService.getListOperation(search, 2);
+		model.addAttribute("list",(List<Post>)map.get("list"));
+		
+		return "operation/listOperationDiscountEvent";
+	}
 	
 	
 	@GetMapping("getChatBot")

@@ -159,9 +159,6 @@
 	          
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link headerNav" href="#">베스트</a>
-	        </li>
-	        <li class="nav-item">
 	          <a class="nav-link headerNav" href="/operation/getListOperation/2/0/0">특가/이벤트</a>
 	        </li>
 	        <li class="nav-item dropdown">
@@ -204,11 +201,11 @@
 
 
 <script>
-    Kakao.init("5a91dcc078a5d95d570495f33c363abb");   // 아까 복사해둔 JavaScript 키
+    Kakao.init("5a91dcc078a5d95d570495f33c363abb"); 
     function sendLink() {
     	console.log("${url}")
       Kakao.Link.sendCustom({
-        templateId: 78625,   // 복사해둔 템플릿 ID
+        templateId: 78625, 
         templateArgs: {
         	<c:if test="${empty product}">
         		title: "SeulMeal MealKit",

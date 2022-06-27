@@ -267,9 +267,8 @@
 			            "Content-Type" : "application/json"
 			        },
 			        dataType : "json",
-			        success : function(data){	        	
-			        	console.log(data);
-
+			        success : function(data,status){
+			        	//console.log(data);
 			        	const parts = "<div class='searchparts'> <input type='hidden' class='partsNo' name='plusPartsNo' value='"+data.partsNo+"' /> <input type='hidden' class='partsName' name='plusName' value='"+data.name+"' />"
 			        	+"<input type='hidden' class='price' name='plusPrice' value='"+data.price+"' />"
 			            +"<br/><div class='parts' data-parts='"+data.partsNo+"'>"+"<span class='name'>" +data.name + "</span><button type='button' class='btn btn-primary' onClick='fncClose(this)'>x</button>"
@@ -288,6 +287,11 @@
 		                const productprice = $("#total").text().replace(",","");
 		                const result = parseInt(productprice)+parseInt(data.price);
 		                $("#total").text(result.toLocaleString());
+			        },
+			        error : function(status){
+			        	if(status.statusText === "parsererror"){
+			        		toastr.error("없는 재료 입니다..","",{timeOut:2000});
+			        	}
 			        }
 				})
 			}else{

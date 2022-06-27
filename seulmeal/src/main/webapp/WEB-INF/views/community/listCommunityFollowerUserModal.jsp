@@ -14,13 +14,13 @@
 	<!-- 팔로워 유저 목록 모달 -->
 	<div id="followerModal" class="modal fade" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-scrollable modal-md "
+		<div class="modal-dialog  modal-dialog-scrollable modal-md "
 			role="document">
 			<div class="modal-content" >
 
 				<!-- 헤더 -->
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalScrollableTitle">팔로워</h5>
+				<div class="modal-header ">
+					<h5 class="modal-title text-center" id="exampleModalScrollableTitle">팔로워</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>

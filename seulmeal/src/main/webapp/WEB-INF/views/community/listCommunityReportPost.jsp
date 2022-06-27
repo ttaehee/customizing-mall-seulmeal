@@ -68,9 +68,7 @@
 		</table>
 		
 		<hr/>
-		<div class="row">
-			<div class="col-md-5"></div>
-			<div class="col-md-4">
+		<div class="row" style="justify-content : center;">
 				<nav aria-label="...">
 				  <ul class="pagination">
 			  		<li class="page-item disabled">
@@ -91,7 +89,6 @@
 				    </li>
 				  </ul>
 				</nav>
-			</div>
 		</div>
 	</div>
 	

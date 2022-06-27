@@ -37,7 +37,7 @@ public class KakaoAPI {
 			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
 			sb.append("&client_id=5d0862d7e4baae490cfc20f9ef7c6cb5");
-			sb.append("&redirect_uri=http://localhost:7100/user/kakaoLogin");
+			sb.append("&redirect_uri=http://www.seulmeal.shop/user/kakaoLogin");
 			sb.append("&code="+code);
 			
 			

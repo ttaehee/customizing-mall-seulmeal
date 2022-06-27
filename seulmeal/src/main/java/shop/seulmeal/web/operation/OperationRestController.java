@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +132,23 @@ public class OperationRestController {
 			json.put("result","true");
 		} else {
 			json.put("result","false");
+		}
+		
+		return json;
+	}
+	
+	/// 이벤트 상품 제거
+	@PostMapping("delectEventProduct")
+	public JSONObject delectEventProduct(@RequestBody Map<String,Object> map) {
+		JSONObject json = new JSONObject();
+		List<String> list = new ArrayList<String>();
+		list.add(Integer.toString((Integer)map.get("productNo")));
+		int r = operationService.updateDiscountProductC(list);
+		
+		if(r==0) {
+			json.put("result","false");
+		} else {
+			json.put("result","true");
 		}
 		
 		return json;

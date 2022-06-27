@@ -340,7 +340,7 @@ function fncClose(ths){
 <div class="form-group row">
 				<label for="Email3" class="col-sm-2 control-label">프로필 이미지</label>
 				<div class="col-sm-3">
-					<img src="/resources/attachments/profile_image/${user.profileImage }" id="img_section" style="width: 200px; height: 200px;">
+					<img src="/resources/attachments/profile_image/default_profile.jpg" id="img_section" style="width: 200px; height: 200px;">
 				
 				</div>
 				<br/><br/>

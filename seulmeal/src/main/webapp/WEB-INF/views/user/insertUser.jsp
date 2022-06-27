@@ -239,7 +239,7 @@ height:44px;
 		const id = $("#userId").val();
 			
 		const reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-		const hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;		
+		const hangulcheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 		
 		if(id===''){
 			$("#passResult").css("color","crimson").text("아이디를 먼저 입력하세요.");
