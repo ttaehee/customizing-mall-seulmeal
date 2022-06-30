@@ -14,7 +14,6 @@
 
 <body>
 <jsp:include page="../layer/header.jsp"></jsp:include>
-<jsp:include page="../layer/upscroll.jsp"></jsp:include>
 
 <style>
 	
@@ -122,7 +121,7 @@
 	</div>
 			
 	<div class="container">
-	 <table class="table table-hover" id="list" style="width: 1000px;">
+	 <table class="table table-hover" id="list">
  
         <thead>
           <tr>
@@ -141,8 +140,10 @@
 			<c:forEach var="purchase" items="${purchaseList}">
 			<c:forEach var="cpd" items="${purchase.customProduct}">
 			<tr class="ct_list_pop">	
-			      <td class="link" align="center" style="cursor:pointer;" onClick="window.location.href='/purchase/getPurchase/${purchase.purchaseNo}'"><br/><br/>
+			      <td class="link" align="center"><br/><br/>
+			      	<a href='/purchase/getPurchase/${purchase.purchaseNo}'>
 			      	${purchase.regDate}&ensp;[${purchase.purchaseNo}]<br/><br/>
+			      	</a>
 			      		<div>
 			      		<c:choose>
 							<c:when test="${purchase.purchaseStatus eq '1'}">상품준비중</c:when>
@@ -201,12 +202,12 @@
   	//구매확정버튼 
 	function fncPurchaseStatus(ths){
 		
-		const purchaseNo=$(ths).data('value');	
-		
-		var status = confirm("구매확정하시겠습니까?");
+		let purchaseNo=$(ths).data('value');	
+
+		let status = confirm("구매확정하시겠습니까?");
 		
 		if(status){
-		
+			
 			$.ajax({
 				url:"/purchase/api/updatePurchaseCode",
 				method:"POST",  
@@ -220,11 +221,13 @@
 		        },
 		        dataType : "json",
 		        success : function(data){	
+		        	toastr.error(`\${data}P 적립되었습니다.`,"",{timeOut:3000});
 		        	$(ths).closest('div').text('구매확정');
 		        	$(ths).remove();
 		        }
-	    	});	
+	    	})
 		}
+		return;
 	}
   	
 	//테이블 셀병함
@@ -348,11 +351,15 @@
 									+"<td><a type='button' class='delete' data-value='"+purchaseOne.purchaseNo+"' onClick='fncDelete(this)'>&ensp;x</a></td></tr>";							
 
 								$("table tbody:last-child").append(purchaseListHtml);
+								ppartsHTML="";
+								mpartsHTML="";
+								
 								}
 							}//for
 							
 							$('#list').rowspan(0);
 							$('#list').rowspan(6);
+
 							
 						}//success
 						, error: function(status, jqXHR){

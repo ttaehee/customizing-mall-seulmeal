@@ -223,7 +223,18 @@ button#insertCommentBtn {
 					<div id ="comment_container">
 						<!-- Comments-->
 						<c:forEach var="comment" items="${commentList}">
+						
+						
+						
 							<div class="d-flex mb-4">
+							<!-- 대댓글 -->
+							<c:if test="${comment.commentLevel != 1}">								
+								<c:forEach var="i" begin="1" end="${comment.commentLevel}">
+								  &nbsp&nbsp&nbsp&nbsp
+								</c:forEach>
+								<i style="font-size: 30px;"  class="bi bi-arrow-return-right"></i>
+							</c:if>
+							
 								<div class="flex-shrink-0">
 									<img id="comment-profile-img"  class="rounded-circle"
 										src="/resources/attachments/profile_image/${comment.user.profileImage}"/>
@@ -232,6 +243,9 @@ button#insertCommentBtn {
 									<span class="fw-bold">${comment.user.nickName}</span>
 									<span class="comment-con">${comment.content}</span>
 									<span class="comment-reg">${comment.regDate}</span>
+									
+									<!-- 대댓글 -->
+									<span class="commentLayerC commentLayer" onclick="commentLayerBtn(this)" data-value="${comment.commentNo}">대댓글달기</span>
 
 									<c:if test="${sessionScope.user.userId == comment.user.userId}">
 										<!-- button id="updateCommentBtn" type="button"
@@ -257,6 +271,55 @@ button#insertCommentBtn {
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 
 	<script>
+	
+	function commentLayerBtn(e){
+		if($(e).parent().attr("class").indexOf("commentLayerC") !== -1){
+			const inputArea = `<div class="comentInputBox" style="margin-left:30px;"><div class="mb-4"> 
+				<textarea style="width: 90%;" id="comment_content" name="content"
+				class="comment_content" rows="3" placeholder="댓글을 입력하세요"></textarea>
+			<button type="button"
+				class="btn btn-primary" onclick="insertLayerBtn(this)">등록</button>
+			</div>`
+			$(e).parent().append(inputArea)
+			$(e).parent().removeClass("commentLayerC")			
+			return;
+		}
+		
+		if($(e).parent().attr("class").indexOf("commentLayerC") === -1){
+			$(e).parent().find(".comentInputBox").remove();
+			$(e).parent().addClass("commentLayerC")
+			return;
+		}
+		
+	}
+	
+	function insertLayerBtn(e){
+		const target = $(e).parents(".ms-3").find(".commentLayer").data("value")
+		var postNo = ${post.postNo};
+		var content = $(e).prev(".comment_content").val();
+		console.log("content: "+content)
+		console.log("target: "+target)
+		
+		var jsonReq = {
+			"postNo" : postNo,
+			"content" : content,
+			"parentCommentNo" : target
+		}
+		
+		
+		$.ajax({
+			url : "/community/api/insertComment",
+			method : "POST",
+			data : JSON.stringify(jsonReq),
+			dataType : "json", // 받는 타입
+			contentType : "application/json; charset=utf-8", // 보내는 타입
+			success : function(data, status, jqXHR) {
+				window.location.reload();
+			}
+		})
+		
+	}
+	
 	
 	function deletePost(e){
 		
@@ -305,6 +368,10 @@ button#insertCommentBtn {
 													<span class="fw-bold">\${data.user.nickName}</span>
 													<span class="comment-con">\${data.content}</span>
 													<span class="comment-reg">\${data.regDate}</span>
+													
+													<!-- 대댓글 -->
+													<span class="commentLayerC commentLayer" onclick="commentLayerBtn(this)" data-value="\${data.commentNo}">대댓글달기</span>
+													
 													<button id="deleteCommentBtn" type="button"
 														class="btn btn-primary deleteC" data-value="\${data.commentNo}">삭제</button>
 												</div>
@@ -439,19 +506,32 @@ button#insertCommentBtn {
 						datatype:"json",
 						success: function(data, status, jqXHR){
 							
-							console.log("success status: "+ status);
-							console.log("data: " + data);
-							console.log("jqXHR: "+ jqXHR);
-							console.log("json/stringify: "+JSON.stringify(data));						
+							//console.log("success status: "+ status);
+							//console.log("data: " + data);
+							//console.log("jqXHR: "+ jqXHR);
+							//console.log("json/stringify: "+JSON.stringify(data));						
 							//const comments = JSON.stringify(data);					
 							//console.log($(".d-flex.mb-4").clone()[0]);
 							//alert("//"+data.resultPage.maxPage);
 							
 							for(let i = 0; i<data.length; i++){
 								const comment = data[i];
+								console.log(comment.commentLevel)
+								
+								let layerComment = "";							
 								
 								// 반복문 안에 위치해야한다.
 								let commentCard = $(".d-flex.mb-4").clone()[0];
+								
+								// 대댓글 처리
+								if(comment.commentLevel !== 1){
+									for(let j=0; j<comment.commentLevel; j++){
+										layerComment += "&nbsp&nbsp&nbsp&nbsp"
+									}
+									layerComment += `<i style="font-size: 30px;"  class="bi bi-arrow-return-right"></i>`;
+								}
+								
+								$(commentCard).prepend(layerComment);
 								/*
 								console.log(comment.user.profileImage);
 								console.log(comment.user.nickName);

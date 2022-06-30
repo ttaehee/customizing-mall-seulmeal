@@ -1,5 +1,6 @@
 package shop.seulmeal.web.main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import shop.seulmeal.common.Page;
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.Like;
 import shop.seulmeal.service.domain.Post;
 import shop.seulmeal.service.domain.Product;
 import shop.seulmeal.service.domain.User;
@@ -101,16 +103,29 @@ public class MainController {
 		}	
 		
 		// 추천음식
-		System.out.println("principal : "+userC);
 		search = new Search();
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
 		}		
 		search.setPageSize(pageSize);
+		
 
 		// 메인페이지 모든 상품들
 		map = productService.getListProduct(search);
 		List<Product> list = (List)map.get("list");
+				
+		if(userC != null) {
+			List<Like> likeList = productService.getListLikeAll(userC.getUserId());
+			for (Product product : list) {
+				
+				for (Like like : likeList) {
+					if(product.getProductNo() == like.getProductNo()) {
+						product.setLikeStatus(1);
+					}					
+				}				
+			}			
+		}
+		
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);
 		model.addAttribute("list",list);
@@ -122,6 +137,7 @@ public class MainController {
 			// 이달의 최고판매 10개
 			map.put("option", "main");
 			map.put("count", 10);
+			
 			model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
 			
 			
@@ -131,12 +147,37 @@ public class MainController {
 				// 이달의 최고판매 10개
 				map.put("option", "main");
 				map.put("count", 10);
-				model.addAttribute("monthSaleProduct",operationService.monthSaleProduct(map));
+				
+				List<Map<String,Object>> bestList = operationService.monthSaleProduct(map);
+				
+				List<Like> likeList2 = productService.getListLikeAll(userC.getUserId());
+				for (Map<String,Object> p2 : bestList) {
+					System.out.println("p2 p2 : "+p2.get("PRODUCT_NO"));
+					String productNo = String.valueOf(p2.get("PRODUCT_NO"));
+					for (Like like : likeList2) {
+						if(productNo.equals(Integer.toString(like.getProductNo()))) {
+							p2.put("likeStatus", 1);
+						}					
+					}				
+				}
+				
+				model.addAttribute("monthSaleProduct",bestList);
 			}else {
 				map.put("user", userC);
-				List<Map<String,Object>> list2 = operationService.selectUserProduct(map);
 				
-				model.addAttribute("monthSaleProduct",list2);
+				List<Map<String,Object>> bestList = operationService.selectUserProduct(map);
+						
+				List<Like> likeList2 = productService.getListLikeAll(userC.getUserId());
+				for (Map<String,Object> p2 : bestList) {
+					String productNo = String.valueOf(p2.get("PRODUCT_NO"));
+					for (Like like : likeList2) {
+						if(productNo.equals(Integer.toString(like.getProductNo()))) {
+							p2.put("likeStatus", 1);
+						}					
+					}				
+				}
+				
+				model.addAttribute("monthSaleProduct",bestList);
 			}
 		}
 		

@@ -576,7 +576,13 @@
 	<select id="getLikeProductTotalCount" resultType="int">
 		SELECT COUNT(*) FROM likes WHERE user_id = #{userId} AND product_no IS NOT NULL
 	</select>
-
+	
+	<select id="getListLikeAll" resultType="like">
+		SELECT * 
+		FROM likes
+		WHERE user_id = #{userId}
+		AND post_no IS NULL AND comment_no IS NULL
+	</select>
 
 	<delete id="deleteLikeProduct" parameterType="Like">
 		{ call declare begin

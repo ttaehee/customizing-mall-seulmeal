@@ -94,6 +94,6 @@ public interface ProductService {
 
 	public String updateLikeProduct(Map<String, Object> map) throws Exception;
 	
-
+	public List<Like> getListLikeAll(String userId) throws Exception;
 }
 

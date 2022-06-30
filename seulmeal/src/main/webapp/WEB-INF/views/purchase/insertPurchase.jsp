@@ -211,7 +211,7 @@
 						<input type="text" id="sample3_address" placeholder="주소" readonly><br>
 						<input type="text" id="address" placeholder="상세주소">
 					
-					<div id="wrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
+					<div id="addressWrap" style="display:none;border:1px solid;width:100%;height:300px;margin:5px 0;position:relative">
 						<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
 					</div>
 					</div><br/>
@@ -297,7 +297,7 @@
 							<button type=button class="pay" id="pay" style="background-color:#FFF; border-radius:5px; border:2px solid #FF4500; font-size:22px; width: 320px" onClick="iamport()">결제하기</button>		
 						</p>
 						<div id="pluspoint">
-							적립예정 포인트 : <span id="pluspoint" nmae="pluspoint"><fmt:formatNumber type="number" maxFractionDigits="0" value="${sum*0.05}"/></span>P
+							적립예정 포인트 : <span id="pluspoint" nmae="pluspoint"><fmt:formatNumber type="number" maxFractionDigits="0" value="${sum*0.005}"/></span>P
 						</div>
 	
 					</div>

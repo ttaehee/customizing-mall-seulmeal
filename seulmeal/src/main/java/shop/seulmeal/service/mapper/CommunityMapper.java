@@ -19,6 +19,7 @@ public interface CommunityMapper {
    //Post
    public int insertPost(Post post);
    public Post getPost(int postNo);
+   public Post getPostAdmin(int postNo);
    public int postViewsUp(int postNo);
    public int updatePost(Post post);
    public int deletePost(int postNo);

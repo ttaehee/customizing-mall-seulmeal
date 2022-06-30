@@ -125,7 +125,9 @@ public class UserController {
 				originalFileExtension = ".jpg";
 			} else if (contentType.contains("image/png")) {
 				originalFileExtension = ".png";
-			}
+			} else if(contentType.contains("image/jpg")) {
+	        	 originalFileExtension = ".jpg";
+	         }
 
 			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
 			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
@@ -222,7 +224,9 @@ public class UserController {
 				originalFileExtension = ".jpg";
 			} else if (contentType.contains("image/png")) {
 				originalFileExtension = ".png";
-			}
+			} else if(contentType.contains("image/jpg")) {
+	        	 originalFileExtension = ".jpg";
+	         }
 
 			imageFilePath = path + "/" + user.getUserId() + "_profile" + originalFileExtension;
 			String imageFileName = user.getUserId() + "_profile" + originalFileExtension;
@@ -553,7 +557,7 @@ public class UserController {
 			user.setPassword((String) userInfo.get("email"));
 			user.setEmail((String) userInfo.get("email"));
 			user.setNickName((String) userInfo.get("nickname"));
-			user.setPhone("010-000-0000");
+			/* user.setPhone("010-000-0000"); */
 			userService.insertUser(user);
 
 			user = userService.getUser((String) userInfo.get("email"));

@@ -168,19 +168,18 @@
 	          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	            <li><a class="dropdown-item" href="/operation/getListOperation/1">공지사항</a></li>
 	            <li><a class="dropdown-item" href="/operation/getListOperation/3">문의관리</a></li>
-	            <li><a class="dropdown-item" href="#">사이트 문의</a></li>
 	          </ul>
 	        </li>
 	      </ul>
 	      
 	
 	      <!-- 검색창 -->
-		<form class="searchProduct" id="searchProduct">
+		<form class="searchProduct" id="searchProduct" action="/product/listProduct">
 			<div style="display:flex;">	
 				<div class="form-outline" style="margin-top: 5px;">
 					<input name="searchKeyword" type="search" class="form-control searchP" placeholder="원하는 상품 검색" />
 				</div>		  
-				<button style="font-size: 20px;" onclick="searchProduct()" type="submit" class="btn btn-primary">
+				<button style="font-size: 20px;"  type="button" class="btn btn-primary" id="searchProduct223" onclick="searchProduct()">
 					<i class="bi bi-search"></i>
 				</button>
 				<c:if test="${ !empty user }">
@@ -235,21 +234,25 @@
 		
 		
 	}
-	
+	/*
+	$("#searchProduct223").on("click",(e)=>{
+		$(".searchProduct").submit();		
+	})
 
-	$(".searchP").on("keypress",(e)=>{
+	$(".searchP").on("keyup",(e)=>{
+		console.log(e.keyCode === 13)
 		if(e.keyCode === 13){
-			$(".searchProduct").attr("action","/product/listProduct").submit();
+			$("#searchProduct").submit();
 		}
 	})
-	
+	*/
 	function searchProduct(){
 		
-		let url = "/product/lististProduct/1";
+		let url = "/product/listProduct/1";
 		if('${searchCondition}' !== ''){
 			url += "/${searchCondition}";
 		}
-		
+		console.log(url)
 		if($(".searchP").val() !== ''){
 			$("#searchProduct").attr("action",url).attr("method","GET").submit();
 		}

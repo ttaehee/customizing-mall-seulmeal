@@ -35,8 +35,8 @@ public class AttachmentsController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
-	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
-	//private String path ="/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
+	//private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
+	private String path ="/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
 	
 	public AttachmentsController() {
 		// TODO Auto-generated constructor stub
@@ -47,18 +47,21 @@ public class AttachmentsController {
 	@GetMapping("/download/{fileName}")
 	public ResponseEntity<Object> attachMentsDownload(@PathVariable String fileName) throws IOException{
 		//String path = System.getProperty("user.dir")+"/src/main/resources/attachments/"+fileName;
-		path +=fileName;
-		Path filePath = Paths.get(path);
+		String newPath =path + fileName;
+		Path filePath = Paths.get(newPath);
 		Resource resource = new InputStreamResource(Files.newInputStream(filePath));
 		
-		File file = new File(path);
+		File file = new File(newPath);
 		
 		HttpHeaders headers = new HttpHeaders();
 		
 		// 다운로드 되거나 로컬에 저장되는 용도로 쓰이는지 알려주는 헤더
 		headers.setContentDisposition(ContentDisposition.builder("attachment").filename(file.getName()).build());
+		ResponseEntity<Object> re = new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
+		file = null;
+		resource =null;
 		
-		return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
+		return re;
 	}
 	
 	@ResponseBody

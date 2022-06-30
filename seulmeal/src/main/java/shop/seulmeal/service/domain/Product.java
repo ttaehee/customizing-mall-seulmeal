@@ -35,4 +35,6 @@ public class Product {
 	// 할인
 	private int discount;
 	private int originPrice;
+	
+	private int likeStatus;
 }

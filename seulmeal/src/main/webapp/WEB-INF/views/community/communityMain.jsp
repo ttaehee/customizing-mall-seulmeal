@@ -741,12 +741,20 @@ div.modal-content{
 			if(scrollTop + windowHeight >= documentHeight && currentPage <= maxPage){
 				setTimeout(getListPost,200);//0.2초
 			}
-			
 				function getListPost(){
 								
 					$.ajax({
-						url:"/community/api/getListPost?currentPage="+currentPage,
+						url:"/community/api/getListPost",
 						type:"GET",
+						data:{
+							currentPage :currentPage,
+							<c:if test="${search.searchCondition != null}">
+								searchCondition : "${search.searchCondition}",
+							</c:if>
+							<c:if test="${search.searchKeyword != null}">
+								searchKeyword : "${search.searchKeyword}",
+							</c:if>
+						},
 						datatype:"json",
 						async: false,
 						success: function(data, status, jqXHR){

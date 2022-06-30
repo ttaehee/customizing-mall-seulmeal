@@ -108,15 +108,15 @@ height:44px;
 	    <label for="Email3" class="col-sm-2 control-label">이메일</label>
 	    <div class="col-sm-10">	    	
 		    <div class="inputBar">
-				<input type="text" class="input" id="email" name="emaile" style="margin-bottom: 5px;" placeholder="이메일">
+				<input type="text" class="input" id="email" name="email" style="margin-bottom: 5px;" placeholder="이메일">
 				<input id="emailBtn" onclick="emailCheck()" value="인증하기" type="button" class="btn-user" disabled="disabled">
 		    </div>
 	    </div>
-	   <label for="Email3" class="col-sm-2 control-label" style="display: none;"> </label>	
+	   <label for="Email3" class="col-sm-2 control-label"> </label>	
 	    <div class="col-sm-10" id="emailCheckForm" style="display: none;">
 			
 			<div class="inputBar">
-				<input name="email" type="text" class="input" id="emailCode"  placeholder="인증번호를 입력하세요">
+				<input type="text" class="input" id="emailCode"  placeholder="인증번호를 입력하세요">
 				<input type="button" onclick="confirmEmail()" class="btn-user" value="인증확인">
 			</div>
 	    </div>
@@ -130,11 +130,11 @@ height:44px;
 				<input id="phoneBtn" type="button" onclick="phoneCheck()" class="btn-user" value="인증하기" disabled="disabled">
 	    	</div>
 	    </div>
-	    <label for="Email3" class="col-sm-2 control-label" style="display: none;"> </label>
+	    <label for="Email3" class="col-sm-2 control-label"> </label>
 	    <div class="col-sm-10" id="phoneCheckForm" style="display: none;">
 	    		
 	    	<div class="inputBar">
-				<input style="width: 100%;" type="text" class="input" id="phoneCode" style="margin-bottom: 5px;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="phoneCode" placeholder="인증번호를 입력하세요">
+				<input type="text" class="input" id="phoneCode" style="margin-bottom: 5px;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="phoneCode" placeholder="인증번호를 입력하세요">
 				<input type="button" onclick="confirmPhone()" class="btn-user" value="인증하기">
 	    	</div>
 	    </div>
@@ -145,10 +145,10 @@ height:44px;
 	    <div class="col-sm-10">
 	    	<!-- 주소 -->
 	    	<div style="display: flex; justify-content: space-between;">
-	    	<input type="text" class="input" id="sample3_postcode" placeholder="우편번호" style="margin-bottom: 5px;" readonly>
+	    	<input type="text" class="input" id="sample3_postcode" name="address" placeholder="우편번호" style="margin-bottom: 5px;" readonly>
 			<input class="btn-post" type="button" onclick="sample3_execDaumPostcode()" value="우편번호 찾기">
 			</div>
-			<input type="text" class="input" id="sample3_address" style="margin-bottom: 5px;" placeholder="주소" readonly><br>
+			<input type="text" class="input" id="sample3_address" name="address" style="margin-bottom: 5px;" placeholder="주소" readonly><br>
 			<input type="text" class="input" id="address" name="address" style="margin-bottom: 5px;" placeholder="상세주소">
 			
 			<div id="addressWrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
@@ -408,7 +408,7 @@ height:44px;
 	        dataType : "json",
 	        success : function(data){
 	        	alert(data.result);	        	
-	        	$("#phone").attr("disabled","disabled");
+	        	$("#phone").attr("readonly","readonly");
 	        	$("#phoneBtn").attr("disabled","disabled");
 	        	$("#phoneCheckForm").css("display","none");
 	        }
@@ -431,7 +431,7 @@ height:44px;
 	        dataType : "json",
 	        success : function(data){
 	        	alert(data.result);
-	        	$("#email").attr("disabled","disabled");
+	        	$("#email").attr("readonly","readonly");
 	        	$("#emailBtn").attr("disabled","disabled");
 	        	$("#emailCheckForm").css("display","none");
 	        }

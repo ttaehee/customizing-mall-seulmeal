@@ -41,7 +41,7 @@ function check() {
 <table class="table table-hover text-center" style="height: autopx; width: 500px; margin-left:auto; margin-right:auto;">
 			<form id="insert" action="/product/insertFoodCategory" onsubmit="return check()" method="POST">
 				<tr>
-					<th><input type="text" class="form-control" id="insertText" placeholder="카테고리명을 입력하세요" style="border: none; background-color: #fff;"/></th>
+					<th><input name="name" type="text" class="form-control" id="insertText" placeholder="카테고리명을 입력하세요" style="border: none; background-color: #fff;"/></th>
 					<th><button type="submit" class="btn btn-primary" style="width:100%; height:100%;  border: none; background-color: #fff;">등록</button></th>
 				</tr>
 			</form>

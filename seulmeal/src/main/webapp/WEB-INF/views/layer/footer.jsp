@@ -218,6 +218,12 @@
 			float: none;
 		}
 	}
+	
+	.bi-caret-down-fill{
+         font-size: 40px;
+         line-height: 40px;
+         color:#FF4500;
+     }
 </style>
 </head>
 <body>
@@ -266,21 +272,12 @@
 	    </script>
 	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 			</div>
-<!-- 
 			<div class="footer-right">
-
-				<p>Contact Us</p>
-
-				<form action="#" method="post">
-
-					<input type="text" name="email" placeholder="Email" />
-					<textarea name="message" placeholder="Message"></textarea>
-					<button>Send</button>
-
-				</form>
+				<p>맨 위로</p>
+				<i class="bi bi-caret-up-fill"></i><br/>
 
 			</div>
- -->
+
 		</footer>
 
 		<!-- Demo ads. Please ignore and remove. -->
@@ -293,5 +290,12 @@
 		<hr />
 		<p>2022.02~2022.06 seulMeal</p>
 	</div> -->
+	<script type="text/javascript">
+	$('.footer-right').on('click',function(){
+		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+	});
+	
+	
+	</script>
 </body>
 </html>

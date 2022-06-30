@@ -453,7 +453,7 @@
 		FROM ${table}
 		WHERE (reg_date BETWEEN TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,#{month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,#{month}))) as rast from dual),'YY-MM-DD'))
 		<if test="table == 'purchase'">
-			AND purchase_status = 1
+			AND purchase_status != 0
 		</if>
 		<if test="table == 'review'">
 			AND status = 0
@@ -498,7 +498,7 @@
 			</if>
 			<if test="table == 'product p, purchase pp, customproduct c'">
 				(p.reg_date BETWEEN TO_DATE((SELECT TRUNC(ADD_MONTHS(SYSDATE,${month}), 'MM') as first FROM dual),'YY-MM-DD') AND TO_DATE((SELECT LAST_DAY(TRUNC(ADD_MONTHS(SYSDATE,${month}))) as rast from dual),'YY-MM-DD'))
-				AND p.product_no = c.product_no(+) AND c.purchase_no = pp.purchase_no(+) AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
+				AND p.product_no(+) = c.product_no AND c.purchase_no(+) = pp.purchase_no AND (c.purchase_no IS NOT NULL AND pp.purchase_status != 0)
 			</if>
 		</where>
 		<!-- GROUP BY -->
@@ -535,7 +535,7 @@
 	
 	<select id="monthSaleProduct" parameterType="map" resultType="map">
 		SELECT * FROM(
-		SELECT p.product_no,p.name, SUM(pp.price+pp.usepoint) cnt, COUNT(*) count		
+		SELECT p.product_no,p.name, SUM(p.price) cnt, COUNT(*) count		
 		<if test="option =='main'">
 			,p.thumbnail, p.price, p.calorie, p.sub_content, p.origin_price, p.like_count, p.review_count
 		</if>

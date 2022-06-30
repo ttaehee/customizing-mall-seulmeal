@@ -27,10 +27,12 @@
 	
 	.card-coverP{
 		transform: scale(1.1);
+		cursor: pointer;
 	}
 	
 	.card-coverP:hover{
 		transform: scale(1.2);
+		background-blend-mode: soft-light;
 	}	
 	
 	#tumbCard{
@@ -145,7 +147,7 @@
 								<div class="col-md-5 cardP">
 									<div class="card card-cover card-coverP h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="transaition : all 0.2s linear; background-image: url('/resources/attachments/${product.thumbnail}');">
 										<div class="d-flex flex-column h-100 p-5 pb-0 text-white text-shadow-1">
-											<div data-value="${product.productNo}" class="productHref">
+											<div data-value="${product.productNo}" class="productHref" onclick="getProductIm(this)">
 											<h2 class="display-6fw-bold productTarget">${product.name}</h2>
 											<h4 class="pt-5 mt-5 mb-5 display-6fw-bold"></h4>
 											<h5 class="productTarget" style="text-decoration: line-through;">${product.originPrice}원</h5>
@@ -198,6 +200,11 @@
 	function cancelEvent(){
 		window.location.href = '/operation/getListOperation/2';
 	}
+
+	function getProductIm(e){
+		const no =$(e).data('value');
+		window.location.href = '/product/getProduct/'+no;
+	}
 	
 	function deleteEvent(){
 		
@@ -211,7 +218,7 @@
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
 	        success : function(data){
-	        	window.location.href = '/operation/getListOperation/2';
+	        	window.location.href = '/operation/getListOperation/2/0/0';
 	        }
 		})
 		

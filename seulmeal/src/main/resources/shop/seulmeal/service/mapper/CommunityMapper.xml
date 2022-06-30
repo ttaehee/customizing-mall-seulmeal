@@ -30,6 +30,7 @@
       <result property="publicStatus" column="public_status" jdbcType="CHAR" />
       <result property="password" column="password" jdbcType="NUMERIC" />
       <result property="answerStatus" column="answer_status" jdbcType="CHAR" />
+      <result property="commentLevel" column="COMMENTLEVEL" jdbcType="NUMERIC" />
       <result property="status" column="status" jdbcType="CHAR" />
    </resultMap>
    
@@ -65,6 +66,16 @@
             AND p.post_no = #{postNo}
               AND p.post_status = '0'
               AND p.status = '0'
+         </where>
+   </select>
+   
+   <select id="getPostAdmin" parameterType="int" resultMap="postSelectMap">
+      SELECT p.*, u.nickname, u.profile_image
+          FROM post p, users u     
+         <where>
+            p.user_id = u.user_id
+            AND p.post_no = #{postNo}
+              AND p.post_status = '0'
          </where>
    </select>
 
@@ -317,6 +328,7 @@
    </select-->
    
    <!-- SQL : SELECT LIST -->
+   <!-- 
    <select  id="getListComment"  parameterType="map"   resultMap="commentSelectMap">
         SELECT *
         FROM (   SELECT inner_table.* , ROWNUM AS row_seq
@@ -329,6 +341,25 @@
                         AND status = '0'
                      </where>            
                      ORDER BY c.reg_date DESC) inner_table
+                  WHERE ROWNUM &lt;= #{search.endRowNum} )
+      WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
+    </select> -->
+    
+    <select  id="getListComment"  parameterType="map"   resultMap="commentSelectMap">
+        SELECT *
+        FROM (   SELECT inner_table.* , ROWNUM AS row_seq
+                    FROM      ( 
+                    SELECT LEVEL COMMENTLEVEL, c.*, u.nickname, u.profile_image, u.role
+                    FROM
+                        (
+                        SELECT * FROM comments c WHERE post_no = #{postNo}
+                        AND status = 0
+                        ORDER BY c.reg_date DESC
+                        ) c, users u
+                        WHERE c.user_id = u.user_id
+                    START WITH parent_comment_no is NULL
+                    CONNECT BY PRIOR comment_no =parent_comment_no
+                            ) inner_table
                   WHERE ROWNUM &lt;= #{search.endRowNum} )
       WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
     </select>

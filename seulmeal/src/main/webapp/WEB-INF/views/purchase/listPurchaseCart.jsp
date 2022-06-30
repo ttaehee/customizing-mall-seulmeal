@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -145,7 +146,7 @@
 					<input type="checkbox" id="delete_title" onClick="selectAll(this)"/>&emsp;
 					<label for="delete_title"></label>&emsp;&ensp;&ensp;<br/>
 				</th>
-	            <th align="right">Image</th>
+	            <th align="right">이미지</th>
 	            <th align="center">상품명</th>
 	            <th align="center">옵션</th>
 	             <th align="center">수량</th>
@@ -478,7 +479,7 @@
 		if(conf){ */
 
 			const count = $("#customProductCount").text();
-			const customprice= $("#customPrice").text();
+			const customprice= $("#customPrice").text().replace(",","");
 			const cartStatus = $(ths).val();
 			
 			$(".cc").append(`<input type="hidden" name ="count" value="\${count}">`);
@@ -673,7 +674,7 @@
 	
 	//추가재료 삭제
 	function fncClose(ths){
-		let partsPrice = parseInt($(ths).closest("div").parent().find("span[name='partsprice']").text());
+		let partsPrice = parseInt($(ths).closest("div").parent().find("span[name='partsprice']").text().replace(",",""));
 		let count = parseInt($(ths).closest("div").parent().find("span[name='gram']").text())/10;
 		let customPrice = $('#customPrice').text().replace(",","");
 		let total = customPrice - (partsPrice*count);

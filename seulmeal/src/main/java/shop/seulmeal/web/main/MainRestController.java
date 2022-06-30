@@ -1,7 +1,10 @@
 package shop.seulmeal.web.main;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import shop.seulmeal.common.Search;
+import shop.seulmeal.service.domain.Like;
+import shop.seulmeal.service.domain.Product;
+import shop.seulmeal.service.domain.User;
 import shop.seulmeal.service.operation.OperationService;
 import shop.seulmeal.service.product.ProductService;
 
@@ -37,12 +43,28 @@ public class MainRestController {
 	}
 	
 	@GetMapping("/api/main")
-	public Map<String,Object> getMain(@RequestParam(required = false, defaultValue = "2") int currentPage) throws Exception {
+	public Map<String,Object> getMain(@RequestParam(required = false, defaultValue = "2") int currentPage, HttpSession session) throws Exception {
 		JSONObject json = new JSONObject();
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
 		search.setPageSize(pageSize);
 		Map<String,Object> map = productService.getListProduct(search);
+		List<Product> list = (List)map.get("list");
+		
+		User user = (User)session.getAttribute("user");
+		
+		if(user != null) {
+			List<Like> likeList = productService.getListLikeAll(user.getUserId());
+			for (Product product : list) {
+				
+				for (Like like : likeList) {
+					if(product.getProductNo() == like.getProductNo()) {
+						product.setLikeStatus(1);
+					}					
+				}				
+			}			
+		}
+
 		
 		return map;
 	}

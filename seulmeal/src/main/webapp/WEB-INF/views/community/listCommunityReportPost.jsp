@@ -44,7 +44,7 @@
 				<tr>
 					<th>${report.regDate}</th>
 					<th>${report.reporterId}</th>
-					<th class="postNo"><a href="/cummnity/getCommunity/1/${report.postNo}" class="link-dark text-decoration-none">${report.postNo}</a></th>					
+					<th class="postNo"><a href="/community/getPostAdmin/${report.postNo}" class="link-dark text-decoration-none">${report.postNo}</a></th>					
 					<th>
 						${report.reason}
 					</th>
@@ -69,26 +69,26 @@
 		
 		<hr/>
 		<div class="row" style="justify-content : center;">
-				<nav aria-label="...">
-				  <ul class="pagination">
-			  		<li class="page-item disabled">
-				      <span class="page-link" data-value="1">Previous</span>
-				    </li>
-				  	<c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage}">
-				  		<li class="page-item">
-				  			<c:if test="${search.searchKeyword ==null }">
-				  				<a class="page-link" href="/community/getListReportPost/${i}">${i}</a>
-				  			</c:if>
-				  			<c:if test="${search.searchKeyword !=null }">
-				  				<a class="page-link" href="/community/getListReportPost/${i}?searchKeyword=${search.searchKeyword}">${i}</a>
-				  			</c:if>
-				  		</li>
-				  	</c:forEach>
-				  	<li class="page-item">
-				      <a class="page-link" href="#">Next</a>
-				    </li>
-				  </ul>
-				</nav>
+			<nav aria-label="...">
+			  <ul class="pagination">
+		  		<li class="page-item disabled">
+			      <span class="page-link" data-value="1">Previous</span>
+			    </li>
+			  	<c:forEach var="i" begin="${resultPage.beginUnitPage}" end="${resultPage.endUnitPage}">
+			  		<li class="page-item">
+			  			<c:if test="${search.searchKeyword ==null }">
+			  				<a class="page-link" href="/community/getListReportPost/${i}">${i}</a>
+			  			</c:if>
+			  			<c:if test="${search.searchKeyword !=null }">
+			  				<a class="page-link" href="/community/getListReportPost/${i}?searchKeyword=${search.searchKeyword}">${i}</a>
+			  			</c:if>
+			  		</li>
+			  	</c:forEach>
+			  	<li class="page-item">
+			      <a class="page-link" href="#">Next</a>
+			    </li>
+			  </ul>
+			</nav>
 		</div>
 	</div>
 	

@@ -256,40 +256,42 @@ public class PurchaseRestController {
 	}
 	
 	//배송하기, 구매확정 후 구매처리상태변경
-	@PostMapping("updatePurchaseCode")
-	public Purchase updatePurchaseCode(@RequestBody Purchase purchase, Point point, HttpSession session) throws Exception{
+   @PostMapping("updatePurchaseCode")
+   public int updatePurchaseCode(@RequestBody Purchase purchase, Point point, HttpSession session) throws Exception{
 
-	      System.out.println("/purchase/api/updatePurchaseCode : POST"+purchase);
-	      
-	      purchaseService.updatePurchaseCode(purchase);
-	      purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
-	      User user=(User)(session.getAttribute("user"));
-	      purchase.setUser(user);
-	      
-	      //구매확정 후 포인트적립
-	      int total=purchase.getPrice()+purchase.getUsePoint();
-	      
-	      int plusPoint=0;
-	      if(user.getGrade().equals("0")) {
-	    	  plusPoint=(int) (total*0.005);
-	      }else if(user.getGrade().equals("1")) {
-	    	  plusPoint=(int) (total*0.01);
-	      }else if(user.getGrade().equals("2")) {
-	    	  plusPoint=(int) (total*0.03);
-	      }else if(user.getGrade().equals("3")) {
-	    	  plusPoint=(int) (total*0.05);
-	      }
-		  
-	      point.setUserId(user.getUserId());
-		  point.setPurchaseNo(purchase.getPurchaseNo());
-		  point.setPointStatus("1");
-		  point.setPoint(plusPoint);
-		  userService.insertPoint(point);
-		  //유저 총포인트
-		  user.setTotalPoint(user.getTotalPoint()+plusPoint);
-		  userService.updateUserTotalPoint(user);
-	      
-	      return purchase;
-	   }   
-
+         System.out.println("/purchase/api/updatePurchaseCode : POST"+purchase);
+         
+         purchaseService.updatePurchaseCode(purchase);
+         purchase=purchaseService.getPurchase(purchase.getPurchaseNo());
+         User user=(User)(session.getAttribute("user"));
+         purchase.setUser(user);
+         
+         //구매확정 후 포인트적립
+         int plusPoint=0;
+         if(purchase.getPurchaseStatus().equals("4")) {
+         
+            int total=purchase.getPrice()+purchase.getUsePoint();
+            String grade=user.getGrade();
+            
+            if(grade.equals("0")) {
+               plusPoint=(int) (total*0.005);
+            }else if(grade.equals("1")) {
+               plusPoint=(int) (total*0.01);
+            }else if(grade.equals("2")) {
+               plusPoint=(int) (total*0.03);
+            }else if(grade.equals("3")) {
+               plusPoint=(int) (total*0.05);
+            }
+           
+           point.setUserId(user.getUserId());
+           point.setPurchaseNo(purchase.getPurchaseNo());
+           point.setPointStatus("1");
+           point.setPoint(plusPoint);
+           userService.insertPoint(point);
+           //유저 총포인트
+           user.setTotalPoint(user.getTotalPoint()+plusPoint);
+           userService.updateUserTotalPoint(user);
+         }           
+         return plusPoint;
+      }   
 }

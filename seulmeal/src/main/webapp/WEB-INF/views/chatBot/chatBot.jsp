@@ -39,9 +39,22 @@ body {
 	  border-radius: 100%;
 	}
 
+.floating-menu { right: 50px; top: 50%; z-index: 100; margin: -120px 0 0 0;}
+
+.footer { height: 100px; background-color: #707070;}
+
+	.bi-caret-up-fill,
+	.bi-caret-down-fill{
+         font-size: 40px;
+         line-height: 40px;
+         color:#FF4500;
+     }
+
 </style>
 <body>
+
 <div style="display:flex; justify-content:space-between; margin-left:90%;">
+
 	<div class="sideBanner psBtn" >
 		<!-- <span class="txt-label">
 			seulMeal 챗봇
@@ -128,6 +141,7 @@ body {
 	
 	function sendMessage() {
 	    let message = $("#msg").val()
+	    $("#msg").val("")
 	    showMessage("보낸 메시지: " + message);
 	
 	    stompClient.send("/app/sendMessage", {}, JSON.stringify(message)); //서버에 보낼 메시지

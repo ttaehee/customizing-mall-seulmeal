@@ -5,8 +5,8 @@ plugins {
 	id 'war'
 }
 
-//group = 'shop.seulmeal'
-//version = '0.0.1-SNAPSHOT'
+group = 'shop.seulmeal'
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -19,8 +19,8 @@ repositories {
 	mavenCentral()
 }
 
-//bootWar.enabled = false
-//war.enabled = true
+bootWar.enabled = false
+war.enabled = true
 dependencies {
 	// �옄諛붾찓�씪
 	implementation 'org.springframework.boot:spring-boot-starter-mail'

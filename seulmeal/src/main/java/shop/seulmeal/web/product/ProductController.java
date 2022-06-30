@@ -47,8 +47,8 @@ public class ProductController {
 	int pageUnit = 10;
 	int pageSize = 10;
 
-	private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
-	//private String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
+	//private String path =System.getProperty("user.dir")+"/src/main/webapp/resources/attachments/";
+	private String path = "/home/tomcat/apache-tomcat-9.0.64/webapps/seulmeal/resources/attachments/";
 	
 	public ProductController() {
 		// TODO Auto-generated constructor stub
@@ -149,7 +149,7 @@ public class ProductController {
 	}
 	@GetMapping(value = { "/listProduct/{currentPage}/{searchCondition}", "/listProduct/{currentPage}","/listProduct" })
 	public String getListProductAsUser(Model model, Search search, @PathVariable(required = false) String currentPage,
-			@PathVariable(required = false) String searchCondition) throws Exception {
+			@PathVariable(required = false) String searchCondition, HttpSession session) throws Exception {
 
 		if (currentPage != null) {
 			search.setCurrentPage(new Integer(currentPage));
@@ -163,6 +163,19 @@ public class ProductController {
   
 		Map<String, Object> map = productService.getListProduct(search);
 		List<Product> list = (List) map.get("list");
+		
+		User user = (User)session.getAttribute("user");		
+		if(user != null) {
+			List<Like> likeList = productService.getListLikeAll(user.getUserId());
+			for (Product product : list) {
+				
+				for (Like like : likeList) {
+					if(product.getProductNo() == like.getProductNo()) {
+						product.setLikeStatus(1);
+					}					
+				}				
+			}			
+		}
 
 
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
@@ -417,11 +430,11 @@ public class ProductController {
 	
 	/* FOODCATEGORY */
 	
-	@GetMapping(value = {"insertFoodCategory"})
+	@PostMapping(value = {"insertFoodCategory"})
 	public String insertFoodCategory(String name) throws Exception {
 		productService.insertFoodCategory(name);
 		
-		return "/product/listFoodCategory";
+		return "redirect:/product/listFoodCategory";
 	}
 	
 	@GetMapping(value = {"listFoodCategory/{status}", "listFoodCategory"})

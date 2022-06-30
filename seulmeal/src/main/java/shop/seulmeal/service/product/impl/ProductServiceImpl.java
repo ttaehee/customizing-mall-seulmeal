@@ -283,4 +283,10 @@ public class ProductServiceImpl implements ProductService {
 		return result;
 	}
 
+	@Override
+	public List<Like> getListLikeAll(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return productMapper.getListLikeAll(userId);
+	}
+
 }

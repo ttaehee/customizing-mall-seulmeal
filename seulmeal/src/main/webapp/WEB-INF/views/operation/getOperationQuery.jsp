@@ -28,6 +28,7 @@
 	.answerBox{
 		border: 1px solid #ff4500;
 		border-radius: 10px;
+		box-shadow: 0 6px 6px 0 gray;
 	}
 	.answerBox+.answerBox{
 		margin-top: 20px;
@@ -57,8 +58,8 @@
 <script src="/resources/javascript/summernote/summernote-lite.js"></script>
 <script src="/resources/javascript/summernote/lang/summernote-ko-KR.js"></script>	
 	<div class="container">
-        <div class="row">
-            <div class="col" style="border-bottom: 2px solid #ff4500; margin-top:20px; ">            	
+        <div class="row" >
+            <div class="col" style="border-bottom: 2px solid #ff4500; margin-top:20px;">            	
             	<h1>${post.title}<c:if test="${post.publicStatus==1}"><i class="bi bi-lock-fill"></i></c:if></h1>
             </div>            
         </div>
@@ -71,10 +72,10 @@
             <div class="col-3" style="display: flex;">
             <div style="margin-right: 10px;">
 	            <c:if test="${post.answerStatus ==0}">
-	            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="답변대기중">
+	            	<input class="btn btn-primary float-right uploadAnswerBtn" id="answerAnswer" type="button" value="답변대기중">
 	            </c:if>
 	            <c:if test="${post.answerStatus ==1}">
-	            	<input class="btn btn-primary float-right uploadAnswerBtn" type="button" value="답변완료">
+	            	<input class="btn btn-primary float-right uploadAnswerBtn answerAnswer" type="button" value="답변완료">
 	            </c:if>
             </div>
             
@@ -339,6 +340,7 @@
 	        </div>	        
 	        `
 	        	$(".commentArg").append(answer);
+	        	$("#answerAnswer").val("답변완료");
 	        	$(".answer").dialog("close");
 	        }
 		})

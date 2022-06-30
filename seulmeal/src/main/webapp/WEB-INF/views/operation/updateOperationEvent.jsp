@@ -141,6 +141,10 @@
 	</div>
 <jsp:include page="../layer/footer.jsp"></jsp:include>
 <script>
+	function cancelBtn(){
+		window.location.href = '/operation/getListOperation/2/0/0';
+	}
+
 	function readURL(){
 		const reader = new FileReader();
 		

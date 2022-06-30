@@ -134,7 +134,8 @@ public class CommunityServiceImpl implements CommunityService {
 
    @Override
    public int deleteReportPost(int postNo) {
-      return communityMapper.deleteReportPost(postNo);
+	   communityMapper.deletePost(postNo);
+	   return communityMapper.deleteReportPost(postNo);
    }
 
    // Like
@@ -343,6 +344,12 @@ public class CommunityServiceImpl implements CommunityService {
       // TODO Auto-generated method stub
       return communityMapper.checkLikePost(userId);
    }
+
+@Override
+public Post getPostAdmin(int postNo) {
+	// TODO Auto-generated method stub
+	return communityMapper.getPostAdmin(postNo);
+}
    
    
 

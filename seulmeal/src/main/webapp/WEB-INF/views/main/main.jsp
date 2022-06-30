@@ -122,7 +122,7 @@
 				</c:if>
 				<div class="carousel-caption d-none d-md-block">
 					<h2 class="display-6 fw-bold">${post.title}</h2>
-					<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}shortContent</h2>
+					<h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">${post.shortContent}</h2>
 					<h2 class="endDateView">~${post.endDate}</h2>
 				</div>
 			</div>
@@ -138,7 +138,7 @@
     <!-- ---------------------------------- -->
     <div style="margin-bottom: 30px; color:black;">
     	<c:if test="${!empty user}">
-    		<h2 class="pb-2 border-bottom">${user.userId}회원님 추천제품</h2>
+    		<h2 class="pb-2 border-bottom">${user.userName} 님 추천제품</h2>
     	</c:if>
     	<c:if test="${empty user}">
     		<h2 class="pb-2 border-bottom">이 달의 인기 상품</h2>
@@ -171,7 +171,17 @@
 								&nbsp;<small>${product.REVIEW_COUNT}</small>
 							</li>
 							<li class="d-flex align-items-center">
-								<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+								<c:if test="${!empty user}">
+									<c:if test="${product.likeStatus == 1}">
+										<i style="font-size:1.5rem;" class="bi bi-heart-fill" onclick="updateLikeProduct(this)"></i>
+									</c:if>
+									<c:if test="${product.likeStatus != 1}">
+										<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+									</c:if>
+								</c:if>
+								<c:if test="${empty user}">
+									<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+								</c:if>
 								&nbsp;<small class="likeText">${product.LIKE_COUNT}</small>
 							</li>
 						</ul>
@@ -217,7 +227,17 @@
 								&nbsp;<small>${product.reviewCount}</small>
 							</li>
 							<li class="d-flex align-items-center">
-								<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+								<c:if test="${ !empty user }">
+									<c:if test="${product.likeStatus==1}">
+										<i style="font-size:1.5rem;" class="bi bi-heart-fill" onclick="updateLikeProduct(this)"></i>
+									</c:if>
+									<c:if test="${product.likeStatus==0}">
+										<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+									</c:if>
+								</c:if>
+								<c:if test="${ empty user }">
+									<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+								</c:if>
 								&nbsp;<small class="likeText">${product.likeCount}</small>
 							</li>
 						</ul>
@@ -384,6 +404,8 @@ $jq(document).ready(function() {
 
 	                     for(let i=0; i<data.list.length; i++){
 	                    	 const product = data.list[i];
+	                    
+	                    	 
 		                     let productCard = `
 			             			<div class="col cardProduct">
 			         				<div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg productCover" style="background-image: url('/resources/attachments/\${product.thumbnail}');">
@@ -410,9 +432,13 @@ $jq(document).ready(function() {
 			         								<i style="font-size:1.5rem; color:black;" class="bi bi-clipboard-heart-fill"></i>
 			         								&nbsp;<small>\${product.reviewCount}</small>
 			         							</li>
-			         							<li class="d-flex align-items-center">
-			         								<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
-			         								&nbsp;<small class="likeText">\${product.likeCount}</small>
+			         							<li class="d-flex align-items-center">`
+			         		if(product.likeStatus === 1){
+			         			productCard += `<i style="font-size:1.5rem;" class="bi bi-heart-fill" onclick="updateLikeProduct(this)"></i>`
+			         		} else {
+			         			productCard += `<i style="font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>`
+			         		}
+			         			productCard += `&nbsp;<small class="likeText">\${product.likeCount}</small>
 			         							</li>
 			         						</ul>
 			         					</div>
@@ -421,6 +447,7 @@ $jq(document).ready(function() {
 			                     `
 			                     //console.log(productCard)
 			                     $(".align-items-stretch").append(productCard)
+			                     filter()
 	                     }
 					
 	                     

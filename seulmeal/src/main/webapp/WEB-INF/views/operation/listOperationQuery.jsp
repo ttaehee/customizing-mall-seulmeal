@@ -165,15 +165,21 @@
 				<tr>
 					<th>${post.postNo}</th>
 					<th style="display:flex;">
-						<c:if test="${post.answerStatus ==1 }">
-							<span style="color:#ff4500;" class="badge badge-light">답변 완료</span>
-						</c:if>
-						<c:if test="${post.publicStatus ==0}">
+						<c:if test="${user != null && user.role == 1}">
 							<a href="/operation/getOperation/${post.postStatus}/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
 						</c:if>
-						<c:if test="${post.publicStatus ==1}">
-							<div class="psBtn" data-value="${post.postNo}" data-toggle="modal" data-target="#exampleModalCenter">${post.title }<i class="bi bi-lock-fill"></i></div>						
+						<c:if test="${user == null || user.role != 1}">
+							<c:if test="${post.answerStatus ==1 }">
+								<span style="color:#ff4500;" class="badge badge-light">답변 완료</span>
+							</c:if>
+							<c:if test="${post.publicStatus ==0}">
+								<a href="/operation/getOperation/${post.postStatus}/${post.postNo}" class="link-dark text-decoration-none">${post.title}</a>
+							</c:if>
+							<c:if test="${post.publicStatus ==1}">
+								<div class="psBtn" data-value="${post.postNo}" data-toggle="modal" data-target="#exampleModalCenter">${post.title }<i class="bi bi-lock-fill"></i></div>						
+							</c:if>
 						</c:if>
+						
 					</th>
 					<th style="font-weight: bolder;">${post.user.userId}</th>
 					<th>${post.regDate}</th>

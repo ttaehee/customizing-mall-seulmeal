@@ -51,7 +51,8 @@ public class CommunityRestController {
 	// 무한스크롤
 	@GetMapping("getListPost") // oo
 	public List<Post> getListPost(@RequestParam(required = false, defaultValue = "2") int currentPage,
-			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String searchOption ,@RequestParam(required = false) String userId, HttpSession session) {
+			@RequestParam(required = false) String searchKeyword, @RequestParam(required = false) String searchOption ,
+			@RequestParam(required = false) String searchCondition, @RequestParam(required = false) String userId, HttpSession session) {
 		
 		System.out.println("RestC : CurrentP : "+ currentPage);
 		
@@ -60,6 +61,7 @@ public class CommunityRestController {
 		search.setPageSize(pageSize);
 		search.setSearchKeyword(searchKeyword);
 		search.setSearchCondition(searchOption);
+		search.setSearchCondition(searchCondition);
 
 		
 		User loginUser = (User)session.getAttribute("user");

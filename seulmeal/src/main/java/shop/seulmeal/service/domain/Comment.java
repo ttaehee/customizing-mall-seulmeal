@@ -24,5 +24,8 @@ public class Comment {
 	
 	// 문의답변용도
 	private List<Attachments> attachments;
+	
+	// 대대스
+	private int commentLevel;
 		
 }

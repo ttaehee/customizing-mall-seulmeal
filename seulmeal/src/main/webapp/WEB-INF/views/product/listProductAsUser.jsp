@@ -53,7 +53,12 @@
 										<small>&nbsp;${product.reviewCount}</small>
 									</li>
 									<li class="d-flex align-items-center">
-										<i style="margin-left:15px; font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+										<c:if test="${product.likeStatus ==1}">
+											<i style="margin-left:15px; font-size:1.5rem;" class="bi bi-heart-fill" onclick="updateLikeProduct(this)"></i>
+										</c:if>
+										<c:if test="${product.likeStatus !=1}">
+											<i style="margin-left:15px; font-size:1.5rem;" class="bi bi-heart" onclick="updateLikeProduct(this)"></i>
+										</c:if>
 										<small>&nbsp;${product.likeCount}</small>
 									</li>
 								</ul>
@@ -76,7 +81,6 @@
 		</div>
 	</div>	
 	
-	<jsp:include page="../layer/upscroll.jsp"></jsp:include>
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>

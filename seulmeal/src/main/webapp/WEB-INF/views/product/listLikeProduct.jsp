@@ -64,7 +64,6 @@
 	</div>	
 </div>
 
-			<jsp:include page="../layer/upscroll.jsp"></jsp:include>
 	<jsp:include page="../layer/footer.jsp"></jsp:include>
 	
 	<jsp:include page="../chatBot/chatBot.jsp"></jsp:include>

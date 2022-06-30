@@ -117,5 +117,6 @@ public interface ProductMapper {
 	public int getPartsTotalCount(Map<String, Object> map) throws Exception;
 
 	public int getLikeProductTotalCount(String userId) throws Exception;
-
+	
+	public List<Like> getListLikeAll(String userId) throws Exception;
 }

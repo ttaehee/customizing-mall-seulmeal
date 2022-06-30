@@ -66,9 +66,11 @@
 						  
 						  	<c:choose>
 								<c:when test="${sale.purchaseStatus eq '1'}">
-								<button type="button" class="btn btn-outline-primary btn-sm" data-value="${sale.purchaseNo}" onClick="fncPurchaseStatus(this)">배송하기</button>
+								<button type="button" class="btn btn-outline-primary btn-sm" data-value="${sale.purchaseNo}" data-status="2" onClick="fncPurchaseStatus(this)">배송하기</button>
 								</c:when>
-								<c:when test="${sale.purchaseStatus eq '2'}">배송중</c:when>
+								<c:when test="${sale.purchaseStatus eq '2'}">
+								<button type="button" class="btn btn-outline-primary btn-sm" data-value="${sale.purchaseNo}" data-status="3" onClick="fncPurchaseStatus(this)">배송완료하기</button>
+								</c:when>
 								<c:when test="${sale.purchaseStatus eq '3'}">배송완료</c:when>
 								<c:when test="${sale.purchaseStatus eq '4'}">구매확정</c:when>
 							</c:choose><br/>
@@ -98,9 +100,18 @@
 	
 	function fncPurchaseStatus(ths){
 		
-		const purchaseNo=$(ths).data('value');
+		let purchaseNo=$(ths).data('value');
+		let purchaseStatus=$(ths).data('status');
 		
-		let conf=confirm("배송을 진행할까요?");
+		let conf =false;
+		console.log($(ths).closest('td').text().trim());
+		
+		if($(ths).closest('td').text().trim() == "배송하기"){
+			conf=confirm("배송을 진행할까요?");
+		}else{
+			conf=confirm("배송완료 처리할까요?");
+		}
+		
 		if(conf){
 			
 			$.ajax({
@@ -108,7 +119,7 @@
 				method:"POST",  
 				data:JSON.stringify({
 					purchaseNo : purchaseNo,
-					purchaseStatus: "2"
+					purchaseStatus: purchaseStatus
 				}),
 		        headers : {
 		            "Accept" : "application/json",
@@ -116,9 +127,16 @@
 		        },
 		        dataType : "json",
 		        success : function(data){	
-		        	$(ths).closest('td').text('배송중');
+		        	if($(ths).closest('td').text().trim() === '배송하기'){
+		        		$(ths).data("status","3");
+		        		console.log($(ths).data("status"));
+		        		$(ths).text("배송완료하기");
+		        	}else{
+		        		$(ths).closest('td').text('배송완료');
+		        	}
 		        }
 	    	});	
+			
 		}else{
 			return;
 		}

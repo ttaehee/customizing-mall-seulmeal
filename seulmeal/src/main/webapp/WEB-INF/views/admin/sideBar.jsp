@@ -39,9 +39,6 @@
 	                    <li class="w-100">
 	                        <a href="#" class="nav-link px-0" id="userList"> <span class="d-none d-sm-inline">모든 유저</span></a>
 	                    </li>
-	                    <li>
-	                        <a href="#" class="nav-link px-0" id="blackUserList"> <span class="d-none d-sm-inline">블랙리스트 유저</span></a>
-	                    </li>
 	                </ul>
 	            </li>
 	            <li>
@@ -97,10 +94,6 @@
 	                        <a href="#" class="nav-link px-0" id="query"> <span class="d-none d-sm-inline">문의답변</span> 3</a>
 	                    </li>
 	                </ul>
-	            </li>
-	            <li>
-	                <a href="#" class="nav-link px-0 align-middle">
-	                    <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span> </a>
 	            </li>
 	        </ul>
 	        <hr>
