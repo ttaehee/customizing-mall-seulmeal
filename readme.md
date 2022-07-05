@@ -6,7 +6,7 @@
 
 - SeulMeal -ver 0.0.1
 - 프로젝트 기간 : 2022-05-04 ~ 2022-07-01
-- [API 문서](https://documenter.getpostman.com/view/18192539/UVRBo6he)
+- [API 문서]()
 
 <p align="center">
     <img src="https://img.shields.io/badge/-Oracle-F80000?style=for-the-badge&logo=Oracle&logoColor=white"> &nbsp
