@@ -1,5 +1,5 @@
 # SeulMeal 🍽
->🙋🏻‍♀️Welcome to Customizing Meal-kit Mall !  
+>🙋🏻‍♀️Welcome to Customizing Meal-kit Mall  
 You can choose the ingredients of the meal-kit  
 If you want to exclude ingredients, you can exclude them, and you can add if you want 🍗🥦🌶🍆   
 Give it a try !  
@@ -9,18 +9,18 @@ Give it a try !
 <img width="200px" height="200px" src="https://user-images.githubusercontent.com/92348108/175930241-fe189438-5f30-4b3c-a715-39b775ebc6ca.jpeg" />
 
 - SeulMeal -ver 0.0.1
-- 프로젝트 기간 : 2022-05-04 ~ 2022-07-01
+- 프로젝트 기간 : 2022-05-04 ~ 2022-07-01 (분석설계 4주 / 구현 4주 / 문서작업 1주)
 - [🍕🍽 www.seulmeal.shop <-- Click!](https://www.seulmeal.shop)
 
 <p align="center">
     <img src="https://img.shields.io/badge/-Oracle-F80000?style=for-the-badge&logo=Oracle&logoColor=white"> &nbsp
     <img src="https://img.shields.io/badge/-Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/-Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white"> &nbsp
+    <img src="https://img.shields.io/badge/-Spring-006600?style=for-the-badge&logo=Spring&logoColor=white"> &nbsp
     <img src="https://img.shields.io/badge/-Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white"> &nbsp
     <img src="https://img.shields.io/badge/-Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white"> &nbsp
     <img src="https://img.shields.io/badge/-JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"> &nbsp
     <img src="https://img.shields.io/badge/-Bootstrap-7952B3?style=for-the-badge&logo=Bootstrap&logoColor=white"> &nbsp
-    <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=for-the-badg&logo=Amazon%20AWS&logoColor=white"/> &nbsp
+    <img src="https://img.shields.io/badge/-Amazon AWS-885630?style=for-the-badge&logo=AmazonAWS&logoColor=white"/> &nbsp
     <img src="https://img.shields.io/badge/-Amazon EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white"> &nbsp
 </p>
 
@@ -31,24 +31,9 @@ Give it a try !
 **커스텀 밀키트를 위한 웹앱**!! <br/>
 먹고 싶은 음식은 많고, 약은 적고!!  
 좋아하는 재료는 항상 적은 '밀키트'  
-우리들은 사용자의 니즈에 맞게 음식을 커스텀하여 원하는 밀키트를 만들 수 있는 것을 생각했습니다.<br/>
-고객들은 원하는 재료를 추가하거나 제거하고 원하는 재료양도 조절이 가능한 커스텀 밀키트<br/>
+우리들은 사용자의 니즈에 맞게 음식을 **커스텀하여 원하는 밀키트**를 만들 수 있는 것을 생각했습니다.<br/>
+고객들은 원하는 재료를 **추가**✔하거나 **제외**✔하고 원하는 **재료양**✔도 조절이 가능한 커스텀 밀키트<br/>
 **슬밀**을 맛있게 즐겨 보세요
-
-<hr />
-
-## 페이지 흐름
-
-<hr />
-
-**웹**
-
-
-
-<hr />
-
-**모바일**
-
 
 <hr />
 
@@ -71,7 +56,8 @@ Give it a try !
 
 김태희
 
-> - 상품판매 관리
+> - 상품 커스터마이징 옵션
+> - 구매 관리
 
 김민혜
 
@@ -208,7 +194,7 @@ dependencies: {
 <img src="https://user-images.githubusercontent.com/103614357/177787439-933db07a-a96b-49a0-99de-1ee932400ad4.png" />
 
 ### 커스터마이징
-<img src="https://user-images.githubusercontent.com/103614357/177787998-9482b150-069d-4765-b530-f19b0aacfdc2.png" />
+<img src="https://user-images.githubusercontent.com/103614357/177791190-323f1f49-86d6-4967-a4f5-db980c2a8f31.png" />
 
 ### 구매
 <img src="https://user-images.githubusercontent.com/103614357/177787571-a94dbc46-6d4f-49bc-b75d-85f6e88f343d.png" />
