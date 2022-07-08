@@ -10,7 +10,7 @@ Give it a try !
 
 - SeulMeal -ver 0.0.1
 - 프로젝트 기간 : 2022-05-04 ~ 2022-07-01 (분석설계 4주 / 구현 4주 / 문서작업 1주)
-- [🍕🍽 www.seulmeal.shop <-- Click!](www.seulmeal.shop)
+- [🍕🍽 www.seulmeal.shop <-- Click!](http://www.seulmeal.shop/)
 
 <p align="center">
     <img src="https://img.shields.io/badge/-Oracle-F80000?style=for-the-badge&logo=Oracle&logoColor=white"> &nbsp
